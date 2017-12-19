@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: cryptape/cita-build:latest
+    working_directory: ~/cita-build
+    steps:
+      - checkout
+      - run:
+          name: format
+          command: 'cargo fmt --all -- --write-mode diff'
+      - run:
+          name: build
+          command: 'cargo test --all --no-run'
+      - run:
+          name: test
+          command: 'cargo test --all --lib'

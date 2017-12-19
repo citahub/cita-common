@@ -1,0 +1,20 @@
+#!/bin/echo Warning: this file should be sourced!
+
+SRCDIR=$(readlink -f $(dirname ${SCRIPT_PATH})/..)
+cd ${SRCDIR}
+
+WORKDIR=/data/work
+
+function clean_build_cache () {
+    git clean -x -d -f
+}
+
+function cargo_run_in_docker () {
+    docker run --rm \
+        --volume ${SRCDIR}:${WORKDIR} \
+        --volume rust-git:/usr/local/cargo/git \
+        --volume rust-registry:/usr/local/cargo/registry \
+        --workdir ${WORKDIR} \
+        cryptape/cita-build:latest \
+        cargo "$@"
+}

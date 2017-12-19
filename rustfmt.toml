@@ -1,0 +1,8 @@
+max_width=120
+max_comments=120
+tab_spaces=4
+fn_call_width=100
+struct_lit_width=32
+single_line_if_else_max_width=100
+chain_one_line_max=100
+array_width=100

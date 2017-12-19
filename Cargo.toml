@@ -1,0 +1,38 @@
+[workspace]
+
+members = [
+    "logger",
+    "ethcore-io",
+    "error",
+    "worker",
+    "bigint",
+    "util",
+
+    "pubsub_zeromq",
+    "pubsub_rabbitmq",
+    "pubsub_kafka",
+    "pubsub",
+
+    "ethcore-bloom-journal",
+    "bloomable",
+    "sha3",
+    "blake2b",
+    "cita-sm2",
+    "sm3",
+    "cita-secp256k1",
+    "cita-ed25519",
+    "cita-crypto",
+    "ethkey",
+
+    "rlp",
+    "rlp_derive",
+    "libproto",
+
+    "tx_pool",
+
+    "proof",
+    "engine_json",
+    "authority_manage",
+
+    "engine",
+]
