@@ -3,7 +3,7 @@ syntax = "proto3";
 import "blockchain.proto";
 
 enum Ret {
-    Ok = 0;
+    OK = 0;
     InvalidNonce = 1;
     Dup = 2;
     InvalidUntilBlock = 3;

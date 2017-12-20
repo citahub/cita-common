@@ -566,7 +566,7 @@ impl VerifyTxResp {
     // .Ret ret = 2;
 
     pub fn clear_ret(&mut self) {
-        self.ret = Ret::Ok;
+        self.ret = Ret::OK;
     }
 
     // Param is passed by value, moved
@@ -658,7 +658,7 @@ impl ::protobuf::Message for VerifyTxResp {
         if !self.tx_hash.is_empty() {
             my_size += ::protobuf::rt::bytes_size(1, &self.tx_hash);
         }
-        if self.ret != Ret::Ok {
+        if self.ret != Ret::OK {
             my_size += ::protobuf::rt::enum_size(2, self.ret);
         }
         if !self.signer.is_empty() {
@@ -673,7 +673,7 @@ impl ::protobuf::Message for VerifyTxResp {
         if !self.tx_hash.is_empty() {
             os.write_bytes(1, &self.tx_hash)?;
         }
-        if self.ret != Ret::Ok {
+        if self.ret != Ret::OK {
             os.write_enum(2, self.ret.value())?;
         }
         if !self.signer.is_empty() {
@@ -1049,7 +1049,7 @@ impl VerifyBlockResp {
     // .Ret ret = 2;
 
     pub fn clear_ret(&mut self) {
-        self.ret = Ret::Ok;
+        self.ret = Ret::OK;
     }
 
     // Param is passed by value, moved
@@ -1108,7 +1108,7 @@ impl ::protobuf::Message for VerifyBlockResp {
         if self.id != 0 {
             my_size += ::protobuf::rt::value_size(1, self.id, ::protobuf::wire_format::WireTypeVarint);
         }
-        if self.ret != Ret::Ok {
+        if self.ret != Ret::OK {
             my_size += ::protobuf::rt::enum_size(2, self.ret);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -1120,7 +1120,7 @@ impl ::protobuf::Message for VerifyBlockResp {
         if self.id != 0 {
             os.write_uint64(1, self.id)?;
         }
-        if self.ret != Ret::Ok {
+        if self.ret != Ret::OK {
             os.write_enum(2, self.ret.value())?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
@@ -1704,7 +1704,7 @@ impl ::protobuf::reflect::ProtobufValue for BlockTxHashesReq {
 
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
 pub enum Ret {
-    Ok = 0,
+    OK = 0,
     InvalidNonce = 1,
     Dup = 2,
     InvalidUntilBlock = 3,
@@ -1720,7 +1720,7 @@ impl ::protobuf::ProtobufEnum for Ret {
 
     fn from_i32(value: i32) -> ::std::option::Option<Ret> {
         match value {
-            0 => ::std::option::Option::Some(Ret::Ok),
+            0 => ::std::option::Option::Some(Ret::OK),
             1 => ::std::option::Option::Some(Ret::InvalidNonce),
             2 => ::std::option::Option::Some(Ret::Dup),
             3 => ::std::option::Option::Some(Ret::InvalidUntilBlock),
@@ -1733,7 +1733,7 @@ impl ::protobuf::ProtobufEnum for Ret {
 
     fn values() -> &'static [Self] {
         static values: &'static [Ret] = &[
-            Ret::Ok,
+            Ret::OK,
             Ret::InvalidNonce,
             Ret::Dup,
             Ret::InvalidUntilBlock,
@@ -1762,7 +1762,7 @@ impl ::std::marker::Copy for Ret {
 
 impl ::std::default::Default for Ret {
     fn default() -> Self {
-        Ret::Ok
+        Ret::OK
     }
 }
 
@@ -1790,7 +1790,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x03(\x0cR\x08txHashes\x12&\n\x0fblock_gas_limit\x18\x03\x20\x01(\x04R\r\
     blockGasLimit\x12<\n\x11account_gas_limit\x18\x04\x20\x01(\x0b2\x10.Acco\
     untGasLimitR\x0faccountGasLimit\"*\n\x10BlockTxHashesReq\x12\x16\n\x06he\
-    ight\x18\x01\x20\x01(\x04R\x06height*c\n\x03Ret\x12\x06\n\x02Ok\x10\0\
+    ight\x18\x01\x20\x01(\x04R\x06height*c\n\x03Ret\x12\x06\n\x02OK\x10\0\
     \x12\x10\n\x0cInvalidNonce\x10\x01\x12\x07\n\x03Dup\x10\x02\x12\x15\n\
     \x11InvalidUntilBlock\x10\x03\x12\n\n\x06BadSig\x10\x04\x12\x0c\n\x08Not\
     Ready\x10\x05\x12\x08\n\x04Busy\x10\x06J\xd6\x0e\n\x06\x12\x04\0\01\x01\
