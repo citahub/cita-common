@@ -7,3 +7,12 @@ authors = ["Cryptape Technologies <arch@cryptape.com>"]
 libproto = { path = "../libproto" }
 util = { path = "../util" }
 cita-crypto = { path = "../cita-crypto" }
+
+[features]
+default = []
+secp256k1 = ["cita-crypto/secp256k1", "libproto/secp256k1"]
+ed25519 = ["cita-crypto/ed25519", "libproto/ed25519"]
+sm2 = ["cita-crypto/sm2", "libproto/sm2"]
+sha3hash = ["util/sha3hash", "libproto/sha3hash"]
+blake2bhash = ["util/blake2bhash", "libproto/blake2bhash"]
+sm3hash = ["util/sm3hash", "libproto/sm3hash"]

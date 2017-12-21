@@ -11,7 +11,7 @@ jobs:
           command: 'cargo fmt --all -- --write-mode diff'
       - run:
           name: build
-          command: 'cargo test --all --no-run'
+          command: '.circleci/loop_crates_to_run build'
       - run:
           name: test
-          command: 'cargo test --all --lib'
+          command: '.circleci/loop_crates_to_run test'
