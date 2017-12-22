@@ -10,3 +10,9 @@ util = { path = "../util" }
 rlp = { path = "../rlp" }
 serde = "1.0"
 bincode = "0.8.0"
+
+[features]
+default = []
+sha3hash = ["util/sha3hash"]
+blake2bhash = ["util/blake2bhash"]
+sm3hash = ["util/sm3hash"]

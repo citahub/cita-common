@@ -9,3 +9,12 @@ serde_derive = "1.0"
 serde_json = "1.0"
 cita-crypto = { path = "../cita-crypto" }
 util = { path = "../util" }
+
+[features]
+default = []
+secp256k1 = ["cita-crypto/secp256k1"]
+ed25519 = ["cita-crypto/ed25519"]
+sm2 = ["cita-crypto/sm2"]
+sha3hash = ["util/sha3hash"]
+blake2bhash = ["util/blake2bhash"]
+sm3hash = ["util/sm3hash"]

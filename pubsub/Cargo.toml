@@ -10,7 +10,7 @@ pubsub_rabbitmq = { path = "../pubsub_rabbitmq", optional = true }
 pubsub_kafka = { path = "../pubsub_kafka", optional = true }
 
 [features]
-default = ["rabbitmq"]
+default = []
 rabbitmq = ["pubsub_rabbitmq"]
 zeromq = ["pubsub_zeromq"]
 kafka = ["pubsub_kafka"]
