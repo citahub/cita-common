@@ -181,7 +181,7 @@ impl From<H768> for Signature {
 
 impl From<Signature> for String {
     fn from(s: Signature) -> Self {
-        H768::from(s.clone()).hex()
+        H768::from(s).hex()
     }
 }
 
