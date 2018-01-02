@@ -1,17 +1,57 @@
+defaults: &defaults
+  docker:
+    - image: cryptape/cita-build:latest
+  working_directory: ~/cita-build
+
 version: 2
 jobs:
-  build:
-    docker:
-      - image: cryptape/cita-build:latest
-    working_directory: ~/cita-build
+  format:
+    <<: *defaults
     steps:
       - checkout
       - run:
           name: format
           command: 'cargo fmt --all -- --write-mode diff'
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: 'cargo generate-lockfile'      
+      - restore_cache:
+          key: build-cache-{{ checksum "Cargo.lock" }}
       - run:
           name: build
           command: '.circleci/loop_crates_to_run build'
+      - save_cache:
+          key: build-cache-{{ checksum "Cargo.lock" }}
+          paths:
+            - "~/.cargo"
+            - "./target"
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: 'cargo generate-lockfile' 
+      - restore_cache:
+          key: test-cache-{{ checksum "Cargo.lock" }}
       - run:
           name: test
           command: '.circleci/loop_crates_to_run test'
+      - save_cache:
+          key: test-cache-{{ checksum "Cargo.lock" }}
+          paths:
+            - "~/.cargo"
+            - "./target"
+
+workflows:
+  version: 2
+
+  btd:
+    jobs:
+      - format
+      - build:
+          requires:
+            - format
+      - test:
+          requires:
+            - format
