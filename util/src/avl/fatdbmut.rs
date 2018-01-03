@@ -109,9 +109,9 @@ impl<'db> AVLMut for FatDBMut<'db> {
 
 #[test]
 fn fatdb_to_avl() {
-    use memorydb::MemoryDB;
-    use super::AVLDB;
     use super::AVL;
+    use super::AVLDB;
+    use memorydb::MemoryDB;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

@@ -89,9 +89,9 @@ impl<'db> AVLMut for SecAVLDBMut<'db> {
 
 #[test]
 fn secavl_to_avl() {
-    use memorydb::*;
-    use super::avldb::*;
     use super::AVL;
+    use super::avldb::*;
+    use memorydb::*;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

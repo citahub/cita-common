@@ -49,7 +49,6 @@ fn populate_avl<'db>(db: &'db mut HashDB, root: &'db mut H256, v: &[(Vec<u8>, Ve
 //     }
 // }
 
-
 #[bench]
 fn bench_avl_update(b: &mut Bencher) {
     let mut seed = H256::default();

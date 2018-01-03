@@ -23,8 +23,6 @@ extern crate pubsub_rabbitmq;
 extern crate pubsub_zeromq;
 use dotenv::dotenv;
 
-
-
 #[cfg(feature = "kafka")]
 use pubsub_kafka::start_kafka;
 

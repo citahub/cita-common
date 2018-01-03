@@ -28,12 +28,10 @@ mod authority_round;
 mod tendermint;
 mod spec;
 
-
 pub use self::authority_round::*;
 pub use self::engine::*;
 pub use self::spec::*;
 pub use self::tendermint::*;
-
 
 #[test]
 fn it_works() {}

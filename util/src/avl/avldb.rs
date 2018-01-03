@@ -305,9 +305,9 @@ impl<'a> Iterator for AVLDBIterator<'a> {
 
 #[test]
 fn iterator() {
-    use memorydb::*;
     use super::AVLMut;
     use super::avldbmut::*;
+    use memorydb::*;
 
     let d = vec![
         DBValue::from_slice(b"A"),
@@ -338,9 +338,9 @@ fn iterator() {
 
 #[test]
 fn iterator_seek() {
-    use memorydb::*;
     use super::AVLMut;
     use super::avldbmut::*;
+    use memorydb::*;
 
     let d = vec![
         DBValue::from_slice(b"A"),
@@ -391,9 +391,9 @@ fn iterator_seek() {
 
 #[test]
 fn get_len() {
-    use memorydb::*;
     use super::AVLMut;
     use super::avldbmut::*;
+    use memorydb::*;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

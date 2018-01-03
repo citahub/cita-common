@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: cryptape/cita-build:latest
+    - image: cita/cita-build:latest
   working_directory: ~/cita-build
 
 version: 2

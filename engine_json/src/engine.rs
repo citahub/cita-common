@@ -20,7 +20,6 @@
 use super::AuthorityRound;
 use super::Tendermint;
 
-
 /// Engine deserialization.
 #[derive(Debug, PartialEq, Deserialize)]
 pub enum Engine {

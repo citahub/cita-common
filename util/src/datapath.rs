@@ -40,7 +40,6 @@ impl DataPath {
         return data_path;
     }
 
-
     /// nosql path
     pub fn nosql_path() -> String {
         let data_path = DataPath::root_node_path();

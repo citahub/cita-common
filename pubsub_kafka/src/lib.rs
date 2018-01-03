@@ -40,7 +40,6 @@ impl ConsumerContext for ConsumerContextExample {
     }
 }
 
-
 pub const KAFKA_URL: &'static str = "KAFKA_URL";
 
 pub fn start_kafka(name: &str, keys: Vec<String>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
@@ -88,8 +87,7 @@ pub fn start_kafka(name: &str, keys: Vec<String>, tx: Sender<(String, Vec<u8>)>,
 
     info!(
         "kafka broker: {}, consumer group {}",
-        consumer_brokers,
-        name
+        consumer_brokers, name
     );
     let consumer = ClientConfig::new()
         .set("group.id", name)
