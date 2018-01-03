@@ -111,9 +111,9 @@ impl<'db> Iterator for FatDBIterator<'db> {
 
 #[test]
 fn fatdb_to_avl() {
-    use memorydb::MemoryDB;
-    use hashdb::DBValue;
     use avl::{AVLMut, FatDBMut};
+    use hashdb::DBValue;
+    use memorydb::MemoryDB;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

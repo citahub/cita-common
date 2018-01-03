@@ -29,7 +29,6 @@ pub struct Spec {
     pub engine: Engine,
 }
 
-
 impl Spec {
     /// Loads test from json.
     pub fn load<R>(reader: R) -> Result<Self, Error>
@@ -39,7 +38,6 @@ impl Spec {
         serde_json::from_reader(reader)
     }
 }
-
 
 #[cfg(test)]
 mod tests {

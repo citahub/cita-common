@@ -203,9 +203,6 @@ fn config_console_appender(filter: (Vec<String>, LogLevelFilter)) -> Config {
     config
 }
 
-
-
-
 #[cfg(test)]
 mod tests {
     #[test]

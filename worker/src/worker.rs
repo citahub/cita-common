@@ -1,6 +1,6 @@
-use std::thread;
-use std::sync::mpsc;
 use std::sync::Arc;
+use std::sync::mpsc;
+use std::thread;
 
 pub enum TerminateMessage {
     Terminate,
@@ -62,8 +62,8 @@ impl Drop for Worker {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::time::Duration;
     use std::sync::{Arc, Mutex};
+    use std::time::Duration;
 
     #[test]
     fn worker_drop() {

@@ -75,7 +75,6 @@ enum Node {
     Branch(u32, NodeKey, Box<[Option<NodeHandle>; 2]>),
 }
 
-
 impl Node {
     // load an inline node into memory or get the hash to do the lookup later.
     fn inline_or_hash(node: &[u8], db: &HashDB, storage: &mut NodeStorage) -> NodeHandle {
@@ -376,7 +375,6 @@ impl<'a> AVLDBMut<'a> {
             },
         }
     }
-
 
     fn left_rotate_successor(&mut self, mut k1: Node) -> super::Result<Stored> {
         let mut k2 = self.left_child_destroy(&mut k1)?;
@@ -797,7 +795,6 @@ impl<'a> AVLMut for AVLDBMut<'a> {
     {
         self.lookup(key.to_vec(), &self.root_handle)
     }
-
 
     fn insert(&mut self, key: &[u8], value: &[u8]) -> super::Result<Option<DBValue>> {
         if value.is_empty() {

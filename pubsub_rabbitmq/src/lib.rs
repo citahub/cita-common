@@ -101,7 +101,6 @@ pub fn start_rabbitmq(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>
             let _ = channel.close(200, "Bye");
         });
 
-
     let mut session = match Session::open_url(&amqp_url) {
         Ok(session) => session,
         Err(error) => panic!("failed to open url {} : {:?}", amqp_url, error),

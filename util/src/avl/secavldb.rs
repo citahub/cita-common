@@ -74,10 +74,10 @@ impl<'db> AVL for SecAVLDB<'db> {
 
 #[test]
 fn avl_to_secavl() {
-    use memorydb::MemoryDB;
-    use hashdb::DBValue;
     use super::avldbmut::AVLDBMut;
     use avl::AVLMut;
+    use hashdb::DBValue;
+    use memorydb::MemoryDB;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

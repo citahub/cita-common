@@ -26,7 +26,6 @@ extern crate util;
 mod authority_round_proof;
 mod tendermint_proof;
 
-
 pub use authority_round_proof::AuthorityRoundProof;
 use libproto::blockchain::{Proof, ProofType};
 pub use tendermint_proof::TendermintProof;
@@ -38,7 +37,6 @@ pub enum CitaProof {
     Raft,
     Tendermint(TendermintProof),
 }
-
 
 impl From<Proof> for CitaProof {
     fn from(p: Proof) -> Self {
@@ -59,8 +57,6 @@ impl Into<Proof> for CitaProof {
         }
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {
