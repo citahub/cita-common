@@ -265,8 +265,9 @@ impl Pool {
     }
 }
 
-//FIXME
+// TODO: FIXME
 #[cfg(test)]
+#[cfg(feature = "secp256k1")]
 mod tests {
     use super::*;
     use crypto::{CreateKey, KeyPair, PrivKey};

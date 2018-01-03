@@ -52,7 +52,7 @@ function cargo_run_all () {
     cargo_run pubsub_kafka
 
     for features in ${FEATURES_FOR_PUBSUB}; do
-        cargo_run pubsub --features ${features}
+        cargo_run pubsub --features "${features}"
     done
 
     cargo_run sha3
@@ -61,13 +61,13 @@ function cargo_run_all () {
 
     for crate in util authority_manage cita-secp256k1 cita-ed25519 cita-sm2; do
         for features in ${FEATURES_FOR_HASH}; do
-            cargo_run ${crate} --features ${features}
+            cargo_run ${crate} --features "${features}"
         done
     done
 
     for crate in cita-crypto libproto proof tx_pool engine_json; do
         for features in "${FEATURES_FOR_HASH_AND_CRYPT[@]}"; do
-            cargo_run ${crate} --features ${features}
+            cargo_run ${crate} --features "${features}"
         done
     done
 
