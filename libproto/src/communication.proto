@@ -18,6 +18,7 @@ enum MsgType {
     RICH_STATUS = 14;
     SYNC_REQ = 15;
     SYNC_RES = 16;
+    EXECUTED_RESULT = 17;
 }
 
 enum OperateType {
