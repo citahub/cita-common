@@ -33,12 +33,14 @@ pub mod auth;
 pub mod response;
 pub mod sync;
 pub mod consensus;
+pub mod executer;
 
 pub use auth::*;
 use blockchain::*;
 use communication::*;
 pub use consensus::*;
 use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
+pub use executer::*;
 use protobuf::{Message, RepeatedField};
 use protobuf::core::parse_from_bytes;
 pub use request::*;
@@ -79,6 +81,7 @@ pub mod submodules {
     pub const CONSENSUS: u32 = 4;
     pub const CONSENSUS_CMD: u32 = 5;
     pub const AUTH: u32 = 6;
+    pub const EXECUTER: u32 = 7;
 }
 
 // TODO: 这里要不要修改下，使topics和MsgClass对应起来
@@ -100,6 +103,7 @@ pub mod topics {
     pub const NEW_PROOF_BLOCK: u16 = 14;
     pub const BLOCK_TXS: u16 = 15;
     pub const RICH_STATUS: u16 = 16;
+    pub const EXECUTED_RESULT: u16 = 17;
 }
 
 #[derive(Debug)]
@@ -121,6 +125,7 @@ pub enum MsgClass {
     RICHSTATUS(RichStatus),
     SYNCREQUEST(SyncRequest),
     SYNCRESPONSE(SyncResponse),
+    EXECUTED(ExecutedResult),
 }
 
 pub fn topic_to_string(top: u16) -> &'static str {
@@ -142,6 +147,7 @@ pub fn topic_to_string(top: u16) -> &'static str {
         topics::NEW_PROOF_BLOCK => "new_proof_blk",
         topics::BLOCK_TXS => "block_txs",
         topics::RICH_STATUS => "rich_status",
+        topics::EXECUTED_RESULT => "executed_result",
         _ => "",
     }
 }
@@ -154,6 +160,7 @@ pub fn id_to_key(id: u32) -> &'static str {
         submodules::CONSENSUS => "consensus",
         submodules::CONSENSUS_CMD => "consensus_cmd",
         submodules::AUTH => "auth",
+        submodules::EXECUTER => "executer",
         _ => "",
     }
 }
@@ -171,6 +178,8 @@ pub fn key_to_id(key: &str) -> u32 {
         submodules::CONSENSUS
     } else if key.starts_with("auth") {
         submodules::AUTH
+    } else if key.starts_with("executor") {
+        submodules::EXECUTER
     } else {
         0
     }
@@ -257,6 +266,7 @@ pub fn parse_msg(msg: &[u8]) -> (CmdId, Origin, MsgClass) {
         MsgType::RICH_STATUS => MsgClass::RICHSTATUS(parse_from_bytes::<RichStatus>(&content_msg).unwrap()),
         MsgType::SYNC_REQ => MsgClass::SYNCREQUEST(parse_from_bytes::<SyncRequest>(&content_msg).unwrap()),
         MsgType::SYNC_RES => MsgClass::SYNCRESPONSE(parse_from_bytes::<SyncResponse>(&content_msg).unwrap()),
+        MsgType::EXECUTED_RESULT => MsgClass::EXECUTED(parse_from_bytes::<ExecutedResult>(&content_msg).unwrap()),
     };
 
     (msg.get_cmd_id(), msg.get_origin(), msg_class)
