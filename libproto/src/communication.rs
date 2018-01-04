@@ -405,6 +405,7 @@ pub enum MsgType {
     RICH_STATUS = 14,
     SYNC_REQ = 15,
     SYNC_RES = 16,
+    EXECUTED_RESULT = 17,
 }
 
 impl ::protobuf::ProtobufEnum for MsgType {
@@ -431,6 +432,7 @@ impl ::protobuf::ProtobufEnum for MsgType {
             14 => ::std::option::Option::Some(MsgType::RICH_STATUS),
             15 => ::std::option::Option::Some(MsgType::SYNC_REQ),
             16 => ::std::option::Option::Some(MsgType::SYNC_RES),
+            17 => ::std::option::Option::Some(MsgType::EXECUTED_RESULT),
             _ => ::std::option::Option::None
         }
     }
@@ -454,6 +456,7 @@ impl ::protobuf::ProtobufEnum for MsgType {
             MsgType::RICH_STATUS,
             MsgType::SYNC_REQ,
             MsgType::SYNC_RES,
+            MsgType::EXECUTED_RESULT,
         ];
         values
     }
