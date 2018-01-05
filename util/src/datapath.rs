@@ -47,6 +47,12 @@ impl DataPath {
         return data_path + "/nosql";
     }
 
+    pub fn state_path() -> String {
+        let data_path = DataPath::root_node_path();
+
+        return data_path + "/statedb";
+    }
+
     /// proof.bin path
     pub fn proof_bin_path() -> String {
         let data_path = DataPath::root_node_path();
