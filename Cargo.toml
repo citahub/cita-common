@@ -35,4 +35,5 @@ members = [
     "authority_manage",
 
     "engine",
+    "panic_hook"
 ]

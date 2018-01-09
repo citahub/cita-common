@@ -30,6 +30,7 @@ regex = "0.2"
 lru-cache = "0.1.0"
 logger = { path = "../logger" }
 uuid = { version = "0.4", features = ["v4"] }
+panic_hook = {path = "../panic_hook"}
 
 [features]
 default = []
