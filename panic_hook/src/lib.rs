@@ -67,10 +67,11 @@ fn panic_hook(info: &PanicInfo) {
 mod tests {
     use super::*;
 
+    #[should_panic]
     #[test]
     fn test_set_panic() {
         set_panic_handler();
-        //panic!("crypatpe!");
+        panic!("crypatpe!");
     }
 
 }
