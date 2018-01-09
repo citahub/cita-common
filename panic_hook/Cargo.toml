@@ -5,5 +5,5 @@ authors = ["Cryptape Technologies <arch@cryptape.com>"]
 
 [dependencies]
 backtrace = "0.3"
-
+log = "0.4"
 

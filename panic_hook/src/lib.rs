@@ -16,10 +16,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate backtrace;
+#[macro_use]
+extern crate log;
 
 use backtrace::Backtrace;
-use std::io::{self, Write};
 use std::panic::{self, PanicInfo};
+use std::process;
 use std::thread;
 
 static ABOUT_PANIC: &str = "
@@ -47,31 +49,16 @@ fn panic_hook(info: &PanicInfo) {
     let thread = thread::current();
     let name = thread.name().unwrap_or("<unnamed>");
     let backtrace = Backtrace::new();
-    let mut stderr = io::stderr();
-    let _ = writeln!(stderr, "");
-    let _ = writeln!(stderr, "====================");
-    let _ = writeln!(stderr, "");
-    let _ = writeln!(stderr, "{:?}", backtrace);
-    let _ = writeln!(stderr, "");
-    let _ = writeln!(
-        stderr,
-        "Thread '{}' panicked at '{}', {}:{}",
-        name, msg, file, line
+    let error = format!(
+        "\n============================\n\
+         {:?}\n\n\
+         position:\n\
+         Thread {} panicked at {}, {}:{}\n\
+         {}\n\
+         ============================\n\
+         ",
+        backtrace, name, msg, file, line, ABOUT_PANIC
     );
-    let _ = writeln!(stderr, "{}", ABOUT_PANIC);
-    let _ = writeln!(stderr, "====================");
-    let _ = writeln!(stderr, "");
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[should_panic]
-    #[test]
-    fn test_set_panic() {
-        set_panic_handler();
-        panic!("crypatpe!");
-    }
-
+    error!("{}", error);
+    process::exit(1);
 }
