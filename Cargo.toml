@@ -4,6 +4,7 @@ members = [
     "logger",
     "ethcore-io",
     "error",
+    "panic_hook",
     "worker",
     "bigint",
     "util",
@@ -35,5 +36,4 @@ members = [
     "authority_manage",
 
     "engine",
-    "panic_hook"
 ]
