@@ -213,7 +213,7 @@ pub mod factory {
         msg.set_operate(communication::OperateType::BROADCAST);
         msg.set_origin(ZERO_ORIGIN);
         //compress data
-        msg.set_content(snappy::cita_compresse(content));
+        msg.set_content(snappy::cita_compress(content));
         msg
     }
 
