@@ -11,7 +11,7 @@ rev = "84d4062"
 errno = "^0.1.8"
 futures = "^0.1.13"
 libc = "^0.2.0"
-log = "^0.3.0"
+log = "0.4"
 futures-cpupool = "0.1.6"
 
 [dev-dependencies]
