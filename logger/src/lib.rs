@@ -22,7 +22,7 @@ extern crate log;
 
 use chan_signal::Signal;
 use chrono::Local;
-use log::LogLevelFilter;
+use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
@@ -34,20 +34,26 @@ use std::sync::{Once, ONCE_INIT};
 use std::thread;
 use std::vec::Vec;
 
+#[derive(Debug, Clone)]
+struct Directive {
+    name: String,
+    level: LevelFilter,
+}
+
 static INIT_LOG: Once = ONCE_INIT;
 
 pub fn init_config(service_name: &str) {
     INIT_LOG.call_once(|| {
         // parse RUST_LOG
-        let mut filter: (Vec<String>, LogLevelFilter) = (Vec::new(), LogLevelFilter::Info);
+        let mut directives: Vec<Directive> = Vec::new();
         if let Ok(s) = env::var("RUST_LOG") {
-            filter = env_parse(&s);
+            directives = parse_env(&s);
         }
 
         // log4rs config
         let log_name = format!("logs/{}.log", service_name.to_string());
-        let filter_clone = filter.clone();
-        let config = config_file_appender(&log_name, filter_clone);
+        let directives_clone = directives.clone();
+        let config = config_file_appender(&log_name, directives_clone);
         let handle = log4rs::init_config(config).unwrap();
 
         // logrotate via signal(USR1)
@@ -72,8 +78,8 @@ pub fn init_config(service_name: &str) {
                 }
 
                 //reconfig
-                let filter_clone = filter.clone();
-                let new_config = config_file_appender(&log_name, filter_clone);
+                let directives_clone = directives.clone();
+                let new_config = config_file_appender(&log_name, directives_clone);
                 handle.set_config(new_config);
             }
         });
@@ -84,11 +90,11 @@ pub fn init_config(service_name: &str) {
 pub fn init() {
     INIT_LOG.call_once(|| {
         // parse RUST_LOG
-        let mut filter: (Vec<String>, LogLevelFilter) = (Vec::new(), LogLevelFilter::Info);
+        let mut directives: Vec<Directive> = Vec::new();
         if let Ok(s) = env::var("RUST_LOG") {
-            filter = env_parse(&s);
+            directives = parse_env(&s);
         }
-        let config = config_console_appender(filter);
+        let config = config_console_appender(directives);
         log4rs::init_config(config).unwrap();
     });
 }
@@ -97,61 +103,87 @@ pub fn init() {
 pub fn silent() {
     INIT_LOG.call_once(|| {
         let config = Config::builder()
-            .build(Root::builder().build(LogLevelFilter::Off))
+            .build(Root::builder().build(LevelFilter::Off))
             .unwrap();
         log4rs::init_config(config).unwrap();
     });
 }
 
-// simple parse env (e.g: crate1,crate2::mod,crate3::mod=trace)
-fn env_parse(s: &str) -> (Vec<String>, LogLevelFilter) {
-    let mut mod_list = Vec::new();
-    let mut section = s.split('=');
+// simple parse env (e.g: crate1,crate2::mod=debug,crate3::mod=trace)
+fn parse_env(env: &str) -> Vec<Directive> {
+    let mut directives = Vec::new();
 
-    //parse crate or modules
-    let mods = section.next();
-    if mods.is_some() {
-        for mod_name in mods.unwrap().split(',') {
-            if mod_name.len() != 0 {
-                mod_list.push(mod_name.to_string());
+    for s in env.split(',') {
+        if s.len() == 0 {
+            continue;
+        }
+        let mut parts = s.split('=');
+        let (log_level, name) = match (parts.next(), parts.next().map(|s| s.trim()), parts.next()) {
+            (Some(part0), None, None) => match LevelFilter::from_str(part0) {
+                Ok(num) => {
+                    println!(
+                        "warning: log level '{}' need explicit crate or module name.",
+                        num
+                    );
+                    continue;
+                }
+                Err(_) => (LevelFilter::Info, part0),
+            },
+            (Some(part0), Some(""), None) => (LevelFilter::Info, part0),
+            (Some(part0), Some(part1), None) => match LevelFilter::from_str(part1) {
+                Ok(num) => (num, part0),
+                _ => {
+                    println!(
+                        "warning: invalid logging spec '{}', \
+                         ignoring it",
+                        part1
+                    );
+                    continue;
+                }
+            },
+            _ => {
+                println!(
+                    "warning: invalid logging spec '{}', \
+                     ignoring it",
+                    s
+                );
+                continue;
             }
+        };
+
+        if name.len() != 0 {
+            directives.push(Directive {
+                name: name.to_string(),
+                level: log_level,
+            });
         }
     }
 
-    //parse log level
-    let level = match section.next() {
-        Some(level_str) => match LogLevelFilter::from_str(level_str.trim()) {
-            Ok(log_level) => (log_level),
-            Err(_) => (LogLevelFilter::Info),
-        },
-        None => (LogLevelFilter::Info),
-    };
-
-    (mod_list, level)
+    directives
 }
 
-// create loggers
-fn creat_loggers(filter: (Vec<String>, LogLevelFilter), appender: String) -> Vec<Logger> {
+fn creat_loggers(directives: Vec<Directive>, appender: String) -> Vec<Logger> {
     let mut loggers = Vec::new();
 
-    if filter.0.len() == 0 {
+    if directives.is_empty() {
         return loggers;
     }
 
     //creat loggers via module/crate and log level
-    for mod_name in filter.0 {
+    for directive in directives {
         let appender_clone = appender.clone();
         let logger = Logger::builder()
             .appender(appender_clone)
             .additive(false)
-            .build(mod_name, filter.1);
+            .build(directive.name, directive.level);
         loggers.push(logger);
     }
 
     loggers
 }
-// creat FileAppender config
-fn config_file_appender(file_path: &str, filter: (Vec<String>, LogLevelFilter)) -> Config {
+
+// FileAppender config
+fn config_file_appender(file_path: &str, directives: Vec<Directive>) -> Config {
     let requests = FileAppender::builder()
         .encoder(Box::new(PatternEncoder::new("{d} - {l} - {m}{n}")))
         .build(file_path)
@@ -159,7 +191,7 @@ fn config_file_appender(file_path: &str, filter: (Vec<String>, LogLevelFilter)) 
 
     let mut config_builder = Config::builder().appender(Appender::builder().build("requests", Box::new(requests)));
 
-    let loggers = creat_loggers(filter, "requests".to_string());
+    let loggers = creat_loggers(directives, "requests".to_string());
 
     // config crate or module log level
     if loggers.len() != 0 {
@@ -171,20 +203,20 @@ fn config_file_appender(file_path: &str, filter: (Vec<String>, LogLevelFilter)) 
         .build(
             Root::builder()
                 .appender("requests")
-                .build(LogLevelFilter::Info),
+                .build(LevelFilter::Info),
         )
         .unwrap();
 
     config
 }
 
-// creat ConsoleAppender config
-fn config_console_appender(filter: (Vec<String>, LogLevelFilter)) -> Config {
+// ConsoleAppender config
+fn config_console_appender(directives: Vec<Directive>) -> Config {
     let stdout = ConsoleAppender::builder().build();
 
     let mut config_builder = Config::builder().appender(Appender::builder().build("stdout", Box::new(stdout)));
 
-    let loggers = creat_loggers(filter, "stdout".to_string());
+    let loggers = creat_loggers(directives, "stdout".to_string());
 
     // config crate or module log level
     if loggers.len() != 0 {
@@ -193,11 +225,7 @@ fn config_console_appender(filter: (Vec<String>, LogLevelFilter)) -> Config {
 
     //config global log level
     let config = config_builder
-        .build(
-            Root::builder()
-                .appender("stdout")
-                .build(LogLevelFilter::Info),
-        )
+        .build(Root::builder().appender("stdout").build(LevelFilter::Info))
         .unwrap();
 
     config
@@ -205,6 +233,46 @@ fn config_console_appender(filter: (Vec<String>, LogLevelFilter)) -> Config {
 
 #[cfg(test)]
 mod tests {
+
+    use super::parse_env;
+    use log::LevelFilter;
+
     #[test]
-    fn it_works() {}
+    fn parse_env_valid() {
+        let directives = parse_env("crate1::mod1,crate1::mod2=debug,crate2=trace");
+        assert_eq!(directives.len(), 3);
+        assert_eq!(directives[0].name, "crate1::mod1".to_string());
+        assert_eq!(directives[0].level, LevelFilter::Info);
+
+        assert_eq!(directives[1].name, "crate1::mod2".to_string());
+        assert_eq!(directives[1].level, LevelFilter::Debug);
+
+        assert_eq!(directives[2].name, "crate2".to_string());
+        assert_eq!(directives[2].level, LevelFilter::Trace);
+    }
+
+    #[test]
+    fn parse_env_invalid_crate() {
+        let directives = parse_env("crate1::mod=warn=info,crate2=warn");
+        assert_eq!(directives.len(), 1);
+        assert_eq!(directives[0].name, "crate2".to_string());
+        assert_eq!(directives[0].level, LevelFilter::Warn);
+    }
+
+    #[test]
+    fn parse_env_invalid_level() {
+        let directives = parse_env("crate1::mod=wrong,crate2=error");
+        assert_eq!(directives.len(), 1);
+        assert_eq!(directives[0].name, "crate2".to_string());
+        assert_eq!(directives[0].level, LevelFilter::Error);
+    }
+
+    #[test]
+    fn parse_env_empty() {
+        let directives = parse_env("crate1::mod=,=trace");
+        assert_eq!(directives.len(), 1);
+        assert_eq!(directives[0].name, "crate1::mod".to_string());
+        assert_eq!(directives[0].level, LevelFilter::Info);
+    }
+
 }

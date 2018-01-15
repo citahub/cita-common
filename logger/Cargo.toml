@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Cryptape Technologies <arch@cryptape.com>"]
 
 [dependencies]
-log = "0.3"
-log4rs = "0.7"
+log = "0.4"
+log4rs = "0.8"
 chan-signal = "0.3"
 chrono = "0.4"
