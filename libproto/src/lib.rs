@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2018 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -50,8 +50,7 @@ use rustc_serialize::hex::ToHex;
 use std::ops::Deref;
 use std::result::Result::Err;
 pub use sync::{SyncRequest, SyncResponse};
-use util::{merklehash, H256, Hashable};
-use util::snappy;
+use util::{merklehash, snappy, H256, Hashable};
 
 //TODO respone contain error
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -206,14 +205,32 @@ pub mod factory {
     use super::*;
     pub const ZERO_ORIGIN: u32 = 99999;
 
-    pub fn create_msg(sub: u32, top: u16, msg_type: MsgType, content: Vec<u8>) -> communication::Message {
+    pub fn create_msg(sub: u32, top: u16, msg_type: MsgType, msg_class: MsgClass) -> communication::Message {
         let mut msg = communication::Message::new();
         msg.set_cmd_id(cmd_id(sub, top));
         msg.set_field_type(msg_type);
         msg.set_operate(communication::OperateType::BROADCAST);
         msg.set_origin(ZERO_ORIGIN);
-        //compress data
-        msg.set_content(snappy::cita_compresse(content));
+        match msg_class {
+            MsgClass::MSG(data) => msg.set_RawBytes(snappy::cita_compress(data)),
+            MsgClass::REQUEST(data) => msg.set_Request(data),
+            MsgClass::RESPONSE(data) => msg.set_Response(data),
+            MsgClass::SYNCREQUEST(data) => msg.set_SyncRequest(data),
+            MsgClass::SYNCRESPONSE(data) => msg.set_SyncResponse(data),
+            MsgClass::STATUS(data) => msg.set_Status(data),
+            MsgClass::RICHSTATUS(data) => msg.set_RichStatus(data),
+            MsgClass::BLOCK(data) => msg.set_Block(data),
+            MsgClass::BLOCKWITHPROOF(data) => msg.set_BlockWithProof(data),
+            MsgClass::HEADER(data) => msg.set_BlockHeader(data),
+            MsgClass::BLOCKTXS(data) => msg.set_BlockTxs(data),
+            MsgClass::BLOCKTXHASHES(data) => msg.set_BlockTxHashes(data),
+            MsgClass::BLOCKTXHASHESREQ(data) => msg.set_BlockTxHashesReq(data),
+            MsgClass::VERIFYTXREQ(data) => msg.set_VerifyTxReq(data),
+            MsgClass::VERIFYTXRESP(data) => msg.set_VerifyTxResp(data),
+            MsgClass::VERIFYBLKREQ(data) => msg.set_VerifyBlockReq(data),
+            MsgClass::VERIFYBLKRESP(data) => msg.set_VerifyBlockResp(data),
+            MsgClass::EXECUTED(data) => msg.set_ExecutedResult(data),
+        };
         msg
     }
 
@@ -224,9 +241,9 @@ pub mod factory {
         msg_type: MsgType,
         operate: communication::OperateType,
         origin: u32,
-        content: Vec<u8>,
+        msg_class: MsgClass,
     ) -> communication::Message {
-        let mut msg = factory::create_msg(sub, top, msg_type, content);
+        let mut msg = factory::create_msg(sub, top, msg_type, msg_class);
         msg.set_origin(origin);
         msg.set_operate(operate);
         msg
@@ -237,39 +254,34 @@ type CmdId = u32;
 pub type Origin = u32;
 
 pub fn parse_msg(msg: &[u8]) -> (CmdId, Origin, MsgClass) {
-    let mut msg = parse_from_bytes::<communication::Message>(msg.as_ref()).unwrap();
-    let content_msg = msg.take_content();
-    let content_msg = snappy::cita_decompress(content_msg);
-    let msg_class = match msg.get_field_type() {
-        MsgType::REQUEST => MsgClass::REQUEST(parse_from_bytes::<Request>(&content_msg).unwrap()),
-        MsgType::RESPONSE => MsgClass::RESPONSE(parse_from_bytes::<Response>(&content_msg).unwrap()),
-        MsgType::HEADER => MsgClass::HEADER(parse_from_bytes::<BlockHeader>(&content_msg).unwrap()),
-        MsgType::BLOCK => MsgClass::BLOCK(parse_from_bytes::<Block>(&content_msg).unwrap()),
-        MsgType::STATUS => MsgClass::STATUS(parse_from_bytes::<Status>(&content_msg).unwrap()),
-        MsgType::VERIFY_TX_REQ => MsgClass::VERIFYTXREQ(parse_from_bytes::<VerifyTxReq>(&content_msg).unwrap()),
-        MsgType::VERIFY_TX_RESP => MsgClass::VERIFYTXRESP(parse_from_bytes::<VerifyTxResp>(&content_msg).unwrap()),
-        MsgType::VERIFY_BLK_REQ => MsgClass::VERIFYBLKREQ(parse_from_bytes::<VerifyBlockReq>(&content_msg).unwrap()),
-        MsgType::VERIFY_BLK_RESP => MsgClass::VERIFYBLKRESP(parse_from_bytes::<VerifyBlockResp>(&content_msg).unwrap()),
-        MsgType::BLOCK_TXHASHES => MsgClass::BLOCKTXHASHES(parse_from_bytes::<BlockTxHashes>(&content_msg).unwrap()),
-        MsgType::BLOCK_TXHASHES_REQ => {
-            MsgClass::BLOCKTXHASHESREQ(parse_from_bytes::<BlockTxHashesReq>(&content_msg).unwrap())
-        }
-        MsgType::BLOCK_WITH_PROOF => {
-            MsgClass::BLOCKWITHPROOF(parse_from_bytes::<BlockWithProof>(&content_msg).unwrap())
-        }
-        MsgType::BLOCK_TXS => MsgClass::BLOCKTXS(parse_from_bytes::<BlockTxs>(&content_msg).unwrap()),
-        MsgType::MSG => {
+    let msg = parse_from_bytes::<communication::Message>(msg.as_ref()).unwrap();
+    let cmd_id = msg.get_cmd_id();
+    let origin = msg.get_origin();
+    let msg_class = match msg.content.unwrap() {
+        Message_oneof_content::RawBytes(data) => {
             let mut content = Vec::new();
-            content.extend_from_slice(&content_msg);
+            content.extend_from_slice(&snappy::cita_decompress(data));
             MsgClass::MSG(content)
         }
-        MsgType::RICH_STATUS => MsgClass::RICHSTATUS(parse_from_bytes::<RichStatus>(&content_msg).unwrap()),
-        MsgType::SYNC_REQ => MsgClass::SYNCREQUEST(parse_from_bytes::<SyncRequest>(&content_msg).unwrap()),
-        MsgType::SYNC_RES => MsgClass::SYNCRESPONSE(parse_from_bytes::<SyncResponse>(&content_msg).unwrap()),
-        MsgType::EXECUTED_RESULT => MsgClass::EXECUTED(parse_from_bytes::<ExecutedResult>(&content_msg).unwrap()),
+        Message_oneof_content::Request(data) => MsgClass::REQUEST(data),
+        Message_oneof_content::Response(data) => MsgClass::RESPONSE(data),
+        Message_oneof_content::SyncRequest(data) => MsgClass::SYNCREQUEST(data),
+        Message_oneof_content::SyncResponse(data) => MsgClass::SYNCRESPONSE(data),
+        Message_oneof_content::Status(data) => MsgClass::STATUS(data),
+        Message_oneof_content::RichStatus(data) => MsgClass::RICHSTATUS(data),
+        Message_oneof_content::Block(data) => MsgClass::BLOCK(data),
+        Message_oneof_content::BlockWithProof(data) => MsgClass::BLOCKWITHPROOF(data),
+        Message_oneof_content::BlockHeader(data) => MsgClass::HEADER(data),
+        Message_oneof_content::BlockTxs(data) => MsgClass::BLOCKTXS(data),
+        Message_oneof_content::BlockTxHashes(data) => MsgClass::BLOCKTXHASHES(data),
+        Message_oneof_content::BlockTxHashesReq(data) => MsgClass::BLOCKTXHASHESREQ(data),
+        Message_oneof_content::VerifyTxReq(data) => MsgClass::VERIFYTXREQ(data),
+        Message_oneof_content::VerifyTxResp(data) => MsgClass::VERIFYTXRESP(data),
+        Message_oneof_content::VerifyBlockReq(data) => MsgClass::VERIFYBLKREQ(data),
+        Message_oneof_content::VerifyBlockResp(data) => MsgClass::VERIFYBLKRESP(data),
+        Message_oneof_content::ExecutedResult(data) => MsgClass::EXECUTED(data),
     };
-
-    (msg.get_cmd_id(), msg.get_origin(), msg_class)
+    (cmd_id, origin, msg_class)
 }
 
 impl blockchain::Transaction {

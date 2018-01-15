@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2018 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -18,7 +18,6 @@
 use super::*;
 use blockchain::{RichStatus, Status};
 use communication;
-use protobuf::Message;
 use submodules;
 use topics;
 
@@ -28,7 +27,7 @@ impl Into<communication::Message> for Request {
             submodules::JSON_RPC,
             topics::REQUEST,
             communication::MsgType::REQUEST,
-            self.write_to_bytes().unwrap(),
+            MsgClass::REQUEST(self),
         );
         msg
     }
@@ -52,7 +51,7 @@ impl Into<communication::Message> for Response {
             submodules::CHAIN,
             topics::RESPONSE,
             communication::MsgType::RESPONSE,
-            self.write_to_bytes().unwrap(),
+            MsgClass::RESPONSE(self),
         );
         msg
     }

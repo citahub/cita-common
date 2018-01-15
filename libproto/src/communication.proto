@@ -1,5 +1,12 @@
 syntax = "proto3";
 
+import "request.proto";
+import "response.proto";
+import "sync.proto";
+import "blockchain.proto";
+import "auth.proto";
+import "executer.proto";
+
 enum MsgType {
     REQUEST = 0;
     HEADER = 1;
@@ -32,5 +39,33 @@ message Message {
     MsgType type = 2;
     uint32 origin = 3;
     OperateType operate = 4;
-    bytes content = 5;
+
+    oneof content {
+
+        bytes RawBytes = 5;
+
+        Request Request = 6;
+        Response Response = 7;
+
+        SyncRequest SyncRequest = 8;
+        SyncResponse SyncResponse = 9;
+
+        Status Status = 10;
+        RichStatus RichStatus = 11;
+
+        Block Block = 12;
+        BlockWithProof BlockWithProof = 13;
+        BlockHeader BlockHeader = 14;
+        BlockTxs BlockTxs = 15;
+
+        BlockTxHashes BlockTxHashes = 16;
+        BlockTxHashesReq BlockTxHashesReq = 17;
+
+        VerifyTxReq VerifyTxReq = 18;
+        VerifyTxResp VerifyTxResp = 19;
+        VerifyBlockReq VerifyBlockReq = 20;
+        VerifyBlockResp VerifyBlockResp = 21;
+
+        ExecutedResult ExecutedResult = 22;
+    }
 }

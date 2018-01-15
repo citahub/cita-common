@@ -150,7 +150,7 @@ pub fn validate_compressed_buffer(input: &[u8]) -> bool {
 }
 
 const CITA_COMPRESS_SIZE: usize = 40 * 1024;
-pub fn cita_compresse(input: Vec<u8>) -> Vec<u8> {
+pub fn cita_compress(input: Vec<u8>) -> Vec<u8> {
     if input.len() > CITA_COMPRESS_SIZE {
         compress(&input)
     } else {
