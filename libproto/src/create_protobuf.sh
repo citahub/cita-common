@@ -1,19 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 find . -name "*.proto" | while read protofile; do
     protoc ${protofile} --rust_out .
 done
 
-case "$OSTYPE" in
-    darwin*)
-        sed -ig 's/    data: ::std::option::Option<Response_oneof_data>,/    pub data: ::std::option::Option<Response_oneof_data>,/g' response.rs
-        sed -ig 's/    req: ::std::option::Option<Request_oneof_req>,/    pub req: ::std::option::Option<Request_oneof_req>,/g' request.rs
-        ;;
-    *)
-        sed -i 's/    data: ::std::option::Option<Response_oneof_data>,/    pub data: ::std::option::Option<Response_oneof_data>,/g' response.rs
-        sed -i 's/    req: ::std::option::Option<Request_oneof_req>,/    pub req: ::std::option::Option<Request_oneof_req>,/g' request.rs
-        ;;
-esac
+function add_pub_to_oneof_in_generated_code () {
+    local update_file="$1"
+    local dataname="$2"
+    local datatype="$3"
+    local update_part="${dataname}: ::std::option::Option<${datatype}_oneof_${dataname}>,"
+    local sed_opts=
+    case "$OSTYPE" in
+        darwin*)
+            sed_opts="-g"
+            ;;
+        *)
+            sed_opts=
+            ;;
+    esac
+    sed -i ${sed_opts} "s/\(\s\)\(${update_part}\)/\1pub \2/g" "${update_file}"
+}
+
+add_pub_to_oneof_in_generated_code response.rs      data    Response
+add_pub_to_oneof_in_generated_code request.rs       req     Request
+add_pub_to_oneof_in_generated_code communication.rs content Message
 
 for i in `find . -name "*.rs"`
 do
