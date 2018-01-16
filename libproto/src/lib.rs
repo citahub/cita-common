@@ -205,10 +205,9 @@ pub mod factory {
     use super::*;
     pub const ZERO_ORIGIN: u32 = 99999;
 
-    pub fn create_msg(sub: u32, top: u16, msg_type: MsgType, msg_class: MsgClass) -> communication::Message {
+    pub fn create_msg(sub: u32, top: u16, msg_class: MsgClass) -> communication::Message {
         let mut msg = communication::Message::new();
         msg.set_cmd_id(cmd_id(sub, top));
-        msg.set_field_type(msg_type);
         msg.set_operate(communication::OperateType::BROADCAST);
         msg.set_origin(ZERO_ORIGIN);
         match msg_class {
@@ -238,12 +237,11 @@ pub mod factory {
     pub fn create_msg_ex(
         sub: u32,
         top: u16,
-        msg_type: MsgType,
         operate: communication::OperateType,
         origin: u32,
         msg_class: MsgClass,
     ) -> communication::Message {
-        let mut msg = factory::create_msg(sub, top, msg_type, msg_class);
+        let mut msg = factory::create_msg(sub, top, msg_class);
         msg.set_origin(origin);
         msg.set_operate(operate);
         msg
