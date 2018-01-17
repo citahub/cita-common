@@ -16,12 +16,12 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: 'cargo generate-lockfile'      
+      - run: 'cargo generate-lockfile'
       - restore_cache:
           key: build-cache-{{ checksum "Cargo.lock" }}
       - run:
           name: build
-          command: '.circleci/loop_crates_to_run build'
+          command: '.ci-scripts/loop_crates_to_run build'
       - save_cache:
           key: build-cache-{{ checksum "Cargo.lock" }}
           paths:
@@ -31,12 +31,12 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: 'cargo generate-lockfile' 
+      - run: 'cargo generate-lockfile'
       - restore_cache:
           key: test-cache-{{ checksum "Cargo.lock" }}
       - run:
           name: test
-          command: '.circleci/loop_crates_to_run test'
+          command: '.ci-scripts/loop_crates_to_run test'
       - save_cache:
           key: test-cache-{{ checksum "Cargo.lock" }}
           paths:

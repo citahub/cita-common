@@ -1,0 +1,20 @@
+language: generic
+sudo: required
+cache:
+  timeout: 600
+  directories:
+  - $HOME/.cargo
+  - $TRAVIS_BUILD_DIR/target
+services:
+  - docker
+jobs:
+  include:
+    - stage: Build
+      script:
+        - docker pull cita/cita-build:latest
+        - bash '.ci-scripts/format'
+        - bash '.ci-scripts/build'
+        - bash '.ci-scripts/test'
+before_cache:
+    - sudo chown -R travis:travis $HOME/.cargo
+    - sudo chown -R travis:travis $TRAVIS_BUILD_DIR/target
