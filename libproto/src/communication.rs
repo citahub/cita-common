@@ -73,7 +73,7 @@ pub enum Message_oneof_content {
     VerifyTxResp(super::auth::VerifyTxResp),
     VerifyBlockReq(super::auth::VerifyBlockReq),
     VerifyBlockResp(super::auth::VerifyBlockResp),
-    ExecutedResult(super::executer::ExecutedResult),
+    ExecutedResult(super::executor::ExecutedResult),
 }
 
 impl Message {
@@ -1007,15 +1007,15 @@ impl Message {
     }
 
     // Param is passed by value, moved
-    pub fn set_ExecutedResult(&mut self, v: super::executer::ExecutedResult) {
+    pub fn set_ExecutedResult(&mut self, v: super::executor::ExecutedResult) {
         self.content = ::std::option::Option::Some(Message_oneof_content::ExecutedResult(v))
     }
 
     // Mutable pointer to the field.
-    pub fn mut_ExecutedResult(&mut self) -> &mut super::executer::ExecutedResult {
+    pub fn mut_ExecutedResult(&mut self) -> &mut super::executor::ExecutedResult {
         if let ::std::option::Option::Some(Message_oneof_content::ExecutedResult(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::ExecutedResult(super::executer::ExecutedResult::new()));
+            self.content = ::std::option::Option::Some(Message_oneof_content::ExecutedResult(super::executor::ExecutedResult::new()));
         }
         match self.content {
             ::std::option::Option::Some(Message_oneof_content::ExecutedResult(ref mut v)) => v,
@@ -1024,21 +1024,21 @@ impl Message {
     }
 
     // Take field
-    pub fn take_ExecutedResult(&mut self) -> super::executer::ExecutedResult {
+    pub fn take_ExecutedResult(&mut self) -> super::executor::ExecutedResult {
         if self.has_ExecutedResult() {
             match self.content.take() {
                 ::std::option::Option::Some(Message_oneof_content::ExecutedResult(v)) => v,
                 _ => panic!(),
             }
         } else {
-            super::executer::ExecutedResult::new()
+            super::executor::ExecutedResult::new()
         }
     }
 
-    pub fn get_ExecutedResult(&self) -> &super::executer::ExecutedResult {
+    pub fn get_ExecutedResult(&self) -> &super::executor::ExecutedResult {
         match self.content {
             ::std::option::Option::Some(Message_oneof_content::ExecutedResult(ref v)) => v,
-            _ => super::executer::ExecutedResult::default_instance(),
+            _ => super::executor::ExecutedResult::default_instance(),
         }
     }
 }
@@ -1613,7 +1613,7 @@ impl ::protobuf::MessageStatic for Message {
                     Message::has_VerifyBlockResp,
                     Message::get_VerifyBlockResp,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::executer::ExecutedResult>(
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::executor::ExecutedResult>(
                     "ExecutedResult",
                     Message::has_ExecutedResult,
                     Message::get_ExecutedResult,
@@ -1727,7 +1727,7 @@ impl ::protobuf::reflect::ProtobufValue for OperateType {
 
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
-    sync.proto\x1a\x10blockchain.proto\x1a\nauth.proto\x1a\x0eexecuter.proto\
+    sync.proto\x1a\x10blockchain.proto\x1a\nauth.proto\x1a\x0eexecutor.proto\
     \"\xdb\x07\n\x07Message\x12\x15\n\x06cmd_id\x18\x01\x20\x01(\rR\x05cmdId\
     \x12\x16\n\x06origin\x18\x02\x20\x01(\rR\x06origin\x12&\n\x07operate\x18\
     \x03\x20\x01(\x0e2\x0c.OperateTypeR\x07operate\x12\x1c\n\x08RawBytes\x18\

@@ -2944,7 +2944,7 @@ impl ::protobuf::reflect::ProtobufValue for ReceiptError {
 }
 
 static file_descriptor_proto_data: &'static [u8] = b"\
-    \n\x0eexecuter.proto\x1a\x10blockchain.proto\"\xa8\x02\n\x0eExecutedHead\
+    \n\x0eexecutor.proto\x1a\x10blockchain.proto\"\xa8\x02\n\x0eExecutedHead\
     er\x12\x1a\n\x08prevhash\x18\x01\x20\x01(\x0cR\x08prevhash\x12\x1c\n\tti\
     mestamp\x18\x02\x20\x01(\x04R\ttimestamp\x12\x16\n\x06height\x18\x03\x20\
     \x01(\x04R\x06height\x12\x1d\n\nstate_root\x18\x04\x20\x01(\x0cR\tstateR\
