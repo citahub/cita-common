@@ -5,7 +5,7 @@ import "response.proto";
 import "sync.proto";
 import "blockchain.proto";
 import "auth.proto";
-import "executer.proto";
+import "executor.proto";
 
 enum OperateType {
     BROADCAST = 0;
