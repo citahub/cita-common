@@ -33,14 +33,14 @@ pub mod auth;
 pub mod response;
 pub mod sync;
 pub mod consensus;
-pub mod executer;
+pub mod executor;
 
 pub use auth::*;
 use blockchain::*;
 use communication::*;
 pub use consensus::*;
 use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
-pub use executer::*;
+pub use executor::*;
 use protobuf::{Message, RepeatedField};
 use protobuf::core::parse_from_bytes;
 pub use request::*;
@@ -80,7 +80,7 @@ pub mod submodules {
     pub const CONSENSUS: u32 = 4;
     pub const CONSENSUS_CMD: u32 = 5;
     pub const AUTH: u32 = 6;
-    pub const EXECUTER: u32 = 7;
+    pub const EXECUTOR: u32 = 7;
 }
 
 // TODO: 这里要不要修改下，使topics和MsgClass对应起来
@@ -141,7 +141,7 @@ pub fn key_to_id(key: &str) -> u32 {
     } else if key.starts_with("auth") {
         submodules::AUTH
     } else if key.starts_with("executor") {
-        submodules::EXECUTER
+        submodules::EXECUTOR
     } else {
         0
     }
