@@ -127,43 +127,6 @@ pub enum MsgClass {
     EXECUTED(ExecutedResult),
 }
 
-pub fn topic_to_string(top: u16) -> &'static str {
-    match top {
-        topics::DEFAULT => "default",
-        topics::REQUEST => "request",
-        topics::NEW_BLK => "new_blk",
-        topics::NEW_STATUS => "new_status",
-        topics::SYNC_BLK => "sync_blk",
-        topics::RESPONSE => "response",
-        topics::CONSENSUS_MSG => "consensus_msg",
-        topics::NEW_PROPOSAL => "new_proposal",
-        topics::VERIFY_TX_REQ => "verify_tx_req",
-        topics::VERIFY_TX_RESP => "verify_tx_resp",
-        topics::VERIFY_BLK_REQ => "verify_blk_req",
-        topics::VERIFY_BLK_RESP => "verify_blk_resp",
-        topics::BLOCK_TXHASHES => "block_txhashes",
-        topics::BLOCK_TXHASHES_REQ => "block_txhashes_req",
-        topics::NEW_PROOF_BLOCK => "new_proof_blk",
-        topics::BLOCK_TXS => "block_txs",
-        topics::RICH_STATUS => "rich_status",
-        topics::EXECUTED_RESULT => "executed_result",
-        _ => "",
-    }
-}
-
-pub fn id_to_key(id: u32) -> &'static str {
-    match id {
-        submodules::JSON_RPC => "json_rpc",
-        submodules::NET => "net",
-        submodules::CHAIN => "chain",
-        submodules::CONSENSUS => "consensus",
-        submodules::CONSENSUS_CMD => "consensus_cmd",
-        submodules::AUTH => "auth",
-        submodules::EXECUTER => "executer",
-        _ => "",
-    }
-}
-
 pub fn key_to_id(key: &str) -> u32 {
     if key.starts_with("jsonrpc") {
         submodules::JSON_RPC
@@ -184,19 +147,6 @@ pub fn key_to_id(key: &str) -> u32 {
     }
 }
 
-pub fn de_cmd_id(cmd_id: u32) -> (u32, u16) {
-    let mut submodule = cmd_id >> 16;
-    let sub = submodule;
-    submodule = submodule << 16;
-    let topic = (cmd_id - submodule) as u16;
-    (sub, topic)
-}
-
-pub fn display_cmd(cmd_id: u32) -> (&'static str, &'static str) {
-    let cd = de_cmd_id(cmd_id);
-    (id_to_key(cd.0), topic_to_string(cd.1))
-}
-
 pub fn cmd_id(submodule: u32, topic: u16) -> u32 {
     (submodule << 16) + topic as u32
 }
@@ -205,10 +155,9 @@ pub mod factory {
     use super::*;
     pub const ZERO_ORIGIN: u32 = 99999;
 
-    pub fn create_msg(sub: u32, top: u16, msg_type: MsgType, msg_class: MsgClass) -> communication::Message {
+    pub fn create_msg(sub: u32, top: u16, msg_class: MsgClass) -> communication::Message {
         let mut msg = communication::Message::new();
         msg.set_cmd_id(cmd_id(sub, top));
-        msg.set_field_type(msg_type);
         msg.set_operate(communication::OperateType::BROADCAST);
         msg.set_origin(ZERO_ORIGIN);
         match msg_class {
@@ -238,12 +187,11 @@ pub mod factory {
     pub fn create_msg_ex(
         sub: u32,
         top: u16,
-        msg_type: MsgType,
         operate: communication::OperateType,
         origin: u32,
         msg_class: MsgClass,
     ) -> communication::Message {
-        let mut msg = factory::create_msg(sub, top, msg_type, msg_class);
+        let mut msg = factory::create_msg(sub, top, msg_class);
         msg.set_origin(origin);
         msg.set_operate(operate);
         msg

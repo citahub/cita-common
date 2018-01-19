@@ -26,7 +26,6 @@ impl Into<communication::Message> for Request {
         let msg = factory::create_msg(
             submodules::JSON_RPC,
             topics::REQUEST,
-            communication::MsgType::REQUEST,
             MsgClass::REQUEST(self),
         );
         msg
@@ -38,7 +37,6 @@ impl Into<communication::Message> for Request {
 //         let msg = factory::create_msg(
 //             submodules::JSON_RPC,
 //             topics::NEW_TX,
-//             communication::MsgType::TX,
 //             self.write_to_bytes().unwrap(),
 //         );
 //         msg
@@ -50,7 +48,6 @@ impl Into<communication::Message> for Response {
         let msg = factory::create_msg(
             submodules::CHAIN,
             topics::RESPONSE,
-            communication::MsgType::RESPONSE,
             MsgClass::RESPONSE(self),
         );
         msg

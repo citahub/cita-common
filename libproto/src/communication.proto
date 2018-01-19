@@ -7,27 +7,6 @@ import "blockchain.proto";
 import "auth.proto";
 import "executer.proto";
 
-enum MsgType {
-    REQUEST = 0;
-    HEADER = 1;
-    BLOCK = 2;
-    STATUS = 3;
-    MSG = 4;
-    RESPONSE = 5;
-    VERIFY_TX_REQ = 6;
-    VERIFY_TX_RESP = 7;
-    VERIFY_BLK_REQ = 8;
-    VERIFY_BLK_RESP = 9;
-    BLOCK_TXHASHES = 10;
-    BLOCK_TXHASHES_REQ = 11;
-    BLOCK_WITH_PROOF = 12;
-    BLOCK_TXS = 13;
-    RICH_STATUS = 14;
-    SYNC_REQ = 15;
-    SYNC_RES = 16;
-    EXECUTED_RESULT = 17;
-}
-
 enum OperateType {
     BROADCAST = 0;
     SINGLE = 1;
@@ -36,36 +15,35 @@ enum OperateType {
 
 message Message {
     uint32 cmd_id = 1;
-    MsgType type = 2;
-    uint32 origin = 3;
-    OperateType operate = 4;
+    uint32 origin = 2;
+    OperateType operate = 3;
 
     oneof content {
 
-        bytes RawBytes = 5;
+        bytes RawBytes = 4;
 
-        Request Request = 6;
-        Response Response = 7;
+        Request Request = 5;
+        Response Response = 6;
 
-        SyncRequest SyncRequest = 8;
-        SyncResponse SyncResponse = 9;
+        SyncRequest SyncRequest = 7;
+        SyncResponse SyncResponse = 8;
 
-        Status Status = 10;
-        RichStatus RichStatus = 11;
+        Status Status = 9;
+        RichStatus RichStatus = 10;
 
-        Block Block = 12;
-        BlockWithProof BlockWithProof = 13;
-        BlockHeader BlockHeader = 14;
-        BlockTxs BlockTxs = 15;
+        Block Block = 11;
+        BlockWithProof BlockWithProof = 12;
+        BlockHeader BlockHeader = 13;
+        BlockTxs BlockTxs = 14;
 
-        BlockTxHashes BlockTxHashes = 16;
-        BlockTxHashesReq BlockTxHashesReq = 17;
+        BlockTxHashes BlockTxHashes = 15;
+        BlockTxHashesReq BlockTxHashesReq = 16;
 
-        VerifyTxReq VerifyTxReq = 18;
-        VerifyTxResp VerifyTxResp = 19;
-        VerifyBlockReq VerifyBlockReq = 20;
-        VerifyBlockResp VerifyBlockResp = 21;
+        VerifyTxReq VerifyTxReq = 17;
+        VerifyTxResp VerifyTxResp = 18;
+        VerifyBlockReq VerifyBlockReq = 19;
+        VerifyBlockResp VerifyBlockResp = 20;
 
-        ExecutedResult ExecutedResult = 22;
+        ExecutedResult ExecutedResult = 21;
     }
 }
