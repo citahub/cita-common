@@ -48,7 +48,7 @@ pub use self::auth::{Ret, BlockTxHashes, BlockTxHashesReq, VerifyBlockReq, Verif
 pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, Proof, RichStatus, SignedTransaction, Status, Transaction, UnverifiedTransaction};
 pub use self::communication::{Message_oneof_content, OperateType, Message};
 pub use self::consensus::{Proposal, SignedProposal, Vote};
-pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, StateRoot, TransAddr};
+pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, StateRoot};
 pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request};
 pub use self::response::{Response_oneof_data, FullTransaction, Response};
 pub use self::sync::{SyncRequest, SyncResponse};
