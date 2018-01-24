@@ -331,7 +331,6 @@ macro_rules! loop_macro_for_structs {
             ReceiptErrorWithOption,
             ReceiptWithOption,
             StateRoot,
-            TransAddr,
             BatchRequest,
             Call,
             Request,
