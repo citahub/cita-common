@@ -20,11 +20,10 @@ extern crate libproto;
 extern crate util;
 
 mod error;
-mod instrument;
 
 pub use error::*;
-pub use instrument::*;
 use libproto::Request;
+pub use util::instrument::*;
 
 use libproto::blockchain::{Block, RichStatus};
 use std::sync::mpsc::Sender;

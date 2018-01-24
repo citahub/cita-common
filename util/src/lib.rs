@@ -63,6 +63,7 @@ pub mod snappy;
 pub mod cache;
 pub mod crypto;
 pub mod datapath;
+pub mod instrument;
 #[macro_use]
 pub mod init;
 
@@ -76,6 +77,7 @@ pub use hashable::*;
 pub use hashdb::*;
 pub use heapsize::HeapSizeOf;
 pub use init::*;
+pub use instrument::*;
 pub use itertools::Itertools;
 pub use journaldb::JournalDB;
 pub use kvdb::*;
