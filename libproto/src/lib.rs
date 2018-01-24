@@ -296,10 +296,10 @@ macro_rules! impl_convert_for_struct {
     };
 }
 
-// grep "^pub struct .* {$" protos/*.rs | sort | awk '{ print "            "$3"," }' | uniq
 macro_rules! loop_macro_for_structs {
     ($macro:ident) => {
         $macro!(
+            // Generate ALL-PROTOS automatically begin:
             BlockTxHashes,
             BlockTxHashesReq,
             VerifyBlockReq,
@@ -338,6 +338,7 @@ macro_rules! loop_macro_for_structs {
             Response,
             SyncRequest,
             SyncResponse,
+            // Generate ALL-PROTOS automatically end.
         );
     }
 }

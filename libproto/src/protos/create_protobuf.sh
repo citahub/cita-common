@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+rootdir=$(readlink -f "$(dirname $0)")
+currdir=$(pwd)
+
 function remove_all_rs () {
     find . -name "*.rs" -exec rm -v {} \;
 }
@@ -84,14 +87,30 @@ function gen_modrs_for_protos () {
     done
 }
 
+function generate_impls () {
+    local indentation="            "
+    local replace_begin="${indentation}\\/\\/ Generate ALL-PROTOS automatically begin:"
+    local replace_end="${indentation}\\/\\/ Generate ALL-PROTOS automatically end."
+    local rsfile="../lib.rs"
+    sed -i "/^${replace_begin}$/,/^${replace_end}$/{//!d}" "${rsfile}"
+    grep "^pub struct .* {$" *.rs | sort \
+            | awk '{ print $3 }' | uniq \
+            | while read struct; do
+        sed -i -e "/^${replace_end}$/i\\${indentation}${struct}," "${rsfile}"
+    done
+}
+
 function main () {
+    cd "${rootdir}"
     remove_all_rs
     gen_rs_for_protos
     add_pub_to_oneof_in_generated_code response.rs      data    Response
     add_pub_to_oneof_in_generated_code request.rs       req     Request
     add_pub_to_oneof_in_generated_code communication.rs content Message
+    generate_impls
     gen_modrs_for_protos
     add_license
+    cd "${currdir}"
 }
 
 main
