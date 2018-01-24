@@ -55,14 +55,8 @@ message ReceiptWithOption {
     Receipt receipt = 1;
 }
 
-message TransAddr {
-    bytes block_hash = 1;
-    uint64 index = 2;
-}
-
 message ExecutedInfo {
     ExecutedHeader header = 1;
-    map<string, TransAddr> transactions = 2;
     repeated ReceiptWithOption receipts = 3;
 }
 
