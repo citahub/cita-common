@@ -49,6 +49,7 @@ message Receipt {
     bytes log_bloom = 3;
     repeated LogEntry logs = 4;
     ReceiptErrorWithOption error = 5;
+    uint64 account_nonce = 6;
 }
 
 message ReceiptWithOption {
