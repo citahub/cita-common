@@ -28,16 +28,7 @@ extern crate serde_derive;
 extern crate util;
 
 pub mod protos;
-
 pub use protos::*;
-pub use protos::auth;
-pub use protos::blockchain;
-pub use protos::communication;
-pub use protos::consensus;
-pub use protos::executor;
-pub use protos::request;
-pub use protos::response;
-pub use protos::sync;
 
 use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
 use protobuf::{parse_from_bytes, Message as MessageTrait, RepeatedField};
@@ -551,16 +542,17 @@ impl BlockBody {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn cmd_id_works() {
+        use super::{cmd_id, submodules, topics};
         assert_eq!(cmd_id(submodules::JSON_RPC, topics::REQUEST), 0x10001);
         assert_eq!(cmd_id(submodules::CHAIN, topics::RESPONSE), 0x30005);
     }
 
     #[test]
     fn create_tx() {
+        use super::{CreateKey, KeyPair, Transaction};
         let keypair = KeyPair::gen_keypair();
         let pv = keypair.privkey();
 
@@ -577,5 +569,60 @@ mod tests {
             signed_tx.crypt_hash(),
             signed_tx.get_transaction_with_sig().crypt_hash()
         );
+    }
+
+    #[test]
+    fn class_funcs_for_message_works() {
+        use super::{submodules, topics, Message, MsgClass, Request, Response};
+        let req_origin = Request::new();
+        let resp_origin = Response::new();
+        let mut msg = Message::init_default(
+            submodules::CONSENSUS,
+            topics::NEW_PROOF_BLOCK,
+            MsgClass::REQUEST(req_origin),
+        );
+
+        let req_clone = msg.get_content();
+        assert!(msg.has_content());
+        assert!(if let MsgClass::REQUEST(_) = req_clone {
+            true
+        } else {
+            false
+        });
+
+        let req_take = msg.take_content();
+        assert!(!msg.has_content());
+        assert!(if let MsgClass::REQUEST(_) = req_take {
+            true
+        } else {
+            false
+        });
+
+        msg.set_content(MsgClass::RESPONSE(resp_origin));
+        assert!(msg.has_content());
+
+        let resp_clone = msg.get_content();
+        assert!(msg.has_content());
+        assert!(if let MsgClass::RESPONSE(_) = resp_clone {
+            true
+        } else {
+            false
+        });
+
+        msg.clear_content();
+        assert!(!msg.has_content());
+    }
+
+    #[test]
+    fn traits_for_protos_works() {
+        use super::blockchain;
+        use std::convert::{TryFrom, TryInto};
+        let height: u64 = 13579;
+        let mut status = blockchain::Status::new();
+        status.set_height(height);
+        let status_bytes: Vec<u8> = status.try_into().unwrap();
+        let status_new = blockchain::Status::try_from(&status_bytes).unwrap();
+        let height_new = status_new.get_height();
+        assert_eq!(height, height_new);
     }
 }
