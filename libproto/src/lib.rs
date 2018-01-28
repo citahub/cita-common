@@ -32,8 +32,9 @@ pub use protos::*;
 
 use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
 use protobuf::{parse_from_bytes, Message as MessageTrait, RepeatedField};
-use rlp::*;
+use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use rustc_serialize::hex::ToHex;
+use std::fmt;
 use std::ops::Deref;
 use std::result::Result::Err;
 use util::{merklehash, snappy, H256, Hashable};
@@ -59,36 +60,55 @@ impl TxResponse {
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct State(pub Vec<Vec<u8>>);
 
-pub mod submodules {
-    pub const JSON_RPC: u32 = 1;
-    pub const NET: u32 = 2;
-    pub const CHAIN: u32 = 3;
-    pub const CONSENSUS: u32 = 4;
-    pub const CONSENSUS_CMD: u32 = 5;
-    pub const AUTH: u32 = 6;
-    pub const EXECUTOR: u32 = 7;
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SubModules {
+    Jsonrpc,
+    Net,
+    Chain,
+    Consensus,
+    Auth,
+    Executor,
+    Unknown,
 }
 
-// TODO: 这里要不要修改下，使topics和MsgClass对应起来
-pub mod topics {
-    pub const DEFAULT: u16 = 0;
-    pub const REQUEST: u16 = 1;
-    pub const NEW_BLK: u16 = 2;
-    pub const NEW_STATUS: u16 = 3;
-    pub const SYNC_BLK: u16 = 4;
-    pub const RESPONSE: u16 = 5;
-    pub const CONSENSUS_MSG: u16 = 6;
-    pub const NEW_PROPOSAL: u16 = 7;
-    pub const VERIFY_TX_REQ: u16 = 8;
-    pub const VERIFY_TX_RESP: u16 = 9;
-    pub const VERIFY_BLK_REQ: u16 = 10;
-    pub const VERIFY_BLK_RESP: u16 = 11;
-    pub const BLOCK_TXHASHES: u16 = 12;
-    pub const BLOCK_TXHASHES_REQ: u16 = 13;
-    pub const NEW_PROOF_BLOCK: u16 = 14;
-    pub const BLOCK_TXS: u16 = 15;
-    pub const RICH_STATUS: u16 = 16;
-    pub const EXECUTED_RESULT: u16 = 17;
+pub const SUBMODULES_UNKNOWN: SubModules = SubModules::Unknown;
+
+impl fmt::Display for SubModules {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                // Please use the same rules to name the string
+                &SubModules::Jsonrpc => "jsonrpc",
+                &SubModules::Net => "net",
+                &SubModules::Chain => "chain",
+                &SubModules::Consensus => "consensus",
+                &SubModules::Auth => "auth",
+                &SubModules::Executor => "executor",
+                &SubModules::Unknown => "unknown",
+            }
+        )
+    }
+}
+
+impl<'a> From<&'a str> for SubModules {
+    fn from(s: &'a str) -> SubModules {
+        let parts: Vec<&str> = s.split('.').collect();
+        if parts.len() > 1 {
+            match parts[0] {
+                "jsonrpc" => SubModules::Jsonrpc,
+                "net" => SubModules::Net,
+                "chain" => SubModules::Chain,
+                "consensus" => SubModules::Consensus,
+                "auth" => SubModules::Auth,
+                "executor" => SubModules::Executor,
+                _ => SubModules::Unknown,
+            }
+        } else {
+            SUBMODULES_UNKNOWN
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -113,30 +133,6 @@ pub enum MsgClass {
     VerifyBlockResp(VerifyBlockResp),
     ExecutedResult(ExecutedResult),
     Empty,
-}
-
-pub fn key_to_id(key: &str) -> u32 {
-    if key.starts_with("jsonrpc") {
-        submodules::JSON_RPC
-    } else if key.starts_with("net") {
-        submodules::NET
-    } else if key.starts_with("chain") {
-        submodules::CHAIN
-    } else if key.starts_with("consensus_cmd") {
-        submodules::CONSENSUS_CMD
-    } else if key.starts_with("consensus") {
-        submodules::CONSENSUS
-    } else if key.starts_with("auth") {
-        submodules::AUTH
-    } else if key.starts_with("executor") {
-        submodules::EXECUTOR
-    } else {
-        0
-    }
-}
-
-pub fn cmd_id(submodule: u32, topic: u16) -> u32 {
-    (submodule << 16) + topic as u32
 }
 
 const ZERO_ORIGIN: u32 = 99999;
@@ -227,17 +223,12 @@ impl Message {
         self.content.take().into()
     }
 
-    pub fn init(sub: u32, top: u16, operate: OperateType, origin: u32, mc: MsgClass) -> Self {
+    pub fn init(operate: OperateType, origin: u32, mc: MsgClass) -> Self {
         let mut msg = Message::new();
-        msg.set_cmd_id(cmd_id(sub, top));
         msg.set_origin(origin);
         msg.set_operate(operate);
         msg.set_content(mc);
         msg
-    }
-
-    pub fn init_default(sub: u32, top: u16, mc: MsgClass) -> Self {
-        Message::init(sub, top, OperateType::BROADCAST, ZERO_ORIGIN, mc)
     }
 }
 
@@ -300,6 +291,12 @@ impl Into<MsgClass> for Vec<u8> {
     }
 }
 
+impl Into<Message> for Vec<u8> {
+    fn into(self) -> Message {
+        Message::init(OperateType::BROADCAST, ZERO_ORIGIN, self.into())
+    }
+}
+
 macro_rules! impl_convert_for_struct_in_msg {
     ($( $struct:ident, )+) => {
         $(
@@ -313,6 +310,12 @@ macro_rules! impl_convert_for_struct_in_msg {
                MsgClass::$struct(self)
            }
        }
+
+        impl Into<Message> for $struct {
+            fn into(self) -> Message {
+                Message::init(OperateType::BROADCAST, ZERO_ORIGIN, self.into())
+            }
+        }
     };
 }
 
@@ -392,18 +395,6 @@ macro_rules! loop_macro_for_structs_in_msg {
 
 loop_macro_for_structs!(impl_convert_for_struct);
 loop_macro_for_structs_in_msg!(impl_convert_for_struct_in_msg);
-
-impl Into<Message> for Request {
-    fn into(self) -> Message {
-        Message::init_default(submodules::JSON_RPC, topics::REQUEST, self.into())
-    }
-}
-
-impl Into<Message> for Response {
-    fn into(self) -> Message {
-        Message::init_default(submodules::CHAIN, topics::RESPONSE, self.into())
-    }
-}
 
 impl From<RichStatus> for Status {
     fn from(rich_status: RichStatus) -> Self {
@@ -593,13 +584,6 @@ impl BlockBody {
 mod tests {
 
     #[test]
-    fn cmd_id_works() {
-        use super::{cmd_id, submodules, topics};
-        assert_eq!(cmd_id(submodules::JSON_RPC, topics::REQUEST), 0x10001);
-        assert_eq!(cmd_id(submodules::CHAIN, topics::RESPONSE), 0x30005);
-    }
-
-    #[test]
     fn create_tx() {
         use super::{CreateKey, KeyPair, Transaction};
         let keypair = KeyPair::gen_keypair();
@@ -621,15 +605,20 @@ mod tests {
     }
 
     #[test]
+    fn sub_modules_works() {
+        use super::SubModules;
+        use std::convert::From;
+        let s = "jsonrpc.anything-is-ok";
+        let sm = SubModules::from(s);
+        assert_eq!(sm, SubModules::Jsonrpc);
+    }
+
+    #[test]
     fn class_funcs_for_message_works() {
-        use super::{submodules, topics, Message, MsgClass, Request, Response};
+        use super::{Message, MsgClass, Request, Response};
         let req_origin = Request::new();
         let resp_origin = Response::new();
-        let mut msg = Message::init_default(
-            submodules::CONSENSUS,
-            topics::NEW_PROOF_BLOCK,
-            req_origin.into(),
-        );
+        let mut msg: Message = req_origin.into();
 
         let req_clone = msg.get_content();
         assert!(msg.has_content());
