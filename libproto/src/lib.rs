@@ -93,26 +93,26 @@ pub mod topics {
 
 #[derive(Debug)]
 pub enum MsgClass {
-    EMPTY,
-    REQUEST(Request),
-    RESPONSE(Response),
-    HEADER(BlockHeader),
-    BLOCK(Block),
-    STATUS(Status),
-    SIGNEDPROPOSAL(SignedProposal),
-    VERIFYTXREQ(VerifyTxReq),
-    VERIFYTXRESP(VerifyTxResp),
-    VERIFYBLKREQ(VerifyBlockReq),
-    VERIFYBLKRESP(VerifyBlockResp),
-    BLOCKTXHASHES(BlockTxHashes),
-    BLOCKTXHASHESREQ(BlockTxHashesReq),
-    BLOCKWITHPROOF(BlockWithProof),
-    BLOCKTXS(BlockTxs),
-    MSG(Vec<u8>),
-    RICHSTATUS(RichStatus),
-    SYNCREQUEST(SyncRequest),
-    SYNCRESPONSE(SyncResponse),
-    EXECUTED(ExecutedResult),
+    RawBytes(Vec<u8>),
+    Request(Request),
+    Response(Response),
+    SyncRequest(SyncRequest),
+    SyncResponse(SyncResponse),
+    Status(Status),
+    RichStatus(RichStatus),
+    SignedProposal(SignedProposal),
+    Block(Block),
+    BlockWithProof(BlockWithProof),
+    BlockHeader(BlockHeader),
+    BlockTxs(BlockTxs),
+    BlockTxHashes(BlockTxHashes),
+    BlockTxHashesReq(BlockTxHashesReq),
+    VerifyTxReq(VerifyTxReq),
+    VerifyTxResp(VerifyTxResp),
+    VerifyBlockReq(VerifyBlockReq),
+    VerifyBlockResp(VerifyBlockResp),
+    ExecutedResult(ExecutedResult),
+    Empty,
 }
 
 pub fn key_to_id(key: &str) -> u32 {
@@ -147,26 +147,28 @@ impl From<Message_oneof_content> for MsgClass {
             Message_oneof_content::RawBytes(data) => {
                 let mut content = Vec::new();
                 content.extend_from_slice(&snappy::cita_decompress(data));
-                MsgClass::MSG(content)
+                content.into()
             }
-            Message_oneof_content::Request(data) => MsgClass::REQUEST(data),
-            Message_oneof_content::Response(data) => MsgClass::RESPONSE(data),
-            Message_oneof_content::SyncRequest(data) => MsgClass::SYNCREQUEST(data),
-            Message_oneof_content::SyncResponse(data) => MsgClass::SYNCRESPONSE(data),
-            Message_oneof_content::Status(data) => MsgClass::STATUS(data),
-            Message_oneof_content::RichStatus(data) => MsgClass::RICHSTATUS(data),
-            Message_oneof_content::SignedProposal(data) => MsgClass::SIGNEDPROPOSAL(data),
-            Message_oneof_content::Block(data) => MsgClass::BLOCK(data),
-            Message_oneof_content::BlockWithProof(data) => MsgClass::BLOCKWITHPROOF(data),
-            Message_oneof_content::BlockHeader(data) => MsgClass::HEADER(data),
-            Message_oneof_content::BlockTxs(data) => MsgClass::BLOCKTXS(data),
-            Message_oneof_content::BlockTxHashes(data) => MsgClass::BLOCKTXHASHES(data),
-            Message_oneof_content::BlockTxHashesReq(data) => MsgClass::BLOCKTXHASHESREQ(data),
-            Message_oneof_content::VerifyTxReq(data) => MsgClass::VERIFYTXREQ(data),
-            Message_oneof_content::VerifyTxResp(data) => MsgClass::VERIFYTXRESP(data),
-            Message_oneof_content::VerifyBlockReq(data) => MsgClass::VERIFYBLKREQ(data),
-            Message_oneof_content::VerifyBlockResp(data) => MsgClass::VERIFYBLKRESP(data),
-            Message_oneof_content::ExecutedResult(data) => MsgClass::EXECUTED(data),
+            // Generate MSG-PROTOS from_content automatically begin:
+            Message_oneof_content::Request(data) => data.into(),
+            Message_oneof_content::Response(data) => data.into(),
+            Message_oneof_content::SyncRequest(data) => data.into(),
+            Message_oneof_content::SyncResponse(data) => data.into(),
+            Message_oneof_content::Status(data) => data.into(),
+            Message_oneof_content::RichStatus(data) => data.into(),
+            Message_oneof_content::SignedProposal(data) => data.into(),
+            Message_oneof_content::Block(data) => data.into(),
+            Message_oneof_content::BlockWithProof(data) => data.into(),
+            Message_oneof_content::BlockHeader(data) => data.into(),
+            Message_oneof_content::BlockTxs(data) => data.into(),
+            Message_oneof_content::BlockTxHashes(data) => data.into(),
+            Message_oneof_content::BlockTxHashesReq(data) => data.into(),
+            Message_oneof_content::VerifyTxReq(data) => data.into(),
+            Message_oneof_content::VerifyTxResp(data) => data.into(),
+            Message_oneof_content::VerifyBlockReq(data) => data.into(),
+            Message_oneof_content::VerifyBlockResp(data) => data.into(),
+            Message_oneof_content::ExecutedResult(data) => data.into(),
+            // Generate MSG-PROTOS from_content automatically end.
         }
     }
 }
@@ -175,7 +177,7 @@ impl From<Option<Message_oneof_content>> for MsgClass {
     fn from(content: Option<Message_oneof_content>) -> Self {
         match content {
             Some(inner) => inner.into(),
-            None => MsgClass::EMPTY,
+            None => MsgClass::Empty,
         }
     }
 }
@@ -192,26 +194,28 @@ impl Message {
     // Param is passed by value, moved
     pub fn set_content(&mut self, v: MsgClass) {
         match v {
-            MsgClass::MSG(data) => self.set_RawBytes(snappy::cita_compress(data)),
-            MsgClass::REQUEST(data) => self.set_Request(data),
-            MsgClass::RESPONSE(data) => self.set_Response(data),
-            MsgClass::SYNCREQUEST(data) => self.set_SyncRequest(data),
-            MsgClass::SYNCRESPONSE(data) => self.set_SyncResponse(data),
-            MsgClass::STATUS(data) => self.set_Status(data),
-            MsgClass::RICHSTATUS(data) => self.set_RichStatus(data),
-            MsgClass::SIGNEDPROPOSAL(data) => self.set_SignedProposal(data),
-            MsgClass::BLOCK(data) => self.set_Block(data),
-            MsgClass::BLOCKWITHPROOF(data) => self.set_BlockWithProof(data),
-            MsgClass::HEADER(data) => self.set_BlockHeader(data),
-            MsgClass::BLOCKTXS(data) => self.set_BlockTxs(data),
-            MsgClass::BLOCKTXHASHES(data) => self.set_BlockTxHashes(data),
-            MsgClass::BLOCKTXHASHESREQ(data) => self.set_BlockTxHashesReq(data),
-            MsgClass::VERIFYTXREQ(data) => self.set_VerifyTxReq(data),
-            MsgClass::VERIFYTXRESP(data) => self.set_VerifyTxResp(data),
-            MsgClass::VERIFYBLKREQ(data) => self.set_VerifyBlockReq(data),
-            MsgClass::VERIFYBLKRESP(data) => self.set_VerifyBlockResp(data),
-            MsgClass::EXECUTED(data) => self.set_ExecutedResult(data),
-            MsgClass::EMPTY => self.clear_content(),
+            MsgClass::RawBytes(data) => self.set_RawBytes(snappy::cita_compress(data)),
+            // Generate MSG-PROTOS set_content automatically begin:
+            MsgClass::Request(data) => self.set_Request(data),
+            MsgClass::Response(data) => self.set_Response(data),
+            MsgClass::SyncRequest(data) => self.set_SyncRequest(data),
+            MsgClass::SyncResponse(data) => self.set_SyncResponse(data),
+            MsgClass::Status(data) => self.set_Status(data),
+            MsgClass::RichStatus(data) => self.set_RichStatus(data),
+            MsgClass::SignedProposal(data) => self.set_SignedProposal(data),
+            MsgClass::Block(data) => self.set_Block(data),
+            MsgClass::BlockWithProof(data) => self.set_BlockWithProof(data),
+            MsgClass::BlockHeader(data) => self.set_BlockHeader(data),
+            MsgClass::BlockTxs(data) => self.set_BlockTxs(data),
+            MsgClass::BlockTxHashes(data) => self.set_BlockTxHashes(data),
+            MsgClass::BlockTxHashesReq(data) => self.set_BlockTxHashesReq(data),
+            MsgClass::VerifyTxReq(data) => self.set_VerifyTxReq(data),
+            MsgClass::VerifyTxResp(data) => self.set_VerifyTxResp(data),
+            MsgClass::VerifyBlockReq(data) => self.set_VerifyBlockReq(data),
+            MsgClass::VerifyBlockResp(data) => self.set_VerifyBlockResp(data),
+            MsgClass::ExecutedResult(data) => self.set_ExecutedResult(data),
+            // Generate MSG-PROTOS set_content automatically end.
+            MsgClass::Empty => self.clear_content(),
         };
     }
 
@@ -290,6 +294,28 @@ macro_rules! impl_convert_for_struct {
     };
 }
 
+impl Into<MsgClass> for Vec<u8> {
+    fn into(self) -> MsgClass {
+        MsgClass::RawBytes(self)
+    }
+}
+
+macro_rules! impl_convert_for_struct_in_msg {
+    ($( $struct:ident, )+) => {
+        $(
+            impl_convert_for_struct_in_msg!($struct);
+        )+
+    };
+    ($struct:ident) => {
+
+       impl Into<MsgClass> for $struct {
+           fn into(self) -> MsgClass {
+               MsgClass::$struct(self)
+           }
+       }
+    };
+}
+
 macro_rules! loop_macro_for_structs {
     ($macro:ident) => {
         $macro!(
@@ -337,25 +363,45 @@ macro_rules! loop_macro_for_structs {
     }
 }
 
+macro_rules! loop_macro_for_structs_in_msg {
+    ($macro:ident) => {
+        $macro!(
+            // Generate MSG-PROTOS automatically begin:
+            Request,
+            Response,
+            SyncRequest,
+            SyncResponse,
+            Status,
+            RichStatus,
+            SignedProposal,
+            Block,
+            BlockWithProof,
+            BlockHeader,
+            BlockTxs,
+            BlockTxHashes,
+            BlockTxHashesReq,
+            VerifyTxReq,
+            VerifyTxResp,
+            VerifyBlockReq,
+            VerifyBlockResp,
+            ExecutedResult,
+            // Generate MSG-PROTOS automatically end.
+        );
+    }
+}
+
 loop_macro_for_structs!(impl_convert_for_struct);
+loop_macro_for_structs_in_msg!(impl_convert_for_struct_in_msg);
 
 impl Into<Message> for Request {
     fn into(self) -> Message {
-        Message::init_default(
-            submodules::JSON_RPC,
-            topics::REQUEST,
-            MsgClass::REQUEST(self),
-        )
+        Message::init_default(submodules::JSON_RPC, topics::REQUEST, self.into())
     }
 }
 
 impl Into<Message> for Response {
     fn into(self) -> Message {
-        Message::init_default(
-            submodules::CHAIN,
-            topics::RESPONSE,
-            MsgClass::RESPONSE(self),
-        )
+        Message::init_default(submodules::CHAIN, topics::RESPONSE, self.into())
     }
 }
 
@@ -582,12 +628,12 @@ mod tests {
         let mut msg = Message::init_default(
             submodules::CONSENSUS,
             topics::NEW_PROOF_BLOCK,
-            MsgClass::REQUEST(req_origin),
+            req_origin.into(),
         );
 
         let req_clone = msg.get_content();
         assert!(msg.has_content());
-        assert!(if let MsgClass::REQUEST(_) = req_clone {
+        assert!(if let MsgClass::Request(_) = req_clone {
             true
         } else {
             false
@@ -595,18 +641,18 @@ mod tests {
 
         let req_take = msg.take_content();
         assert!(!msg.has_content());
-        assert!(if let MsgClass::REQUEST(_) = req_take {
+        assert!(if let MsgClass::Request(_) = req_take {
             true
         } else {
             false
         });
 
-        msg.set_content(MsgClass::RESPONSE(resp_origin));
+        msg.set_content(resp_origin.into());
         assert!(msg.has_content());
 
         let resp_clone = msg.get_content();
         assert!(msg.has_content());
-        assert!(if let MsgClass::RESPONSE(_) = resp_clone {
+        assert!(if let MsgClass::Response(_) = resp_clone {
             true
         } else {
             false
