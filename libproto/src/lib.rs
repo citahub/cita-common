@@ -60,7 +60,7 @@ impl TxResponse {
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct State(pub Vec<Vec<u8>>);
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum SubModules {
     Jsonrpc,
     Net,
