@@ -41,7 +41,6 @@ use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 #[derive(PartialEq,Clone,Default)]
 pub struct Message {
     // message fields
-    pub cmd_id: u32,
     pub origin: u32,
     pub operate: OperateType,
     // message oneof groups
@@ -63,6 +62,7 @@ pub enum Message_oneof_content {
     SyncResponse(super::sync::SyncResponse),
     Status(super::blockchain::Status),
     RichStatus(super::blockchain::RichStatus),
+    SignedProposal(super::consensus::SignedProposal),
     Block(super::blockchain::Block),
     BlockWithProof(super::blockchain::BlockWithProof),
     BlockHeader(super::blockchain::BlockHeader),
@@ -91,30 +91,7 @@ impl Message {
         }
     }
 
-    // uint32 cmd_id = 1;
-
-    pub fn clear_cmd_id(&mut self) {
-        self.cmd_id = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_cmd_id(&mut self, v: u32) {
-        self.cmd_id = v;
-    }
-
-    pub fn get_cmd_id(&self) -> u32 {
-        self.cmd_id
-    }
-
-    fn get_cmd_id_for_reflect(&self) -> &u32 {
-        &self.cmd_id
-    }
-
-    fn mut_cmd_id_for_reflect(&mut self) -> &mut u32 {
-        &mut self.cmd_id
-    }
-
-    // uint32 origin = 2;
+    // uint32 origin = 1;
 
     pub fn clear_origin(&mut self) {
         self.origin = 0;
@@ -137,7 +114,7 @@ impl Message {
         &mut self.origin
     }
 
-    // .OperateType operate = 3;
+    // .OperateType operate = 2;
 
     pub fn clear_operate(&mut self) {
         self.operate = OperateType::BROADCAST;
@@ -160,7 +137,7 @@ impl Message {
         &mut self.operate
     }
 
-    // bytes RawBytes = 4;
+    // bytes RawBytes = 3;
 
     pub fn clear_RawBytes(&mut self) {
         self.content = ::std::option::Option::None;
@@ -209,7 +186,7 @@ impl Message {
         }
     }
 
-    // .Request Request = 5;
+    // .Request Request = 4;
 
     pub fn clear_Request(&mut self) {
         self.content = ::std::option::Option::None;
@@ -258,7 +235,7 @@ impl Message {
         }
     }
 
-    // .Response Response = 6;
+    // .Response Response = 5;
 
     pub fn clear_Response(&mut self) {
         self.content = ::std::option::Option::None;
@@ -307,7 +284,7 @@ impl Message {
         }
     }
 
-    // .SyncRequest SyncRequest = 7;
+    // .SyncRequest SyncRequest = 6;
 
     pub fn clear_SyncRequest(&mut self) {
         self.content = ::std::option::Option::None;
@@ -356,7 +333,7 @@ impl Message {
         }
     }
 
-    // .SyncResponse SyncResponse = 8;
+    // .SyncResponse SyncResponse = 7;
 
     pub fn clear_SyncResponse(&mut self) {
         self.content = ::std::option::Option::None;
@@ -405,7 +382,7 @@ impl Message {
         }
     }
 
-    // .Status Status = 9;
+    // .Status Status = 8;
 
     pub fn clear_Status(&mut self) {
         self.content = ::std::option::Option::None;
@@ -454,7 +431,7 @@ impl Message {
         }
     }
 
-    // .RichStatus RichStatus = 10;
+    // .RichStatus RichStatus = 9;
 
     pub fn clear_RichStatus(&mut self) {
         self.content = ::std::option::Option::None;
@@ -500,6 +477,55 @@ impl Message {
         match self.content {
             ::std::option::Option::Some(Message_oneof_content::RichStatus(ref v)) => v,
             _ => super::blockchain::RichStatus::default_instance(),
+        }
+    }
+
+    // .SignedProposal SignedProposal = 10;
+
+    pub fn clear_SignedProposal(&mut self) {
+        self.content = ::std::option::Option::None;
+    }
+
+    pub fn has_SignedProposal(&self) -> bool {
+        match self.content {
+            ::std::option::Option::Some(Message_oneof_content::SignedProposal(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_SignedProposal(&mut self, v: super::consensus::SignedProposal) {
+        self.content = ::std::option::Option::Some(Message_oneof_content::SignedProposal(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_SignedProposal(&mut self) -> &mut super::consensus::SignedProposal {
+        if let ::std::option::Option::Some(Message_oneof_content::SignedProposal(_)) = self.content {
+        } else {
+            self.content = ::std::option::Option::Some(Message_oneof_content::SignedProposal(super::consensus::SignedProposal::new()));
+        }
+        match self.content {
+            ::std::option::Option::Some(Message_oneof_content::SignedProposal(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_SignedProposal(&mut self) -> super::consensus::SignedProposal {
+        if self.has_SignedProposal() {
+            match self.content.take() {
+                ::std::option::Option::Some(Message_oneof_content::SignedProposal(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            super::consensus::SignedProposal::new()
+        }
+    }
+
+    pub fn get_SignedProposal(&self) -> &super::consensus::SignedProposal {
+        match self.content {
+            ::std::option::Option::Some(Message_oneof_content::SignedProposal(ref v)) => v,
+            _ => super::consensus::SignedProposal::default_instance(),
         }
     }
 
@@ -1075,6 +1101,11 @@ impl ::protobuf::Message for Message {
                 return false;
             }
         }
+        if let Some(Message_oneof_content::SignedProposal(ref v)) = self.content {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
         if let Some(Message_oneof_content::Block(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
@@ -1142,63 +1173,62 @@ impl ::protobuf::Message for Message {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
-                    self.cmd_id = tmp;
-                },
-                2 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_uint32()?;
                     self.origin = tmp;
                 },
-                3 => {
+                2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.operate = tmp;
                 },
-                4 => {
+                3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::RawBytes(is.read_bytes()?));
                 },
-                5 => {
+                4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::Request(is.read_message()?));
                 },
-                6 => {
+                5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::Response(is.read_message()?));
                 },
-                7 => {
+                6 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::SyncRequest(is.read_message()?));
                 },
-                8 => {
+                7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::SyncResponse(is.read_message()?));
                 },
-                9 => {
+                8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::Status(is.read_message()?));
                 },
-                10 => {
+                9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(Message_oneof_content::RichStatus(is.read_message()?));
+                },
+                10 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.content = ::std::option::Option::Some(Message_oneof_content::SignedProposal(is.read_message()?));
                 },
                 11 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
@@ -1278,19 +1308,16 @@ impl ::protobuf::Message for Message {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        if self.cmd_id != 0 {
-            my_size += ::protobuf::rt::value_size(1, self.cmd_id, ::protobuf::wire_format::WireTypeVarint);
-        }
         if self.origin != 0 {
-            my_size += ::protobuf::rt::value_size(2, self.origin, ::protobuf::wire_format::WireTypeVarint);
+            my_size += ::protobuf::rt::value_size(1, self.origin, ::protobuf::wire_format::WireTypeVarint);
         }
         if self.operate != OperateType::BROADCAST {
-            my_size += ::protobuf::rt::enum_size(3, self.operate);
+            my_size += ::protobuf::rt::enum_size(2, self.operate);
         }
         if let ::std::option::Option::Some(ref v) = self.content {
             match v {
                 &Message_oneof_content::RawBytes(ref v) => {
-                    my_size += ::protobuf::rt::bytes_size(4, &v);
+                    my_size += ::protobuf::rt::bytes_size(3, &v);
                 },
                 &Message_oneof_content::Request(ref v) => {
                     let len = v.compute_size();
@@ -1313,6 +1340,10 @@ impl ::protobuf::Message for Message {
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
                 &Message_oneof_content::RichStatus(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &Message_oneof_content::SignedProposal(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -1368,46 +1399,48 @@ impl ::protobuf::Message for Message {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        if self.cmd_id != 0 {
-            os.write_uint32(1, self.cmd_id)?;
-        }
         if self.origin != 0 {
-            os.write_uint32(2, self.origin)?;
+            os.write_uint32(1, self.origin)?;
         }
         if self.operate != OperateType::BROADCAST {
-            os.write_enum(3, self.operate.value())?;
+            os.write_enum(2, self.operate.value())?;
         }
         if let ::std::option::Option::Some(ref v) = self.content {
             match v {
                 &Message_oneof_content::RawBytes(ref v) => {
-                    os.write_bytes(4, v)?;
+                    os.write_bytes(3, v)?;
                 },
                 &Message_oneof_content::Request(ref v) => {
-                    os.write_tag(5, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
                 &Message_oneof_content::Response(ref v) => {
-                    os.write_tag(6, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_tag(5, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
                 &Message_oneof_content::SyncRequest(ref v) => {
-                    os.write_tag(7, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_tag(6, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
                 &Message_oneof_content::SyncResponse(ref v) => {
-                    os.write_tag(8, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_tag(7, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
                 &Message_oneof_content::Status(ref v) => {
-                    os.write_tag(9, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_tag(8, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
                 &Message_oneof_content::RichStatus(ref v) => {
+                    os.write_tag(9, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &Message_oneof_content::SignedProposal(ref v) => {
                     os.write_tag(10, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
@@ -1514,11 +1547,6 @@ impl ::protobuf::MessageStatic for Message {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
-                    "cmd_id",
-                    Message::get_cmd_id_for_reflect,
-                    Message::mut_cmd_id_for_reflect,
-                ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "origin",
                     Message::get_origin_for_reflect,
                     Message::mut_origin_for_reflect,
@@ -1562,6 +1590,11 @@ impl ::protobuf::MessageStatic for Message {
                     "RichStatus",
                     Message::has_RichStatus,
                     Message::get_RichStatus,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::consensus::SignedProposal>(
+                    "SignedProposal",
+                    Message::has_SignedProposal,
+                    Message::get_SignedProposal,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::Block>(
                     "Block",
@@ -1630,7 +1663,6 @@ impl ::protobuf::MessageStatic for Message {
 
 impl ::protobuf::Clear for Message {
     fn clear(&mut self) {
-        self.clear_cmd_id();
         self.clear_origin();
         self.clear_operate();
         self.clear_RawBytes();
@@ -1640,6 +1672,7 @@ impl ::protobuf::Clear for Message {
         self.clear_SyncResponse();
         self.clear_Status();
         self.clear_RichStatus();
+        self.clear_SignedProposal();
         self.clear_Block();
         self.clear_BlockWithProof();
         self.clear_BlockHeader();
@@ -1727,101 +1760,101 @@ impl ::protobuf::reflect::ProtobufValue for OperateType {
 
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
-    sync.proto\x1a\x10blockchain.proto\x1a\nauth.proto\x1a\x0eexecutor.proto\
-    \"\xdb\x07\n\x07Message\x12\x15\n\x06cmd_id\x18\x01\x20\x01(\rR\x05cmdId\
-    \x12\x16\n\x06origin\x18\x02\x20\x01(\rR\x06origin\x12&\n\x07operate\x18\
-    \x03\x20\x01(\x0e2\x0c.OperateTypeR\x07operate\x12\x1c\n\x08RawBytes\x18\
-    \x04\x20\x01(\x0cH\0R\x08RawBytes\x12$\n\x07Request\x18\x05\x20\x01(\x0b\
-    2\x08.RequestH\0R\x07Request\x12'\n\x08Response\x18\x06\x20\x01(\x0b2\t.\
-    ResponseH\0R\x08Response\x120\n\x0bSyncRequest\x18\x07\x20\x01(\x0b2\x0c\
-    .SyncRequestH\0R\x0bSyncRequest\x123\n\x0cSyncResponse\x18\x08\x20\x01(\
-    \x0b2\r.SyncResponseH\0R\x0cSyncResponse\x12!\n\x06Status\x18\t\x20\x01(\
-    \x0b2\x07.StatusH\0R\x06Status\x12-\n\nRichStatus\x18\n\x20\x01(\x0b2\
-    \x0b.RichStatusH\0R\nRichStatus\x12\x1e\n\x05Block\x18\x0b\x20\x01(\x0b2\
-    \x06.BlockH\0R\x05Block\x129\n\x0eBlockWithProof\x18\x0c\x20\x01(\x0b2\
-    \x0f.BlockWithProofH\0R\x0eBlockWithProof\x120\n\x0bBlockHeader\x18\r\
-    \x20\x01(\x0b2\x0c.BlockHeaderH\0R\x0bBlockHeader\x12'\n\x08BlockTxs\x18\
-    \x0e\x20\x01(\x0b2\t.BlockTxsH\0R\x08BlockTxs\x126\n\rBlockTxHashes\x18\
-    \x0f\x20\x01(\x0b2\x0e.BlockTxHashesH\0R\rBlockTxHashes\x12?\n\x10BlockT\
-    xHashesReq\x18\x10\x20\x01(\x0b2\x11.BlockTxHashesReqH\0R\x10BlockTxHash\
-    esReq\x120\n\x0bVerifyTxReq\x18\x11\x20\x01(\x0b2\x0c.VerifyTxReqH\0R\
-    \x0bVerifyTxReq\x123\n\x0cVerifyTxResp\x18\x12\x20\x01(\x0b2\r.VerifyTxR\
-    espH\0R\x0cVerifyTxResp\x129\n\x0eVerifyBlockReq\x18\x13\x20\x01(\x0b2\
-    \x0f.VerifyBlockReqH\0R\x0eVerifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\
-    \x14\x20\x01(\x0b2\x10.VerifyBlockRespH\0R\x0fVerifyBlockResp\x129\n\x0e\
-    ExecutedResult\x18\x15\x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eExecutedR\
-    esultB\t\n\x07content*6\n\x0bOperateType\x12\r\n\tBROADCAST\x10\0\x12\n\
-    \n\x06SINGLE\x10\x01\x12\x0c\n\x08SUBTRACT\x10\x02J\xcb\x0b\n\x06\x12\
-    \x04\0\00\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\
-    \x02\x07\x16\n\t\n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\
-    \x03\x04\x07\x13\n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\
-    \x12\x03\x06\x07\x13\n\t\n\x02\x03\x05\x12\x03\x07\x07\x17\n\n\n\x02\x05\
-    \0\x12\x04\t\0\r\x01\n\n\n\x03\x05\0\x01\x12\x03\t\x05\x10\n\x0b\n\x04\
-    \x05\0\x02\0\x12\x03\n\x04\x12\n\x0c\n\x05\x05\0\x02\0\x01\x12\x03\n\x04\
-    \r\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\n\x10\x11\n\x0b\n\x04\x05\0\x02\
-    \x01\x12\x03\x0b\x04\x0f\n\x0c\n\x05\x05\0\x02\x01\x01\x12\x03\x0b\x04\n\
-    \n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x0b\r\x0e\n\x0b\n\x04\x05\0\x02\
-    \x02\x12\x03\x0c\x04\x11\n\x0c\n\x05\x05\0\x02\x02\x01\x12\x03\x0c\x04\
-    \x0c\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\x0c\x0f\x10\n\n\n\x02\x04\0\
-    \x12\x04\x0f\00\x01\n\n\n\x03\x04\0\x01\x12\x03\x0f\x08\x0f\n\x0b\n\x04\
-    \x04\0\x02\0\x12\x03\x10\x04\x16\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x10\
-    \x04\x0f\x11\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x10\x04\n\n\x0c\n\x05\
-    \x04\0\x02\0\x01\x12\x03\x10\x0b\x11\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\
-    \x10\x14\x15\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x11\x04\x16\n\r\n\x05\x04\
-    \0\x02\x01\x04\x12\x04\x11\x04\x10\x16\n\x0c\n\x05\x04\0\x02\x01\x05\x12\
-    \x03\x11\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x11\x0b\x11\n\x0c\n\
-    \x05\x04\0\x02\x01\x03\x12\x03\x11\x14\x15\n\x0b\n\x04\x04\0\x02\x02\x12\
-    \x03\x12\x04\x1c\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\x12\x04\x11\x16\n\
-    \x0c\n\x05\x04\0\x02\x02\x06\x12\x03\x12\x04\x0f\n\x0c\n\x05\x04\0\x02\
-    \x02\x01\x12\x03\x12\x10\x17\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x12\
-    \x1a\x1b\n\x0c\n\x04\x04\0\x08\0\x12\x04\x14\x04/\x05\n\x0c\n\x05\x04\0\
-    \x08\0\x01\x12\x03\x14\n\x11\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x16\x08\
-    \x1b\n\x0c\n\x05\x04\0\x02\x03\x05\x12\x03\x16\x08\r\n\x0c\n\x05\x04\0\
-    \x02\x03\x01\x12\x03\x16\x0e\x16\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\
-    \x16\x19\x1a\n\x0b\n\x04\x04\0\x02\x04\x12\x03\x18\x08\x1c\n\x0c\n\x05\
-    \x04\0\x02\x04\x06\x12\x03\x18\x08\x0f\n\x0c\n\x05\x04\0\x02\x04\x01\x12\
-    \x03\x18\x10\x17\n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x18\x1a\x1b\n\x0b\
-    \n\x04\x04\0\x02\x05\x12\x03\x19\x08\x1e\n\x0c\n\x05\x04\0\x02\x05\x06\
-    \x12\x03\x19\x08\x10\n\x0c\n\x05\x04\0\x02\x05\x01\x12\x03\x19\x11\x19\n\
-    \x0c\n\x05\x04\0\x02\x05\x03\x12\x03\x19\x1c\x1d\n\x0b\n\x04\x04\0\x02\
-    \x06\x12\x03\x1b\x08$\n\x0c\n\x05\x04\0\x02\x06\x06\x12\x03\x1b\x08\x13\
-    \n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x1b\x14\x1f\n\x0c\n\x05\x04\0\x02\
-    \x06\x03\x12\x03\x1b\"#\n\x0b\n\x04\x04\0\x02\x07\x12\x03\x1c\x08&\n\x0c\
-    \n\x05\x04\0\x02\x07\x06\x12\x03\x1c\x08\x14\n\x0c\n\x05\x04\0\x02\x07\
-    \x01\x12\x03\x1c\x15!\n\x0c\n\x05\x04\0\x02\x07\x03\x12\x03\x1c$%\n\x0b\
-    \n\x04\x04\0\x02\x08\x12\x03\x1e\x08\x1a\n\x0c\n\x05\x04\0\x02\x08\x06\
-    \x12\x03\x1e\x08\x0e\n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\x1e\x0f\x15\n\
-    \x0c\n\x05\x04\0\x02\x08\x03\x12\x03\x1e\x18\x19\n\x0b\n\x04\x04\0\x02\t\
-    \x12\x03\x1f\x08#\n\x0c\n\x05\x04\0\x02\t\x06\x12\x03\x1f\x08\x12\n\x0c\
-    \n\x05\x04\0\x02\t\x01\x12\x03\x1f\x13\x1d\n\x0c\n\x05\x04\0\x02\t\x03\
-    \x12\x03\x1f\x20\"\n\x0b\n\x04\x04\0\x02\n\x12\x03!\x08\x19\n\x0c\n\x05\
-    \x04\0\x02\n\x06\x12\x03!\x08\r\n\x0c\n\x05\x04\0\x02\n\x01\x12\x03!\x0e\
-    \x13\n\x0c\n\x05\x04\0\x02\n\x03\x12\x03!\x16\x18\n\x0b\n\x04\x04\0\x02\
-    \x0b\x12\x03\"\x08+\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\"\x08\x16\n\
-    \x0c\n\x05\x04\0\x02\x0b\x01\x12\x03\"\x17%\n\x0c\n\x05\x04\0\x02\x0b\
-    \x03\x12\x03\"(*\n\x0b\n\x04\x04\0\x02\x0c\x12\x03#\x08%\n\x0c\n\x05\x04\
-    \0\x02\x0c\x06\x12\x03#\x08\x13\n\x0c\n\x05\x04\0\x02\x0c\x01\x12\x03#\
-    \x14\x1f\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\x03#\"$\n\x0b\n\x04\x04\0\x02\
-    \r\x12\x03$\x08\x1f\n\x0c\n\x05\x04\0\x02\r\x06\x12\x03$\x08\x10\n\x0c\n\
-    \x05\x04\0\x02\r\x01\x12\x03$\x11\x19\n\x0c\n\x05\x04\0\x02\r\x03\x12\
-    \x03$\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0e\x12\x03&\x08)\n\x0c\n\x05\x04\0\
-    \x02\x0e\x06\x12\x03&\x08\x15\n\x0c\n\x05\x04\0\x02\x0e\x01\x12\x03&\x16\
-    #\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03&&(\n\x0b\n\x04\x04\0\x02\x0f\x12\
-    \x03'\x08/\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\x03'\x08\x18\n\x0c\n\x05\
-    \x04\0\x02\x0f\x01\x12\x03'\x19)\n\x0c\n\x05\x04\0\x02\x0f\x03\x12\x03',\
-    .\n\x0b\n\x04\x04\0\x02\x10\x12\x03)\x08%\n\x0c\n\x05\x04\0\x02\x10\x06\
-    \x12\x03)\x08\x13\n\x0c\n\x05\x04\0\x02\x10\x01\x12\x03)\x14\x1f\n\x0c\n\
-    \x05\x04\0\x02\x10\x03\x12\x03)\"$\n\x0b\n\x04\x04\0\x02\x11\x12\x03*\
-    \x08'\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03*\x08\x14\n\x0c\n\x05\x04\0\
-    \x02\x11\x01\x12\x03*\x15!\n\x0c\n\x05\x04\0\x02\x11\x03\x12\x03*$&\n\
-    \x0b\n\x04\x04\0\x02\x12\x12\x03+\x08+\n\x0c\n\x05\x04\0\x02\x12\x06\x12\
-    \x03+\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\x12\x03+\x17%\n\x0c\n\x05\
-    \x04\0\x02\x12\x03\x12\x03+(*\n\x0b\n\x04\x04\0\x02\x13\x12\x03,\x08-\n\
-    \x0c\n\x05\x04\0\x02\x13\x06\x12\x03,\x08\x17\n\x0c\n\x05\x04\0\x02\x13\
-    \x01\x12\x03,\x18'\n\x0c\n\x05\x04\0\x02\x13\x03\x12\x03,*,\n\x0b\n\x04\
-    \x04\0\x02\x14\x12\x03.\x08+\n\x0c\n\x05\x04\0\x02\x14\x06\x12\x03.\x08\
-    \x16\n\x0c\n\x05\x04\0\x02\x14\x01\x12\x03.\x17%\n\x0c\n\x05\x04\0\x02\
-    \x14\x03\x12\x03.(*b\x06proto3\
+    sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
+    o\x1a\x0eexecutor.proto\"\xff\x07\n\x07Message\x12\x16\n\x06origin\x18\
+    \x01\x20\x01(\rR\x06origin\x12&\n\x07operate\x18\x02\x20\x01(\x0e2\x0c.O\
+    perateTypeR\x07operate\x12\x1c\n\x08RawBytes\x18\x03\x20\x01(\x0cH\0R\
+    \x08RawBytes\x12$\n\x07Request\x18\x04\x20\x01(\x0b2\x08.RequestH\0R\x07\
+    Request\x12'\n\x08Response\x18\x05\x20\x01(\x0b2\t.ResponseH\0R\x08Respo\
+    nse\x120\n\x0bSyncRequest\x18\x06\x20\x01(\x0b2\x0c.SyncRequestH\0R\x0bS\
+    yncRequest\x123\n\x0cSyncResponse\x18\x07\x20\x01(\x0b2\r.SyncResponseH\
+    \0R\x0cSyncResponse\x12!\n\x06Status\x18\x08\x20\x01(\x0b2\x07.StatusH\0\
+    R\x06Status\x12-\n\nRichStatus\x18\t\x20\x01(\x0b2\x0b.RichStatusH\0R\nR\
+    ichStatus\x129\n\x0eSignedProposal\x18\n\x20\x01(\x0b2\x0f.SignedProposa\
+    lH\0R\x0eSignedProposal\x12\x1e\n\x05Block\x18\x0b\x20\x01(\x0b2\x06.Blo\
+    ckH\0R\x05Block\x129\n\x0eBlockWithProof\x18\x0c\x20\x01(\x0b2\x0f.Block\
+    WithProofH\0R\x0eBlockWithProof\x120\n\x0bBlockHeader\x18\r\x20\x01(\x0b\
+    2\x0c.BlockHeaderH\0R\x0bBlockHeader\x12'\n\x08BlockTxs\x18\x0e\x20\x01(\
+    \x0b2\t.BlockTxsH\0R\x08BlockTxs\x126\n\rBlockTxHashes\x18\x0f\x20\x01(\
+    \x0b2\x0e.BlockTxHashesH\0R\rBlockTxHashes\x12?\n\x10BlockTxHashesReq\
+    \x18\x10\x20\x01(\x0b2\x11.BlockTxHashesReqH\0R\x10BlockTxHashesReq\x120\
+    \n\x0bVerifyTxReq\x18\x11\x20\x01(\x0b2\x0c.VerifyTxReqH\0R\x0bVerifyTxR\
+    eq\x123\n\x0cVerifyTxResp\x18\x12\x20\x01(\x0b2\r.VerifyTxRespH\0R\x0cVe\
+    rifyTxResp\x129\n\x0eVerifyBlockReq\x18\x13\x20\x01(\x0b2\x0f.VerifyBloc\
+    kReqH\0R\x0eVerifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\x14\x20\x01(\
+    \x0b2\x10.VerifyBlockRespH\0R\x0fVerifyBlockResp\x129\n\x0eExecutedResul\
+    t\x18\x15\x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eExecutedResultB\t\n\
+    \x07content*6\n\x0bOperateType\x12\r\n\tBROADCAST\x10\0\x12\n\n\x06SINGL\
+    E\x10\x01\x12\x0c\n\x08SUBTRACT\x10\x02J\xc7\x0b\n\x06\x12\x04\0\03\x01\
+    \n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\
+    \n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\
+    \n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\
+    \x18\n\t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\
+    \x07\x17\n\n\n\x02\x05\0\x12\x04\n\0\x0e\x01\n\n\n\x03\x05\0\x01\x12\x03\
+    \n\x05\x10\n\x0b\n\x04\x05\0\x02\0\x12\x03\x0b\x04\x12\n\x0c\n\x05\x05\0\
+    \x02\0\x01\x12\x03\x0b\x04\r\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x0b\x10\
+    \x11\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x0c\x04\x0f\n\x0c\n\x05\x05\0\x02\
+    \x01\x01\x12\x03\x0c\x04\n\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x0c\r\
+    \x0e\n\x0b\n\x04\x05\0\x02\x02\x12\x03\r\x04\x11\n\x0c\n\x05\x05\0\x02\
+    \x02\x01\x12\x03\r\x04\x0c\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\r\x0f\
+    \x10\n\n\n\x02\x04\0\x12\x04\x10\03\x01\n\n\n\x03\x04\0\x01\x12\x03\x10\
+    \x08\x0f\n\x0b\n\x04\x04\0\x02\0\x12\x03\x12\x04\x16\n\r\n\x05\x04\0\x02\
+    \0\x04\x12\x04\x12\x04\x10\x11\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x12\
+    \x04\n\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x12\x0b\x11\n\x0c\n\x05\x04\0\
+    \x02\0\x03\x12\x03\x12\x14\x15\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x13\x04\
+    \x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x13\x04\x12\x16\n\x0c\n\x05\x04\
+    \0\x02\x01\x06\x12\x03\x13\x04\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\
+    \x13\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x13\x1a\x1b\n\x0c\n\
+    \x04\x04\0\x08\0\x12\x04\x15\x042\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\
+    \x03\x15\n\x11\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x17\x08\x1b\n\x0c\n\x05\
+    \x04\0\x02\x02\x05\x12\x03\x17\x08\r\n\x0c\n\x05\x04\0\x02\x02\x01\x12\
+    \x03\x17\x0e\x16\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x17\x19\x1a\n\x0b\
+    \n\x04\x04\0\x02\x03\x12\x03\x19\x08\x1c\n\x0c\n\x05\x04\0\x02\x03\x06\
+    \x12\x03\x19\x08\x0f\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x19\x10\x17\n\
+    \x0c\n\x05\x04\0\x02\x03\x03\x12\x03\x19\x1a\x1b\n\x0b\n\x04\x04\0\x02\
+    \x04\x12\x03\x1a\x08\x1e\n\x0c\n\x05\x04\0\x02\x04\x06\x12\x03\x1a\x08\
+    \x10\n\x0c\n\x05\x04\0\x02\x04\x01\x12\x03\x1a\x11\x19\n\x0c\n\x05\x04\0\
+    \x02\x04\x03\x12\x03\x1a\x1c\x1d\n\x0b\n\x04\x04\0\x02\x05\x12\x03\x1c\
+    \x08$\n\x0c\n\x05\x04\0\x02\x05\x06\x12\x03\x1c\x08\x13\n\x0c\n\x05\x04\
+    \0\x02\x05\x01\x12\x03\x1c\x14\x1f\n\x0c\n\x05\x04\0\x02\x05\x03\x12\x03\
+    \x1c\"#\n\x0b\n\x04\x04\0\x02\x06\x12\x03\x1d\x08&\n\x0c\n\x05\x04\0\x02\
+    \x06\x06\x12\x03\x1d\x08\x14\n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x1d\
+    \x15!\n\x0c\n\x05\x04\0\x02\x06\x03\x12\x03\x1d$%\n\x0b\n\x04\x04\0\x02\
+    \x07\x12\x03\x1f\x08\x1a\n\x0c\n\x05\x04\0\x02\x07\x06\x12\x03\x1f\x08\
+    \x0e\n\x0c\n\x05\x04\0\x02\x07\x01\x12\x03\x1f\x0f\x15\n\x0c\n\x05\x04\0\
+    \x02\x07\x03\x12\x03\x1f\x18\x19\n\x0b\n\x04\x04\0\x02\x08\x12\x03\x20\
+    \x08\"\n\x0c\n\x05\x04\0\x02\x08\x06\x12\x03\x20\x08\x12\n\x0c\n\x05\x04\
+    \0\x02\x08\x01\x12\x03\x20\x13\x1d\n\x0c\n\x05\x04\0\x02\x08\x03\x12\x03\
+    \x20\x20!\n\x0b\n\x04\x04\0\x02\t\x12\x03\"\x08+\n\x0c\n\x05\x04\0\x02\t\
+    \x06\x12\x03\"\x08\x16\n\x0c\n\x05\x04\0\x02\t\x01\x12\x03\"\x17%\n\x0c\
+    \n\x05\x04\0\x02\t\x03\x12\x03\"(*\n\x0b\n\x04\x04\0\x02\n\x12\x03$\x08\
+    \x19\n\x0c\n\x05\x04\0\x02\n\x06\x12\x03$\x08\r\n\x0c\n\x05\x04\0\x02\n\
+    \x01\x12\x03$\x0e\x13\n\x0c\n\x05\x04\0\x02\n\x03\x12\x03$\x16\x18\n\x0b\
+    \n\x04\x04\0\x02\x0b\x12\x03%\x08+\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\
+    %\x08\x16\n\x0c\n\x05\x04\0\x02\x0b\x01\x12\x03%\x17%\n\x0c\n\x05\x04\0\
+    \x02\x0b\x03\x12\x03%(*\n\x0b\n\x04\x04\0\x02\x0c\x12\x03&\x08%\n\x0c\n\
+    \x05\x04\0\x02\x0c\x06\x12\x03&\x08\x13\n\x0c\n\x05\x04\0\x02\x0c\x01\
+    \x12\x03&\x14\x1f\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\x03&\"$\n\x0b\n\x04\
+    \x04\0\x02\r\x12\x03'\x08\x1f\n\x0c\n\x05\x04\0\x02\r\x06\x12\x03'\x08\
+    \x10\n\x0c\n\x05\x04\0\x02\r\x01\x12\x03'\x11\x19\n\x0c\n\x05\x04\0\x02\
+    \r\x03\x12\x03'\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0e\x12\x03)\x08)\n\x0c\n\
+    \x05\x04\0\x02\x0e\x06\x12\x03)\x08\x15\n\x0c\n\x05\x04\0\x02\x0e\x01\
+    \x12\x03)\x16#\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03)&(\n\x0b\n\x04\x04\
+    \0\x02\x0f\x12\x03*\x08/\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\x03*\x08\x18\
+    \n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03*\x19)\n\x0c\n\x05\x04\0\x02\x0f\
+    \x03\x12\x03*,.\n\x0b\n\x04\x04\0\x02\x10\x12\x03,\x08%\n\x0c\n\x05\x04\
+    \0\x02\x10\x06\x12\x03,\x08\x13\n\x0c\n\x05\x04\0\x02\x10\x01\x12\x03,\
+    \x14\x1f\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03,\"$\n\x0b\n\x04\x04\0\x02\
+    \x11\x12\x03-\x08'\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03-\x08\x14\n\x0c\
+    \n\x05\x04\0\x02\x11\x01\x12\x03-\x15!\n\x0c\n\x05\x04\0\x02\x11\x03\x12\
+    \x03-$&\n\x0b\n\x04\x04\0\x02\x12\x12\x03.\x08+\n\x0c\n\x05\x04\0\x02\
+    \x12\x06\x12\x03.\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\x12\x03.\x17%\n\
+    \x0c\n\x05\x04\0\x02\x12\x03\x12\x03.(*\n\x0b\n\x04\x04\0\x02\x13\x12\
+    \x03/\x08-\n\x0c\n\x05\x04\0\x02\x13\x06\x12\x03/\x08\x17\n\x0c\n\x05\
+    \x04\0\x02\x13\x01\x12\x03/\x18'\n\x0c\n\x05\x04\0\x02\x13\x03\x12\x03/*\
+    ,\n\x0b\n\x04\x04\0\x02\x14\x12\x031\x08+\n\x0c\n\x05\x04\0\x02\x14\x06\
+    \x12\x031\x08\x16\n\x0c\n\x05\x04\0\x02\x14\x01\x12\x031\x17%\n\x0c\n\
+    \x05\x04\0\x02\x14\x03\x12\x031(*b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

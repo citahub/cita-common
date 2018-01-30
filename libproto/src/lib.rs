@@ -28,21 +28,13 @@ extern crate serde_derive;
 extern crate util;
 
 pub mod protos;
-
 pub use protos::*;
-pub use protos::auth;
-pub use protos::blockchain;
-pub use protos::communication;
-pub use protos::consensus;
-pub use protos::executor;
-pub use protos::request;
-pub use protos::response;
-pub use protos::sync;
 
 use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
 use protobuf::{parse_from_bytes, Message as MessageTrait, RepeatedField};
-use rlp::*;
+use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use rustc_serialize::hex::ToHex;
+use std::fmt;
 use std::ops::Deref;
 use std::result::Result::Err;
 use util::{merklehash, snappy, H256, Hashable};
@@ -68,83 +60,79 @@ impl TxResponse {
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct State(pub Vec<Vec<u8>>);
 
-pub mod submodules {
-    pub const JSON_RPC: u32 = 1;
-    pub const NET: u32 = 2;
-    pub const CHAIN: u32 = 3;
-    pub const CONSENSUS: u32 = 4;
-    pub const CONSENSUS_CMD: u32 = 5;
-    pub const AUTH: u32 = 6;
-    pub const EXECUTOR: u32 = 7;
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum SubModules {
+    Jsonrpc,
+    Net,
+    Chain,
+    Consensus,
+    Auth,
+    Executor,
+    Unknown,
 }
 
-// TODO: 这里要不要修改下，使topics和MsgClass对应起来
-pub mod topics {
-    pub const DEFAULT: u16 = 0;
-    pub const REQUEST: u16 = 1;
-    pub const NEW_BLK: u16 = 2;
-    pub const NEW_STATUS: u16 = 3;
-    pub const SYNC_BLK: u16 = 4;
-    pub const RESPONSE: u16 = 5;
-    pub const CONSENSUS_MSG: u16 = 6;
-    pub const NEW_PROPOSAL: u16 = 7;
-    pub const VERIFY_TX_REQ: u16 = 8;
-    pub const VERIFY_TX_RESP: u16 = 9;
-    pub const VERIFY_BLK_REQ: u16 = 10;
-    pub const VERIFY_BLK_RESP: u16 = 11;
-    pub const BLOCK_TXHASHES: u16 = 12;
-    pub const BLOCK_TXHASHES_REQ: u16 = 13;
-    pub const NEW_PROOF_BLOCK: u16 = 14;
-    pub const BLOCK_TXS: u16 = 15;
-    pub const RICH_STATUS: u16 = 16;
-    pub const EXECUTED_RESULT: u16 = 17;
+pub const SUBMODULES_UNKNOWN: SubModules = SubModules::Unknown;
+
+impl fmt::Display for SubModules {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                // Please use the same rules to name the string
+                &SubModules::Jsonrpc => "jsonrpc",
+                &SubModules::Net => "net",
+                &SubModules::Chain => "chain",
+                &SubModules::Consensus => "consensus",
+                &SubModules::Auth => "auth",
+                &SubModules::Executor => "executor",
+                &SubModules::Unknown => "unknown",
+            }
+        )
+    }
+}
+
+impl<'a> From<&'a str> for SubModules {
+    fn from(s: &'a str) -> SubModules {
+        let parts: Vec<&str> = s.split('.').collect();
+        if parts.len() > 1 {
+            match parts[0] {
+                "jsonrpc" => SubModules::Jsonrpc,
+                "net" => SubModules::Net,
+                "chain" => SubModules::Chain,
+                "consensus" => SubModules::Consensus,
+                "auth" => SubModules::Auth,
+                "executor" => SubModules::Executor,
+                _ => SubModules::Unknown,
+            }
+        } else {
+            SUBMODULES_UNKNOWN
+        }
+    }
 }
 
 #[derive(Debug)]
 pub enum MsgClass {
-    EMPTY,
-    REQUEST(Request),
-    RESPONSE(Response),
-    HEADER(BlockHeader),
-    BLOCK(Block),
-    STATUS(Status),
-    VERIFYTXREQ(VerifyTxReq),
-    VERIFYTXRESP(VerifyTxResp),
-    VERIFYBLKREQ(VerifyBlockReq),
-    VERIFYBLKRESP(VerifyBlockResp),
-    BLOCKTXHASHES(BlockTxHashes),
-    BLOCKTXHASHESREQ(BlockTxHashesReq),
-    BLOCKWITHPROOF(BlockWithProof),
-    BLOCKTXS(BlockTxs),
-    MSG(Vec<u8>),
-    RICHSTATUS(RichStatus),
-    SYNCREQUEST(SyncRequest),
-    SYNCRESPONSE(SyncResponse),
-    EXECUTED(ExecutedResult),
-}
-
-pub fn key_to_id(key: &str) -> u32 {
-    if key.starts_with("jsonrpc") {
-        submodules::JSON_RPC
-    } else if key.starts_with("net") {
-        submodules::NET
-    } else if key.starts_with("chain") {
-        submodules::CHAIN
-    } else if key.starts_with("consensus_cmd") {
-        submodules::CONSENSUS_CMD
-    } else if key.starts_with("consensus") {
-        submodules::CONSENSUS
-    } else if key.starts_with("auth") {
-        submodules::AUTH
-    } else if key.starts_with("executor") {
-        submodules::EXECUTOR
-    } else {
-        0
-    }
-}
-
-pub fn cmd_id(submodule: u32, topic: u16) -> u32 {
-    (submodule << 16) + topic as u32
+    RawBytes(Vec<u8>),
+    Request(Request),
+    Response(Response),
+    SyncRequest(SyncRequest),
+    SyncResponse(SyncResponse),
+    Status(Status),
+    RichStatus(RichStatus),
+    SignedProposal(SignedProposal),
+    Block(Block),
+    BlockWithProof(BlockWithProof),
+    BlockHeader(BlockHeader),
+    BlockTxs(BlockTxs),
+    BlockTxHashes(BlockTxHashes),
+    BlockTxHashesReq(BlockTxHashesReq),
+    VerifyTxReq(VerifyTxReq),
+    VerifyTxResp(VerifyTxResp),
+    VerifyBlockReq(VerifyBlockReq),
+    VerifyBlockResp(VerifyBlockResp),
+    ExecutedResult(ExecutedResult),
+    Empty,
 }
 
 const ZERO_ORIGIN: u32 = 99999;
@@ -155,25 +143,28 @@ impl From<Message_oneof_content> for MsgClass {
             Message_oneof_content::RawBytes(data) => {
                 let mut content = Vec::new();
                 content.extend_from_slice(&snappy::cita_decompress(data));
-                MsgClass::MSG(content)
+                content.into()
             }
-            Message_oneof_content::Request(data) => MsgClass::REQUEST(data),
-            Message_oneof_content::Response(data) => MsgClass::RESPONSE(data),
-            Message_oneof_content::SyncRequest(data) => MsgClass::SYNCREQUEST(data),
-            Message_oneof_content::SyncResponse(data) => MsgClass::SYNCRESPONSE(data),
-            Message_oneof_content::Status(data) => MsgClass::STATUS(data),
-            Message_oneof_content::RichStatus(data) => MsgClass::RICHSTATUS(data),
-            Message_oneof_content::Block(data) => MsgClass::BLOCK(data),
-            Message_oneof_content::BlockWithProof(data) => MsgClass::BLOCKWITHPROOF(data),
-            Message_oneof_content::BlockHeader(data) => MsgClass::HEADER(data),
-            Message_oneof_content::BlockTxs(data) => MsgClass::BLOCKTXS(data),
-            Message_oneof_content::BlockTxHashes(data) => MsgClass::BLOCKTXHASHES(data),
-            Message_oneof_content::BlockTxHashesReq(data) => MsgClass::BLOCKTXHASHESREQ(data),
-            Message_oneof_content::VerifyTxReq(data) => MsgClass::VERIFYTXREQ(data),
-            Message_oneof_content::VerifyTxResp(data) => MsgClass::VERIFYTXRESP(data),
-            Message_oneof_content::VerifyBlockReq(data) => MsgClass::VERIFYBLKREQ(data),
-            Message_oneof_content::VerifyBlockResp(data) => MsgClass::VERIFYBLKRESP(data),
-            Message_oneof_content::ExecutedResult(data) => MsgClass::EXECUTED(data),
+            // Generate MSG-PROTOS from_content automatically begin:
+            Message_oneof_content::Request(data) => data.into(),
+            Message_oneof_content::Response(data) => data.into(),
+            Message_oneof_content::SyncRequest(data) => data.into(),
+            Message_oneof_content::SyncResponse(data) => data.into(),
+            Message_oneof_content::Status(data) => data.into(),
+            Message_oneof_content::RichStatus(data) => data.into(),
+            Message_oneof_content::SignedProposal(data) => data.into(),
+            Message_oneof_content::Block(data) => data.into(),
+            Message_oneof_content::BlockWithProof(data) => data.into(),
+            Message_oneof_content::BlockHeader(data) => data.into(),
+            Message_oneof_content::BlockTxs(data) => data.into(),
+            Message_oneof_content::BlockTxHashes(data) => data.into(),
+            Message_oneof_content::BlockTxHashesReq(data) => data.into(),
+            Message_oneof_content::VerifyTxReq(data) => data.into(),
+            Message_oneof_content::VerifyTxResp(data) => data.into(),
+            Message_oneof_content::VerifyBlockReq(data) => data.into(),
+            Message_oneof_content::VerifyBlockResp(data) => data.into(),
+            Message_oneof_content::ExecutedResult(data) => data.into(),
+            // Generate MSG-PROTOS from_content automatically end.
         }
     }
 }
@@ -182,7 +173,7 @@ impl From<Option<Message_oneof_content>> for MsgClass {
     fn from(content: Option<Message_oneof_content>) -> Self {
         match content {
             Some(inner) => inner.into(),
-            None => MsgClass::EMPTY,
+            None => MsgClass::Empty,
         }
     }
 }
@@ -199,25 +190,28 @@ impl Message {
     // Param is passed by value, moved
     pub fn set_content(&mut self, v: MsgClass) {
         match v {
-            MsgClass::MSG(data) => self.set_RawBytes(snappy::cita_compress(data)),
-            MsgClass::REQUEST(data) => self.set_Request(data),
-            MsgClass::RESPONSE(data) => self.set_Response(data),
-            MsgClass::SYNCREQUEST(data) => self.set_SyncRequest(data),
-            MsgClass::SYNCRESPONSE(data) => self.set_SyncResponse(data),
-            MsgClass::STATUS(data) => self.set_Status(data),
-            MsgClass::RICHSTATUS(data) => self.set_RichStatus(data),
-            MsgClass::BLOCK(data) => self.set_Block(data),
-            MsgClass::BLOCKWITHPROOF(data) => self.set_BlockWithProof(data),
-            MsgClass::HEADER(data) => self.set_BlockHeader(data),
-            MsgClass::BLOCKTXS(data) => self.set_BlockTxs(data),
-            MsgClass::BLOCKTXHASHES(data) => self.set_BlockTxHashes(data),
-            MsgClass::BLOCKTXHASHESREQ(data) => self.set_BlockTxHashesReq(data),
-            MsgClass::VERIFYTXREQ(data) => self.set_VerifyTxReq(data),
-            MsgClass::VERIFYTXRESP(data) => self.set_VerifyTxResp(data),
-            MsgClass::VERIFYBLKREQ(data) => self.set_VerifyBlockReq(data),
-            MsgClass::VERIFYBLKRESP(data) => self.set_VerifyBlockResp(data),
-            MsgClass::EXECUTED(data) => self.set_ExecutedResult(data),
-            MsgClass::EMPTY => self.clear_content(),
+            MsgClass::RawBytes(data) => self.set_RawBytes(snappy::cita_compress(data)),
+            // Generate MSG-PROTOS set_content automatically begin:
+            MsgClass::Request(data) => self.set_Request(data),
+            MsgClass::Response(data) => self.set_Response(data),
+            MsgClass::SyncRequest(data) => self.set_SyncRequest(data),
+            MsgClass::SyncResponse(data) => self.set_SyncResponse(data),
+            MsgClass::Status(data) => self.set_Status(data),
+            MsgClass::RichStatus(data) => self.set_RichStatus(data),
+            MsgClass::SignedProposal(data) => self.set_SignedProposal(data),
+            MsgClass::Block(data) => self.set_Block(data),
+            MsgClass::BlockWithProof(data) => self.set_BlockWithProof(data),
+            MsgClass::BlockHeader(data) => self.set_BlockHeader(data),
+            MsgClass::BlockTxs(data) => self.set_BlockTxs(data),
+            MsgClass::BlockTxHashes(data) => self.set_BlockTxHashes(data),
+            MsgClass::BlockTxHashesReq(data) => self.set_BlockTxHashesReq(data),
+            MsgClass::VerifyTxReq(data) => self.set_VerifyTxReq(data),
+            MsgClass::VerifyTxResp(data) => self.set_VerifyTxResp(data),
+            MsgClass::VerifyBlockReq(data) => self.set_VerifyBlockReq(data),
+            MsgClass::VerifyBlockResp(data) => self.set_VerifyBlockResp(data),
+            MsgClass::ExecutedResult(data) => self.set_ExecutedResult(data),
+            // Generate MSG-PROTOS set_content automatically end.
+            MsgClass::Empty => self.clear_content(),
         };
     }
 
@@ -229,17 +223,12 @@ impl Message {
         self.content.take().into()
     }
 
-    pub fn init(sub: u32, top: u16, operate: OperateType, origin: u32, mc: MsgClass) -> Self {
+    pub fn init(operate: OperateType, origin: u32, mc: MsgClass) -> Self {
         let mut msg = Message::new();
-        msg.set_cmd_id(cmd_id(sub, top));
         msg.set_origin(origin);
         msg.set_operate(operate);
         msg.set_content(mc);
         msg
-    }
-
-    pub fn init_default(sub: u32, top: u16, mc: MsgClass) -> Self {
-        Message::init(sub, top, OperateType::BROADCAST, ZERO_ORIGIN, mc)
     }
 }
 
@@ -296,6 +285,40 @@ macro_rules! impl_convert_for_struct {
     };
 }
 
+impl Into<MsgClass> for Vec<u8> {
+    fn into(self) -> MsgClass {
+        MsgClass::RawBytes(self)
+    }
+}
+
+impl Into<Message> for Vec<u8> {
+    fn into(self) -> Message {
+        Message::init(OperateType::BROADCAST, ZERO_ORIGIN, self.into())
+    }
+}
+
+macro_rules! impl_convert_for_struct_in_msg {
+    ($( $struct:ident, )+) => {
+        $(
+            impl_convert_for_struct_in_msg!($struct);
+        )+
+    };
+    ($struct:ident) => {
+
+       impl Into<MsgClass> for $struct {
+           fn into(self) -> MsgClass {
+               MsgClass::$struct(self)
+           }
+       }
+
+        impl Into<Message> for $struct {
+            fn into(self) -> Message {
+                Message::init(OperateType::BROADCAST, ZERO_ORIGIN, self.into())
+            }
+        }
+    };
+}
+
 macro_rules! loop_macro_for_structs {
     ($macro:ident) => {
         $macro!(
@@ -343,27 +366,35 @@ macro_rules! loop_macro_for_structs {
     }
 }
 
+macro_rules! loop_macro_for_structs_in_msg {
+    ($macro:ident) => {
+        $macro!(
+            // Generate MSG-PROTOS automatically begin:
+            Request,
+            Response,
+            SyncRequest,
+            SyncResponse,
+            Status,
+            RichStatus,
+            SignedProposal,
+            Block,
+            BlockWithProof,
+            BlockHeader,
+            BlockTxs,
+            BlockTxHashes,
+            BlockTxHashesReq,
+            VerifyTxReq,
+            VerifyTxResp,
+            VerifyBlockReq,
+            VerifyBlockResp,
+            ExecutedResult,
+            // Generate MSG-PROTOS automatically end.
+        );
+    }
+}
+
 loop_macro_for_structs!(impl_convert_for_struct);
-
-impl Into<Message> for Request {
-    fn into(self) -> Message {
-        Message::init_default(
-            submodules::JSON_RPC,
-            topics::REQUEST,
-            MsgClass::REQUEST(self),
-        )
-    }
-}
-
-impl Into<Message> for Response {
-    fn into(self) -> Message {
-        Message::init_default(
-            submodules::CHAIN,
-            topics::RESPONSE,
-            MsgClass::RESPONSE(self),
-        )
-    }
-}
+loop_macro_for_structs_in_msg!(impl_convert_for_struct_in_msg);
 
 impl From<RichStatus> for Status {
     fn from(rich_status: RichStatus) -> Self {
@@ -551,16 +582,10 @@ impl BlockBody {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
-    #[test]
-    fn cmd_id_works() {
-        assert_eq!(cmd_id(submodules::JSON_RPC, topics::REQUEST), 0x10001);
-        assert_eq!(cmd_id(submodules::CHAIN, topics::RESPONSE), 0x30005);
-    }
 
     #[test]
     fn create_tx() {
+        use super::{CreateKey, KeyPair, Transaction};
         let keypair = KeyPair::gen_keypair();
         let pv = keypair.privkey();
 
@@ -577,5 +602,65 @@ mod tests {
             signed_tx.crypt_hash(),
             signed_tx.get_transaction_with_sig().crypt_hash()
         );
+    }
+
+    #[test]
+    fn sub_modules_works() {
+        use super::SubModules;
+        use std::convert::From;
+        let s = "jsonrpc.anything-is-ok";
+        let sm = SubModules::from(s);
+        assert_eq!(sm, SubModules::Jsonrpc);
+    }
+
+    #[test]
+    fn class_funcs_for_message_works() {
+        use super::{Message, MsgClass, Request, Response};
+        let req_origin = Request::new();
+        let resp_origin = Response::new();
+        let mut msg: Message = req_origin.into();
+
+        let req_clone = msg.get_content();
+        assert!(msg.has_content());
+        assert!(if let MsgClass::Request(_) = req_clone {
+            true
+        } else {
+            false
+        });
+
+        let req_take = msg.take_content();
+        assert!(!msg.has_content());
+        assert!(if let MsgClass::Request(_) = req_take {
+            true
+        } else {
+            false
+        });
+
+        msg.set_content(resp_origin.into());
+        assert!(msg.has_content());
+
+        let resp_clone = msg.get_content();
+        assert!(msg.has_content());
+        assert!(if let MsgClass::Response(_) = resp_clone {
+            true
+        } else {
+            false
+        });
+
+        msg.clear_content();
+        assert!(!msg.has_content());
+    }
+
+    #[test]
+    fn traits_for_protos_works() {
+        use super::blockchain;
+        use std::convert::{TryFrom, TryInto};
+        let height: u64 = 13579;
+        let mut status = blockchain::Status::new();
+        status.set_height(height);
+        let status_bytes: Vec<u8> = status.try_into().unwrap();
+        let status_new = blockchain::Status::try_from(&status_bytes).unwrap();
+        let height_new = status_new.get_height();
+        assert_eq!(height, height_new);
     }
 }

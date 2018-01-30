@@ -4,6 +4,7 @@ import "request.proto";
 import "response.proto";
 import "sync.proto";
 import "blockchain.proto";
+import "consensus.proto";
 import "auth.proto";
 import "executor.proto";
 
@@ -14,22 +15,24 @@ enum OperateType {
 }
 
 message Message {
-    uint32 cmd_id = 1;
-    uint32 origin = 2;
-    OperateType operate = 3;
+
+    uint32 origin = 1;
+    OperateType operate = 2;
 
     oneof content {
 
-        bytes RawBytes = 4;
+        bytes RawBytes = 3;
 
-        Request Request = 5;
-        Response Response = 6;
+        Request Request = 4;
+        Response Response = 5;
 
-        SyncRequest SyncRequest = 7;
-        SyncResponse SyncResponse = 8;
+        SyncRequest SyncRequest = 6;
+        SyncResponse SyncResponse = 7;
 
-        Status Status = 9;
-        RichStatus RichStatus = 10;
+        Status Status = 8;
+        RichStatus RichStatus = 9;
+
+        SignedProposal SignedProposal = 10;
 
         Block Block = 11;
         BlockWithProof BlockWithProof = 12;

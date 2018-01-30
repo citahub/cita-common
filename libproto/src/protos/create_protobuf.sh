@@ -87,7 +87,7 @@ function gen_modrs_for_protos () {
     done
 }
 
-function generate_impls () {
+function generate_impls_for_all () {
     local indentation="            "
     local replace_begin="${indentation}\\/\\/ Generate ALL-PROTOS automatically begin:"
     local replace_end="${indentation}\\/\\/ Generate ALL-PROTOS automatically end."
@@ -100,6 +100,27 @@ function generate_impls () {
     done
 }
 
+function generate_impls_for_msg () {
+    local indentation="            "
+    local replace_begin_1="${indentation}\\/\\/ Generate MSG-PROTOS automatically begin:"
+    local replace_end_1="${indentation}\\/\\/ Generate MSG-PROTOS automatically end."
+    local replace_begin_2="${indentation}\\/\\/ Generate MSG-PROTOS set_content automatically begin:"
+    local replace_end_2="${indentation}\\/\\/ Generate MSG-PROTOS set_content automatically end."
+    local replace_begin_3="${indentation}\\/\\/ Generate MSG-PROTOS from_content automatically begin:"
+    local replace_end_3="${indentation}\\/\\/ Generate MSG-PROTOS from_content automatically end."
+    local rsfile="../lib.rs"
+    sed -i "/^${replace_begin_1}$/,/^${replace_end_1}$/{//!d}" "${rsfile}"
+    sed -i "/^${replace_begin_2}$/,/^${replace_end_2}$/{//!d}" "${rsfile}"
+    sed -i "/^${replace_begin_3}$/,/^${replace_end_3}$/{//!d}" "${rsfile}"
+    sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
+            | grep "^\s\{8\}[A-Z].*;$" | awk '{ print $2 }' \
+            | while read struct; do
+        sed -i -e "/^${replace_end_1}$/i\\${indentation}${struct}," "${rsfile}"
+        sed -i -e "/^${replace_end_2}$/i\\${indentation}MsgClass::${struct}(data) => self.set_${struct}(data)," "${rsfile}"
+        sed -i -e "/^${replace_end_3}$/i\\${indentation}Message_oneof_content::${struct}(data) => data.into()," "${rsfile}"
+    done
+}
+
 function main () {
     cd "${rootdir}"
     remove_all_rs
@@ -107,7 +128,8 @@ function main () {
     add_pub_to_oneof_in_generated_code response.rs      data    Response
     add_pub_to_oneof_in_generated_code request.rs       req     Request
     add_pub_to_oneof_in_generated_code communication.rs content Message
-    generate_impls
+    generate_impls_for_all
+    generate_impls_for_msg
     gen_modrs_for_protos
     add_license
     cd "${currdir}"
