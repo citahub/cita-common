@@ -6,6 +6,7 @@ import "sync.proto";
 import "blockchain.proto";
 import "auth.proto";
 import "executor.proto";
+import "snapshot.proto";
 
 enum OperateType {
     BROADCAST = 0;
@@ -45,5 +46,8 @@ message Message {
         VerifyBlockResp VerifyBlockResp = 20;
 
         ExecutedResult ExecutedResult = 21;
+
+        SnapshotReq SnapshotReq = 22;
+        SnapshotResp SnapshotResp = 23;
     }
 }

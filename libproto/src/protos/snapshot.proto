@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+enum Cmd {
+    BEGIN = 0;
+    CLEAR = 1;
+    SNAPSHOT = 2;
+    RESTORE = 3;
+    END = 4;
+}
+
+enum Resp {
+    BEGIN_RESP = 0;
+    CLEAR_RESP = 1;
+    SNAPSHOT_RESP = 2;
+    RESTORE_RESP = 3;
+    END_RESP = 4;
+}
+
+message Manifest {
+    repeated bytes state_hashes = 1;
+    repeated bytes block_hashes = 2;
+    bytes state_root = 3;
+    uint64 block_number = 4;
+    bytes block_hash = 5;
+}
+
+message SnapshotReq {
+    Cmd cmd = 1;
+    uint64 start_height = 2;
+    uint64 end_height = 3;
+    Manifest manifest = 4;
+}
+
+
+message SnapshotResp {
+    Resp resp = 1;
+    Manifest manifest = 2;
+}
+
+
+

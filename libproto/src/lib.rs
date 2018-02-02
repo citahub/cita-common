@@ -38,6 +38,7 @@ pub use protos::executor;
 pub use protos::request;
 pub use protos::response;
 pub use protos::sync;
+pub use protos::snapshot;
 
 use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
 use protobuf::{parse_from_bytes, Message as MessageTrait, RepeatedField};
@@ -76,6 +77,7 @@ pub mod submodules {
     pub const CONSENSUS_CMD: u32 = 5;
     pub const AUTH: u32 = 6;
     pub const EXECUTOR: u32 = 7;
+    pub const SNAPSHOT: u32 = 8;
 }
 
 // TODO: 这里要不要修改下，使topics和MsgClass对应起来
@@ -98,6 +100,8 @@ pub mod topics {
     pub const BLOCK_TXS: u16 = 15;
     pub const RICH_STATUS: u16 = 16;
     pub const EXECUTED_RESULT: u16 = 17;
+    pub const SNAPSHOT_REQ: u16 = 18;
+    pub const SNAPSHOT_RESP: u16 = 19;
 }
 
 #[derive(Debug)]
@@ -121,6 +125,8 @@ pub enum MsgClass {
     SYNCREQUEST(SyncRequest),
     SYNCRESPONSE(SyncResponse),
     EXECUTED(ExecutedResult),
+    SNAPSHOTREQ(SnapshotReq),
+    SNAPSHOTRESP(SnapshotResp),
 }
 
 pub fn key_to_id(key: &str) -> u32 {
@@ -138,6 +144,8 @@ pub fn key_to_id(key: &str) -> u32 {
         submodules::AUTH
     } else if key.starts_with("executor") {
         submodules::EXECUTOR
+    } else if key.starts_with("snapshot") {
+        submodules::SNAPSHOT
     } else {
         0
     }
@@ -174,6 +182,8 @@ impl From<Message_oneof_content> for MsgClass {
             Message_oneof_content::VerifyBlockReq(data) => MsgClass::VERIFYBLKREQ(data),
             Message_oneof_content::VerifyBlockResp(data) => MsgClass::VERIFYBLKRESP(data),
             Message_oneof_content::ExecutedResult(data) => MsgClass::EXECUTED(data),
+            Message_oneof_content::SnapshotReq(data) => MsgClass::SNAPSHOTREQ(data),
+            Message_oneof_content::SnapshotResp(data) => MsgClass::SNAPSHOTRESP(data),
         }
     }
 }
@@ -217,6 +227,8 @@ impl Message {
             MsgClass::VERIFYBLKREQ(data) => self.set_VerifyBlockReq(data),
             MsgClass::VERIFYBLKRESP(data) => self.set_VerifyBlockResp(data),
             MsgClass::EXECUTED(data) => self.set_ExecutedResult(data),
+            MsgClass::SNAPSHOTREQ(data) => self.set_SnapshotReq(data),
+            MsgClass::SNAPSHOTRESP(data) => self.set_SnapshotResp(data),
             MsgClass::EMPTY => self.clear_content(),
         };
     }
@@ -336,6 +348,9 @@ macro_rules! loop_macro_for_structs {
             Request,
             FullTransaction,
             Response,
+            Manifest,
+            SnapshotReq,
+            SnapshotResp,
             SyncRequest,
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
