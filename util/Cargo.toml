@@ -22,7 +22,7 @@ libc = "0.2.7"
 vergen = "0.1"
 target_info = "0.1"
 bigint = { path = "../bigint", features = ["heapsizeof"] }
-parking_lot = "0.4"
+parking_lot = "0.5"
 ansi_term = "0.9"
 tiny-keccak= "1.0"
 ethcore-bloom-journal = { path = "../ethcore-bloom-journal" }
