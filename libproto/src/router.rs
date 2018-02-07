@@ -157,6 +157,8 @@ impl fmt::Display for MsgType {
                 &MsgType::VerifyBlockReq => "verify_block_req",
                 &MsgType::VerifyBlockResp => "verify_block_resp",
                 &MsgType::ExecutedResult => "executed_result",
+                &MsgType::SnapshotReq => "snapshot_req",
+                &MsgType::SnapshotResp => "snapshot_resp",
                 // Generate MSG-PROTOS display automatically end.
                 &MsgType::All => "*",
                 &MsgType::Unknown => UNKNOWN,
@@ -213,6 +215,8 @@ impl<'a> From<&'a str> for MsgType {
             "verify_block_req" => MsgType::VerifyBlockReq,
             "verify_block_resp" => MsgType::VerifyBlockResp,
             "executed_result" => MsgType::ExecutedResult,
+            "snapshot_req" => MsgType::SnapshotReq,
+            "snapshot_resp" => MsgType::SnapshotResp,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,

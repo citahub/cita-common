@@ -174,6 +174,8 @@ macro_rules! loop_macro_for_structs {
             Request,
             FullTransaction,
             Response,
+            SnapshotReq,
+            SnapshotResp,
             SyncRequest,
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
@@ -424,6 +426,18 @@ impl Message {
     pub fn take_executed_result(&mut self) -> Option<ExecutedResult> {
         match self.take_content() {
             Some(MsgClass::ExecutedResult(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_snapshot_req(&mut self) -> Option<SnapshotReq> {
+        match self.take_content() {
+            Some(MsgClass::SnapshotReq(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_snapshot_resp(&mut self) -> Option<SnapshotResp> {
+        match self.take_content() {
+            Some(MsgClass::SnapshotResp(v)) => Some(v),
             _ => None,
         }
     }
