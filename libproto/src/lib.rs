@@ -68,6 +68,7 @@ pub enum SubModules {
     Consensus,
     Auth,
     Executor,
+    Snapshot,
     Unknown,
 }
 
@@ -86,6 +87,7 @@ impl fmt::Display for SubModules {
                 &SubModules::Consensus => "consensus",
                 &SubModules::Auth => "auth",
                 &SubModules::Executor => "executor",
+                &SubModules::Snapshot => "snapshot",
                 &SubModules::Unknown => "unknown",
             }
         )
@@ -103,6 +105,7 @@ impl<'a> From<&'a str> for SubModules {
                 "consensus" => SubModules::Consensus,
                 "auth" => SubModules::Auth,
                 "executor" => SubModules::Executor,
+                "snapshot" => SubModules::Snapshot,
                 _ => SubModules::Unknown,
             }
         } else {
@@ -132,6 +135,8 @@ pub enum MsgClass {
     VerifyBlockReq(VerifyBlockReq),
     VerifyBlockResp(VerifyBlockResp),
     ExecutedResult(ExecutedResult),
+    SnapshotReq(SnapshotReq),
+    SnapshotResp(SnapshotResp),
     Empty,
 }
 
@@ -164,6 +169,8 @@ impl From<Message_oneof_content> for MsgClass {
             Message_oneof_content::VerifyBlockReq(data) => data.into(),
             Message_oneof_content::VerifyBlockResp(data) => data.into(),
             Message_oneof_content::ExecutedResult(data) => data.into(),
+            Message_oneof_content::SnapshotReq(data) => data.into(),
+            Message_oneof_content::SnapshotResp(data) => data.into(),
             // Generate MSG-PROTOS from_content automatically end.
         }
     }
@@ -210,6 +217,8 @@ impl Message {
             MsgClass::VerifyBlockReq(data) => self.set_VerifyBlockReq(data),
             MsgClass::VerifyBlockResp(data) => self.set_VerifyBlockResp(data),
             MsgClass::ExecutedResult(data) => self.set_ExecutedResult(data),
+            MsgClass::SnapshotReq(data) => self.set_SnapshotReq(data),
+            MsgClass::SnapshotResp(data) => self.set_SnapshotResp(data),
             // Generate MSG-PROTOS set_content automatically end.
             MsgClass::Empty => self.clear_content(),
         };
@@ -359,6 +368,8 @@ macro_rules! loop_macro_for_structs {
             Request,
             FullTransaction,
             Response,
+            SnapshotReq,
+            SnapshotResp,
             SyncRequest,
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
@@ -388,6 +399,8 @@ macro_rules! loop_macro_for_structs_in_msg {
             VerifyBlockReq,
             VerifyBlockResp,
             ExecutedResult,
+            SnapshotReq,
+            SnapshotResp,
             // Generate MSG-PROTOS automatically end.
         );
     }
