@@ -10,12 +10,13 @@ WORKDIR=/data/work
 
 function run_in_docker () {
     docker run --rm \
-        --volume "${SRCDIR}:${WORKDIR}" \
-        --volume "rust-git:${DOCKER_CARGO_HOME}/git" \
-        --volume "rust-registry:${DOCKER_CARGO_HOME}/registry" \
-        --workdir "${WORKDIR}" \
-        "${DOCKER_IMAGE}" \
-        "$@"
+           -e CODECOV_TOKEN=$CODECOV_TOKEN \
+           --volume "${SRCDIR}:${WORKDIR}" \
+           --volume "rust-git:${DOCKER_CARGO_HOME}/git" \
+           --volume "rust-registry:${DOCKER_CARGO_HOME}/registry" \
+           --workdir "${WORKDIR}" \
+           "${DOCKER_IMAGE}" \
+           "$@"
 }
 
 function cargo_run_in_docker () {
