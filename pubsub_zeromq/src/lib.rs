@@ -22,7 +22,7 @@ use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 use std::thread;
 //use util::log::error;
-pub fn start_zeromq(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
+pub fn start_zeromq(name: &str, keys: Vec<String>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
     let context = zmq::Context::new();
     //pub
     let publisher = context.socket(zmq::PUB).unwrap();
@@ -68,7 +68,7 @@ pub fn start_zeromq(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>, 
         flag = match name {
             "network" => {
                 network_subscriber
-                    .set_subscribe(&topic.to_string().into_bytes())
+                    .set_subscribe(&topic.into_bytes())
                     .unwrap();
                 0
             }

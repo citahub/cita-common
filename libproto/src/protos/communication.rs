@@ -39,22 +39,19 @@ use protobuf::Message as Message_imported_for_functions;
 use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 
 #[derive(PartialEq,Clone,Default)]
-pub struct Message {
-    // message fields
-    pub origin: u32,
-    pub operate: OperateType,
+pub struct InnerMessage {
     // message oneof groups
-    pub content: ::std::option::Option<Message_oneof_content>,
+    pub content: ::std::option::Option<InnerMessage_oneof_content>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
-unsafe impl ::std::marker::Sync for Message {}
+unsafe impl ::std::marker::Sync for InnerMessage {}
 
 #[derive(Clone,PartialEq)]
-pub enum Message_oneof_content {
+pub enum InnerMessage_oneof_content {
     RawBytes(::std::vec::Vec<u8>),
     Request(super::request::Request),
     Response(super::response::Response),
@@ -76,68 +73,22 @@ pub enum Message_oneof_content {
     ExecutedResult(super::executor::ExecutedResult),
 }
 
-impl Message {
-    pub fn new() -> Message {
+impl InnerMessage {
+    pub fn new() -> InnerMessage {
         ::std::default::Default::default()
     }
 
-    pub fn default_instance() -> &'static Message {
-        static mut instance: ::protobuf::lazy::Lazy<Message> = ::protobuf::lazy::Lazy {
+    pub fn default_instance() -> &'static InnerMessage {
+        static mut instance: ::protobuf::lazy::Lazy<InnerMessage> = ::protobuf::lazy::Lazy {
             lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const Message,
+            ptr: 0 as *const InnerMessage,
         };
         unsafe {
-            instance.get(Message::new)
+            instance.get(InnerMessage::new)
         }
     }
 
-    // uint32 origin = 1;
-
-    pub fn clear_origin(&mut self) {
-        self.origin = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_origin(&mut self, v: u32) {
-        self.origin = v;
-    }
-
-    pub fn get_origin(&self) -> u32 {
-        self.origin
-    }
-
-    fn get_origin_for_reflect(&self) -> &u32 {
-        &self.origin
-    }
-
-    fn mut_origin_for_reflect(&mut self) -> &mut u32 {
-        &mut self.origin
-    }
-
-    // .OperateType operate = 2;
-
-    pub fn clear_operate(&mut self) {
-        self.operate = OperateType::BROADCAST;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_operate(&mut self, v: OperateType) {
-        self.operate = v;
-    }
-
-    pub fn get_operate(&self) -> OperateType {
-        self.operate
-    }
-
-    fn get_operate_for_reflect(&self) -> &OperateType {
-        &self.operate
-    }
-
-    fn mut_operate_for_reflect(&mut self) -> &mut OperateType {
-        &mut self.operate
-    }
-
-    // bytes RawBytes = 3;
+    // bytes RawBytes = 1;
 
     pub fn clear_RawBytes(&mut self) {
         self.content = ::std::option::Option::None;
@@ -145,24 +96,24 @@ impl Message {
 
     pub fn has_RawBytes(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::RawBytes(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_RawBytes(&mut self, v: ::std::vec::Vec<u8>) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::RawBytes(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_RawBytes(&mut self) -> &mut ::std::vec::Vec<u8> {
-        if let ::std::option::Option::Some(Message_oneof_content::RawBytes(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::RawBytes(::std::vec::Vec::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(::std::vec::Vec::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::RawBytes(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -171,7 +122,7 @@ impl Message {
     pub fn take_RawBytes(&mut self) -> ::std::vec::Vec<u8> {
         if self.has_RawBytes() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::RawBytes(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -181,12 +132,12 @@ impl Message {
 
     pub fn get_RawBytes(&self) -> &[u8] {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::RawBytes(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(ref v)) => v,
             _ => &[],
         }
     }
 
-    // .Request Request = 4;
+    // .Request Request = 2;
 
     pub fn clear_Request(&mut self) {
         self.content = ::std::option::Option::None;
@@ -194,24 +145,24 @@ impl Message {
 
     pub fn has_Request(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Request(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Request(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_Request(&mut self, v: super::request::Request) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::Request(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Request(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_Request(&mut self) -> &mut super::request::Request {
-        if let ::std::option::Option::Some(Message_oneof_content::Request(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::Request(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::Request(super::request::Request::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Request(super::request::Request::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Request(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Request(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -220,7 +171,7 @@ impl Message {
     pub fn take_Request(&mut self) -> super::request::Request {
         if self.has_Request() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::Request(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::Request(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -230,12 +181,12 @@ impl Message {
 
     pub fn get_Request(&self) -> &super::request::Request {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Request(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Request(ref v)) => v,
             _ => super::request::Request::default_instance(),
         }
     }
 
-    // .Response Response = 5;
+    // .Response Response = 3;
 
     pub fn clear_Response(&mut self) {
         self.content = ::std::option::Option::None;
@@ -243,24 +194,24 @@ impl Message {
 
     pub fn has_Response(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Response(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Response(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_Response(&mut self, v: super::response::Response) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::Response(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Response(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_Response(&mut self) -> &mut super::response::Response {
-        if let ::std::option::Option::Some(Message_oneof_content::Response(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::Response(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::Response(super::response::Response::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Response(super::response::Response::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Response(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Response(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -269,7 +220,7 @@ impl Message {
     pub fn take_Response(&mut self) -> super::response::Response {
         if self.has_Response() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::Response(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::Response(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -279,12 +230,12 @@ impl Message {
 
     pub fn get_Response(&self) -> &super::response::Response {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Response(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Response(ref v)) => v,
             _ => super::response::Response::default_instance(),
         }
     }
 
-    // .SyncRequest SyncRequest = 6;
+    // .SyncRequest SyncRequest = 4;
 
     pub fn clear_SyncRequest(&mut self) {
         self.content = ::std::option::Option::None;
@@ -292,24 +243,24 @@ impl Message {
 
     pub fn has_SyncRequest(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SyncRequest(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_SyncRequest(&mut self, v: super::sync::SyncRequest) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::SyncRequest(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_SyncRequest(&mut self) -> &mut super::sync::SyncRequest {
-        if let ::std::option::Option::Some(Message_oneof_content::SyncRequest(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::SyncRequest(super::sync::SyncRequest::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(super::sync::SyncRequest::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SyncRequest(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -318,7 +269,7 @@ impl Message {
     pub fn take_SyncRequest(&mut self) -> super::sync::SyncRequest {
         if self.has_SyncRequest() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::SyncRequest(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -328,12 +279,12 @@ impl Message {
 
     pub fn get_SyncRequest(&self) -> &super::sync::SyncRequest {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SyncRequest(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(ref v)) => v,
             _ => super::sync::SyncRequest::default_instance(),
         }
     }
 
-    // .SyncResponse SyncResponse = 7;
+    // .SyncResponse SyncResponse = 5;
 
     pub fn clear_SyncResponse(&mut self) {
         self.content = ::std::option::Option::None;
@@ -341,24 +292,24 @@ impl Message {
 
     pub fn has_SyncResponse(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SyncResponse(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_SyncResponse(&mut self, v: super::sync::SyncResponse) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::SyncResponse(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_SyncResponse(&mut self) -> &mut super::sync::SyncResponse {
-        if let ::std::option::Option::Some(Message_oneof_content::SyncResponse(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::SyncResponse(super::sync::SyncResponse::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(super::sync::SyncResponse::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SyncResponse(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -367,7 +318,7 @@ impl Message {
     pub fn take_SyncResponse(&mut self) -> super::sync::SyncResponse {
         if self.has_SyncResponse() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::SyncResponse(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -377,12 +328,12 @@ impl Message {
 
     pub fn get_SyncResponse(&self) -> &super::sync::SyncResponse {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SyncResponse(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(ref v)) => v,
             _ => super::sync::SyncResponse::default_instance(),
         }
     }
 
-    // .Status Status = 8;
+    // .Status Status = 6;
 
     pub fn clear_Status(&mut self) {
         self.content = ::std::option::Option::None;
@@ -390,24 +341,24 @@ impl Message {
 
     pub fn has_Status(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Status(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Status(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_Status(&mut self, v: super::blockchain::Status) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::Status(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Status(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_Status(&mut self) -> &mut super::blockchain::Status {
-        if let ::std::option::Option::Some(Message_oneof_content::Status(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::Status(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::Status(super::blockchain::Status::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Status(super::blockchain::Status::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Status(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Status(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -416,7 +367,7 @@ impl Message {
     pub fn take_Status(&mut self) -> super::blockchain::Status {
         if self.has_Status() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::Status(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::Status(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -426,12 +377,12 @@ impl Message {
 
     pub fn get_Status(&self) -> &super::blockchain::Status {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Status(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Status(ref v)) => v,
             _ => super::blockchain::Status::default_instance(),
         }
     }
 
-    // .RichStatus RichStatus = 9;
+    // .RichStatus RichStatus = 7;
 
     pub fn clear_RichStatus(&mut self) {
         self.content = ::std::option::Option::None;
@@ -439,24 +390,24 @@ impl Message {
 
     pub fn has_RichStatus(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::RichStatus(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_RichStatus(&mut self, v: super::blockchain::RichStatus) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::RichStatus(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_RichStatus(&mut self) -> &mut super::blockchain::RichStatus {
-        if let ::std::option::Option::Some(Message_oneof_content::RichStatus(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::RichStatus(super::blockchain::RichStatus::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(super::blockchain::RichStatus::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::RichStatus(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -465,7 +416,7 @@ impl Message {
     pub fn take_RichStatus(&mut self) -> super::blockchain::RichStatus {
         if self.has_RichStatus() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::RichStatus(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -475,12 +426,12 @@ impl Message {
 
     pub fn get_RichStatus(&self) -> &super::blockchain::RichStatus {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::RichStatus(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(ref v)) => v,
             _ => super::blockchain::RichStatus::default_instance(),
         }
     }
 
-    // .SignedProposal SignedProposal = 10;
+    // .SignedProposal SignedProposal = 8;
 
     pub fn clear_SignedProposal(&mut self) {
         self.content = ::std::option::Option::None;
@@ -488,24 +439,24 @@ impl Message {
 
     pub fn has_SignedProposal(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SignedProposal(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_SignedProposal(&mut self, v: super::consensus::SignedProposal) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::SignedProposal(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_SignedProposal(&mut self) -> &mut super::consensus::SignedProposal {
-        if let ::std::option::Option::Some(Message_oneof_content::SignedProposal(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::SignedProposal(super::consensus::SignedProposal::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(super::consensus::SignedProposal::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SignedProposal(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -514,7 +465,7 @@ impl Message {
     pub fn take_SignedProposal(&mut self) -> super::consensus::SignedProposal {
         if self.has_SignedProposal() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::SignedProposal(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -524,12 +475,12 @@ impl Message {
 
     pub fn get_SignedProposal(&self) -> &super::consensus::SignedProposal {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::SignedProposal(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(ref v)) => v,
             _ => super::consensus::SignedProposal::default_instance(),
         }
     }
 
-    // .Block Block = 11;
+    // .Block Block = 9;
 
     pub fn clear_Block(&mut self) {
         self.content = ::std::option::Option::None;
@@ -537,24 +488,24 @@ impl Message {
 
     pub fn has_Block(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Block(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Block(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_Block(&mut self, v: super::blockchain::Block) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::Block(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Block(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_Block(&mut self) -> &mut super::blockchain::Block {
-        if let ::std::option::Option::Some(Message_oneof_content::Block(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::Block(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::Block(super::blockchain::Block::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Block(super::blockchain::Block::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Block(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Block(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -563,7 +514,7 @@ impl Message {
     pub fn take_Block(&mut self) -> super::blockchain::Block {
         if self.has_Block() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::Block(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::Block(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -573,12 +524,12 @@ impl Message {
 
     pub fn get_Block(&self) -> &super::blockchain::Block {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::Block(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::Block(ref v)) => v,
             _ => super::blockchain::Block::default_instance(),
         }
     }
 
-    // .BlockWithProof BlockWithProof = 12;
+    // .BlockWithProof BlockWithProof = 10;
 
     pub fn clear_BlockWithProof(&mut self) {
         self.content = ::std::option::Option::None;
@@ -586,24 +537,24 @@ impl Message {
 
     pub fn has_BlockWithProof(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockWithProof(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_BlockWithProof(&mut self, v: super::blockchain::BlockWithProof) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::BlockWithProof(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_BlockWithProof(&mut self) -> &mut super::blockchain::BlockWithProof {
-        if let ::std::option::Option::Some(Message_oneof_content::BlockWithProof(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::BlockWithProof(super::blockchain::BlockWithProof::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(super::blockchain::BlockWithProof::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockWithProof(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -612,7 +563,7 @@ impl Message {
     pub fn take_BlockWithProof(&mut self) -> super::blockchain::BlockWithProof {
         if self.has_BlockWithProof() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::BlockWithProof(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -622,12 +573,12 @@ impl Message {
 
     pub fn get_BlockWithProof(&self) -> &super::blockchain::BlockWithProof {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockWithProof(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(ref v)) => v,
             _ => super::blockchain::BlockWithProof::default_instance(),
         }
     }
 
-    // .BlockHeader BlockHeader = 13;
+    // .BlockHeader BlockHeader = 11;
 
     pub fn clear_BlockHeader(&mut self) {
         self.content = ::std::option::Option::None;
@@ -635,24 +586,24 @@ impl Message {
 
     pub fn has_BlockHeader(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockHeader(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_BlockHeader(&mut self, v: super::blockchain::BlockHeader) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::BlockHeader(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_BlockHeader(&mut self) -> &mut super::blockchain::BlockHeader {
-        if let ::std::option::Option::Some(Message_oneof_content::BlockHeader(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::BlockHeader(super::blockchain::BlockHeader::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(super::blockchain::BlockHeader::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockHeader(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -661,7 +612,7 @@ impl Message {
     pub fn take_BlockHeader(&mut self) -> super::blockchain::BlockHeader {
         if self.has_BlockHeader() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::BlockHeader(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -671,12 +622,12 @@ impl Message {
 
     pub fn get_BlockHeader(&self) -> &super::blockchain::BlockHeader {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockHeader(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(ref v)) => v,
             _ => super::blockchain::BlockHeader::default_instance(),
         }
     }
 
-    // .BlockTxs BlockTxs = 14;
+    // .BlockTxs BlockTxs = 12;
 
     pub fn clear_BlockTxs(&mut self) {
         self.content = ::std::option::Option::None;
@@ -684,24 +635,24 @@ impl Message {
 
     pub fn has_BlockTxs(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxs(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_BlockTxs(&mut self, v: super::blockchain::BlockTxs) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxs(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_BlockTxs(&mut self) -> &mut super::blockchain::BlockTxs {
-        if let ::std::option::Option::Some(Message_oneof_content::BlockTxs(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxs(super::blockchain::BlockTxs::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(super::blockchain::BlockTxs::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxs(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -710,7 +661,7 @@ impl Message {
     pub fn take_BlockTxs(&mut self) -> super::blockchain::BlockTxs {
         if self.has_BlockTxs() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::BlockTxs(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -720,12 +671,12 @@ impl Message {
 
     pub fn get_BlockTxs(&self) -> &super::blockchain::BlockTxs {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxs(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(ref v)) => v,
             _ => super::blockchain::BlockTxs::default_instance(),
         }
     }
 
-    // .BlockTxHashes BlockTxHashes = 15;
+    // .BlockTxHashes BlockTxHashes = 13;
 
     pub fn clear_BlockTxHashes(&mut self) {
         self.content = ::std::option::Option::None;
@@ -733,24 +684,24 @@ impl Message {
 
     pub fn has_BlockTxHashes(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_BlockTxHashes(&mut self, v: super::auth::BlockTxHashes) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_BlockTxHashes(&mut self) -> &mut super::auth::BlockTxHashes {
-        if let ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(super::auth::BlockTxHashes::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(super::auth::BlockTxHashes::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -759,7 +710,7 @@ impl Message {
     pub fn take_BlockTxHashes(&mut self) -> super::auth::BlockTxHashes {
         if self.has_BlockTxHashes() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -769,12 +720,12 @@ impl Message {
 
     pub fn get_BlockTxHashes(&self) -> &super::auth::BlockTxHashes {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(ref v)) => v,
             _ => super::auth::BlockTxHashes::default_instance(),
         }
     }
 
-    // .BlockTxHashesReq BlockTxHashesReq = 16;
+    // .BlockTxHashesReq BlockTxHashesReq = 14;
 
     pub fn clear_BlockTxHashesReq(&mut self) {
         self.content = ::std::option::Option::None;
@@ -782,24 +733,24 @@ impl Message {
 
     pub fn has_BlockTxHashesReq(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_BlockTxHashesReq(&mut self, v: super::auth::BlockTxHashesReq) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_BlockTxHashesReq(&mut self) -> &mut super::auth::BlockTxHashesReq {
-        if let ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(super::auth::BlockTxHashesReq::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(super::auth::BlockTxHashesReq::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -808,7 +759,7 @@ impl Message {
     pub fn take_BlockTxHashesReq(&mut self) -> super::auth::BlockTxHashesReq {
         if self.has_BlockTxHashesReq() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -818,12 +769,12 @@ impl Message {
 
     pub fn get_BlockTxHashesReq(&self) -> &super::auth::BlockTxHashesReq {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(ref v)) => v,
             _ => super::auth::BlockTxHashesReq::default_instance(),
         }
     }
 
-    // .VerifyTxReq VerifyTxReq = 17;
+    // .VerifyTxReq VerifyTxReq = 15;
 
     pub fn clear_VerifyTxReq(&mut self) {
         self.content = ::std::option::Option::None;
@@ -831,24 +782,24 @@ impl Message {
 
     pub fn has_VerifyTxReq(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_VerifyTxReq(&mut self, v: super::auth::VerifyTxReq) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_VerifyTxReq(&mut self) -> &mut super::auth::VerifyTxReq {
-        if let ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(super::auth::VerifyTxReq::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(super::auth::VerifyTxReq::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -857,7 +808,7 @@ impl Message {
     pub fn take_VerifyTxReq(&mut self) -> super::auth::VerifyTxReq {
         if self.has_VerifyTxReq() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -867,12 +818,12 @@ impl Message {
 
     pub fn get_VerifyTxReq(&self) -> &super::auth::VerifyTxReq {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(ref v)) => v,
             _ => super::auth::VerifyTxReq::default_instance(),
         }
     }
 
-    // .VerifyTxResp VerifyTxResp = 18;
+    // .VerifyTxResp VerifyTxResp = 16;
 
     pub fn clear_VerifyTxResp(&mut self) {
         self.content = ::std::option::Option::None;
@@ -880,24 +831,24 @@ impl Message {
 
     pub fn has_VerifyTxResp(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_VerifyTxResp(&mut self, v: super::auth::VerifyTxResp) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_VerifyTxResp(&mut self) -> &mut super::auth::VerifyTxResp {
-        if let ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(super::auth::VerifyTxResp::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(super::auth::VerifyTxResp::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -906,7 +857,7 @@ impl Message {
     pub fn take_VerifyTxResp(&mut self) -> super::auth::VerifyTxResp {
         if self.has_VerifyTxResp() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -916,12 +867,12 @@ impl Message {
 
     pub fn get_VerifyTxResp(&self) -> &super::auth::VerifyTxResp {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(ref v)) => v,
             _ => super::auth::VerifyTxResp::default_instance(),
         }
     }
 
-    // .VerifyBlockReq VerifyBlockReq = 19;
+    // .VerifyBlockReq VerifyBlockReq = 17;
 
     pub fn clear_VerifyBlockReq(&mut self) {
         self.content = ::std::option::Option::None;
@@ -929,24 +880,24 @@ impl Message {
 
     pub fn has_VerifyBlockReq(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_VerifyBlockReq(&mut self, v: super::auth::VerifyBlockReq) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_VerifyBlockReq(&mut self) -> &mut super::auth::VerifyBlockReq {
-        if let ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(super::auth::VerifyBlockReq::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(super::auth::VerifyBlockReq::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -955,7 +906,7 @@ impl Message {
     pub fn take_VerifyBlockReq(&mut self) -> super::auth::VerifyBlockReq {
         if self.has_VerifyBlockReq() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -965,12 +916,12 @@ impl Message {
 
     pub fn get_VerifyBlockReq(&self) -> &super::auth::VerifyBlockReq {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(ref v)) => v,
             _ => super::auth::VerifyBlockReq::default_instance(),
         }
     }
 
-    // .VerifyBlockResp VerifyBlockResp = 20;
+    // .VerifyBlockResp VerifyBlockResp = 18;
 
     pub fn clear_VerifyBlockResp(&mut self) {
         self.content = ::std::option::Option::None;
@@ -978,24 +929,24 @@ impl Message {
 
     pub fn has_VerifyBlockResp(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_VerifyBlockResp(&mut self, v: super::auth::VerifyBlockResp) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_VerifyBlockResp(&mut self) -> &mut super::auth::VerifyBlockResp {
-        if let ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(super::auth::VerifyBlockResp::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(super::auth::VerifyBlockResp::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -1004,7 +955,7 @@ impl Message {
     pub fn take_VerifyBlockResp(&mut self) -> super::auth::VerifyBlockResp {
         if self.has_VerifyBlockResp() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -1014,12 +965,12 @@ impl Message {
 
     pub fn get_VerifyBlockResp(&self) -> &super::auth::VerifyBlockResp {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(ref v)) => v,
             _ => super::auth::VerifyBlockResp::default_instance(),
         }
     }
 
-    // .ExecutedResult ExecutedResult = 21;
+    // .ExecutedResult ExecutedResult = 19;
 
     pub fn clear_ExecutedResult(&mut self) {
         self.content = ::std::option::Option::None;
@@ -1027,24 +978,24 @@ impl Message {
 
     pub fn has_ExecutedResult(&self) -> bool {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::ExecutedResult(..)) => true,
+            ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
     pub fn set_ExecutedResult(&mut self, v: super::executor::ExecutedResult) {
-        self.content = ::std::option::Option::Some(Message_oneof_content::ExecutedResult(v))
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(v))
     }
 
     // Mutable pointer to the field.
     pub fn mut_ExecutedResult(&mut self) -> &mut super::executor::ExecutedResult {
-        if let ::std::option::Option::Some(Message_oneof_content::ExecutedResult(_)) = self.content {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(_)) = self.content {
         } else {
-            self.content = ::std::option::Option::Some(Message_oneof_content::ExecutedResult(super::executor::ExecutedResult::new()));
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(super::executor::ExecutedResult::new()));
         }
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::ExecutedResult(ref mut v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(ref mut v)) => v,
             _ => panic!(),
         }
     }
@@ -1053,7 +1004,7 @@ impl Message {
     pub fn take_ExecutedResult(&mut self) -> super::executor::ExecutedResult {
         if self.has_ExecutedResult() {
             match self.content.take() {
-                ::std::option::Option::Some(Message_oneof_content::ExecutedResult(v)) => v,
+                ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -1063,100 +1014,100 @@ impl Message {
 
     pub fn get_ExecutedResult(&self) -> &super::executor::ExecutedResult {
         match self.content {
-            ::std::option::Option::Some(Message_oneof_content::ExecutedResult(ref v)) => v,
+            ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(ref v)) => v,
             _ => super::executor::ExecutedResult::default_instance(),
         }
     }
 }
 
-impl ::protobuf::Message for Message {
+impl ::protobuf::Message for InnerMessage {
     fn is_initialized(&self) -> bool {
-        if let Some(Message_oneof_content::Request(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::Request(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::Response(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::Response(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::SyncRequest(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::SyncRequest(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::SyncResponse(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::SyncResponse(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::Status(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::Status(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::RichStatus(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::RichStatus(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::SignedProposal(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::SignedProposal(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::Block(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::Block(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::BlockWithProof(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::BlockWithProof(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::BlockHeader(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::BlockHeader(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::BlockTxs(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::BlockTxs(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::BlockTxHashes(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::BlockTxHashes(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::BlockTxHashesReq(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::BlockTxHashesReq(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::VerifyTxReq(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::VerifyTxReq(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::VerifyTxResp(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::VerifyTxResp(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::VerifyBlockReq(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::VerifyBlockReq(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::VerifyBlockResp(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::VerifyBlockResp(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
         }
-        if let Some(Message_oneof_content::ExecutedResult(ref v)) = self.content {
+        if let Some(InnerMessage_oneof_content::ExecutedResult(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
@@ -1169,132 +1120,118 @@ impl ::protobuf::Message for Message {
             let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    let tmp = is.read_uint32()?;
-                    self.origin = tmp;
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::RawBytes(is.read_bytes()?));
                 },
                 2 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    let tmp = is.read_enum()?;
-                    self.operate = tmp;
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Request(is.read_message()?));
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::RawBytes(is.read_bytes()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Response(is.read_message()?));
                 },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::Request(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SyncRequest(is.read_message()?));
                 },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::Response(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SyncResponse(is.read_message()?));
                 },
                 6 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::SyncRequest(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Status(is.read_message()?));
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::SyncResponse(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::RichStatus(is.read_message()?));
                 },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::Status(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SignedProposal(is.read_message()?));
                 },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::RichStatus(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::Block(is.read_message()?));
                 },
                 10 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::SignedProposal(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockWithProof(is.read_message()?));
                 },
                 11 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::Block(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockHeader(is.read_message()?));
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::BlockWithProof(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxs(is.read_message()?));
                 },
                 13 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::BlockHeader(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashes(is.read_message()?));
                 },
                 14 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxs(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(is.read_message()?));
                 },
                 15 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxHashes(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(is.read_message()?));
                 },
                 16 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::BlockTxHashesReq(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(is.read_message()?));
                 },
                 17 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::VerifyTxReq(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockReq(is.read_message()?));
                 },
                 18 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::VerifyTxResp(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyBlockResp(is.read_message()?));
                 },
                 19 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::VerifyBlockReq(is.read_message()?));
-                },
-                20 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::VerifyBlockResp(is.read_message()?));
-                },
-                21 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    self.content = ::std::option::Option::Some(Message_oneof_content::ExecutedResult(is.read_message()?));
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(is.read_message()?));
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -1308,86 +1245,80 @@ impl ::protobuf::Message for Message {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        if self.origin != 0 {
-            my_size += ::protobuf::rt::value_size(1, self.origin, ::protobuf::wire_format::WireTypeVarint);
-        }
-        if self.operate != OperateType::BROADCAST {
-            my_size += ::protobuf::rt::enum_size(2, self.operate);
-        }
         if let ::std::option::Option::Some(ref v) = self.content {
             match v {
-                &Message_oneof_content::RawBytes(ref v) => {
-                    my_size += ::protobuf::rt::bytes_size(3, &v);
+                &InnerMessage_oneof_content::RawBytes(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(1, &v);
                 },
-                &Message_oneof_content::Request(ref v) => {
+                &InnerMessage_oneof_content::Request(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::Response(ref v) => {
+                &InnerMessage_oneof_content::Response(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::SyncRequest(ref v) => {
+                &InnerMessage_oneof_content::SyncRequest(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::SyncResponse(ref v) => {
+                &InnerMessage_oneof_content::SyncResponse(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::Status(ref v) => {
+                &InnerMessage_oneof_content::Status(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::RichStatus(ref v) => {
+                &InnerMessage_oneof_content::RichStatus(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::SignedProposal(ref v) => {
+                &InnerMessage_oneof_content::SignedProposal(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::Block(ref v) => {
+                &InnerMessage_oneof_content::Block(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::BlockWithProof(ref v) => {
+                &InnerMessage_oneof_content::BlockWithProof(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::BlockHeader(ref v) => {
+                &InnerMessage_oneof_content::BlockHeader(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::BlockTxs(ref v) => {
+                &InnerMessage_oneof_content::BlockTxs(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::BlockTxHashes(ref v) => {
+                &InnerMessage_oneof_content::BlockTxHashes(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::BlockTxHashesReq(ref v) => {
+                &InnerMessage_oneof_content::BlockTxHashesReq(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::VerifyTxReq(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::VerifyTxResp(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::VerifyTxReq(ref v) => {
+                &InnerMessage_oneof_content::VerifyBlockReq(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::VerifyTxResp(ref v) => {
+                &InnerMessage_oneof_content::VerifyBlockResp(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &Message_oneof_content::VerifyBlockReq(ref v) => {
-                    let len = v.compute_size();
-                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-                },
-                &Message_oneof_content::VerifyBlockResp(ref v) => {
-                    let len = v.compute_size();
-                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-                },
-                &Message_oneof_content::ExecutedResult(ref v) => {
+                &InnerMessage_oneof_content::ExecutedResult(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -1399,104 +1330,98 @@ impl ::protobuf::Message for Message {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        if self.origin != 0 {
-            os.write_uint32(1, self.origin)?;
-        }
-        if self.operate != OperateType::BROADCAST {
-            os.write_enum(2, self.operate.value())?;
-        }
         if let ::std::option::Option::Some(ref v) = self.content {
             match v {
-                &Message_oneof_content::RawBytes(ref v) => {
-                    os.write_bytes(3, v)?;
+                &InnerMessage_oneof_content::RawBytes(ref v) => {
+                    os.write_bytes(1, v)?;
                 },
-                &Message_oneof_content::Request(ref v) => {
+                &InnerMessage_oneof_content::Request(ref v) => {
+                    os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::Response(ref v) => {
+                    os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::SyncRequest(ref v) => {
                     os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::Response(ref v) => {
+                &InnerMessage_oneof_content::SyncResponse(ref v) => {
                     os.write_tag(5, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::SyncRequest(ref v) => {
+                &InnerMessage_oneof_content::Status(ref v) => {
                     os.write_tag(6, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::SyncResponse(ref v) => {
+                &InnerMessage_oneof_content::RichStatus(ref v) => {
                     os.write_tag(7, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::Status(ref v) => {
+                &InnerMessage_oneof_content::SignedProposal(ref v) => {
                     os.write_tag(8, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::RichStatus(ref v) => {
+                &InnerMessage_oneof_content::Block(ref v) => {
                     os.write_tag(9, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::SignedProposal(ref v) => {
+                &InnerMessage_oneof_content::BlockWithProof(ref v) => {
                     os.write_tag(10, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::Block(ref v) => {
+                &InnerMessage_oneof_content::BlockHeader(ref v) => {
                     os.write_tag(11, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::BlockWithProof(ref v) => {
+                &InnerMessage_oneof_content::BlockTxs(ref v) => {
                     os.write_tag(12, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::BlockHeader(ref v) => {
+                &InnerMessage_oneof_content::BlockTxHashes(ref v) => {
                     os.write_tag(13, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::BlockTxs(ref v) => {
+                &InnerMessage_oneof_content::BlockTxHashesReq(ref v) => {
                     os.write_tag(14, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::BlockTxHashes(ref v) => {
+                &InnerMessage_oneof_content::VerifyTxReq(ref v) => {
                     os.write_tag(15, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::BlockTxHashesReq(ref v) => {
+                &InnerMessage_oneof_content::VerifyTxResp(ref v) => {
                     os.write_tag(16, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::VerifyTxReq(ref v) => {
+                &InnerMessage_oneof_content::VerifyBlockReq(ref v) => {
                     os.write_tag(17, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::VerifyTxResp(ref v) => {
+                &InnerMessage_oneof_content::VerifyBlockResp(ref v) => {
                     os.write_tag(18, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &Message_oneof_content::VerifyBlockReq(ref v) => {
+                &InnerMessage_oneof_content::ExecutedResult(ref v) => {
                     os.write_tag(19, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-                    os.write_raw_varint32(v.get_cached_size())?;
-                    v.write_to_with_cached_sizes(os)?;
-                },
-                &Message_oneof_content::VerifyBlockResp(ref v) => {
-                    os.write_tag(20, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-                    os.write_raw_varint32(v.get_cached_size())?;
-                    v.write_to_with_cached_sizes(os)?;
-                },
-                &Message_oneof_content::ExecutedResult(ref v) => {
-                    os.write_tag(21, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -1533,12 +1458,12 @@ impl ::protobuf::Message for Message {
     }
 }
 
-impl ::protobuf::MessageStatic for Message {
-    fn new() -> Message {
-        Message::new()
+impl ::protobuf::MessageStatic for InnerMessage {
+    fn new() -> InnerMessage {
+        InnerMessage::new()
     }
 
-    fn descriptor_static(_: ::std::option::Option<Message>) -> &'static ::protobuf::reflect::MessageDescriptor {
+    fn descriptor_static(_: ::std::option::Option<InnerMessage>) -> &'static ::protobuf::reflect::MessageDescriptor {
         static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
             lock: ::protobuf::lazy::ONCE_INIT,
             ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
@@ -1546,113 +1471,103 @@ impl ::protobuf::MessageStatic for Message {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
-                    "origin",
-                    Message::get_origin_for_reflect,
-                    Message::mut_origin_for_reflect,
-                ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeEnum<OperateType>>(
-                    "operate",
-                    Message::get_operate_for_reflect,
-                    Message::mut_operate_for_reflect,
-                ));
                 fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
                     "RawBytes",
-                    Message::has_RawBytes,
-                    Message::get_RawBytes,
+                    InnerMessage::has_RawBytes,
+                    InnerMessage::get_RawBytes,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::request::Request>(
                     "Request",
-                    Message::has_Request,
-                    Message::get_Request,
+                    InnerMessage::has_Request,
+                    InnerMessage::get_Request,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::response::Response>(
                     "Response",
-                    Message::has_Response,
-                    Message::get_Response,
+                    InnerMessage::has_Response,
+                    InnerMessage::get_Response,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::sync::SyncRequest>(
                     "SyncRequest",
-                    Message::has_SyncRequest,
-                    Message::get_SyncRequest,
+                    InnerMessage::has_SyncRequest,
+                    InnerMessage::get_SyncRequest,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::sync::SyncResponse>(
                     "SyncResponse",
-                    Message::has_SyncResponse,
-                    Message::get_SyncResponse,
+                    InnerMessage::has_SyncResponse,
+                    InnerMessage::get_SyncResponse,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::Status>(
                     "Status",
-                    Message::has_Status,
-                    Message::get_Status,
+                    InnerMessage::has_Status,
+                    InnerMessage::get_Status,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::RichStatus>(
                     "RichStatus",
-                    Message::has_RichStatus,
-                    Message::get_RichStatus,
+                    InnerMessage::has_RichStatus,
+                    InnerMessage::get_RichStatus,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::consensus::SignedProposal>(
                     "SignedProposal",
-                    Message::has_SignedProposal,
-                    Message::get_SignedProposal,
+                    InnerMessage::has_SignedProposal,
+                    InnerMessage::get_SignedProposal,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::Block>(
                     "Block",
-                    Message::has_Block,
-                    Message::get_Block,
+                    InnerMessage::has_Block,
+                    InnerMessage::get_Block,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::BlockWithProof>(
                     "BlockWithProof",
-                    Message::has_BlockWithProof,
-                    Message::get_BlockWithProof,
+                    InnerMessage::has_BlockWithProof,
+                    InnerMessage::get_BlockWithProof,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::BlockHeader>(
                     "BlockHeader",
-                    Message::has_BlockHeader,
-                    Message::get_BlockHeader,
+                    InnerMessage::has_BlockHeader,
+                    InnerMessage::get_BlockHeader,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::BlockTxs>(
                     "BlockTxs",
-                    Message::has_BlockTxs,
-                    Message::get_BlockTxs,
+                    InnerMessage::has_BlockTxs,
+                    InnerMessage::get_BlockTxs,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::BlockTxHashes>(
                     "BlockTxHashes",
-                    Message::has_BlockTxHashes,
-                    Message::get_BlockTxHashes,
+                    InnerMessage::has_BlockTxHashes,
+                    InnerMessage::get_BlockTxHashes,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::BlockTxHashesReq>(
                     "BlockTxHashesReq",
-                    Message::has_BlockTxHashesReq,
-                    Message::get_BlockTxHashesReq,
+                    InnerMessage::has_BlockTxHashesReq,
+                    InnerMessage::get_BlockTxHashesReq,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyTxReq>(
                     "VerifyTxReq",
-                    Message::has_VerifyTxReq,
-                    Message::get_VerifyTxReq,
+                    InnerMessage::has_VerifyTxReq,
+                    InnerMessage::get_VerifyTxReq,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyTxResp>(
                     "VerifyTxResp",
-                    Message::has_VerifyTxResp,
-                    Message::get_VerifyTxResp,
+                    InnerMessage::has_VerifyTxResp,
+                    InnerMessage::get_VerifyTxResp,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyBlockReq>(
                     "VerifyBlockReq",
-                    Message::has_VerifyBlockReq,
-                    Message::get_VerifyBlockReq,
+                    InnerMessage::has_VerifyBlockReq,
+                    InnerMessage::get_VerifyBlockReq,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyBlockResp>(
                     "VerifyBlockResp",
-                    Message::has_VerifyBlockResp,
-                    Message::get_VerifyBlockResp,
+                    InnerMessage::has_VerifyBlockResp,
+                    InnerMessage::get_VerifyBlockResp,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::executor::ExecutedResult>(
                     "ExecutedResult",
-                    Message::has_ExecutedResult,
-                    Message::get_ExecutedResult,
+                    InnerMessage::has_ExecutedResult,
+                    InnerMessage::get_ExecutedResult,
                 ));
-                ::protobuf::reflect::MessageDescriptor::new::<Message>(
-                    "Message",
+                ::protobuf::reflect::MessageDescriptor::new::<InnerMessage>(
+                    "InnerMessage",
                     fields,
                     file_descriptor_proto()
                 )
@@ -1661,10 +1576,8 @@ impl ::protobuf::MessageStatic for Message {
     }
 }
 
-impl ::protobuf::Clear for Message {
+impl ::protobuf::Clear for InnerMessage {
     fn clear(&mut self) {
-        self.clear_origin();
-        self.clear_operate();
         self.clear_RawBytes();
         self.clear_Request();
         self.clear_Response();
@@ -1688,173 +1601,99 @@ impl ::protobuf::Clear for Message {
     }
 }
 
-impl ::std::fmt::Debug for Message {
+impl ::std::fmt::Debug for InnerMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-impl ::protobuf::reflect::ProtobufValue for Message {
+impl ::protobuf::reflect::ProtobufValue for InnerMessage {
     fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
         ::protobuf::reflect::ProtobufValueRef::Message(self)
-    }
-}
-
-#[derive(Clone,PartialEq,Eq,Debug,Hash)]
-pub enum OperateType {
-    BROADCAST = 0,
-    SINGLE = 1,
-    SUBTRACT = 2,
-}
-
-impl ::protobuf::ProtobufEnum for OperateType {
-    fn value(&self) -> i32 {
-        *self as i32
-    }
-
-    fn from_i32(value: i32) -> ::std::option::Option<OperateType> {
-        match value {
-            0 => ::std::option::Option::Some(OperateType::BROADCAST),
-            1 => ::std::option::Option::Some(OperateType::SINGLE),
-            2 => ::std::option::Option::Some(OperateType::SUBTRACT),
-            _ => ::std::option::Option::None
-        }
-    }
-
-    fn values() -> &'static [Self] {
-        static values: &'static [OperateType] = &[
-            OperateType::BROADCAST,
-            OperateType::SINGLE,
-            OperateType::SUBTRACT,
-        ];
-        values
-    }
-
-    fn enum_descriptor_static(_: ::std::option::Option<OperateType>) -> &'static ::protobuf::reflect::EnumDescriptor {
-        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::EnumDescriptor> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const ::protobuf::reflect::EnumDescriptor,
-        };
-        unsafe {
-            descriptor.get(|| {
-                ::protobuf::reflect::EnumDescriptor::new("OperateType", file_descriptor_proto())
-            })
-        }
-    }
-}
-
-impl ::std::marker::Copy for OperateType {
-}
-
-impl ::std::default::Default for OperateType {
-    fn default() -> Self {
-        OperateType::BROADCAST
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for OperateType {
-    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
-        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
     }
 }
 
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
-    o\x1a\x0eexecutor.proto\"\xff\x07\n\x07Message\x12\x16\n\x06origin\x18\
-    \x01\x20\x01(\rR\x06origin\x12&\n\x07operate\x18\x02\x20\x01(\x0e2\x0c.O\
-    perateTypeR\x07operate\x12\x1c\n\x08RawBytes\x18\x03\x20\x01(\x0cH\0R\
-    \x08RawBytes\x12$\n\x07Request\x18\x04\x20\x01(\x0b2\x08.RequestH\0R\x07\
-    Request\x12'\n\x08Response\x18\x05\x20\x01(\x0b2\t.ResponseH\0R\x08Respo\
-    nse\x120\n\x0bSyncRequest\x18\x06\x20\x01(\x0b2\x0c.SyncRequestH\0R\x0bS\
-    yncRequest\x123\n\x0cSyncResponse\x18\x07\x20\x01(\x0b2\r.SyncResponseH\
-    \0R\x0cSyncResponse\x12!\n\x06Status\x18\x08\x20\x01(\x0b2\x07.StatusH\0\
-    R\x06Status\x12-\n\nRichStatus\x18\t\x20\x01(\x0b2\x0b.RichStatusH\0R\nR\
-    ichStatus\x129\n\x0eSignedProposal\x18\n\x20\x01(\x0b2\x0f.SignedProposa\
-    lH\0R\x0eSignedProposal\x12\x1e\n\x05Block\x18\x0b\x20\x01(\x0b2\x06.Blo\
-    ckH\0R\x05Block\x129\n\x0eBlockWithProof\x18\x0c\x20\x01(\x0b2\x0f.Block\
-    WithProofH\0R\x0eBlockWithProof\x120\n\x0bBlockHeader\x18\r\x20\x01(\x0b\
-    2\x0c.BlockHeaderH\0R\x0bBlockHeader\x12'\n\x08BlockTxs\x18\x0e\x20\x01(\
-    \x0b2\t.BlockTxsH\0R\x08BlockTxs\x126\n\rBlockTxHashes\x18\x0f\x20\x01(\
-    \x0b2\x0e.BlockTxHashesH\0R\rBlockTxHashes\x12?\n\x10BlockTxHashesReq\
-    \x18\x10\x20\x01(\x0b2\x11.BlockTxHashesReqH\0R\x10BlockTxHashesReq\x120\
-    \n\x0bVerifyTxReq\x18\x11\x20\x01(\x0b2\x0c.VerifyTxReqH\0R\x0bVerifyTxR\
-    eq\x123\n\x0cVerifyTxResp\x18\x12\x20\x01(\x0b2\r.VerifyTxRespH\0R\x0cVe\
-    rifyTxResp\x129\n\x0eVerifyBlockReq\x18\x13\x20\x01(\x0b2\x0f.VerifyBloc\
-    kReqH\0R\x0eVerifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\x14\x20\x01(\
-    \x0b2\x10.VerifyBlockRespH\0R\x0fVerifyBlockResp\x129\n\x0eExecutedResul\
-    t\x18\x15\x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eExecutedResultB\t\n\
-    \x07content*6\n\x0bOperateType\x12\r\n\tBROADCAST\x10\0\x12\n\n\x06SINGL\
-    E\x10\x01\x12\x0c\n\x08SUBTRACT\x10\x02J\xc7\x0b\n\x06\x12\x04\0\03\x01\
-    \n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\
-    \n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\
-    \n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\
-    \x18\n\t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\
-    \x07\x17\n\n\n\x02\x05\0\x12\x04\n\0\x0e\x01\n\n\n\x03\x05\0\x01\x12\x03\
-    \n\x05\x10\n\x0b\n\x04\x05\0\x02\0\x12\x03\x0b\x04\x12\n\x0c\n\x05\x05\0\
-    \x02\0\x01\x12\x03\x0b\x04\r\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x0b\x10\
-    \x11\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x0c\x04\x0f\n\x0c\n\x05\x05\0\x02\
-    \x01\x01\x12\x03\x0c\x04\n\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x0c\r\
-    \x0e\n\x0b\n\x04\x05\0\x02\x02\x12\x03\r\x04\x11\n\x0c\n\x05\x05\0\x02\
-    \x02\x01\x12\x03\r\x04\x0c\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\r\x0f\
-    \x10\n\n\n\x02\x04\0\x12\x04\x10\03\x01\n\n\n\x03\x04\0\x01\x12\x03\x10\
-    \x08\x0f\n\x0b\n\x04\x04\0\x02\0\x12\x03\x12\x04\x16\n\r\n\x05\x04\0\x02\
-    \0\x04\x12\x04\x12\x04\x10\x11\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x12\
-    \x04\n\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x12\x0b\x11\n\x0c\n\x05\x04\0\
-    \x02\0\x03\x12\x03\x12\x14\x15\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x13\x04\
-    \x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x13\x04\x12\x16\n\x0c\n\x05\x04\
-    \0\x02\x01\x06\x12\x03\x13\x04\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\
-    \x13\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x13\x1a\x1b\n\x0c\n\
-    \x04\x04\0\x08\0\x12\x04\x15\x042\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\
-    \x03\x15\n\x11\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x17\x08\x1b\n\x0c\n\x05\
-    \x04\0\x02\x02\x05\x12\x03\x17\x08\r\n\x0c\n\x05\x04\0\x02\x02\x01\x12\
-    \x03\x17\x0e\x16\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x17\x19\x1a\n\x0b\
-    \n\x04\x04\0\x02\x03\x12\x03\x19\x08\x1c\n\x0c\n\x05\x04\0\x02\x03\x06\
-    \x12\x03\x19\x08\x0f\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x19\x10\x17\n\
-    \x0c\n\x05\x04\0\x02\x03\x03\x12\x03\x19\x1a\x1b\n\x0b\n\x04\x04\0\x02\
-    \x04\x12\x03\x1a\x08\x1e\n\x0c\n\x05\x04\0\x02\x04\x06\x12\x03\x1a\x08\
-    \x10\n\x0c\n\x05\x04\0\x02\x04\x01\x12\x03\x1a\x11\x19\n\x0c\n\x05\x04\0\
-    \x02\x04\x03\x12\x03\x1a\x1c\x1d\n\x0b\n\x04\x04\0\x02\x05\x12\x03\x1c\
-    \x08$\n\x0c\n\x05\x04\0\x02\x05\x06\x12\x03\x1c\x08\x13\n\x0c\n\x05\x04\
-    \0\x02\x05\x01\x12\x03\x1c\x14\x1f\n\x0c\n\x05\x04\0\x02\x05\x03\x12\x03\
-    \x1c\"#\n\x0b\n\x04\x04\0\x02\x06\x12\x03\x1d\x08&\n\x0c\n\x05\x04\0\x02\
-    \x06\x06\x12\x03\x1d\x08\x14\n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x1d\
-    \x15!\n\x0c\n\x05\x04\0\x02\x06\x03\x12\x03\x1d$%\n\x0b\n\x04\x04\0\x02\
-    \x07\x12\x03\x1f\x08\x1a\n\x0c\n\x05\x04\0\x02\x07\x06\x12\x03\x1f\x08\
-    \x0e\n\x0c\n\x05\x04\0\x02\x07\x01\x12\x03\x1f\x0f\x15\n\x0c\n\x05\x04\0\
-    \x02\x07\x03\x12\x03\x1f\x18\x19\n\x0b\n\x04\x04\0\x02\x08\x12\x03\x20\
-    \x08\"\n\x0c\n\x05\x04\0\x02\x08\x06\x12\x03\x20\x08\x12\n\x0c\n\x05\x04\
-    \0\x02\x08\x01\x12\x03\x20\x13\x1d\n\x0c\n\x05\x04\0\x02\x08\x03\x12\x03\
-    \x20\x20!\n\x0b\n\x04\x04\0\x02\t\x12\x03\"\x08+\n\x0c\n\x05\x04\0\x02\t\
-    \x06\x12\x03\"\x08\x16\n\x0c\n\x05\x04\0\x02\t\x01\x12\x03\"\x17%\n\x0c\
-    \n\x05\x04\0\x02\t\x03\x12\x03\"(*\n\x0b\n\x04\x04\0\x02\n\x12\x03$\x08\
-    \x19\n\x0c\n\x05\x04\0\x02\n\x06\x12\x03$\x08\r\n\x0c\n\x05\x04\0\x02\n\
-    \x01\x12\x03$\x0e\x13\n\x0c\n\x05\x04\0\x02\n\x03\x12\x03$\x16\x18\n\x0b\
-    \n\x04\x04\0\x02\x0b\x12\x03%\x08+\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\
-    %\x08\x16\n\x0c\n\x05\x04\0\x02\x0b\x01\x12\x03%\x17%\n\x0c\n\x05\x04\0\
-    \x02\x0b\x03\x12\x03%(*\n\x0b\n\x04\x04\0\x02\x0c\x12\x03&\x08%\n\x0c\n\
-    \x05\x04\0\x02\x0c\x06\x12\x03&\x08\x13\n\x0c\n\x05\x04\0\x02\x0c\x01\
-    \x12\x03&\x14\x1f\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\x03&\"$\n\x0b\n\x04\
-    \x04\0\x02\r\x12\x03'\x08\x1f\n\x0c\n\x05\x04\0\x02\r\x06\x12\x03'\x08\
-    \x10\n\x0c\n\x05\x04\0\x02\r\x01\x12\x03'\x11\x19\n\x0c\n\x05\x04\0\x02\
-    \r\x03\x12\x03'\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0e\x12\x03)\x08)\n\x0c\n\
-    \x05\x04\0\x02\x0e\x06\x12\x03)\x08\x15\n\x0c\n\x05\x04\0\x02\x0e\x01\
-    \x12\x03)\x16#\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03)&(\n\x0b\n\x04\x04\
-    \0\x02\x0f\x12\x03*\x08/\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\x03*\x08\x18\
-    \n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03*\x19)\n\x0c\n\x05\x04\0\x02\x0f\
-    \x03\x12\x03*,.\n\x0b\n\x04\x04\0\x02\x10\x12\x03,\x08%\n\x0c\n\x05\x04\
-    \0\x02\x10\x06\x12\x03,\x08\x13\n\x0c\n\x05\x04\0\x02\x10\x01\x12\x03,\
-    \x14\x1f\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03,\"$\n\x0b\n\x04\x04\0\x02\
-    \x11\x12\x03-\x08'\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03-\x08\x14\n\x0c\
-    \n\x05\x04\0\x02\x11\x01\x12\x03-\x15!\n\x0c\n\x05\x04\0\x02\x11\x03\x12\
-    \x03-$&\n\x0b\n\x04\x04\0\x02\x12\x12\x03.\x08+\n\x0c\n\x05\x04\0\x02\
-    \x12\x06\x12\x03.\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\x12\x03.\x17%\n\
-    \x0c\n\x05\x04\0\x02\x12\x03\x12\x03.(*\n\x0b\n\x04\x04\0\x02\x13\x12\
-    \x03/\x08-\n\x0c\n\x05\x04\0\x02\x13\x06\x12\x03/\x08\x17\n\x0c\n\x05\
-    \x04\0\x02\x13\x01\x12\x03/\x18'\n\x0c\n\x05\x04\0\x02\x13\x03\x12\x03/*\
-    ,\n\x0b\n\x04\x04\0\x02\x14\x12\x031\x08+\n\x0c\n\x05\x04\0\x02\x14\x06\
-    \x12\x031\x08\x16\n\x0c\n\x05\x04\0\x02\x14\x01\x12\x031\x17%\n\x0c\n\
-    \x05\x04\0\x02\x14\x03\x12\x031(*b\x06proto3\
+    o\x1a\x0eexecutor.proto\"\xc4\x07\n\x0cInnerMessage\x12\x1c\n\x08RawByte\
+    s\x18\x01\x20\x01(\x0cH\0R\x08RawBytes\x12$\n\x07Request\x18\x02\x20\x01\
+    (\x0b2\x08.RequestH\0R\x07Request\x12'\n\x08Response\x18\x03\x20\x01(\
+    \x0b2\t.ResponseH\0R\x08Response\x120\n\x0bSyncRequest\x18\x04\x20\x01(\
+    \x0b2\x0c.SyncRequestH\0R\x0bSyncRequest\x123\n\x0cSyncResponse\x18\x05\
+    \x20\x01(\x0b2\r.SyncResponseH\0R\x0cSyncResponse\x12!\n\x06Status\x18\
+    \x06\x20\x01(\x0b2\x07.StatusH\0R\x06Status\x12-\n\nRichStatus\x18\x07\
+    \x20\x01(\x0b2\x0b.RichStatusH\0R\nRichStatus\x129\n\x0eSignedProposal\
+    \x18\x08\x20\x01(\x0b2\x0f.SignedProposalH\0R\x0eSignedProposal\x12\x1e\
+    \n\x05Block\x18\t\x20\x01(\x0b2\x06.BlockH\0R\x05Block\x129\n\x0eBlockWi\
+    thProof\x18\n\x20\x01(\x0b2\x0f.BlockWithProofH\0R\x0eBlockWithProof\x12\
+    0\n\x0bBlockHeader\x18\x0b\x20\x01(\x0b2\x0c.BlockHeaderH\0R\x0bBlockHea\
+    der\x12'\n\x08BlockTxs\x18\x0c\x20\x01(\x0b2\t.BlockTxsH\0R\x08BlockTxs\
+    \x126\n\rBlockTxHashes\x18\r\x20\x01(\x0b2\x0e.BlockTxHashesH\0R\rBlockT\
+    xHashes\x12?\n\x10BlockTxHashesReq\x18\x0e\x20\x01(\x0b2\x11.BlockTxHash\
+    esReqH\0R\x10BlockTxHashesReq\x120\n\x0bVerifyTxReq\x18\x0f\x20\x01(\x0b\
+    2\x0c.VerifyTxReqH\0R\x0bVerifyTxReq\x123\n\x0cVerifyTxResp\x18\x10\x20\
+    \x01(\x0b2\r.VerifyTxRespH\0R\x0cVerifyTxResp\x129\n\x0eVerifyBlockReq\
+    \x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\x0eVerifyBlockReq\x12<\n\
+    \x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.VerifyBlockRespH\0R\x0fVer\
+    ifyBlockResp\x129\n\x0eExecutedResult\x18\x13\x20\x01(\x0b2\x0f.Executed\
+    ResultH\0R\x0eExecutedResultB\t\n\x07contentJ\xa8\t\n\x06\x12\x04\0\0*\
+    \x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\
+    \n\t\n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\
+    \x13\n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\
+    \x07\x18\n\t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\
+    \x08\x07\x17\n\n\n\x02\x04\0\x12\x04\n\0*\x01\n\n\n\x03\x04\0\x01\x12\
+    \x03\n\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\x04\x0c\x04)\x05\n\x0c\n\x05\
+    \x04\0\x08\0\x01\x12\x03\x0c\n\x11\n\x0b\n\x04\x04\0\x02\0\x12\x03\x0e\
+    \x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0e\x08\r\n\x0c\n\x05\x04\0\
+    \x02\0\x01\x12\x03\x0e\x0e\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x0e\
+    \x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x10\x08\x1c\n\x0c\n\x05\x04\0\
+    \x02\x01\x06\x12\x03\x10\x08\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\
+    \x10\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x10\x1a\x1b\n\x0b\n\
+    \x04\x04\0\x02\x02\x12\x03\x11\x08\x1e\n\x0c\n\x05\x04\0\x02\x02\x06\x12\
+    \x03\x11\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x11\x11\x19\n\x0c\
+    \n\x05\x04\0\x02\x02\x03\x12\x03\x11\x1c\x1d\n\x0b\n\x04\x04\0\x02\x03\
+    \x12\x03\x13\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\x03\x13\x08\x13\n\
+    \x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x13\x14\x1f\n\x0c\n\x05\x04\0\x02\
+    \x03\x03\x12\x03\x13\"#\n\x0b\n\x04\x04\0\x02\x04\x12\x03\x14\x08&\n\x0c\
+    \n\x05\x04\0\x02\x04\x06\x12\x03\x14\x08\x14\n\x0c\n\x05\x04\0\x02\x04\
+    \x01\x12\x03\x14\x15!\n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x14$%\n\x0b\
+    \n\x04\x04\0\x02\x05\x12\x03\x16\x08\x1a\n\x0c\n\x05\x04\0\x02\x05\x06\
+    \x12\x03\x16\x08\x0e\n\x0c\n\x05\x04\0\x02\x05\x01\x12\x03\x16\x0f\x15\n\
+    \x0c\n\x05\x04\0\x02\x05\x03\x12\x03\x16\x18\x19\n\x0b\n\x04\x04\0\x02\
+    \x06\x12\x03\x17\x08\"\n\x0c\n\x05\x04\0\x02\x06\x06\x12\x03\x17\x08\x12\
+    \n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x17\x13\x1d\n\x0c\n\x05\x04\0\x02\
+    \x06\x03\x12\x03\x17\x20!\n\x0b\n\x04\x04\0\x02\x07\x12\x03\x19\x08*\n\
+    \x0c\n\x05\x04\0\x02\x07\x06\x12\x03\x19\x08\x16\n\x0c\n\x05\x04\0\x02\
+    \x07\x01\x12\x03\x19\x17%\n\x0c\n\x05\x04\0\x02\x07\x03\x12\x03\x19()\n\
+    \x0b\n\x04\x04\0\x02\x08\x12\x03\x1b\x08\x18\n\x0c\n\x05\x04\0\x02\x08\
+    \x06\x12\x03\x1b\x08\r\n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\x1b\x0e\x13\
+    \n\x0c\n\x05\x04\0\x02\x08\x03\x12\x03\x1b\x16\x17\n\x0b\n\x04\x04\0\x02\
+    \t\x12\x03\x1c\x08+\n\x0c\n\x05\x04\0\x02\t\x06\x12\x03\x1c\x08\x16\n\
+    \x0c\n\x05\x04\0\x02\t\x01\x12\x03\x1c\x17%\n\x0c\n\x05\x04\0\x02\t\x03\
+    \x12\x03\x1c(*\n\x0b\n\x04\x04\0\x02\n\x12\x03\x1d\x08%\n\x0c\n\x05\x04\
+    \0\x02\n\x06\x12\x03\x1d\x08\x13\n\x0c\n\x05\x04\0\x02\n\x01\x12\x03\x1d\
+    \x14\x1f\n\x0c\n\x05\x04\0\x02\n\x03\x12\x03\x1d\"$\n\x0b\n\x04\x04\0\
+    \x02\x0b\x12\x03\x1e\x08\x1f\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\x1e\
+    \x08\x10\n\x0c\n\x05\x04\0\x02\x0b\x01\x12\x03\x1e\x11\x19\n\x0c\n\x05\
+    \x04\0\x02\x0b\x03\x12\x03\x1e\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0c\x12\x03\
+    \x20\x08)\n\x0c\n\x05\x04\0\x02\x0c\x06\x12\x03\x20\x08\x15\n\x0c\n\x05\
+    \x04\0\x02\x0c\x01\x12\x03\x20\x16#\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\
+    \x03\x20&(\n\x0b\n\x04\x04\0\x02\r\x12\x03!\x08/\n\x0c\n\x05\x04\0\x02\r\
+    \x06\x12\x03!\x08\x18\n\x0c\n\x05\x04\0\x02\r\x01\x12\x03!\x19)\n\x0c\n\
+    \x05\x04\0\x02\r\x03\x12\x03!,.\n\x0b\n\x04\x04\0\x02\x0e\x12\x03#\x08%\
+    \n\x0c\n\x05\x04\0\x02\x0e\x06\x12\x03#\x08\x13\n\x0c\n\x05\x04\0\x02\
+    \x0e\x01\x12\x03#\x14\x1f\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03#\"$\n\
+    \x0b\n\x04\x04\0\x02\x0f\x12\x03$\x08'\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\
+    \x03$\x08\x14\n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03$\x15!\n\x0c\n\x05\
+    \x04\0\x02\x0f\x03\x12\x03$$&\n\x0b\n\x04\x04\0\x02\x10\x12\x03%\x08+\n\
+    \x0c\n\x05\x04\0\x02\x10\x06\x12\x03%\x08\x16\n\x0c\n\x05\x04\0\x02\x10\
+    \x01\x12\x03%\x17%\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03%(*\n\x0b\n\x04\
+    \x04\0\x02\x11\x12\x03&\x08-\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03&\x08\
+    \x17\n\x0c\n\x05\x04\0\x02\x11\x01\x12\x03&\x18'\n\x0c\n\x05\x04\0\x02\
+    \x11\x03\x12\x03&*,\n\x0b\n\x04\x04\0\x02\x12\x12\x03(\x08+\n\x0c\n\x05\
+    \x04\0\x02\x12\x06\x12\x03(\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\x12\
+    \x03(\x17%\n\x0c\n\x05\x04\0\x02\x12\x03\x12\x03((*b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

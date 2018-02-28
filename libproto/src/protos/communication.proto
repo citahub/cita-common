@@ -8,45 +8,36 @@ import "consensus.proto";
 import "auth.proto";
 import "executor.proto";
 
-enum OperateType {
-    BROADCAST = 0;
-    SINGLE = 1;
-    SUBTRACT = 2;
-}
-
-message Message {
-
-    uint32 origin = 1;
-    OperateType operate = 2;
+message InnerMessage {
 
     oneof content {
 
-        bytes RawBytes = 3;
+        bytes RawBytes = 1;
 
-        Request Request = 4;
-        Response Response = 5;
+        Request Request = 2;
+        Response Response = 3;
 
-        SyncRequest SyncRequest = 6;
-        SyncResponse SyncResponse = 7;
+        SyncRequest SyncRequest = 4;
+        SyncResponse SyncResponse = 5;
 
-        Status Status = 8;
-        RichStatus RichStatus = 9;
+        Status Status = 6;
+        RichStatus RichStatus = 7;
 
-        SignedProposal SignedProposal = 10;
+        SignedProposal SignedProposal = 8;
 
-        Block Block = 11;
-        BlockWithProof BlockWithProof = 12;
-        BlockHeader BlockHeader = 13;
-        BlockTxs BlockTxs = 14;
+        Block Block = 9;
+        BlockWithProof BlockWithProof = 10;
+        BlockHeader BlockHeader = 11;
+        BlockTxs BlockTxs = 12;
 
-        BlockTxHashes BlockTxHashes = 15;
-        BlockTxHashesReq BlockTxHashesReq = 16;
+        BlockTxHashes BlockTxHashes = 13;
+        BlockTxHashesReq BlockTxHashesReq = 14;
 
-        VerifyTxReq VerifyTxReq = 17;
-        VerifyTxResp VerifyTxResp = 18;
-        VerifyBlockReq VerifyBlockReq = 19;
-        VerifyBlockResp VerifyBlockResp = 20;
+        VerifyTxReq VerifyTxReq = 15;
+        VerifyTxResp VerifyTxResp = 16;
+        VerifyBlockReq VerifyBlockReq = 17;
+        VerifyBlockResp VerifyBlockResp = 18;
 
-        ExecutedResult ExecutedResult = 21;
+        ExecutedResult ExecutedResult = 19;
     }
 }

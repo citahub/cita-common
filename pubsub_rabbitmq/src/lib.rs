@@ -46,7 +46,7 @@ impl Consumer for Handler {
 
 pub const AMQP_URL: &'static str = "AMQP_URL";
 
-pub fn start_rabbitmq(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
+pub fn start_rabbitmq(name: &str, keys: Vec<String>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
     let amqp_url = std::env::var(AMQP_URL).expect(format!("{} must be set", AMQP_URL).as_str());
     let mut session = match Session::open_url(&amqp_url) {
         Ok(session) => session,
@@ -75,7 +75,7 @@ pub fn start_rabbitmq(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>
 
     for key in keys {
         channel
-            .queue_bind(name.clone(), "cita", key, false, Table::new())
+            .queue_bind(name.clone(), "cita", &key, false, Table::new())
             .unwrap();
     }
     let callback = Handler::new(tx);

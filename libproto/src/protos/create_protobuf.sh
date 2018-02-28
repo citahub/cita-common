@@ -3,6 +3,16 @@
 rootdir=$(readlink -f "$(dirname $0)")
 currdir=$(pwd)
 
+sed_opts=
+case "$OSTYPE" in
+    darwin*)
+        sed_opts="-g"
+        ;;
+    *)
+        sed_opts=
+        ;;
+esac
+
 function remove_all_rs () {
     find . -name "*.rs" -exec rm -v {} \;
 }
@@ -18,15 +28,6 @@ function add_pub_to_oneof_in_generated_code () {
     local dataname="$2"
     local datatype="$3"
     local update_part="${dataname}: ::std::option::Option<${datatype}_oneof_${dataname}>,"
-    local sed_opts=
-    case "$OSTYPE" in
-        darwin*)
-            sed_opts="-g"
-            ;;
-        *)
-            sed_opts=
-            ;;
-    esac
     sed -i ${sed_opts} "s/\(\s\)\(${update_part}\)/\1pub \2/g" "${update_file}"
 }
 
@@ -88,36 +89,48 @@ function gen_modrs_for_protos () {
 }
 
 function generate_impls_for_all () {
-    local indentation="            "
-    local replace_begin="${indentation}\\/\\/ Generate ALL-PROTOS automatically begin:"
-    local replace_end="${indentation}\\/\\/ Generate ALL-PROTOS automatically end."
-    local rsfile="../lib.rs"
-    sed -i "/^${replace_begin}$/,/^${replace_end}$/{//!d}" "${rsfile}"
+    local rsfile="../autoimpl.rs"
+    local replace="            \\/\\/ Generate ALL-PROTOS automatically"
+    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" "${rsfile}"
     grep "^pub struct .* {$" *.rs | sort \
             | awk '{ print $3 }' | uniq \
             | while read struct; do
-        sed -i -e "/^${replace_end}$/i\\${indentation}${struct}," "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\            ${struct}," "${rsfile}"
     done
 }
 
 function generate_impls_for_msg () {
-    local indentation="            "
-    local replace_begin_1="${indentation}\\/\\/ Generate MSG-PROTOS automatically begin:"
-    local replace_end_1="${indentation}\\/\\/ Generate MSG-PROTOS automatically end."
-    local replace_begin_2="${indentation}\\/\\/ Generate MSG-PROTOS set_content automatically begin:"
-    local replace_end_2="${indentation}\\/\\/ Generate MSG-PROTOS set_content automatically end."
-    local replace_begin_3="${indentation}\\/\\/ Generate MSG-PROTOS from_content automatically begin:"
-    local replace_end_3="${indentation}\\/\\/ Generate MSG-PROTOS from_content automatically end."
-    local rsfile="../lib.rs"
-    sed -i "/^${replace_begin_1}$/,/^${replace_end_1}$/{//!d}" "${rsfile}"
-    sed -i "/^${replace_begin_2}$/,/^${replace_end_2}$/{//!d}" "${rsfile}"
-    sed -i "/^${replace_begin_3}$/,/^${replace_end_3}$/{//!d}" "${rsfile}"
+    local rsfile="$1"
+    local indent=$(printf "%${2}s")
+    local replace="${indent}\\/\\/ Generate MSG-PROTOS $3 automatically"
+    local newcode="$4"
+    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" "${rsfile}"
     sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
-            | grep "^\s\{8\}[A-Z].*;$" | awk '{ print $2 }' \
+            | grep "^\s\{8\}[a-Z].*;$" | awk '{ print $2 }' \
             | while read struct; do
-        sed -i -e "/^${replace_end_1}$/i\\${indentation}${struct}," "${rsfile}"
-        sed -i -e "/^${replace_end_2}$/i\\${indentation}MsgClass::${struct}(data) => self.set_${struct}(data)," "${rsfile}"
-        sed -i -e "/^${replace_end_3}$/i\\${indentation}Message_oneof_content::${struct}(data) => data.into()," "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\${indent}$(eval echo "${newcode}")" "${rsfile}"
+    done
+}
+
+function camelcase_to_underscore () {
+    echo "$1" | sed -e 's/\([A-Z]\)/_\L\1/g' -e 's/^_//'
+}
+
+function generate_methods_for_msg () {
+    local rsfile="../autoimpl.rs"
+    local replace="    \\/\\/ Generate MSG-PROTOS methods automatically"
+    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" "${rsfile}"
+    sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
+            | grep "^\s\{8\}[a-Z].*;$" | awk '{ print $2 }' \
+            | while read struct; do
+        local struct_us=$(camelcase_to_underscore ${struct})
+        sed -i -e "/^${replace} end.$/i\\"                                                                  "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\    pub fn take_${struct_us}(&mut self) -> Option<${struct}> {"    "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\        match self.take_content() {"                               "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\            Some(MsgClass::${struct}(v)) => Some(v),"              "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\            _ => None,"                                            "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\        }"                                                         "${rsfile}"
+        sed -i -e "/^${replace} end.$/i\\    }"                                                             "${rsfile}"
     done
 }
 
@@ -127,9 +140,15 @@ function main () {
     gen_rs_for_protos
     add_pub_to_oneof_in_generated_code response.rs      data    Response
     add_pub_to_oneof_in_generated_code request.rs       req     Request
-    add_pub_to_oneof_in_generated_code communication.rs content Message
+    add_pub_to_oneof_in_generated_code communication.rs content InnerMessage
     generate_impls_for_all
-    generate_impls_for_msg
+    generate_impls_for_msg "../autoimpl.rs" 12 ""         '${struct},'
+    generate_impls_for_msg "../router.rs"   4  ""         '${struct},'
+    generate_impls_for_msg "../router.rs"   16 "display"  \
+        '\&MsgType::${struct} =\> \"$(camelcase_to_underscore ${struct})\",'
+    generate_impls_for_msg "../router.rs"   12 "from_str" \
+        '\"$(camelcase_to_underscore ${struct})\" =\> MsgType::${struct},'
+    generate_methods_for_msg
     gen_modrs_for_protos
     add_license
     cd "${currdir}"

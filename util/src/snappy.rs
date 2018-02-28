@@ -150,22 +150,22 @@ pub fn validate_compressed_buffer(input: &[u8]) -> bool {
 }
 
 const CITA_COMPRESS_SIZE: usize = 40 * 1024;
-pub fn cita_compress(input: Vec<u8>) -> Vec<u8> {
+pub fn cita_compress(input: &[u8]) -> Vec<u8> {
     if input.len() > CITA_COMPRESS_SIZE {
-        compress(&input)
+        compress(input)
     } else {
-        input
+        input.to_vec()
     }
 }
 
-pub fn cita_decompress(input: Vec<u8>) -> Vec<u8> {
-    if validate_compressed_buffer(&input) {
-        match decompress(&input) {
+pub fn cita_decompress(input: &[u8]) -> Vec<u8> {
+    if validate_compressed_buffer(input) {
+        match decompress(input) {
             Ok(data) => data,
-            Err(_) => input,
+            Err(_) => input.to_vec(),
         }
     } else {
-        input
+        input.to_vec()
     }
 }
 
