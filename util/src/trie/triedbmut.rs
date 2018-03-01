@@ -62,7 +62,10 @@ impl From<H256> for NodeHandle {
 }
 
 fn empty_children() -> Box<[Option<NodeHandle>; 16]> {
-    Box::new([None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None])
+    Box::new([
+        None, None, None, None, None, None, None, None,
+        None, None, None, None, None, None, None, None
+    ])
 }
 
 /// Node types in the Trie.
@@ -193,8 +196,7 @@ impl InsertAction {
     // unwrap the node, disregarding replace or restore state.
     fn unwrap_node(self) -> Node {
         match self {
-            InsertAction::Replace(n) |
-            InsertAction::Restore(n) => n,
+            InsertAction::Replace(n) | InsertAction::Restore(n) => n,
         }
     }
 }
@@ -369,42 +371,52 @@ impl<'a> TrieDBMut<'a> {
     }
 
     // walk the trie, attempting to find the key's node.
-    fn lookup<'x, 'key>(&'x self, partial: NibbleSlice<'key>, handle: &NodeHandle) -> super::Result<Option<DBValue>>
+    fn lookup<'x, 'key>(&'x self, mut partial: NibbleSlice<'key>, handle: &NodeHandle) -> super::Result<Option<DBValue>>
     where
         'x: 'key,
     {
-        match *handle {
-            NodeHandle::Hash(ref hash) => Lookup {
-                                              db: &*self.db,
-                                              query: DBValue::from_slice,
-                                              hash: hash.clone(),
-                                          }
-                                          .look_up(partial),
-            NodeHandle::InMemory(ref handle) => match self.storage[handle] {
-                Node::Empty => Ok(None),
-                Node::Leaf(ref key, ref value) => {
-                    if NibbleSlice::from_encoded(key).0 == partial {
-                        Ok(Some(DBValue::from_slice(value)))
-                    } else {
-                        Ok(None)
-                    }
+        let mut handle = handle;
+        loop {
+            let (mid, child) = match *handle {
+                NodeHandle::Hash(ref hash) => return Lookup {
+                    db: &*self.db,
+                    query: DBValue::from_slice,
+                    hash: hash.clone(),
                 }
-                Node::Extension(ref slice, ref child) => {
-                    let slice = NibbleSlice::from_encoded(slice).0;
-                    if partial.starts_with(&slice) { self.lookup(partial.mid(slice.len()), child) } else { Ok(None) }
-                }
-                Node::Branch(ref children, ref value) => {
-                    if partial.is_empty() {
-                        Ok(value.as_ref().map(|v| DBValue::from_slice(v)))
-                    } else {
-                        let idx = partial.at(0);
-                        match children[idx as usize].as_ref() {
-                            Some(child) => self.lookup(partial.mid(1), child),
-                            None => Ok(None),
+                    .look_up(partial),
+                NodeHandle::InMemory(ref handle) => match self.storage[handle] {
+                    Node::Empty => return Ok(None),
+                    Node::Leaf(ref key, ref value) => {
+                        if NibbleSlice::from_encoded(key).0 == partial {
+                            return Ok(Some(DBValue::from_slice(value)))
+                        } else {
+                            return Ok(None)
                         }
                     }
-                }
-            },
+                    Node::Extension(ref slice, ref child) => {
+                        let slice = NibbleSlice::from_encoded(slice).0;
+                        if partial.starts_with(&slice) {
+                            (slice.len(), child)
+                        } else {
+                            return Ok(None)
+                        }
+                    }
+                    Node::Branch(ref children, ref value) => {
+                        if partial.is_empty() {
+                            return Ok(value.as_ref().map(|v| DBValue::from_slice(v)))
+                        } else {
+                            let idx = partial.at(0);
+                            match children[idx as usize].as_ref() {
+                                Some(child) => (1, child),
+                                None => return Ok(None),
+                            }
+                        }
+                    }
+                },
+            };
+
+            partial = partial.mid(mid);
+            handle = child;
         }
     }
 
@@ -415,8 +427,9 @@ impl<'a> TrieDBMut<'a> {
             NodeHandle::Hash(h) => self.cache(h)?,
         };
         let stored = self.storage.destroy(h);
-        let (new_stored, changed) = self.inspect(stored, move |trie, stored| trie.insert_inspector(stored, partial, value, old_val).map(|a| a.into_action()))?
-                                        .expect("Insertion never deletes.");
+        let (new_stored, changed) = self.inspect(stored, move |trie, stored| {
+            trie.insert_inspector(stored, partial, value, old_val).map(|a| a.into_action())
+        })?.expect("Insertion never deletes.");
 
         Ok((self.storage.alloc(new_stored), changed))
     }
@@ -520,7 +533,10 @@ impl<'a> TrieDBMut<'a> {
                        let augmented_low = self.insert_inspector(low, partial.mid(cp), value, old_val)?.unwrap_node();
 
                        // make an extension using it. this is a replacement.
-                       InsertAction::Replace(Node::Extension(existing_key.encoded_leftmost(cp, false), self.storage.alloc(Stored::New(augmented_low)).into()))
+                       InsertAction::Replace(Node::Extension(
+                           existing_key.encoded_leftmost(cp, false),
+                           self.storage.alloc(Stored::New(augmented_low)).into()
+                       ))
                    }
                }
                Node::Extension(encoded, child_branch) => {
@@ -571,7 +587,10 @@ impl<'a> TrieDBMut<'a> {
 
                        // always replace, since this extension is not the one we started with.
                        // this is known because the partial key is only the common prefix.
-                       InsertAction::Replace(Node::Extension(existing_key.encoded_leftmost(cp, false), self.storage.alloc(Stored::New(augmented_low)).into()))
+                       InsertAction::Replace(Node::Extension(
+                           existing_key.encoded_leftmost(cp, false),
+                           self.storage.alloc(Stored::New(augmented_low)).into()
+                       ))
                    }
                }
            })
@@ -767,7 +786,11 @@ impl<'a> TrieDBMut<'a> {
                         trace!(target: "trie", "fixing: restoring extension");
 
                         // reallocate the child node.
-                        let stored = if let Some(hash) = maybe_hash { Stored::Cached(child_node, hash) } else { Stored::New(child_node) };
+                        let stored = if let Some(hash) = maybe_hash {
+                            Stored::Cached(child_node, hash)
+                        } else {
+                            Stored::New(child_node)
+                        };
 
                         Ok(Node::Extension(partial, self.storage.alloc(stored).into()))
                     }
@@ -874,7 +897,12 @@ impl<'a> TrieMut for TrieDBMut<'a> {
         trace!(target: "trie", "insert: key={:?}, value={:?}", key.pretty(), value.pretty());
 
         let root_handle = self.root_handle();
-        let (new_handle, changed) = self.insert_at(root_handle, NibbleSlice::new(key), DBValue::from_slice(value), &mut old_val)?;
+        let (new_handle, changed) = self.insert_at(
+            root_handle,
+            NibbleSlice::new(key),
+            DBValue::from_slice(value),
+            &mut old_val
+        )?;
 
         trace!(target: "trie", "insert: altered trie={}", changed);
         self.root_handle = NodeHandle::InMemory(new_handle);
@@ -1040,7 +1068,10 @@ mod tests {
         let mut t = TrieDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], &[0x01u8, 0x23]).unwrap();
         t.insert(&[0x11u8, 0x23], &[0x11u8, 0x23]).unwrap();
-        assert_eq!(*t.root(), trie_root(vec![(vec![0x01u8, 0x23], vec![0x01u8, 0x23]), (vec![0x11u8, 0x23], vec![0x11u8, 0x23])]));
+        assert_eq!(*t.root(), trie_root(vec![
+            (vec![0x01u8, 0x23], vec![0x01u8, 0x23]),
+            (vec![0x11u8, 0x23], vec![0x11u8, 0x23])
+        ]));
     }
 
     #[test]
@@ -1068,7 +1099,10 @@ mod tests {
         let mut t = TrieDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], &[0x01u8, 0x23]).unwrap();
         t.insert(&[], &[0x0]).unwrap();
-        assert_eq!(*t.root(), trie_root(vec![(vec![], vec![0x0]), (vec![0x01u8, 0x23], vec![0x01u8, 0x23])]));
+        assert_eq!(*t.root(), trie_root(vec![
+            (vec![], vec![0x0]),
+            (vec![0x01u8, 0x23], vec![0x01u8, 0x23])
+        ]));
     }
 
     #[test]
@@ -1078,7 +1112,10 @@ mod tests {
         let mut t = TrieDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], &[0x01u8, 0x23]).unwrap();
         t.insert(&[0x01u8, 0x34], &[0x01u8, 0x34]).unwrap();
-        assert_eq!(*t.root(), trie_root(vec![(vec![0x01u8, 0x23], vec![0x01u8, 0x23]), (vec![0x01u8, 0x34], vec![0x01u8, 0x34])]));
+        assert_eq!(*t.root(), trie_root(vec![
+            (vec![0x01u8, 0x23], vec![0x01u8, 0x23]),
+            (vec![0x01u8, 0x34], vec![0x01u8, 0x34])
+        ]));
     }
 
     #[test]
@@ -1109,7 +1146,10 @@ mod tests {
         let mut t = TrieDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], big_value0).unwrap();
         t.insert(&[0x11u8, 0x23], big_value1).unwrap();
-        assert_eq!(*t.root(), trie_root(vec![(vec![0x01u8, 0x23], big_value0.to_vec()), (vec![0x11u8, 0x23], big_value1.to_vec())]));
+        assert_eq!(*t.root(), trie_root(vec![
+            (vec![0x01u8, 0x23], big_value0.to_vec()),
+            (vec![0x11u8, 0x23], big_value1.to_vec())
+        ]));
     }
 
     #[test]
@@ -1121,7 +1161,10 @@ mod tests {
         let mut t = TrieDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], big_value).unwrap();
         t.insert(&[0x11u8, 0x23], big_value).unwrap();
-        assert_eq!(*t.root(), trie_root(vec![(vec![0x01u8, 0x23], big_value.to_vec()), (vec![0x11u8, 0x23], big_value.to_vec())]));
+        assert_eq!(*t.root(), trie_root(vec![
+            (vec![0x01u8, 0x23], big_value.to_vec()),
+            (vec![0x11u8, 0x23], big_value.to_vec())
+        ]));
     }
 
     #[test]
