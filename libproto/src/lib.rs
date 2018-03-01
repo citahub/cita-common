@@ -323,6 +323,8 @@ macro_rules! loop_macro_for_structs {
     ($macro:ident) => {
         $macro!(
             // Generate ALL-PROTOS automatically begin:
+            RegisterRequest,
+            RegisterResponse,
             BlockTxHashes,
             BlockTxHashesReq,
             VerifyBlockReq,

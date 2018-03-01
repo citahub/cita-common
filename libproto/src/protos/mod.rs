@@ -35,6 +35,7 @@
 #![allow(unused_imports)]
 #![allow(unused_results)]
 
+pub mod adapter;
 pub mod auth;
 pub mod blockchain;
 pub mod communication;
@@ -44,6 +45,7 @@ pub mod request;
 pub mod response;
 pub mod sync;
 
+pub use self::adapter::{RegisterRequest, RegisterResponse};
 pub use self::auth::{Ret, BlockTxHashes, BlockTxHashesReq, VerifyBlockReq, VerifyBlockResp, VerifyTxReq, VerifyTxResp};
 pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, Proof, RichStatus, SignedTransaction, Status, Transaction, UnverifiedTransaction};
 pub use self::communication::{Message_oneof_content, OperateType, Message};

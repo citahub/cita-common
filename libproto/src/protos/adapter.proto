@@ -1,0 +1,17 @@
+syntax = "proto3";
+package adapter;
+
+service Register {
+    // Sends a greeting
+    rpc SayHello (RegisterRequest) returns (RegisterResponse) {}
+}
+
+message RegisterRequest {
+    string contract_address = 1;
+    string ip = 2;
+    string port = 3;
+}
+
+message RegisterResponse {
+    string state = 1;
+}
