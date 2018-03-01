@@ -36,10 +36,32 @@ function cargo_run_build () {
     CARGO_COMMAND=
 }
 
+function cargo_run_coverage () {
+    # For: check_crates_list()
+    CARGO_COMMAND="echo"
+    cargo_run_all
+    CARGO_COMMAND=
+
+    KCOV_TARGET="target/cov"
+    KCOV_FLAGS="--verify"
+    EXCLUDE="/usr/lib,/usr/include,$HOME/.cargo,$HOME/.multirust,rocksdb,secp256k1"
+    mkdir -p $KCOV_TARGET
+    echo "Cover RUST"
+    for FILE in `find target/debug -maxdepth 1 -perm -111 -type f ! -name "*.*"`
+    do
+        echo "[kcov]: ${FILE}"
+        kcov --exclude-pattern $EXCLUDE $KCOV_FLAGS $KCOV_TARGET $FILE || true
+    done
+    echo "kcov Done"
+    bash <(curl -s https://codecov.io/bash) && echo "Uploaded code coverage"
+}
+
 function cargo_run_test () {
+    export RUSTFLAGS="-C link-dead-code"
     CARGO_COMMAND="cargo test --lib"
     cargo_run_all
     CARGO_COMMAND=
+    unset RUSTFLAGS
 }
 
 function cargo_run () {
