@@ -243,7 +243,7 @@ impl BlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        merklehash::complete_merkle_root_raw(self.transaction_hashes().clone())
+        merklehash::MerkleTree::from_hashes(self.transaction_hashes().clone()).get_root_hash()
     }
 }
 
