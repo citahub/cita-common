@@ -31,24 +31,37 @@ use pubsub_rabbitmq::start_rabbitmq;
 
 #[cfg(feature = "zeromq")]
 use pubsub_zeromq::start_zeromq;
+
+use std::convert::Into;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 
 #[cfg(feature = "rabbitmq")]
-pub fn start_pubsub(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
+pub fn start_pubsub<K>(name: &str, keys: Vec<K>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>)
+where
+    K: Into<String>,
+{
     dotenv().ok();
+    let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
     start_rabbitmq(name, keys, tx, rx);
 }
 
 #[cfg(feature = "zeromq")]
-pub fn start_pubsub(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
+pub fn start_pubsub<K>(name: &str, keys: Vec<K>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>)
+where
+    K: Into<String>,
+{
     dotenv().ok();
+    let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
     start_zeromq(name, keys, tx, rx);
 }
 #[cfg(feature = "kafka")]
-pub fn start_pubsub(name: &str, keys: Vec<&str>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
+pub fn start_pubsub<K>(name: &str, keys: Vec<K>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>)
+where
+    K: Into<String>,
+{
     dotenv().ok();
-    let keys = keys.iter().map(|elem| elem.to_string()).collect::<Vec<_>>();
+    let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
     start_kafka(name, keys, tx, rx);
 }
 
