@@ -27,6 +27,7 @@ enum ReceiptError {
     StackUnderflow = 8;
     OutOfStack = 9;
     Internal = 10;
+    MutableCallInStaticContext = 11;
 }
 
 message LogEntry {
