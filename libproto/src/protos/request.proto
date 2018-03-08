@@ -28,13 +28,14 @@ message Request {
         bytes transaction_receipt = 10;
         string transaction_count = 11;
         string code = 12;
-        string new_filter = 13;
-        bool new_block_filter = 14;
-        uint64 uninstall_filter = 15;
-        uint64 filter_changes = 16;
-        uint64 filter_logs = 17;
-        UnverifiedTransaction un_tx = 18;//交易统一到这里了。划分在请求里面
-        BatchRequest batch_req = 19;
+        string abi = 13;
+        string new_filter = 14;
+        bool new_block_filter = 15;
+        uint64 uninstall_filter = 16;
+        uint64 filter_changes = 17;
+        uint64 filter_logs = 18;
+        UnverifiedTransaction un_tx = 19;//交易统一到这里了。划分在请求里面
+        BatchRequest batch_req = 20;
     }
 }
 
