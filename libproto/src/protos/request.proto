@@ -36,6 +36,7 @@ message Request {
         uint64 filter_logs = 18;
         UnverifiedTransaction un_tx = 19;//交易统一到这里了。划分在请求里面
         BatchRequest batch_req = 20;
+        bytes transaction_proof = 21;
     }
 }
 

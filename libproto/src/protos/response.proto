@@ -31,6 +31,7 @@ message Response {
         string filter_changes = 17;
         string filter_logs = 18;
         bool none = 19;
+        bytes transaction_proof = 20;
     }
 }
 
