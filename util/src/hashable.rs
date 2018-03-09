@@ -86,15 +86,13 @@ pub const HASH_NAME: &str = "sm3";
 pub trait Hashable {
     /// Calculate crypt HASH of this object.
     fn crypt_hash(&self) -> H256 {
-        let mut ret: H256 = H256::zero();
-        self.crypt_hash_into(&mut *ret);
-        ret
+        let mut ret = [0u8; 32];
+        self.crypt_hash_into(&mut ret);
+        H256(ret)
     }
 
     /// Calculate crypt HASH of this object and place result into dest.
-    fn crypt_hash_into(&self, dest: &mut [u8]) {
-        self.crypt_hash().copy_to(dest);
-    }
+    fn crypt_hash_into(&self, _dest: &mut [u8]) {}
 }
 
 #[cfg(feature = "sha3hash")]
@@ -103,7 +101,7 @@ where
     T: AsRef<[u8]>,
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
-        let input: &[u8] = self.as_ref();
+        let input = self.as_ref();
 
         unsafe {
             sha3_256(dest.as_mut_ptr(), dest.len(), input.as_ptr(), input.len());
@@ -143,15 +141,6 @@ where
             sm3(input.as_ptr(), input.len(), dest.as_mut_ptr());
         }
     }
-}
-
-pub fn sha3(val: &[u8]) -> H256 {
-    let out: &mut [u8; 32] = &mut [0; 32];
-    let outptr = out.as_mut_ptr();
-    unsafe {
-        sha3_256(outptr, 32, val.as_ptr(), val.len());
-    }
-    H256::from_slice(out)
 }
 
 #[cfg(test)]
