@@ -31,8 +31,8 @@ pub struct MerkleTree {
 
 #[derive(Debug, Clone)]
 pub struct MerkleProofNode {
-    is_right: bool,
-    hash: H256,
+    pub is_right: bool,
+    pub hash: H256,
 }
 
 pub type MerkleProof = Vec<MerkleProofNode>;
