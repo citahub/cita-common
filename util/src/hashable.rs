@@ -86,15 +86,13 @@ pub const HASH_NAME: &str = "sm3";
 pub trait Hashable {
     /// Calculate crypt HASH of this object.
     fn crypt_hash(&self) -> H256 {
-        let mut ret: H256 = H256::zero();
-        self.crypt_hash_into(&mut *ret);
-        ret
+        let mut result = [0u8; 32];
+        self.crypt_hash_into(&mut result);
+        H256(result)
     }
 
     /// Calculate crypt HASH of this object and place result into dest.
-    fn crypt_hash_into(&self, dest: &mut [u8]) {
-        self.crypt_hash().copy_to(dest);
-    }
+    fn crypt_hash_into(&self, dest: &mut [u8]);
 }
 
 #[cfg(feature = "sha3hash")]
