@@ -54,16 +54,18 @@ impl MerkleTree {
         self.nodes[0]
     }
 
-    pub fn get_proof_by_input_index(&self, input_index: usize) -> MerkleProof {
-        MerkleProof(
-            get_proof_indexes(input_index, self.input_size)
-                .into_iter()
-                .map(|i| MerkleProofNode {
-                    is_right: (i & 1) == 0,
-                    hash: self.nodes[i],
-                })
-                .collect(),
-        )
+    pub fn get_proof_by_input_index(&self, input_index: usize) -> Option<MerkleProof> {
+        get_proof_indexes(input_index, self.input_size).map(|indexes| {
+            MerkleProof(
+                indexes
+                    .into_iter()
+                    .map(|i| MerkleProofNode {
+                        is_right: (i & 1) == 0,
+                        hash: self.nodes[i],
+                    })
+                    .collect(),
+            )
+        })
     }
 }
 
@@ -113,10 +115,11 @@ fn generate_merkle_tree_from_hash(input: Vec<H256>) -> MerkleTree {
             let nodes_size = get_size_of_nodes(input_size);
             let mut nodes = vec![H256::default(); nodes_size];
 
-            let lowest_row = get_lowest_row(input_size);
+            let rows_size = get_size_of_rows(input_size);
+            let lowest_row_index = rows_size - 1;
 
             let first_input_node_index = nodes_size - input_size;
-            let first_index_in_lowest_row = (1 << (lowest_row - 1)) - 1;
+            let first_index_in_lowest_row = (1 << lowest_row_index) - 1;
             let nodes_size_of_lowest_row = nodes_size - first_index_in_lowest_row;
 
             // Insert the input into the merkle tree.
@@ -127,19 +130,19 @@ fn generate_merkle_tree_from_hash(input: Vec<H256>) -> MerkleTree {
                 nodes[first_input_node_index + i] = input[nodes_size_of_lowest_row + i];
             }
 
-            let max_nodes_size_of_lowest_row = 1 << (lowest_row - 1);
+            let max_nodes_size_of_lowest_row = 1 << lowest_row_index;
             // Calc hash for the lowest row
             if max_nodes_size_of_lowest_row == input_size {
                 // The lowest row is full.
-                calc_merkle_tree_at_row(&mut nodes, lowest_row - 1, 0)
+                calc_merkle_tree_at_row(&mut nodes, lowest_row_index, 0)
             } else {
-                calc_merkle_tree_at_row(&mut nodes, lowest_row - 1, nodes_size_of_lowest_row >> 1);
+                calc_merkle_tree_at_row(&mut nodes, lowest_row_index, nodes_size_of_lowest_row >> 1);
             }
 
-            // The first row do not have to calc.
-            for i in 1..lowest_row - 1 {
-                let row = lowest_row - i - 1;
-                calc_merkle_tree_at_row(&mut nodes, row, 0);
+            // From the second row from the bottom to the second row from the top.
+            for i in 1..lowest_row_index {
+                let row_index = lowest_row_index - i;
+                calc_merkle_tree_at_row(&mut nodes, row_index, 0);
             }
 
             nodes
@@ -154,12 +157,14 @@ fn generate_merkle_tree_from_hash(input: Vec<H256>) -> MerkleTree {
 
 // Calc hash for one row in merkle tree.
 // If break_cnt > 0, just calc break_cnt hash for that row.
-fn calc_merkle_tree_at_row(nodes: &mut Vec<H256>, row: usize, break_cnt: usize) {
-    let index_update = (1 << (row - 1)) - 1;
-    let size_update = if break_cnt > 0 {
+fn calc_merkle_tree_at_row(nodes: &mut Vec<H256>, row_index: usize, break_cnt: usize) {
+    // The first index in the row which above the row_index row.
+    let index_update = (1 << (row_index - 1)) - 1;
+    let size_max = 1 << (row_index - 1);
+    let size_update = if break_cnt > 0 && break_cnt < size_max {
         break_cnt
     } else {
-        1 << (row - 1)
+        size_max
     };
     for i in 0..size_update {
         let j = index_update + i;
@@ -175,7 +180,7 @@ fn merge(left: &H256, right: &H256) -> H256 {
 }
 
 #[inline]
-fn get_lowest_row(m: usize) -> usize {
+fn get_size_of_rows(m: usize) -> usize {
     let mut x: usize = 1;
     let mut y: usize = 0;
     while x < m {
@@ -187,61 +192,77 @@ fn get_lowest_row(m: usize) -> usize {
 
 #[inline]
 fn get_size_of_nodes(m: usize) -> usize {
-    // The lowest row for m:
-    //      x = get_lowest_row(m);
-    // First row above the lowest row:
+    // The rows size for m:
+    //      x = get_size_of_rows(m);
+    // The second row from the bottom (math index):
     //      y = x - 1;
-    // Size of nodes for the first row above the lowest row:
+    // Size of nodes for the second row from the bottom:
     //      z = 2 ^ (y - 1);
     // Size of nodes above the lowest row:
     //      n1 = 2 ^ y - 1;
-    // Size of nodes for the lowest row:
+    // Size of nodes in the lowest row:
     //      n2 = (m - z) * 2;
     // Returns:
     //      n1 + n2
     //      = (2 ^ y - 1) + ((m - z) * 2)
     //      = m * 2  - 1
-    m * 2 - 1
-}
-
-// Use math index (start from 1).
-#[inline]
-fn get_math_index_of_brother_node(mi: usize) -> usize {
-    (mi & ((!0) - 1)) + ((!mi) & 1)
-}
-
-#[inline]
-fn get_proof_indexes(input_index: usize, input_size: usize) -> Vec<usize> {
-    let mut ret = Vec::new();
-    let nodes_size = get_size_of_nodes(input_size);
-    let lowest_row = get_lowest_row(input_size);
-    let first_input_node_index = nodes_size - input_size;
-    let first_index_in_lowest_row = (1 << (lowest_row - 1)) - 1;
-    let nodes_size_of_lowest_row = nodes_size - first_index_in_lowest_row;
-    let index = if input_index + 1 > nodes_size_of_lowest_row {
-        first_input_node_index + (input_index - nodes_size_of_lowest_row)
+    if m == 0 {
+        1
     } else {
-        first_index_in_lowest_row + input_index
-    };
-    // Convert computer index (start from 0) to math index (start from 1).
-    let mut midx = index + 1;
-    while midx > 1 {
-        ret.push(get_math_index_of_brother_node(midx) - 1);
-        midx >>= 1;
+        m * 2 - 1
     }
-    ret
+}
+
+#[inline]
+fn get_index_of_brother_and_father(index: usize) -> (usize, usize) {
+    // Convert computer index (start from 0) to math index (start from 1).
+    let math_index = index + 1;
+    // The only one difference between brother math indexes in binary tree is the last bit.
+    let math_index_for_brother = (math_index & ((!0) - 1)) + ((!math_index) & 1);
+    let math_index_for_father = math_index >> 1;
+    // Convert back to computer index.
+    (math_index_for_brother - 1, math_index_for_father - 1)
+}
+
+#[inline]
+fn get_proof_indexes(input_index: usize, input_size: usize) -> Option<Vec<usize>> {
+    if input_index == 0 && input_size < 2 {
+        Some(vec![])
+    } else if input_size != 0 && input_index < input_size {
+        let mut ret = Vec::new();
+        let nodes_size = get_size_of_nodes(input_size);
+        let rows_size = get_size_of_rows(input_size);
+        let lowest_row_index = rows_size - 1;
+        let first_input_node_index = nodes_size - input_size;
+        let first_index_in_lowest_row = (1 << lowest_row_index) - 1;
+        let nodes_size_of_lowest_row = nodes_size - first_index_in_lowest_row;
+        let mut index = if input_index + 1 > nodes_size_of_lowest_row {
+            first_input_node_index + (input_index - nodes_size_of_lowest_row)
+        } else {
+            first_index_in_lowest_row + input_index
+        };
+        while index > 0 {
+            let (brother_index, parent_index) = get_index_of_brother_and_father(index);
+            ret.push(brother_index);
+            index = parent_index;
+        }
+        Some(ret)
+    } else {
+        None
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::MerkleProof;
-    use hashable::Hashable;
+    use hashable::{Hashable, HASH_NULL_RLP};
     use rlp;
     use rlp::Encodable;
 
     #[test]
-    fn test_lowest_row() {
+    fn test_size_of_rows() {
         let check = vec![
+            (0, 1),
             (1, 1),
             (2, 2),
             (3, 3),
@@ -253,13 +274,14 @@ mod tests {
             (17, 6),
         ];
         for (x, y) in check {
-            assert_eq!(y, super::get_lowest_row(x));
+            assert_eq!(y, super::get_size_of_rows(x));
         }
     }
 
     #[test]
     fn test_size_of_nodes() {
         let check = vec![
+            (0, 1),
             (1, 1),
             (2, 3),
             (3, 5),
@@ -276,31 +298,37 @@ mod tests {
     }
 
     #[test]
-    fn test_math_index_of_brother_node() {
+    fn test_index_of_brother_and_father() {
         let check = vec![
-            (2, 3),
-            (3, 2),
-            (12, 13),
-            (13, 12),
-            (22, 23),
-            (23, 22),
-            (32, 33),
-            (33, 32),
+            (1, (2, 0)),
+            (2, (1, 0)),
+            (11, (12, 5)),
+            (12, (11, 5)),
+            (21, (22, 10)),
+            (22, (21, 10)),
+            (31, (32, 15)),
+            (32, (31, 15)),
         ];
         for (x, y) in check {
-            assert_eq!(y, super::get_math_index_of_brother_node(x));
+            assert_eq!(y, super::get_index_of_brother_and_father(x));
         }
     }
 
     #[test]
     fn test_proof_indexes() {
         let check = vec![
-            ((0, 20), vec![32, 16, 8, 4, 2]),
-            ((11, 20), vec![21, 9, 3, 2]),
-            ((15, 20), vec![25, 11, 6, 1]),
-            ((0, 19), vec![32, 16, 8, 4, 2]),
-            ((11, 19), vec![24, 12, 6, 1]),
-            ((15, 19), vec![28, 14, 5, 1]),
+            ((1, 0), None),
+            ((1, 1), None),
+            ((2, 1), None),
+            ((2, 2), None),
+            ((0, 0), Some(vec![])),
+            ((0, 1), Some(vec![])),
+            ((0, 20), Some(vec![32, 16, 8, 4, 2])),
+            ((11, 20), Some(vec![21, 9, 3, 2])),
+            ((15, 20), Some(vec![25, 11, 6, 1])),
+            ((0, 19), Some(vec![32, 16, 8, 4, 2])),
+            ((11, 19), Some(vec![24, 12, 6, 1])),
+            ((15, 19), Some(vec![28, 14, 5, 1])),
         ];
         for ((x1, x2), y) in check {
             assert_eq!(y, super::get_proof_indexes(x1, x2));
@@ -309,44 +337,57 @@ mod tests {
 
     #[test]
     fn test_proof() {
-        let input = vec![
-            b"a".to_vec(),
-            b"b".to_vec(),
-            b"c".to_vec(),
-            b"d".to_vec(),
-            b"e".to_vec(),
-            b"f".to_vec(),
-            b"g".to_vec(),
-            b"h".to_vec(),
-            b"i".to_vec(),
-            b"j".to_vec(),
-            b"k".to_vec(),
-            b"l".to_vec(),
-            b"m".to_vec(),
-            b"n".to_vec(),
-            b"o".to_vec(),
-            b"p".to_vec(),
-            b"q".to_vec(),
-            b"r".to_vec(),
-            b"s".to_vec(),
-            b"t".to_vec(),
-            b"u".to_vec(),
-            b"v".to_vec(),
-            b"w".to_vec(),
-            b"x".to_vec(),
-            b"y".to_vec(),
-            b"z".to_vec(),
+        let inputs = vec![
+            vec![],
+            vec![b"".to_vec()],
+            vec![
+                b"a".to_vec(),
+                b"b".to_vec(),
+                b"c".to_vec(),
+                b"d".to_vec(),
+                b"e".to_vec(),
+                b"f".to_vec(),
+                b"g".to_vec(),
+                b"h".to_vec(),
+                b"i".to_vec(),
+                b"j".to_vec(),
+                b"k".to_vec(),
+                b"l".to_vec(),
+                b"m".to_vec(),
+                b"n".to_vec(),
+                b"o".to_vec(),
+                b"p".to_vec(),
+                b"q".to_vec(),
+                b"r".to_vec(),
+                b"s".to_vec(),
+                b"t".to_vec(),
+                b"u".to_vec(),
+                b"v".to_vec(),
+                b"w".to_vec(),
+                b"x".to_vec(),
+                b"y".to_vec(),
+                b"z".to_vec(),
+            ],
         ];
-        let tree = super::MerkleTree::from_bytes(input.clone());
-        let root_hash = tree.get_root_hash();
-        let input_size = input.len();
-        for index in 0..input_size {
-            let data_hash = input[index].crypt_hash();
-            let proof = tree.get_proof_by_input_index(index);
-            // encode and decode
-            let proof_bytes = proof.rlp_bytes().to_vec();
-            let proof1: MerkleProof = rlp::decode(&proof_bytes);
-            assert!(super::verify_proof(root_hash, &proof1, data_hash));
+        for input in inputs {
+            let tree = super::MerkleTree::from_bytes(input.clone());
+            let root_hash = tree.get_root_hash();
+            let input_size = input.len();
+            let loop_size = if input_size == 0 { 1 } else { input_size };
+            for index in 0..loop_size {
+                let data_hash = if input_size == 0 {
+                    HASH_NULL_RLP
+                } else {
+                    input[index].crypt_hash()
+                };
+                let proof = tree.get_proof_by_input_index(index)
+                    .expect("proof is not none");
+                assert!(super::verify_proof(root_hash, &proof, data_hash));
+                // encode and decode
+                let proof_bytes = proof.rlp_bytes().to_vec();
+                let proof_decode: MerkleProof = rlp::decode(&proof_bytes);
+                assert!(super::verify_proof(root_hash, &proof_decode, data_hash));
+            }
         }
     }
 }
@@ -361,6 +402,18 @@ mod tests_for_sha3hash {
     #[test]
     fn test_from_bytes() {
         let check = vec![
+            (
+                vec![],
+                "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+            ),
+            (
+                vec![b"".to_vec()],
+                "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+            ),
+            (
+                vec![b"A".to_vec()],
+                "03783fac2efed8fbc9ad443e592ee30e61d65f471140c10ca155e937b435b760",
+            ),
             (
                 vec![
                     b"A".to_vec(),
@@ -377,10 +430,6 @@ mod tests_for_sha3hash {
                     b"aaab".to_vec(),
                 ],
                 "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
-            ),
-            (
-                vec![],
-                "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
             ),
             (
                 vec![
