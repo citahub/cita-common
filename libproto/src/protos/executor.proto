@@ -18,18 +18,19 @@ enum ReceiptError {
     //ExecutionError
     NoTransactionPermission = 0;
     NoContractPermission = 1;
-    NotEnoughBaseGas = 2;
-    BlockGasLimitReached  = 3;
-    AccountGasLimitReached  = 4;
-    OutOfGas = 5;
-    BadJumpDestination = 6;
-    BadInstruction = 7;
-    StackUnderflow = 8;
-    OutOfStack = 9;
-    Internal = 10;
-    MutableCallInStaticContext = 11;
-    OutOfBounds = 12;
-    Reverted = 13;
+    NoCallPermission = 2;
+    NotEnoughBaseGas = 3;
+    BlockGasLimitReached  = 4;
+    AccountGasLimitReached  = 5;
+    OutOfGas = 6;
+    BadJumpDestination = 7;
+    BadInstruction = 8;
+    StackUnderflow = 9;
+    OutOfStack = 10;
+    Internal = 11;
+    MutableCallInStaticContext = 12;
+    OutOfBounds = 13;
+    Reverted = 14;
 }
 
 message LogEntry {
