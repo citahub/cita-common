@@ -29,6 +29,8 @@ extern crate lru_cache;
 extern crate parking_lot;
 extern crate regex;
 extern crate rlp;
+#[macro_use]
+extern crate rlp_derive;
 extern crate rocksdb;
 extern crate rustc_hex;
 extern crate sha3;

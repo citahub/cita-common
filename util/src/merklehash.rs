@@ -29,13 +29,14 @@ pub struct MerkleTree {
     input_size: usize,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable)]
 pub struct MerkleProofNode {
     is_right: bool,
     hash: H256,
 }
 
-pub type MerkleProof = Vec<MerkleProofNode>;
+#[derive(Debug, Clone, RlpEncodableWrapper, RlpDecodableWrapper)]
+pub struct MerkleProof(Vec<MerkleProofNode>);
 
 impl MerkleTree {
     pub fn from_hashes(input: Vec<H256>) -> Self {
@@ -54,18 +55,20 @@ impl MerkleTree {
     }
 
     pub fn get_proof_by_input_index(&self, input_index: usize) -> MerkleProof {
-        get_proof_indexes(input_index, self.input_size)
-            .into_iter()
-            .map(|i| MerkleProofNode {
-                is_right: (i & 1) == 0,
-                hash: self.nodes[i],
-            })
-            .collect()
+        MerkleProof(
+            get_proof_indexes(input_index, self.input_size)
+                .into_iter()
+                .map(|i| MerkleProofNode {
+                    is_right: (i & 1) == 0,
+                    hash: self.nodes[i],
+                })
+                .collect(),
+        )
     }
 }
 
 pub fn verify_proof(root_hash: H256, proof: &MerkleProof, data_hash: H256) -> bool {
-    proof.iter().fold(data_hash, |h, ref x| {
+    proof.0.iter().fold(data_hash, |h, ref x| {
         if x.is_right {
             merge(&h, &x.hash)
         } else {
@@ -231,7 +234,10 @@ fn get_proof_indexes(input_index: usize, input_size: usize) -> Vec<usize> {
 
 #[cfg(test)]
 mod tests {
+    use super::MerkleProof;
     use hashable::Hashable;
+    use rlp;
+    use rlp::Encodable;
 
     #[test]
     fn test_lowest_row() {
@@ -337,7 +343,10 @@ mod tests {
         for index in 0..input_size {
             let data_hash = input[index].crypt_hash();
             let proof = tree.get_proof_by_input_index(index);
-            assert!(super::verify_proof(root_hash, &proof, data_hash));
+            // encode and decode
+            let proof_bytes = proof.rlp_bytes().to_vec();
+            let proof1: MerkleProof = rlp::decode(&proof_bytes);
+            assert!(super::verify_proof(root_hash, &proof1, data_hash));
         }
     }
 }
