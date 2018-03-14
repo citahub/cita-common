@@ -45,6 +45,7 @@ pub enum SubModules {
     Auth,
     Executor,
     Synchronizer,
+    Snapshot,
     All,
     Unknown,
 }
@@ -71,6 +72,8 @@ pub enum MsgType {
     VerifyBlockReq,
     VerifyBlockResp,
     ExecutedResult,
+    SnapshotReq,
+    SnapshotResp,
     // Generate MSG-PROTOS automatically end.
     All,
     Unknown,
@@ -124,6 +127,7 @@ impl fmt::Display for SubModules {
                 &SubModules::Auth => "auth",
                 &SubModules::Executor => "executor",
                 &SubModules::Synchronizer => "synchronizer",
+                &SubModules::Snapshot => "snapshot",
                 &SubModules::All => "*",
                 &SubModules::Unknown => UNKNOWN,
             }
@@ -186,6 +190,7 @@ impl<'a> From<&'a str> for SubModules {
             "auth" => SubModules::Auth,
             "executor" => SubModules::Executor,
             "synchronizer" => SubModules::Synchronizer,
+            "snapshot" => SubModules::Snapshot,
             "*" => SubModules::All,
             _ => SubModules::Unknown,
         }
