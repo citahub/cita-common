@@ -52,7 +52,7 @@ pub enum SubModules {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum MsgType {
-    // Generate MSG-PROTOS automatically begin:
+    // Generate MSG-PROTOS struct automatically begin:
     RawBytes,
     Request,
     Response,
@@ -74,7 +74,7 @@ pub enum MsgType {
     ExecutedResult,
     SnapshotReq,
     SnapshotResp,
-    // Generate MSG-PROTOS automatically end.
+    // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
     // TODO This is a issue left over by history.
