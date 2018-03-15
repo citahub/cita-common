@@ -45,6 +45,7 @@ pub enum SubModules {
     Auth,
     Executor,
     Synchronizer,
+    Snapshot,
     All,
     Unknown,
 }
@@ -71,6 +72,8 @@ pub enum MsgType {
     VerifyBlockReq,
     VerifyBlockResp,
     ExecutedResult,
+    SnapshotReq,
+    SnapshotResp,
     // Generate MSG-PROTOS automatically end.
     All,
     Unknown,
@@ -124,6 +127,7 @@ impl fmt::Display for SubModules {
                 &SubModules::Auth => "auth",
                 &SubModules::Executor => "executor",
                 &SubModules::Synchronizer => "synchronizer",
+                &SubModules::Snapshot => "snapshot",
                 &SubModules::All => "*",
                 &SubModules::Unknown => UNKNOWN,
             }
@@ -157,6 +161,8 @@ impl fmt::Display for MsgType {
                 &MsgType::VerifyBlockReq => "verify_block_req",
                 &MsgType::VerifyBlockResp => "verify_block_resp",
                 &MsgType::ExecutedResult => "executed_result",
+                &MsgType::SnapshotReq => "snapshot_req",
+                &MsgType::SnapshotResp => "snapshot_resp",
                 // Generate MSG-PROTOS display automatically end.
                 &MsgType::All => "*",
                 &MsgType::Unknown => UNKNOWN,
@@ -184,6 +190,7 @@ impl<'a> From<&'a str> for SubModules {
             "auth" => SubModules::Auth,
             "executor" => SubModules::Executor,
             "synchronizer" => SubModules::Synchronizer,
+            "snapshot" => SubModules::Snapshot,
             "*" => SubModules::All,
             _ => SubModules::Unknown,
         }
@@ -213,6 +220,8 @@ impl<'a> From<&'a str> for MsgType {
             "verify_block_req" => MsgType::VerifyBlockReq,
             "verify_block_resp" => MsgType::VerifyBlockResp,
             "executed_result" => MsgType::ExecutedResult,
+            "snapshot_req" => MsgType::SnapshotReq,
+            "snapshot_resp" => MsgType::SnapshotResp,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,

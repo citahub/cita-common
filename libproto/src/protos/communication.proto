@@ -7,6 +7,7 @@ import "blockchain.proto";
 import "consensus.proto";
 import "auth.proto";
 import "executor.proto";
+import "snapshot.proto";
 
 message InnerMessage {
 
@@ -39,5 +40,8 @@ message InnerMessage {
         VerifyBlockResp VerifyBlockResp = 18;
 
         ExecutedResult ExecutedResult = 19;
+
+        SnapshotReq SnapshotReq = 20;
+        SnapshotResp SnapshotResp = 21;
     }
 }

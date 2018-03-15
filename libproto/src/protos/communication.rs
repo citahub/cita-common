@@ -71,6 +71,8 @@ pub enum InnerMessage_oneof_content {
     VerifyBlockReq(super::auth::VerifyBlockReq),
     VerifyBlockResp(super::auth::VerifyBlockResp),
     ExecutedResult(super::executor::ExecutedResult),
+    SnapshotReq(super::snapshot::SnapshotReq),
+    SnapshotResp(super::snapshot::SnapshotResp),
 }
 
 impl InnerMessage {
@@ -1018,6 +1020,104 @@ impl InnerMessage {
             _ => super::executor::ExecutedResult::default_instance(),
         }
     }
+
+    // .SnapshotReq SnapshotReq = 20;
+
+    pub fn clear_SnapshotReq(&mut self) {
+        self.content = ::std::option::Option::None;
+    }
+
+    pub fn has_SnapshotReq(&self) -> bool {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_SnapshotReq(&mut self, v: super::snapshot::SnapshotReq) {
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_SnapshotReq(&mut self) -> &mut super::snapshot::SnapshotReq {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(_)) = self.content {
+        } else {
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(super::snapshot::SnapshotReq::new()));
+        }
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_SnapshotReq(&mut self) -> super::snapshot::SnapshotReq {
+        if self.has_SnapshotReq() {
+            match self.content.take() {
+                ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            super::snapshot::SnapshotReq::new()
+        }
+    }
+
+    pub fn get_SnapshotReq(&self) -> &super::snapshot::SnapshotReq {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(ref v)) => v,
+            _ => super::snapshot::SnapshotReq::default_instance(),
+        }
+    }
+
+    // .SnapshotResp SnapshotResp = 21;
+
+    pub fn clear_SnapshotResp(&mut self) {
+        self.content = ::std::option::Option::None;
+    }
+
+    pub fn has_SnapshotResp(&self) -> bool {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_SnapshotResp(&mut self, v: super::snapshot::SnapshotResp) {
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_SnapshotResp(&mut self) -> &mut super::snapshot::SnapshotResp {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(_)) = self.content {
+        } else {
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(super::snapshot::SnapshotResp::new()));
+        }
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_SnapshotResp(&mut self) -> super::snapshot::SnapshotResp {
+        if self.has_SnapshotResp() {
+            match self.content.take() {
+                ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            super::snapshot::SnapshotResp::new()
+        }
+    }
+
+    pub fn get_SnapshotResp(&self) -> &super::snapshot::SnapshotResp {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(ref v)) => v,
+            _ => super::snapshot::SnapshotResp::default_instance(),
+        }
+    }
 }
 
 impl ::protobuf::Message for InnerMessage {
@@ -1108,6 +1208,16 @@ impl ::protobuf::Message for InnerMessage {
             }
         }
         if let Some(InnerMessage_oneof_content::ExecutedResult(ref v)) = self.content {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(InnerMessage_oneof_content::SnapshotReq(ref v)) = self.content {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(InnerMessage_oneof_content::SnapshotResp(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
@@ -1233,6 +1343,18 @@ impl ::protobuf::Message for InnerMessage {
                     }
                     self.content = ::std::option::Option::Some(InnerMessage_oneof_content::ExecutedResult(is.read_message()?));
                 },
+                20 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotReq(is.read_message()?));
+                },
+                21 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::SnapshotResp(is.read_message()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -1319,6 +1441,14 @@ impl ::protobuf::Message for InnerMessage {
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
                 &InnerMessage_oneof_content::ExecutedResult(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::SnapshotReq(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::SnapshotResp(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -1422,6 +1552,16 @@ impl ::protobuf::Message for InnerMessage {
                 },
                 &InnerMessage_oneof_content::ExecutedResult(ref v) => {
                     os.write_tag(19, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::SnapshotReq(ref v) => {
+                    os.write_tag(20, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::SnapshotResp(ref v) => {
+                    os.write_tag(21, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -1566,6 +1706,16 @@ impl ::protobuf::MessageStatic for InnerMessage {
                     InnerMessage::has_ExecutedResult,
                     InnerMessage::get_ExecutedResult,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::snapshot::SnapshotReq>(
+                    "SnapshotReq",
+                    InnerMessage::has_SnapshotReq,
+                    InnerMessage::get_SnapshotReq,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::snapshot::SnapshotResp>(
+                    "SnapshotResp",
+                    InnerMessage::has_SnapshotResp,
+                    InnerMessage::get_SnapshotResp,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<InnerMessage>(
                     "InnerMessage",
                     fields,
@@ -1597,6 +1747,8 @@ impl ::protobuf::Clear for InnerMessage {
         self.clear_VerifyBlockReq();
         self.clear_VerifyBlockResp();
         self.clear_ExecutedResult();
+        self.clear_SnapshotReq();
+        self.clear_SnapshotResp();
         self.unknown_fields.clear();
     }
 }
@@ -1616,84 +1768,92 @@ impl ::protobuf::reflect::ProtobufValue for InnerMessage {
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
-    o\x1a\x0eexecutor.proto\"\xc4\x07\n\x0cInnerMessage\x12\x1c\n\x08RawByte\
-    s\x18\x01\x20\x01(\x0cH\0R\x08RawBytes\x12$\n\x07Request\x18\x02\x20\x01\
-    (\x0b2\x08.RequestH\0R\x07Request\x12'\n\x08Response\x18\x03\x20\x01(\
-    \x0b2\t.ResponseH\0R\x08Response\x120\n\x0bSyncRequest\x18\x04\x20\x01(\
-    \x0b2\x0c.SyncRequestH\0R\x0bSyncRequest\x123\n\x0cSyncResponse\x18\x05\
-    \x20\x01(\x0b2\r.SyncResponseH\0R\x0cSyncResponse\x12!\n\x06Status\x18\
-    \x06\x20\x01(\x0b2\x07.StatusH\0R\x06Status\x12-\n\nRichStatus\x18\x07\
-    \x20\x01(\x0b2\x0b.RichStatusH\0R\nRichStatus\x129\n\x0eSignedProposal\
-    \x18\x08\x20\x01(\x0b2\x0f.SignedProposalH\0R\x0eSignedProposal\x12\x1e\
-    \n\x05Block\x18\t\x20\x01(\x0b2\x06.BlockH\0R\x05Block\x129\n\x0eBlockWi\
-    thProof\x18\n\x20\x01(\x0b2\x0f.BlockWithProofH\0R\x0eBlockWithProof\x12\
-    0\n\x0bBlockHeader\x18\x0b\x20\x01(\x0b2\x0c.BlockHeaderH\0R\x0bBlockHea\
-    der\x12'\n\x08BlockTxs\x18\x0c\x20\x01(\x0b2\t.BlockTxsH\0R\x08BlockTxs\
-    \x126\n\rBlockTxHashes\x18\r\x20\x01(\x0b2\x0e.BlockTxHashesH\0R\rBlockT\
-    xHashes\x12?\n\x10BlockTxHashesReq\x18\x0e\x20\x01(\x0b2\x11.BlockTxHash\
-    esReqH\0R\x10BlockTxHashesReq\x120\n\x0bVerifyTxReq\x18\x0f\x20\x01(\x0b\
-    2\x0c.VerifyTxReqH\0R\x0bVerifyTxReq\x123\n\x0cVerifyTxResp\x18\x10\x20\
-    \x01(\x0b2\r.VerifyTxRespH\0R\x0cVerifyTxResp\x129\n\x0eVerifyBlockReq\
-    \x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\x0eVerifyBlockReq\x12<\n\
-    \x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.VerifyBlockRespH\0R\x0fVer\
-    ifyBlockResp\x129\n\x0eExecutedResult\x18\x13\x20\x01(\x0b2\x0f.Executed\
-    ResultH\0R\x0eExecutedResultB\t\n\x07contentJ\xa8\t\n\x06\x12\x04\0\0*\
-    \x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\
-    \n\t\n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\
-    \x13\n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\
-    \x07\x18\n\t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\
-    \x08\x07\x17\n\n\n\x02\x04\0\x12\x04\n\0*\x01\n\n\n\x03\x04\0\x01\x12\
-    \x03\n\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\x04\x0c\x04)\x05\n\x0c\n\x05\
-    \x04\0\x08\0\x01\x12\x03\x0c\n\x11\n\x0b\n\x04\x04\0\x02\0\x12\x03\x0e\
-    \x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0e\x08\r\n\x0c\n\x05\x04\0\
-    \x02\0\x01\x12\x03\x0e\x0e\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x0e\
-    \x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x10\x08\x1c\n\x0c\n\x05\x04\0\
-    \x02\x01\x06\x12\x03\x10\x08\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\
-    \x10\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x10\x1a\x1b\n\x0b\n\
-    \x04\x04\0\x02\x02\x12\x03\x11\x08\x1e\n\x0c\n\x05\x04\0\x02\x02\x06\x12\
-    \x03\x11\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x11\x11\x19\n\x0c\
-    \n\x05\x04\0\x02\x02\x03\x12\x03\x11\x1c\x1d\n\x0b\n\x04\x04\0\x02\x03\
-    \x12\x03\x13\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\x03\x13\x08\x13\n\
-    \x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x13\x14\x1f\n\x0c\n\x05\x04\0\x02\
-    \x03\x03\x12\x03\x13\"#\n\x0b\n\x04\x04\0\x02\x04\x12\x03\x14\x08&\n\x0c\
-    \n\x05\x04\0\x02\x04\x06\x12\x03\x14\x08\x14\n\x0c\n\x05\x04\0\x02\x04\
-    \x01\x12\x03\x14\x15!\n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x14$%\n\x0b\
-    \n\x04\x04\0\x02\x05\x12\x03\x16\x08\x1a\n\x0c\n\x05\x04\0\x02\x05\x06\
-    \x12\x03\x16\x08\x0e\n\x0c\n\x05\x04\0\x02\x05\x01\x12\x03\x16\x0f\x15\n\
-    \x0c\n\x05\x04\0\x02\x05\x03\x12\x03\x16\x18\x19\n\x0b\n\x04\x04\0\x02\
-    \x06\x12\x03\x17\x08\"\n\x0c\n\x05\x04\0\x02\x06\x06\x12\x03\x17\x08\x12\
-    \n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x17\x13\x1d\n\x0c\n\x05\x04\0\x02\
-    \x06\x03\x12\x03\x17\x20!\n\x0b\n\x04\x04\0\x02\x07\x12\x03\x19\x08*\n\
-    \x0c\n\x05\x04\0\x02\x07\x06\x12\x03\x19\x08\x16\n\x0c\n\x05\x04\0\x02\
-    \x07\x01\x12\x03\x19\x17%\n\x0c\n\x05\x04\0\x02\x07\x03\x12\x03\x19()\n\
-    \x0b\n\x04\x04\0\x02\x08\x12\x03\x1b\x08\x18\n\x0c\n\x05\x04\0\x02\x08\
-    \x06\x12\x03\x1b\x08\r\n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\x1b\x0e\x13\
-    \n\x0c\n\x05\x04\0\x02\x08\x03\x12\x03\x1b\x16\x17\n\x0b\n\x04\x04\0\x02\
-    \t\x12\x03\x1c\x08+\n\x0c\n\x05\x04\0\x02\t\x06\x12\x03\x1c\x08\x16\n\
-    \x0c\n\x05\x04\0\x02\t\x01\x12\x03\x1c\x17%\n\x0c\n\x05\x04\0\x02\t\x03\
-    \x12\x03\x1c(*\n\x0b\n\x04\x04\0\x02\n\x12\x03\x1d\x08%\n\x0c\n\x05\x04\
-    \0\x02\n\x06\x12\x03\x1d\x08\x13\n\x0c\n\x05\x04\0\x02\n\x01\x12\x03\x1d\
-    \x14\x1f\n\x0c\n\x05\x04\0\x02\n\x03\x12\x03\x1d\"$\n\x0b\n\x04\x04\0\
-    \x02\x0b\x12\x03\x1e\x08\x1f\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\x1e\
-    \x08\x10\n\x0c\n\x05\x04\0\x02\x0b\x01\x12\x03\x1e\x11\x19\n\x0c\n\x05\
-    \x04\0\x02\x0b\x03\x12\x03\x1e\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0c\x12\x03\
-    \x20\x08)\n\x0c\n\x05\x04\0\x02\x0c\x06\x12\x03\x20\x08\x15\n\x0c\n\x05\
-    \x04\0\x02\x0c\x01\x12\x03\x20\x16#\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\
-    \x03\x20&(\n\x0b\n\x04\x04\0\x02\r\x12\x03!\x08/\n\x0c\n\x05\x04\0\x02\r\
-    \x06\x12\x03!\x08\x18\n\x0c\n\x05\x04\0\x02\r\x01\x12\x03!\x19)\n\x0c\n\
-    \x05\x04\0\x02\r\x03\x12\x03!,.\n\x0b\n\x04\x04\0\x02\x0e\x12\x03#\x08%\
-    \n\x0c\n\x05\x04\0\x02\x0e\x06\x12\x03#\x08\x13\n\x0c\n\x05\x04\0\x02\
-    \x0e\x01\x12\x03#\x14\x1f\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03#\"$\n\
-    \x0b\n\x04\x04\0\x02\x0f\x12\x03$\x08'\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\
-    \x03$\x08\x14\n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03$\x15!\n\x0c\n\x05\
-    \x04\0\x02\x0f\x03\x12\x03$$&\n\x0b\n\x04\x04\0\x02\x10\x12\x03%\x08+\n\
-    \x0c\n\x05\x04\0\x02\x10\x06\x12\x03%\x08\x16\n\x0c\n\x05\x04\0\x02\x10\
-    \x01\x12\x03%\x17%\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03%(*\n\x0b\n\x04\
-    \x04\0\x02\x11\x12\x03&\x08-\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03&\x08\
-    \x17\n\x0c\n\x05\x04\0\x02\x11\x01\x12\x03&\x18'\n\x0c\n\x05\x04\0\x02\
-    \x11\x03\x12\x03&*,\n\x0b\n\x04\x04\0\x02\x12\x12\x03(\x08+\n\x0c\n\x05\
-    \x04\0\x02\x12\x06\x12\x03(\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\x12\
-    \x03(\x17%\n\x0c\n\x05\x04\0\x02\x12\x03\x12\x03((*b\x06proto3\
+    o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\"\xab\x08\n\x0cInnerMessag\
+    e\x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0R\x08RawBytes\x12$\n\x07R\
+    equest\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\x07Request\x12'\n\x08Respon\
+    se\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08Response\x120\n\x0bSyncReques\
+    t\x18\x04\x20\x01(\x0b2\x0c.SyncRequestH\0R\x0bSyncRequest\x123\n\x0cSyn\
+    cResponse\x18\x05\x20\x01(\x0b2\r.SyncResponseH\0R\x0cSyncResponse\x12!\
+    \n\x06Status\x18\x06\x20\x01(\x0b2\x07.StatusH\0R\x06Status\x12-\n\nRich\
+    Status\x18\x07\x20\x01(\x0b2\x0b.RichStatusH\0R\nRichStatus\x129\n\x0eSi\
+    gnedProposal\x18\x08\x20\x01(\x0b2\x0f.SignedProposalH\0R\x0eSignedPropo\
+    sal\x12\x1e\n\x05Block\x18\t\x20\x01(\x0b2\x06.BlockH\0R\x05Block\x129\n\
+    \x0eBlockWithProof\x18\n\x20\x01(\x0b2\x0f.BlockWithProofH\0R\x0eBlockWi\
+    thProof\x120\n\x0bBlockHeader\x18\x0b\x20\x01(\x0b2\x0c.BlockHeaderH\0R\
+    \x0bBlockHeader\x12'\n\x08BlockTxs\x18\x0c\x20\x01(\x0b2\t.BlockTxsH\0R\
+    \x08BlockTxs\x126\n\rBlockTxHashes\x18\r\x20\x01(\x0b2\x0e.BlockTxHashes\
+    H\0R\rBlockTxHashes\x12?\n\x10BlockTxHashesReq\x18\x0e\x20\x01(\x0b2\x11\
+    .BlockTxHashesReqH\0R\x10BlockTxHashesReq\x120\n\x0bVerifyTxReq\x18\x0f\
+    \x20\x01(\x0b2\x0c.VerifyTxReqH\0R\x0bVerifyTxReq\x123\n\x0cVerifyTxResp\
+    \x18\x10\x20\x01(\x0b2\r.VerifyTxRespH\0R\x0cVerifyTxResp\x129\n\x0eVeri\
+    fyBlockReq\x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\x0eVerifyBlockRe\
+    q\x12<\n\x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.VerifyBlockRespH\0\
+    R\x0fVerifyBlockResp\x129\n\x0eExecutedResult\x18\x13\x20\x01(\x0b2\x0f.\
+    ExecutedResultH\0R\x0eExecutedResult\x120\n\x0bSnapshotReq\x18\x14\x20\
+    \x01(\x0b2\x0c.SnapshotReqH\0R\x0bSnapshotReq\x123\n\x0cSnapshotResp\x18\
+    \x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotRespB\t\n\x07contentJ\
+    \xa1\n\n\x06\x12\x04\0\0.\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\
+    \x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\
+    \x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\
+    \t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\t\n\x02\x03\x05\x12\x03\x07\x07\
+    \x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\x17\n\t\n\x02\x03\x07\x12\x03\t\
+    \x07\x17\n\n\n\x02\x04\0\x12\x04\x0b\0.\x01\n\n\n\x03\x04\0\x01\x12\x03\
+    \x0b\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\x04\r\x04-\x05\n\x0c\n\x05\x04\
+    \0\x08\0\x01\x12\x03\r\n\x11\n\x0b\n\x04\x04\0\x02\0\x12\x03\x0f\x08\x1b\
+    \n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0f\x08\r\n\x0c\n\x05\x04\0\x02\0\
+    \x01\x12\x03\x0f\x0e\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x0f\x19\x1a\
+    \n\x0b\n\x04\x04\0\x02\x01\x12\x03\x11\x08\x1c\n\x0c\n\x05\x04\0\x02\x01\
+    \x06\x12\x03\x11\x08\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x11\x10\
+    \x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x11\x1a\x1b\n\x0b\n\x04\x04\0\
+    \x02\x02\x12\x03\x12\x08\x1e\n\x0c\n\x05\x04\0\x02\x02\x06\x12\x03\x12\
+    \x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x12\x11\x19\n\x0c\n\x05\
+    \x04\0\x02\x02\x03\x12\x03\x12\x1c\x1d\n\x0b\n\x04\x04\0\x02\x03\x12\x03\
+    \x14\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\x03\x14\x08\x13\n\x0c\n\x05\
+    \x04\0\x02\x03\x01\x12\x03\x14\x14\x1f\n\x0c\n\x05\x04\0\x02\x03\x03\x12\
+    \x03\x14\"#\n\x0b\n\x04\x04\0\x02\x04\x12\x03\x15\x08&\n\x0c\n\x05\x04\0\
+    \x02\x04\x06\x12\x03\x15\x08\x14\n\x0c\n\x05\x04\0\x02\x04\x01\x12\x03\
+    \x15\x15!\n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x15$%\n\x0b\n\x04\x04\0\
+    \x02\x05\x12\x03\x17\x08\x1a\n\x0c\n\x05\x04\0\x02\x05\x06\x12\x03\x17\
+    \x08\x0e\n\x0c\n\x05\x04\0\x02\x05\x01\x12\x03\x17\x0f\x15\n\x0c\n\x05\
+    \x04\0\x02\x05\x03\x12\x03\x17\x18\x19\n\x0b\n\x04\x04\0\x02\x06\x12\x03\
+    \x18\x08\"\n\x0c\n\x05\x04\0\x02\x06\x06\x12\x03\x18\x08\x12\n\x0c\n\x05\
+    \x04\0\x02\x06\x01\x12\x03\x18\x13\x1d\n\x0c\n\x05\x04\0\x02\x06\x03\x12\
+    \x03\x18\x20!\n\x0b\n\x04\x04\0\x02\x07\x12\x03\x1a\x08*\n\x0c\n\x05\x04\
+    \0\x02\x07\x06\x12\x03\x1a\x08\x16\n\x0c\n\x05\x04\0\x02\x07\x01\x12\x03\
+    \x1a\x17%\n\x0c\n\x05\x04\0\x02\x07\x03\x12\x03\x1a()\n\x0b\n\x04\x04\0\
+    \x02\x08\x12\x03\x1c\x08\x18\n\x0c\n\x05\x04\0\x02\x08\x06\x12\x03\x1c\
+    \x08\r\n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\x1c\x0e\x13\n\x0c\n\x05\x04\
+    \0\x02\x08\x03\x12\x03\x1c\x16\x17\n\x0b\n\x04\x04\0\x02\t\x12\x03\x1d\
+    \x08+\n\x0c\n\x05\x04\0\x02\t\x06\x12\x03\x1d\x08\x16\n\x0c\n\x05\x04\0\
+    \x02\t\x01\x12\x03\x1d\x17%\n\x0c\n\x05\x04\0\x02\t\x03\x12\x03\x1d(*\n\
+    \x0b\n\x04\x04\0\x02\n\x12\x03\x1e\x08%\n\x0c\n\x05\x04\0\x02\n\x06\x12\
+    \x03\x1e\x08\x13\n\x0c\n\x05\x04\0\x02\n\x01\x12\x03\x1e\x14\x1f\n\x0c\n\
+    \x05\x04\0\x02\n\x03\x12\x03\x1e\"$\n\x0b\n\x04\x04\0\x02\x0b\x12\x03\
+    \x1f\x08\x1f\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\x1f\x08\x10\n\x0c\n\
+    \x05\x04\0\x02\x0b\x01\x12\x03\x1f\x11\x19\n\x0c\n\x05\x04\0\x02\x0b\x03\
+    \x12\x03\x1f\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0c\x12\x03!\x08)\n\x0c\n\x05\
+    \x04\0\x02\x0c\x06\x12\x03!\x08\x15\n\x0c\n\x05\x04\0\x02\x0c\x01\x12\
+    \x03!\x16#\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\x03!&(\n\x0b\n\x04\x04\0\
+    \x02\r\x12\x03\"\x08/\n\x0c\n\x05\x04\0\x02\r\x06\x12\x03\"\x08\x18\n\
+    \x0c\n\x05\x04\0\x02\r\x01\x12\x03\"\x19)\n\x0c\n\x05\x04\0\x02\r\x03\
+    \x12\x03\",.\n\x0b\n\x04\x04\0\x02\x0e\x12\x03$\x08%\n\x0c\n\x05\x04\0\
+    \x02\x0e\x06\x12\x03$\x08\x13\n\x0c\n\x05\x04\0\x02\x0e\x01\x12\x03$\x14\
+    \x1f\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03$\"$\n\x0b\n\x04\x04\0\x02\x0f\
+    \x12\x03%\x08'\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\x03%\x08\x14\n\x0c\n\
+    \x05\x04\0\x02\x0f\x01\x12\x03%\x15!\n\x0c\n\x05\x04\0\x02\x0f\x03\x12\
+    \x03%$&\n\x0b\n\x04\x04\0\x02\x10\x12\x03&\x08+\n\x0c\n\x05\x04\0\x02\
+    \x10\x06\x12\x03&\x08\x16\n\x0c\n\x05\x04\0\x02\x10\x01\x12\x03&\x17%\n\
+    \x0c\n\x05\x04\0\x02\x10\x03\x12\x03&(*\n\x0b\n\x04\x04\0\x02\x11\x12\
+    \x03'\x08-\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03'\x08\x17\n\x0c\n\x05\
+    \x04\0\x02\x11\x01\x12\x03'\x18'\n\x0c\n\x05\x04\0\x02\x11\x03\x12\x03'*\
+    ,\n\x0b\n\x04\x04\0\x02\x12\x12\x03)\x08+\n\x0c\n\x05\x04\0\x02\x12\x06\
+    \x12\x03)\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\x12\x03)\x17%\n\x0c\n\
+    \x05\x04\0\x02\x12\x03\x12\x03)(*\n\x0b\n\x04\x04\0\x02\x13\x12\x03+\x08\
+    %\n\x0c\n\x05\x04\0\x02\x13\x06\x12\x03+\x08\x13\n\x0c\n\x05\x04\0\x02\
+    \x13\x01\x12\x03+\x14\x1f\n\x0c\n\x05\x04\0\x02\x13\x03\x12\x03+\"$\n\
+    \x0b\n\x04\x04\0\x02\x14\x12\x03,\x08'\n\x0c\n\x05\x04\0\x02\x14\x06\x12\
+    \x03,\x08\x14\n\x0c\n\x05\x04\0\x02\x14\x01\x12\x03,\x15!\n\x0c\n\x05\
+    \x04\0\x02\x14\x03\x12\x03,$&b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
