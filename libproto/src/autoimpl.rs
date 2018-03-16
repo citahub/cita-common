@@ -186,7 +186,7 @@ macro_rules! loop_macro_for_structs {
 macro_rules! loop_macro_for_structs_in_msg {
     ($macro:ident) => {
         $macro!(
-            // Generate MSG-PROTOS automatically begin:
+            // Generate MSG-PROTOS struct automatically begin:
             RawBytes,
             Request,
             Response,
@@ -206,7 +206,9 @@ macro_rules! loop_macro_for_structs_in_msg {
             VerifyBlockReq,
             VerifyBlockResp,
             ExecutedResult,
-            // Generate MSG-PROTOS automatically end.
+            SnapshotReq,
+            SnapshotResp,
+            // Generate MSG-PROTOS struct automatically end.
         );
     }
 }
