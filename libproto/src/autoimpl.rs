@@ -174,6 +174,8 @@ macro_rules! loop_macro_for_structs {
             Request,
             FullTransaction,
             Response,
+            SnapshotReq,
+            SnapshotResp,
             SyncRequest,
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
@@ -184,7 +186,7 @@ macro_rules! loop_macro_for_structs {
 macro_rules! loop_macro_for_structs_in_msg {
     ($macro:ident) => {
         $macro!(
-            // Generate MSG-PROTOS automatically begin:
+            // Generate MSG-PROTOS struct automatically begin:
             RawBytes,
             Request,
             Response,
@@ -204,7 +206,9 @@ macro_rules! loop_macro_for_structs_in_msg {
             VerifyBlockReq,
             VerifyBlockResp,
             ExecutedResult,
-            // Generate MSG-PROTOS automatically end.
+            SnapshotReq,
+            SnapshotResp,
+            // Generate MSG-PROTOS struct automatically end.
         );
     }
 }
@@ -424,6 +428,18 @@ impl Message {
     pub fn take_executed_result(&mut self) -> Option<ExecutedResult> {
         match self.take_content() {
             Some(MsgClass::ExecutedResult(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_snapshot_req(&mut self) -> Option<SnapshotReq> {
+        match self.take_content() {
+            Some(MsgClass::SnapshotReq(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_snapshot_resp(&mut self) -> Option<SnapshotResp> {
+        match self.take_content() {
+            Some(MsgClass::SnapshotResp(v)) => Some(v),
             _ => None,
         }
     }

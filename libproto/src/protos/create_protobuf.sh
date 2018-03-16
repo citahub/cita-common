@@ -88,10 +88,14 @@ function gen_modrs_for_protos () {
     done
 }
 
+function remove_all_generated_code () {
+    local replace="\\s\\+\\/\\/ Generate .* automatically"
+    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" ../*.rs
+}
+
 function generate_impls_for_all () {
     local rsfile="../autoimpl.rs"
     local replace="            \\/\\/ Generate ALL-PROTOS automatically"
-    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" "${rsfile}"
     grep "^pub struct .* {$" *.rs | sort \
             | awk '{ print $3 }' | uniq \
             | while read struct; do
@@ -104,7 +108,6 @@ function generate_impls_for_msg () {
     local indent=$(printf "%${2}s")
     local replace="${indent}\\/\\/ Generate MSG-PROTOS $3 automatically"
     local newcode="$4"
-    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" "${rsfile}"
     sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
             | grep "^\s\{8\}[a-Z].*;$" | awk '{ print $2 }' \
             | while read struct; do
@@ -119,7 +122,6 @@ function camelcase_to_underscore () {
 function generate_methods_for_msg () {
     local rsfile="../autoimpl.rs"
     local replace="    \\/\\/ Generate MSG-PROTOS methods automatically"
-    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" "${rsfile}"
     sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
             | grep "^\s\{8\}[a-Z].*;$" | awk '{ print $2 }' \
             | while read struct; do
@@ -141,9 +143,10 @@ function main () {
     add_pub_to_oneof_in_generated_code response.rs      data    Response
     add_pub_to_oneof_in_generated_code request.rs       req     Request
     add_pub_to_oneof_in_generated_code communication.rs content InnerMessage
+    remove_all_generated_code
     generate_impls_for_all
-    generate_impls_for_msg "../autoimpl.rs" 12 ""         '${struct},'
-    generate_impls_for_msg "../router.rs"   4  ""         '${struct},'
+    generate_impls_for_msg "../autoimpl.rs" 12 "struct"         '${struct},'
+    generate_impls_for_msg "../router.rs"   4  "struct"         '${struct},'
     generate_impls_for_msg "../router.rs"   16 "display"  \
         '\&MsgType::${struct} =\> \"$(camelcase_to_underscore ${struct})\",'
     generate_impls_for_msg "../router.rs"   12 "from_str" \
