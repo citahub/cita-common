@@ -41,6 +41,8 @@ extern crate target_info;
 #[macro_use]
 extern crate log as rlog;
 extern crate panic_hook;
+extern crate serde;
+extern crate toml;
 extern crate uuid;
 
 pub mod avl;
