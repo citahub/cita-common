@@ -56,7 +56,7 @@ pub enum UtilError {
     /// Error from a bad input size being given for the needed output.
     BadSize,
     /// Error from snappy.
-    Snappy(::snappy::InvalidInput),
+    Snappy(::snappy::SnappyError),
 }
 
 impl fmt::Display for UtilError {
@@ -68,7 +68,7 @@ impl fmt::Display for UtilError {
             UtilError::Decoder(ref err) => f.write_fmt(format_args!("{}", err)),
             UtilError::SimpleString(ref msg) => f.write_str(msg),
             UtilError::BadSize => f.write_str("Bad input size."),
-            UtilError::Snappy(ref err) => f.write_fmt(format_args!("{}", err)),
+            UtilError::Snappy(ref err) => f.write_fmt(format_args!("{:?}", err)),
         }
     }
 }
@@ -142,8 +142,8 @@ impl From<String> for UtilError {
     }
 }
 
-impl From<::snappy::InvalidInput> for UtilError {
-    fn from(err: ::snappy::InvalidInput) -> UtilError {
+impl From<::snappy::SnappyError> for UtilError {
+    fn from(err: ::snappy::SnappyError) -> UtilError {
         UtilError::Snappy(err)
     }
 }
