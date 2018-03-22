@@ -23,6 +23,11 @@ function gen_rs_for_protos () {
     done
 }
 
+function gen_grpc_rs_for_protos() {
+    protoc --rust-grpc_out=. executor.proto
+    protoc --rust-grpc_out=. citacode.proto
+}
+
 function add_pub_to_oneof_in_generated_code () {
     local update_file="$1"
     local dataname="$2"
@@ -84,6 +89,20 @@ function gen_modrs_for_protos () {
             | sort \
             | cut -d"." -f 1 | while read name; do
         items=$(grep "^pub [se].* {$" "${name}.rs" | sort | awk '{ printf $3", " }')
+        echo "pub use self::${name}::{${items/%, }};" >> "${modrs}"
+    done
+}
+
+function gen_modrs_for_protos_grpc () {
+    local modrs="mod.rs"
+    echo >> "${modrs}"
+    echo "// For gprc" >> "${modrs}"
+    find . -maxdepth 1 -name "*_grpc.rs" \
+            -exec basename {} \; \
+            | sort \
+            | cut -d"." -f 1 | while read name; do
+        items=$(grep "^pub [set].* {$" "${name}.rs" | sort | awk '{ printf $3", " }')
+        echo "pub mod ${name};" >> "${modrs}"
         echo "pub use self::${name}::{${items/%, }};" >> "${modrs}"
     done
 }
@@ -153,6 +172,8 @@ function main () {
         '\"$(camelcase_to_underscore ${struct})\" =\> MsgType::${struct},'
     generate_methods_for_msg
     gen_modrs_for_protos
+    gen_grpc_rs_for_protos
+    gen_modrs_for_protos_grpc
     add_license
     cd "${currdir}"
 }

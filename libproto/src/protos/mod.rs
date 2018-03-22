@@ -37,6 +37,7 @@
 
 pub mod auth;
 pub mod blockchain;
+pub mod citacode;
 pub mod communication;
 pub mod consensus;
 pub mod executor;
@@ -47,10 +48,17 @@ pub mod sync;
 
 pub use self::auth::{Ret, BlockTxHashes, BlockTxHashesReq, VerifyBlockReq, VerifyBlockResp, VerifyTxReq, VerifyTxResp};
 pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, Proof, RichStatus, SignedTransaction, Status, Transaction, UnverifiedTransaction};
+pub use self::citacode::{ActionParams, EnvInfo, InvokeRequest, InvokeResponse, KV, Log};
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
 pub use self::consensus::{Proposal, SignedProposal, Vote};
-pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, StateRoot};
+pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LoadRequest, LoadResponse, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, RegisterRequest, RegisterResponse, StateRoot};
 pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request};
 pub use self::response::{Response_oneof_data, FullTransaction, Response};
 pub use self::snapshot::{Cmd, Resp, SnapshotReq, SnapshotResp};
 pub use self::sync::{SyncRequest, SyncResponse};
+
+// For gprc
+pub mod citacode_grpc;
+pub use self::citacode_grpc::{CitacodeServiceClient, CitacodeService};
+pub mod executor_grpc;
+pub use self::executor_grpc::{ExecutorServiceClient, ExecutorService};

@@ -18,6 +18,7 @@
 #![feature(try_from)]
 
 extern crate cita_crypto as crypto;
+extern crate grpc;
 #[macro_use]
 extern crate log as rlog;
 extern crate protobuf;
@@ -25,6 +26,7 @@ extern crate rlp;
 extern crate rustc_serialize;
 #[macro_use]
 extern crate serde_derive;
+extern crate tls_api;
 extern crate util;
 
 pub mod protos;
