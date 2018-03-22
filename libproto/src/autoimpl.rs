@@ -228,7 +228,8 @@ loop_macro_for_structs_in_msg!(impl_convert_for_struct_in_msg);
 /// |   2   |  u8  | Reserved                                       |
 /// |-------+------+------------------------------------------------|
 /// |   3   |  u4  | Reserved                                       |
-/// |       |  u2  | Reserved                                       |
+/// |       |  u1  | Reserved                                       |
+/// |       |  u1  | Compress: true 1, false 0                      |
 /// |       |  u2  | OperateType                                    |
 /// |-------+------+------------------------------------------------|
 /// |  4~7  |  u32 | Origin                                         |
@@ -298,18 +299,46 @@ impl Message {
         }
     }
 
+    fn set_compressed(&mut self, c: bool) {
+        self.let_raw_be_ok();
+        let c_val: u8 = if c { 0b00000100 } else { 0b00000000 };
+        self.raw[3] = (self.raw[3] & 0b11111011) + (c_val & 0b00000100);
+    }
+
+    pub fn get_compressed(&self) -> bool {
+        if self.is_raw_ok() {
+            (self.raw[3] & 0b00000100) != 0
+        } else {
+            false // default
+        }
+    }
+
     pub fn set_content(&mut self, v: MsgClass) {
         let im: InnerMessage = v.into();
         let im_vec: Vec<u8> = im.try_into().unwrap();
-        let mut im_compress = snappy::cita_compress(&im_vec[..]);
         self.raw.drain(8..);
-        self.raw.append(&mut im_compress);
+        match snappy::cita_compress_to(&im_vec[..], &mut self.raw) {
+            Ok(true) => {
+                self.set_compressed(true);
+            }
+            Ok(false) | Err(_) => {
+                self.set_compressed(false);
+                self.raw.extend_from_slice(&im_vec[..]);
+            }
+        }
     }
 
     pub fn take_content(&mut self) -> Option<MsgClass> {
-        let im_vec = snappy::cita_decompress(&self.raw[8..]);
-        let im_rst = InnerMessage::try_from(&im_vec);
-        if let Ok(mut im) = im_rst {
+        let im_opt = if self.get_compressed() {
+            let mut im_vec: Vec<u8> = Vec::new();
+            match snappy::cita_decompress_to(&self.raw[8..], &mut im_vec) {
+                Ok(_) => InnerMessage::try_from(&im_vec).ok(),
+                Err(e) => None,
+            }
+        } else {
+            InnerMessage::try_from(&self.raw[8..]).ok()
+        };
+        if let Some(mut im) = im_opt {
             im.take_content()
         } else {
             None
@@ -631,5 +660,25 @@ mod tests {
 
         assert!(msg.take_response().is_some());
         assert!(msg.take_request().is_none());
+    }
+
+    #[test]
+    fn compress_and_decompress() {
+        use super::Message;
+        use std::convert::Into;
+        use util::snappy::CITA_SKIP_COMPRESS_SIZE;
+
+        let raw_bytes: Vec<u8> = vec![1, 2, 3, 4];
+        let mut msg: Message = raw_bytes.clone().into();
+        assert!(!msg.get_compressed());
+        let raw_bytes_opt = msg.take_raw_bytes();
+        assert!(raw_bytes_opt.is_some());
+        assert_eq!(raw_bytes_opt.unwrap(), raw_bytes);
+        let raw_bytes: Vec<u8> = [1; CITA_SKIP_COMPRESS_SIZE + 1].to_vec();
+        let mut msg: Message = raw_bytes.clone().into();
+        assert!(msg.get_compressed());
+        let raw_bytes_opt = msg.take_raw_bytes();
+        assert!(raw_bytes_opt.is_some());
+        assert_eq!(raw_bytes_opt.unwrap(), raw_bytes);
     }
 }
