@@ -8,3 +8,7 @@ log = "0.4"
 log4rs = "0.8"
 chan-signal = "0.3"
 chrono = "0.4"
+
+[features]
+default = []
+console = []
