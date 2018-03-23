@@ -36,6 +36,18 @@ pub enum SnappyStatus {
     Unknown = !0,
 }
 
+impl ::std::fmt::Display for SnappyError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl ::std::fmt::Display for SnappyStatus {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 impl From<c_int> for SnappyStatus {
     fn from(s: c_int) -> SnappyStatus {
         match s {
@@ -82,7 +94,7 @@ extern "C" {
 /// the given output buffer, growing it if necessary.
 /// Returns the length of the compressed data.
 /// Otherwise, raise an error if compress failed.
-fn compress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, SnappyError> {
+pub fn compress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, SnappyError> {
     let input_len = input.len();
     let output_len = output.len();
     // Try to get the maximum compressed length possibly.
@@ -116,7 +128,7 @@ fn compress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, SnappyError>
 /// the given output buffer, growing it if necessary.
 /// Returns the length of the decompressed data.
 /// Otherwise, raise an error if uncompress failed.
-fn decompress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, SnappyError> {
+pub fn decompress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, SnappyError> {
     let input_len = input.len();
     let output_len = output.len();
     let mut uncompressed_len: size_t = 0;
