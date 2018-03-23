@@ -22,13 +22,13 @@ extern crate log4rs;
 extern crate log;
 
 use log::LevelFilter;
+use log4rs::Handle;
 #[cfg(feature = "console")]
 use log4rs::append::console::ConsoleAppender;
 #[cfg(not(feature = "console"))]
 use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
 use log4rs::encode::pattern::PatternEncoder;
-use log4rs::Handle;
 use std::env;
 use std::str::FromStr;
 use std::sync::{Once, ONCE_INIT};
@@ -221,8 +221,8 @@ fn config_appender(file_path: &str, directives: Vec<Directive>) -> Config {
 #[cfg(feature = "console")]
 fn config_appender(_: &str, directives: Vec<Directive>) -> Config {
     let stdout = ConsoleAppender::builder()
-    .encoder(Box::new(PatternEncoder::new("{d} - {l} - {m}{n}")))
-    .build();
+        .encoder(Box::new(PatternEncoder::new("{d} - {l} - {m}{n}")))
+        .build();
 
     let mut config_builder = Config::builder().appender(Appender::builder().build("stdout", Box::new(stdout)));
 
