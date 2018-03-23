@@ -68,7 +68,7 @@ impl fmt::Display for UtilError {
             UtilError::Decoder(ref err) => f.write_fmt(format_args!("{}", err)),
             UtilError::SimpleString(ref msg) => f.write_str(msg),
             UtilError::BadSize => f.write_str("Bad input size."),
-            UtilError::Snappy(ref err) => f.write_fmt(format_args!("{:?}", err)),
+            UtilError::Snappy(ref err) => f.write_fmt(format_args!("{}", err)),
         }
     }
 }
