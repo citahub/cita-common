@@ -56,7 +56,7 @@ pub enum UtilError {
     /// Error from a bad input size being given for the needed output.
     BadSize,
     /// Error from snappy.
-    Snappy(::snappy::InvalidInput),
+    Snappy(::snappy::SnappyError),
 }
 
 impl fmt::Display for UtilError {
@@ -142,8 +142,8 @@ impl From<String> for UtilError {
     }
 }
 
-impl From<::snappy::InvalidInput> for UtilError {
-    fn from(err: ::snappy::InvalidInput) -> UtilError {
+impl From<::snappy::SnappyError> for UtilError {
+    fn from(err: ::snappy::SnappyError) -> UtilError {
         UtilError::Snappy(err)
     }
 }
