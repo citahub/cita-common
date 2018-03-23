@@ -1,0 +1,40 @@
+syntax = "proto3";
+package citacode;
+message ActionParams {
+    string code_address = 1;
+    string sender = 2;
+    string gas = 3;
+    bytes data = 4;
+}
+message EnvInfo {
+    string number = 1;
+    string author = 2;
+    string timestamp = 3;
+}
+
+message InvokeRequest {
+    ActionParams param = 1;
+    EnvInfo env_info = 2;
+}
+
+message Log {
+    bytes topic = 1;
+    bytes data = 2;
+}
+
+message KV {
+    bytes key = 1;
+    bytes value = 2;
+}
+
+message InvokeResponse {
+    string gas_left = 1;
+    string message = 2;
+    repeated Log logs = 3;
+    repeated KV storages = 4;
+}
+
+service CitacodeService {
+    rpc Init(InvokeRequest) returns (InvokeResponse){}
+    rpc Invoke(InvokeRequest) returns (InvokeResponse){}
+}

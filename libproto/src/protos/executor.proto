@@ -75,3 +75,28 @@ message ExecutedResult {
     ExecutedInfo executed_info = 1;
     ConsensusConfig config = 2;
 }
+
+message RegisterRequest {
+    string contract_address = 1;
+    string ip = 2;
+    string port = 3;
+}
+
+message RegisterResponse {
+    string state = 1;
+}
+
+message LoadRequest {
+    uint64 height = 1;
+    string contract_address = 2;
+    string key = 3;
+}
+
+message LoadResponse {
+    string value = 1;
+}
+
+service ExecutorService {
+    rpc Register(RegisterRequest) returns (RegisterResponse){}
+    rpc Load(LoadRequest) returns (LoadResponse){}
+}
