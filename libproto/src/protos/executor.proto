@@ -54,6 +54,7 @@ message Receipt {
     repeated LogEntry logs = 4;
     ReceiptErrorWithOption error = 5;
     uint64 account_nonce = 6;
+    bytes transaction_hash = 7;
 }
 
 message ReceiptWithOption {
