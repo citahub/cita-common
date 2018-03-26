@@ -343,7 +343,7 @@ impl Message {
             let mut im_vec: Vec<u8> = Vec::new();
             match snappy::cita_decompress_to(&self.raw[8..], &mut im_vec) {
                 Ok(_) => InnerMessage::try_from(&im_vec).ok(),
-                Err(e) => None,
+                Err(_) => None,
             }
         } else {
             InnerMessage::try_from(&self.raw[8..]).ok()

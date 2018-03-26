@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 rootdir=$(readlink -f "$(dirname $0)")
 currdir=$(pwd)
 
@@ -12,6 +14,18 @@ case "$OSTYPE" in
         sed_opts=
         ;;
 esac
+
+function check_dependencies () {
+    for bin in protoc protoc-gen-rust protoc-gen-rust-grpc; do
+        if [ ! -x "$(which ${bin})" ]; then
+            echo "[Error] Please check if you have installed ${bin} in your \$PATH."
+            echo "    protoc:                 https://developers.google.com/protocol-buffers/"
+            echo "    protoc-gen-rust:        https://crates.io/crates/protobuf"
+            echo "    protoc-gen-rust-grpc:   https://crates.io/crates/grpc-compiler"
+            exit 1
+        fi
+    done
+}
 
 function remove_all_rs () {
     find . -name "*.rs" -exec rm -v {} \;
@@ -157,6 +171,7 @@ function generate_methods_for_msg () {
 
 function main () {
     cd "${rootdir}"
+    check_dependencies
     remove_all_rs
     gen_rs_for_protos
     add_pub_to_oneof_in_generated_code response.rs      data    Response
