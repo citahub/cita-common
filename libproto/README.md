@@ -2,8 +2,8 @@
 
 Provide the type of interaction between the cita-node 
 interaction type and the cita component, use protobuf 
-to generate the corresponding **.rs file and the 
-corresponding type, and type of behavior.
+to generate the corresponding **.rs file which include 
+types and some set/get methods.
 
 ## Dependences
 
