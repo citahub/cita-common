@@ -41,7 +41,6 @@ default = []
 sha3hash = []
 blake2bhash = ["blake2b"]
 sm3hash = ["sm3"]
-console = ["logger/console"]
 
 [build-dependencies]
 vergen = "*"
