@@ -96,6 +96,14 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
     ).replace("\"", "\\\"");
     let code = format!(
         "
+        pub fn get_descr_dirty_str() -> &'static str {{
+            \"{}\"
+        }}
+
+        pub fn get_rustc_str() -> &'static str {{
+            \"{}\"
+        }}
+
         pub fn get_build_info_str(dirty: bool) -> &'static str {{
             if dirty {{ \"{}\" }} else {{ \"{}\" }}
         }}
@@ -112,7 +120,17 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
            ({:?}, {:?}, {:?}, {:?}, {:?}, {:?}, {:?})
         }}
     ",
-        info_dirty_str, info_str, descr_dirty, tag, branch, commit_id, version, pre, commit_date
+        descr_dirty_str,
+        rustc_str,
+        info_dirty_str,
+        info_str,
+        descr_dirty,
+        tag,
+        branch,
+        commit_id,
+        version,
+        pre,
+        commit_date
     );
     f.write_all(code.as_bytes()).unwrap();
 }
