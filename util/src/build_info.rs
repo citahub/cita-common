@@ -5,6 +5,42 @@ use std::path::Path;
 use git2::{DescribeFormatOptions, DescribeOptions, ErrorCode, Repository};
 use rustc_version;
 
+const ASCII_LOGO: &'static str = r#"
+                 `:+shmNNNNMMMMMMMMNMMNNNNNNmmdyo/.
+              .+hNMMMMMMMMMMMN             hNNNNNNms-`
+            -yNNMMMMMMMMMMMm+.-/+oo+-    `:yNNNNNNNNNdo-`
+          `sNMMMMMMMMMMMMMMmmNNNNMMNNd.     /NNNNNNNNNmy+.
+         `hNMMMMMMMMMMMMMMMMMMMMMMMMMMd               /dNNN:
+        `dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMo..-::///++++++++odMy
+        yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNmNNNNNNNNMMMMMMmMMh
+       -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM  mMMMMMMMMMM  MMy
+       yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNmNMMMMN```/hmMMMMNo.
+       mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN`       `:ymNmh/.
+      .MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmhhhhy/             .oNMNms`
+      -MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM-            ./oso:..-dhshNh
+      :MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMs`               ddddy   `oM:
+      /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNdysoosd/             .--:Ms
+      sMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM/   .+hddyoosyhhhdMh
+     .NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm++ymMMMMMMhyyyho-Ms
+     yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMoyN:
+    +NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmsNs
+   :NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNN+
+  .mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNMMs
+  hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNm  :MMN+
+ +MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM`     NMMMs
+ mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM/    .NMMMMo
+ NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNMMMMMN
+ dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh
+ .dNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh`
+   :sdNNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNds:
+  ._____. ._____.  _. ._   ._____. ._____.   ._.   ._____. ._____.
+  | .___| |___. | | | | |  |___. | |_____|   |_|   |___. | |_____|
+  | |     ._. | | | |_| |  ._. | |   ._.   ._____. ._. | | ._____.
+  | |     | | |_| \_____/  | | |_/   | |   | ,_, | | | |_/ |_____|
+  | |___. | | ._.   ._.    | |       | |   | | | | | |     ._____.
+  |_____| |_| |_|   |_|    |_|       |_|   |_| |_| |_|     |_____|
+"#;
+
 /// Get the commit ID of this repository
 fn get_commit_id(repo: &Repository) -> Option<String> {
     repo.revparse("HEAD")
@@ -70,13 +106,15 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
         ((ver.major, ver.minor, ver.patch), pre, ver_meta.commit_date)
     };
 
-    let descr_dirty_str = descr_dirty.as_ref().map(|x| &**x).unwrap_or("unknown");
-    let branch_str = branch.as_ref().map(|x| &**x).unwrap_or("unknown");
-    let commit_id_str = commit_id.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let version_string = descr_dirty.clone().unwrap_or_else(|| {
+        let branch_string = branch.clone().unwrap_or_else(|| "unknown".to_owned());
+        let commit_id_string = commit_id.clone().unwrap_or_else(|| "unknown".to_owned());
+        format!("{}-{:.8}", branch_string, commit_id_string)
+    });
     let pre_str = pre.as_ref().map(|x| &**x).unwrap_or("unknown");
     let commit_date_str = commit_date.as_ref().map(|x| &**x).unwrap_or("unknown");
     let rustc_str = format!(
-        "(rustc {major}.{minor}.{patch}-{pre}-{commit_date})",
+        "rustc {major}.{minor}.{patch}-{pre}-{commit_date}",
         major = version.0,
         minor = version.1,
         patch = version.2,
@@ -84,31 +122,21 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
         commit_date = commit_date_str,
     );
     let info_str = format!(
-        "{branch}-{commit_id:.7} {rustc}",
-        branch = branch_str,
-        commit_id = commit_id_str,
-        rustc = rustc_str
-    ).replace("\"", "\\\"");
-    let info_dirty_str = format!(
-        "{descr_dirty} {rustc}",
-        descr_dirty = descr_dirty_str,
-        rustc = rustc_str
-    ).replace("\"", "\\\"");
+        "{version}\n({rustc})\n{logo}",
+        version = version_string,
+        rustc = rustc_str,
+        logo = ASCII_LOGO,
+    ).replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+        .replace("\n", "\\n");
     let code = format!(
         "
-        pub fn get_descr_dirty_str() -> &'static str {{
-            \"{}\"
-        }}
-
-        pub fn get_rustc_str() -> &'static str {{
-            \"{}\"
-        }}
-
-        pub fn get_build_info_str(dirty: bool) -> &'static str {{
-            if dirty {{ \"{}\" }} else {{ \"{}\" }}
+        pub fn get_build_info_str(short: bool) -> &'static str {{
+           if short {{ \"{}\" }} else {{ \"{}\" }}
         }}
 
         pub fn get_build_info() -> (
+           &'static str,          // ASCII Logo
            Option<&'static str>,  // git: describe --dirty=-dev
            Option<&'static str>,  // git: latest tag
            Option<&'static str>,  // git: current branch
@@ -117,20 +145,10 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
            Option<&'static str>,  // rustc: pre-release
            Option<&'static str>,  // rustc: commit_date
         ) {{
-           ({:?}, {:?}, {:?}, {:?}, {:?}, {:?}, {:?})
+           ({:?}, {:?}, {:?}, {:?}, {:?}, {:?}, {:?}, {:?})
         }}
     ",
-        descr_dirty_str,
-        rustc_str,
-        info_dirty_str,
-        info_str,
-        descr_dirty,
-        tag,
-        branch,
-        commit_id,
-        version,
-        pre,
-        commit_date
+        version_string, info_str, ASCII_LOGO, descr_dirty, tag, branch, commit_id, version, pre, commit_date
     );
     f.write_all(code.as_bytes()).unwrap();
 }
