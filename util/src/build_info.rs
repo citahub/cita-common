@@ -24,18 +24,28 @@ fn get_branch(repo: &Repository) -> Option<String> {
         .map(|v| v.to_owned())
 }
 
-/// [Command]: git describe --abbrev=0 --tags
-fn get_latest_tag(repo: &Repository) -> Option<String> {
+/// [Command]:
+///   * git describe --abbrev=0 --tags
+///   * git describe --dirty=-dev
+fn get_describe(repo: &Repository, dirty: Option<&str>) -> Option<String> {
     let mut describe_opt = DescribeOptions::new();
     describe_opt.describe_tags();
     repo.describe(&describe_opt)
         .map(|describe| {
             let mut format_opt = DescribeFormatOptions::new();
-            format_opt.abbreviated_size(0);
+            if let Some(dirty) = dirty {
+                format_opt.dirty_suffix(dirty);
+            } else {
+                format_opt.abbreviated_size(0);
+            }
             describe.format(Some(&format_opt)).ok()
         })
         .ok()
         .unwrap_or(None)
+}
+
+fn get_latest_tag(repo: &Repository) -> Option<String> {
+    get_describe(repo, None)
 }
 
 /// Generate the build info functions (The file will be used by `include!` macro)
@@ -43,13 +53,14 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
     let dest_path = Path::new(&out_dir).join(dest_name);
     let mut f = File::create(&dest_path).unwrap();
 
-    let (tag, branch, commit_id) = match Repository::discover(".") {
+    let (descr_dirty, tag, branch, commit_id) = match Repository::discover(".") {
         Ok(repo) => (
+            get_describe(&repo, Some("-dev")),
             get_latest_tag(&repo),
             get_branch(&repo),
             get_commit_id(&repo),
         ),
-        Err(_) => (None, None, None),
+        Err(_) => (None, None, None, None),
     };
 
     let (version, pre, commit_date) = {
@@ -59,34 +70,49 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
         ((ver.major, ver.minor, ver.patch), pre, ver_meta.commit_date)
     };
 
+    let descr_dirty_str = descr_dirty.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let branch_str = branch.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let commit_id_str = commit_id.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let pre_str = pre.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let commit_date_str = commit_date.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let rustc_str = format!(
+        "(rustc {major}.{minor}.{patch}-{pre}-{commit_date})",
+        major = version.0,
+        minor = version.1,
+        patch = version.2,
+        pre = pre_str,
+        commit_date = commit_date_str,
+    );
     let info_str = format!(
-        "{}-{:.7} (rustc {}.{}.{}-{}-{})",
-        branch.as_ref().map(|x| &**x).unwrap_or("unknown"),
-        commit_id.as_ref().map(|x| &**x).unwrap_or("unknown"),
-        version.0,
-        version.1,
-        version.2,
-        pre.as_ref().map(|x| &**x).unwrap_or("unknown"),
-        commit_date.as_ref().map(|x| &**x).unwrap_or("unknown"),
+        "{branch}-{commit_id:.7} {rustc}",
+        branch = branch_str,
+        commit_id = commit_id_str,
+        rustc = rustc_str
+    ).replace("\"", "\\\"");
+    let info_dirty_str = format!(
+        "{descr_dirty} {rustc}",
+        descr_dirty = descr_dirty_str,
+        rustc = rustc_str
     ).replace("\"", "\\\"");
     let code = format!(
         "
-        pub fn get_build_info_str() -> &'static str {{
-            \"{}\"
+        pub fn get_build_info_str(dirty: bool) -> &'static str {{
+            if dirty {{ \"{}\" }} else {{ \"{}\" }}
         }}
 
         pub fn get_build_info() -> (
-           Option<&'static str>,  // git: tag
-           Option<&'static str>,  // git: branch
-           Option<&'static str>,  // git: commit id
+           Option<&'static str>,  // git: describe --dirty=-dev
+           Option<&'static str>,  // git: latest tag
+           Option<&'static str>,  // git: current branch
+           Option<&'static str>,  // git: current commit id
            (u64, u64, u64),       // rustc: version(major, minor, patch)
            Option<&'static str>,  // rustc: pre-release
            Option<&'static str>,  // rustc: commit_date
         ) {{
-           ({:?}, {:?}, {:?}, {:?}, {:?}, {:?})
+           ({:?}, {:?}, {:?}, {:?}, {:?}, {:?}, {:?})
         }}
     ",
-        info_str, tag, branch, commit_id, version, pre, commit_date
+        info_dirty_str, info_str, descr_dirty, tag, branch, commit_id, version, pre, commit_date
     );
     f.write_all(code.as_bytes()).unwrap();
 }
