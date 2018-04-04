@@ -22,6 +22,7 @@ extern crate bigint;
 #[cfg(feature = "blake2bhash")]
 extern crate blake2b;
 extern crate elastic_array;
+extern crate git2;
 extern crate heapsize;
 extern crate itertools;
 extern crate libc;
@@ -33,6 +34,7 @@ extern crate rlp;
 extern crate rlp_derive;
 extern crate rocksdb;
 extern crate rustc_hex;
+extern crate rustc_version;
 extern crate sha3;
 #[cfg(feature = "sm3hash")]
 extern crate sm3;
@@ -46,6 +48,7 @@ extern crate toml;
 extern crate uuid;
 
 pub mod avl;
+pub mod build_info;
 pub mod merklehash;
 pub mod hashable;
 pub mod common;
