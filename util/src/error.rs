@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
+// CITA, Copyright 2016-2017 Cryptape Technologies LLC.
+// add UtilError::Snappy
+
 //! General error types for use in ethcore.
 #![rustfmt_skip]
 
