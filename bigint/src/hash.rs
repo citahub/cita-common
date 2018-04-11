@@ -6,6 +6,9 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+// CITA, Copyright 2016-2017 Cryptape Technologies LLC.
+// impl serde for bigint
+
 //! General hash types, a fixed-size raw-data type used as the output of hash functions.
 #![rustfmt_skip]
 
