@@ -12,6 +12,7 @@ message ExecutedHeader {
     bytes log_bloom = 7;
     uint64 gas_used = 8;
     uint64 gas_limit = 9;
+    bytes proposer = 10;
 }
 
 enum ReceiptError {
