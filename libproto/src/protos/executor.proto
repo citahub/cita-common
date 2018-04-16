@@ -17,21 +17,25 @@ message ExecutedHeader {
 
 enum ReceiptError {
     //ExecutionError
-    NoTransactionPermission = 0;
-    NoContractPermission = 1;
-    NoCallPermission = 2;
-    NotEnoughBaseGas = 3;
-    BlockGasLimitReached  = 4;
-    AccountGasLimitReached  = 5;
-    OutOfGas = 6;
-    BadJumpDestination = 7;
-    BadInstruction = 8;
-    StackUnderflow = 9;
-    OutOfStack = 10;
-    Internal = 11;
-    MutableCallInStaticContext = 12;
-    OutOfBounds = 13;
-    Reverted = 14;
+    NotEnoughBaseGas = 0;
+    BlockGasLimitReached = 1;
+    AccountGasLimitReached = 2;
+    InvalidTransactionNonce = 3;
+    NotEnoughCash = 4;
+    NoTransactionPermission = 5;
+    NoContractPermission = 6;
+    NoCallPermission = 7;
+    TransactionMalformed = 8;
+    //EvmError
+    OutOfGas = 9;
+    BadJumpDestination = 10;
+    BadInstruction = 11;
+    StackUnderflow = 12;
+    OutOfStack = 13;
+    Internal = 14;
+    MutableCallInStaticContext = 15;
+    OutOfBounds = 16;
+    Reverted = 17;
 }
 
 message LogEntry {
