@@ -74,13 +74,13 @@ pub enum MsgType {
     ExecutedResult,
     SnapshotReq,
     SnapshotResp,
-    LocalSync,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
     // TODO This is a issue left over by history.
     //      The Request is too big (send from Jsonrpc).
     //      To remove follow items should be better.
+    LocalSync,
     RequestNewTx,
     RequestNewTxBatch,
     RequestNet,
@@ -164,8 +164,8 @@ impl fmt::Display for MsgType {
                 &MsgType::ExecutedResult => "executed_result",
                 &MsgType::SnapshotReq => "snapshot_req",
                 &MsgType::SnapshotResp => "snapshot_resp",
-                &MsgType::LocalSync => "sync",
                 // Generate MSG-PROTOS display automatically end.
+                &MsgType::LocalSync => "sync",
                 &MsgType::All => "*",
                 &MsgType::Unknown => UNKNOWN,
                 &MsgType::RequestNewTx => "request_new_tx",
@@ -224,8 +224,8 @@ impl<'a> From<&'a str> for MsgType {
             "executed_result" => MsgType::ExecutedResult,
             "snapshot_req" => MsgType::SnapshotReq,
             "snapshot_resp" => MsgType::SnapshotResp,
-            "sync" => MsgType::LocalSync,
             // Generate MSG-PROTOS from_str automatically end.
+            "sync" => MsgType::LocalSync,
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
             "request_new_tx_batch" => MsgType::RequestNewTxBatch,
