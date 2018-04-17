@@ -25,17 +25,18 @@ enum ReceiptError {
     NoTransactionPermission = 5;
     NoContractPermission = 6;
     NoCallPermission = 7;
-    TransactionMalformed = 8;
+    ExecutionInternal = 8;
+    TransactionMalformed = 9;
     //EvmError
-    OutOfGas = 9;
-    BadJumpDestination = 10;
-    BadInstruction = 11;
-    StackUnderflow = 12;
-    OutOfStack = 13;
-    Internal = 14;
-    MutableCallInStaticContext = 15;
-    OutOfBounds = 16;
-    Reverted = 17;
+    OutOfGas = 10;
+    BadJumpDestination = 11;
+    BadInstruction = 12;
+    StackUnderflow = 13;
+    OutOfStack = 14;
+    Internal = 15;
+    MutableCallInStaticContext = 16;
+    OutOfBounds = 17;
+    Reverted = 18;
 }
 
 message LogEntry {
