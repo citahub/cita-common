@@ -1309,7 +1309,7 @@ pub struct RichStatus {
     pub hash: ::std::vec::Vec<u8>,
     pub height: u64,
     pub nodes: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
-    pub duration: u64,
+    pub interval: u64,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -1423,27 +1423,27 @@ impl RichStatus {
         &mut self.nodes
     }
 
-    // uint64 duration = 4;
+    // uint64 interval = 4;
 
-    pub fn clear_duration(&mut self) {
-        self.duration = 0;
+    pub fn clear_interval(&mut self) {
+        self.interval = 0;
     }
 
     // Param is passed by value, moved
-    pub fn set_duration(&mut self, v: u64) {
-        self.duration = v;
+    pub fn set_interval(&mut self, v: u64) {
+        self.interval = v;
     }
 
-    pub fn get_duration(&self) -> u64 {
-        self.duration
+    pub fn get_interval(&self) -> u64 {
+        self.interval
     }
 
-    fn get_duration_for_reflect(&self) -> &u64 {
-        &self.duration
+    fn get_interval_for_reflect(&self) -> &u64 {
+        &self.interval
     }
 
-    fn mut_duration_for_reflect(&mut self) -> &mut u64 {
-        &mut self.duration
+    fn mut_interval_for_reflect(&mut self) -> &mut u64 {
+        &mut self.interval
     }
 }
 
@@ -1474,7 +1474,7 @@ impl ::protobuf::Message for RichStatus {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
-                    self.duration = tmp;
+                    self.interval = tmp;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -1497,8 +1497,8 @@ impl ::protobuf::Message for RichStatus {
         for value in &self.nodes {
             my_size += ::protobuf::rt::bytes_size(3, &value);
         };
-        if self.duration != 0 {
-            my_size += ::protobuf::rt::value_size(4, self.duration, ::protobuf::wire_format::WireTypeVarint);
+        if self.interval != 0 {
+            my_size += ::protobuf::rt::value_size(4, self.interval, ::protobuf::wire_format::WireTypeVarint);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -1515,8 +1515,8 @@ impl ::protobuf::Message for RichStatus {
         for v in &self.nodes {
             os.write_bytes(3, &v)?;
         };
-        if self.duration != 0 {
-            os.write_uint64(4, self.duration)?;
+        if self.interval != 0 {
+            os.write_uint64(4, self.interval)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -1578,9 +1578,9 @@ impl ::protobuf::MessageStatic for RichStatus {
                     RichStatus::mut_nodes_for_reflect,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
-                    "duration",
-                    RichStatus::get_duration_for_reflect,
-                    RichStatus::mut_duration_for_reflect,
+                    "interval",
+                    RichStatus::get_interval_for_reflect,
+                    RichStatus::mut_interval_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<RichStatus>(
                     "RichStatus",
@@ -1597,7 +1597,7 @@ impl ::protobuf::Clear for RichStatus {
         self.clear_hash();
         self.clear_height();
         self.clear_nodes();
-        self.clear_duration();
+        self.clear_interval();
         self.unknown_fields.clear();
     }
 }
@@ -3785,8 +3785,8 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \tR\x03key\x12\x14\n\x05value\x18\x02\x20\x01(\x04R\x05value:\x028\x01\"\
     j\n\nRichStatus\x12\x12\n\x04hash\x18\x01\x20\x01(\x0cR\x04hash\x12\x16\
     \n\x06height\x18\x02\x20\x01(\x04R\x06height\x12\x14\n\x05nodes\x18\x03\
-    \x20\x03(\x0cR\x05nodes\x12\x1a\n\x08duration\x18\x04\x20\x01(\x04R\x08d\
-    uration\"\xd4\x01\n\x0bTransaction\x12\x0e\n\x02to\x18\x01\x20\x01(\tR\
+    \x20\x03(\x0cR\x05nodes\x12\x1a\n\x08interval\x18\x04\x20\x01(\x04R\x08i\
+    nterval\"\xd4\x01\n\x0bTransaction\x12\x0e\n\x02to\x18\x01\x20\x01(\tR\
     \x02to\x12\x14\n\x05nonce\x18\x02\x20\x01(\tR\x05nonce\x12\x14\n\x05quot\
     a\x18\x03\x20\x01(\x04R\x05quota\x12*\n\x11valid_until_block\x18\x04\x20\
     \x01(\x04R\x0fvalidUntilBlock\x12\x12\n\x04data\x18\x05\x20\x01(\x0cR\
