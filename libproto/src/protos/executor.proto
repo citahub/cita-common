@@ -76,6 +76,7 @@ message ConsensusConfig {
     uint64 block_gas_limit = 1;
     AccountGasLimit account_gas_limit = 2;
     repeated bytes nodes = 3;
+    uint64 block_interval = 4;
 }
 
 message ExecutedResult {
