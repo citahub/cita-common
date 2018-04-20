@@ -37,13 +37,11 @@ message Request {
         UnverifiedTransaction un_tx = 19;//交易统一到这里了。划分在请求里面
         BatchRequest batch_req = 20;
         bytes transaction_proof = 21;
+        // cita_getMetaData
+        string meta_data = 22;
     }
 }
 
 message BatchRequest {
     repeated Request new_tx_requests = 1;
 }
-
-
-
-

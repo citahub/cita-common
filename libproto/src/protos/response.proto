@@ -32,6 +32,8 @@ message Response {
         string filter_logs = 18;
         bool none = 19;
         bytes transaction_proof = 20;
+        // cita_getMetaData
+        string meta_data = 21;
     }
 }
 
