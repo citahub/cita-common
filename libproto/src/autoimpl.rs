@@ -220,6 +220,8 @@ macro_rules! loop_macro_for_structs_in_msg {
             ExecutedResult,
             SnapshotReq,
             SnapshotResp,
+            Miscellaneous,
+            MiscellaneousReq,
             // Generate MSG-PROTOS struct automatically end.
         );
     }
@@ -481,6 +483,18 @@ impl Message {
     pub fn take_snapshot_resp(&mut self) -> Option<SnapshotResp> {
         match self.take_content() {
             Some(MsgClass::SnapshotResp(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_miscellaneous(&mut self) -> Option<Miscellaneous> {
+        match self.take_content() {
+            Some(MsgClass::Miscellaneous(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_miscellaneous_req(&mut self) -> Option<MiscellaneousReq> {
+        match self.take_content() {
+            Some(MsgClass::MiscellaneousReq(v)) => Some(v),
             _ => None,
         }
     }
