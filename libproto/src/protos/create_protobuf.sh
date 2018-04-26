@@ -142,21 +142,21 @@ function generate_impls_for_msg () {
     local replace="${indent}\\/\\/ Generate MSG-PROTOS $3 automatically"
     local newcode="$4"
     sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
-            | grep "^\s\{8\}[a-Z].*;$" | awk '{ print $2 }' \
+            | grep "^\s\{8\}[[:alpha:]].*;$" | awk '{ print $2 }' \
             | while read struct; do
         sed -i -e "/^${replace} end.$/i\\${indent}$(eval echo "${newcode}")" "${rsfile}"
     done
 }
 
 function camelcase_to_underscore () {
-    echo "$1" | sed -e 's/\([A-Z]\)/_\L\1/g' -e 's/^_//'
+    echo "$1" | sed -e 's/\([[:upper:]]\)/_\L\1/g' -e 's/^_//'
 }
 
 function generate_methods_for_msg () {
     local rsfile="../autoimpl.rs"
     local replace="    \\/\\/ Generate MSG-PROTOS methods automatically"
     sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
-            | grep "^\s\{8\}[a-Z].*;$" | awk '{ print $2 }' \
+            | grep "^\s\{8\}[[:alpha:]].*;$" | awk '{ print $2 }' \
             | while read struct; do
         local struct_us=$(camelcase_to_underscore ${struct})
         sed -i -e "/^${replace} end.$/i\\"                                                                  "${rsfile}"
