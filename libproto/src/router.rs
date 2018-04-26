@@ -74,6 +74,8 @@ pub enum MsgType {
     ExecutedResult,
     SnapshotReq,
     SnapshotResp,
+    Miscellaneous,
+    MiscellaneousReq,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -164,6 +166,8 @@ impl fmt::Display for MsgType {
                 &MsgType::ExecutedResult => "executed_result",
                 &MsgType::SnapshotReq => "snapshot_req",
                 &MsgType::SnapshotResp => "snapshot_resp",
+                &MsgType::Miscellaneous => "miscellaneous",
+                &MsgType::MiscellaneousReq => "miscellaneous_req",
                 // Generate MSG-PROTOS display automatically end.
                 &MsgType::LocalSync => "sync",
                 &MsgType::All => "*",
@@ -224,6 +228,8 @@ impl<'a> From<&'a str> for MsgType {
             "executed_result" => MsgType::ExecutedResult,
             "snapshot_req" => MsgType::SnapshotReq,
             "snapshot_resp" => MsgType::SnapshotResp,
+            "miscellaneous" => MsgType::Miscellaneous,
+            "miscellaneous_req" => MsgType::MiscellaneousReq,
             // Generate MSG-PROTOS from_str automatically end.
             "sync" => MsgType::LocalSync,
             "*" => MsgType::All,

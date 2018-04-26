@@ -43,5 +43,9 @@ message InnerMessage {
 
         SnapshotReq SnapshotReq = 20;
         SnapshotResp SnapshotResp = 21;
+
+        Miscellaneous Miscellaneous = 22;
+        MiscellaneousReq MiscellaneousReq = 23;
+        
     }
 }
