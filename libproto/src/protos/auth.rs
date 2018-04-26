@@ -48,6 +48,7 @@ pub struct VerifyTxReq {
     pub tx_hash: ::std::vec::Vec<u8>,
     pub signer: ::std::vec::Vec<u8>,
     pub nonce: ::std::string::String,
+    pub chain_id: u32,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -286,6 +287,29 @@ impl VerifyTxReq {
     fn mut_nonce_for_reflect(&mut self) -> &mut ::std::string::String {
         &mut self.nonce
     }
+
+    // uint32 chain_id = 8;
+
+    pub fn clear_chain_id(&mut self) {
+        self.chain_id = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_chain_id(&mut self, v: u32) {
+        self.chain_id = v;
+    }
+
+    pub fn get_chain_id(&self) -> u32 {
+        self.chain_id
+    }
+
+    fn get_chain_id_for_reflect(&self) -> &u32 {
+        &self.chain_id
+    }
+
+    fn mut_chain_id_for_reflect(&mut self) -> &mut u32 {
+        &mut self.chain_id
+    }
 }
 
 impl ::protobuf::Message for VerifyTxReq {
@@ -326,6 +350,13 @@ impl ::protobuf::Message for VerifyTxReq {
                 7 => {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.nonce)?;
                 },
+                8 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.chain_id = tmp;
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -359,6 +390,9 @@ impl ::protobuf::Message for VerifyTxReq {
         if !self.nonce.is_empty() {
             my_size += ::protobuf::rt::string_size(7, &self.nonce);
         }
+        if self.chain_id != 0 {
+            my_size += ::protobuf::rt::value_size(8, self.chain_id, ::protobuf::wire_format::WireTypeVarint);
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -385,6 +419,9 @@ impl ::protobuf::Message for VerifyTxReq {
         }
         if !self.nonce.is_empty() {
             os.write_string(7, &self.nonce)?;
+        }
+        if self.chain_id != 0 {
+            os.write_uint32(8, self.chain_id)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -465,6 +502,11 @@ impl ::protobuf::MessageStatic for VerifyTxReq {
                     VerifyTxReq::get_nonce_for_reflect,
                     VerifyTxReq::mut_nonce_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "chain_id",
+                    VerifyTxReq::get_chain_id_for_reflect,
+                    VerifyTxReq::mut_chain_id_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyTxReq>(
                     "VerifyTxReq",
                     fields,
@@ -484,6 +526,7 @@ impl ::protobuf::Clear for VerifyTxReq {
         self.clear_tx_hash();
         self.clear_signer();
         self.clear_nonce();
+        self.clear_chain_id();
         self.unknown_fields.clear();
     }
 }
@@ -506,6 +549,8 @@ pub struct VerifyTxResp {
     pub tx_hash: ::std::vec::Vec<u8>,
     pub ret: Ret,
     pub signer: ::std::vec::Vec<u8>,
+    pub received_chain_id: u32,
+    pub expected_chain_id: u32,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -619,6 +664,52 @@ impl VerifyTxResp {
     fn mut_signer_for_reflect(&mut self) -> &mut ::std::vec::Vec<u8> {
         &mut self.signer
     }
+
+    // uint32 received_chain_id = 4;
+
+    pub fn clear_received_chain_id(&mut self) {
+        self.received_chain_id = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_received_chain_id(&mut self, v: u32) {
+        self.received_chain_id = v;
+    }
+
+    pub fn get_received_chain_id(&self) -> u32 {
+        self.received_chain_id
+    }
+
+    fn get_received_chain_id_for_reflect(&self) -> &u32 {
+        &self.received_chain_id
+    }
+
+    fn mut_received_chain_id_for_reflect(&mut self) -> &mut u32 {
+        &mut self.received_chain_id
+    }
+
+    // uint32 expected_chain_id = 5;
+
+    pub fn clear_expected_chain_id(&mut self) {
+        self.expected_chain_id = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_expected_chain_id(&mut self, v: u32) {
+        self.expected_chain_id = v;
+    }
+
+    pub fn get_expected_chain_id(&self) -> u32 {
+        self.expected_chain_id
+    }
+
+    fn get_expected_chain_id_for_reflect(&self) -> &u32 {
+        &self.expected_chain_id
+    }
+
+    fn mut_expected_chain_id_for_reflect(&mut self) -> &mut u32 {
+        &mut self.expected_chain_id
+    }
 }
 
 impl ::protobuf::Message for VerifyTxResp {
@@ -643,6 +734,20 @@ impl ::protobuf::Message for VerifyTxResp {
                 3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signer)?;
                 },
+                4 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.received_chain_id = tmp;
+                },
+                5 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.expected_chain_id = tmp;
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -664,6 +769,12 @@ impl ::protobuf::Message for VerifyTxResp {
         if !self.signer.is_empty() {
             my_size += ::protobuf::rt::bytes_size(3, &self.signer);
         }
+        if self.received_chain_id != 0 {
+            my_size += ::protobuf::rt::value_size(4, self.received_chain_id, ::protobuf::wire_format::WireTypeVarint);
+        }
+        if self.expected_chain_id != 0 {
+            my_size += ::protobuf::rt::value_size(5, self.expected_chain_id, ::protobuf::wire_format::WireTypeVarint);
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -678,6 +789,12 @@ impl ::protobuf::Message for VerifyTxResp {
         }
         if !self.signer.is_empty() {
             os.write_bytes(3, &self.signer)?;
+        }
+        if self.received_chain_id != 0 {
+            os.write_uint32(4, self.received_chain_id)?;
+        }
+        if self.expected_chain_id != 0 {
+            os.write_uint32(5, self.expected_chain_id)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -738,6 +855,16 @@ impl ::protobuf::MessageStatic for VerifyTxResp {
                     VerifyTxResp::get_signer_for_reflect,
                     VerifyTxResp::mut_signer_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "received_chain_id",
+                    VerifyTxResp::get_received_chain_id_for_reflect,
+                    VerifyTxResp::mut_received_chain_id_for_reflect,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "expected_chain_id",
+                    VerifyTxResp::get_expected_chain_id_for_reflect,
+                    VerifyTxResp::mut_expected_chain_id_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyTxResp>(
                     "VerifyTxResp",
                     fields,
@@ -753,6 +880,8 @@ impl ::protobuf::Clear for VerifyTxResp {
         self.clear_tx_hash();
         self.clear_ret();
         self.clear_signer();
+        self.clear_received_chain_id();
+        self.clear_expected_chain_id();
         self.unknown_fields.clear();
     }
 }
@@ -2005,6 +2134,7 @@ pub enum Ret {
     BadSig = 4,
     NotReady = 5,
     Busy = 6,
+    BadChainId = 7,
 }
 
 impl ::protobuf::ProtobufEnum for Ret {
@@ -2021,6 +2151,7 @@ impl ::protobuf::ProtobufEnum for Ret {
             4 => ::std::option::Option::Some(Ret::BadSig),
             5 => ::std::option::Option::Some(Ret::NotReady),
             6 => ::std::option::Option::Some(Ret::Busy),
+            7 => ::std::option::Option::Some(Ret::BadChainId),
             _ => ::std::option::Option::None
         }
     }
@@ -2034,6 +2165,7 @@ impl ::protobuf::ProtobufEnum for Ret {
             Ret::BadSig,
             Ret::NotReady,
             Ret::Busy,
+            Ret::BadChainId,
         ];
         values
     }
@@ -2067,7 +2199,7 @@ impl ::protobuf::reflect::ProtobufValue for Ret {
 }
 
 static file_descriptor_proto_data: &'static [u8] = b"\
-    \n\nauth.proto\x1a\x10blockchain.proto\"\xd3\x01\n\x0bVerifyTxReq\x12*\n\
+    \n\nauth.proto\x1a\x10blockchain.proto\"\xee\x01\n\x0bVerifyTxReq\x12*\n\
     \x11valid_until_block\x18\x01\x20\x01(\x04R\x0fvalidUntilBlock\x12\x12\n\
     \x04hash\x18\x02\x20\x01(\x0cR\x04hash\x12\x1c\n\tsignature\x18\x03\x20\
     \x01(\x0cR\tsignature\x12\x1f\n\x06crypto\x18\x04\x20\x01(\x0e2\x07.Cryp\

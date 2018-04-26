@@ -10,6 +10,7 @@ enum Ret {
     BadSig = 4;
     NotReady = 5;
     Busy = 6;
+    BadChainId = 7;
 }
 
 message VerifyTxReq {
@@ -18,14 +19,17 @@ message VerifyTxReq {
     bytes signature = 3;
     Crypto crypto = 4;
     bytes tx_hash = 5;
-    bytes signer = 6; //public key only set in BlockReq
+    bytes signer = 6; // public key only set in BlockReq
     string nonce = 7;
+    uint32 chain_id = 8;
 }
 
 message VerifyTxResp {
     bytes tx_hash = 1;
     Ret ret = 2;
-    bytes signer = 3; //public key only set in TxResp
+    bytes signer = 3; // public key only set in TxResp
+    uint32 received_chain_id = 4;
+    uint32 expected_chain_id = 5;
 }
 
 message VerifyBlockReq {
