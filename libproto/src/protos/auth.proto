@@ -52,3 +52,10 @@ message BlockTxHashes {
 message BlockTxHashesReq {
     uint64 height = 1;
 }
+
+message Miscellaneous {
+    uint32 chain_id = 1;
+}
+
+message MiscellaneousReq {
+}
