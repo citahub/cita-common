@@ -2,7 +2,6 @@
 name = "util"
 version = "0.6.0"
 authors = ["Parity Technologies <admin@parity.io>", "Cryptape Technologies <contact@cryptape.com>"]
-build = "build.rs"
 
 [dependencies]
 sha3 = { path = "../sha3" }
@@ -43,10 +42,6 @@ default = []
 sha3hash = []
 blake2bhash = ["blake2b"]
 sm3hash = ["sm3"]
-
-[build-dependencies]
-vergen = "*"
-rustc_version = "0.1.0"
 
 [dev-dependencies]
 mktemp = "0.3.1"
