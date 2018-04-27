@@ -97,8 +97,17 @@ pub use trie::{SecTrieDB, SecTrieDBMut, Trie, TrieDB, TrieDBMut, TrieError, Trie
 pub use triehash::*;
 pub use vector::*;
 
+pub const BLOCKLIMIT: u64 = 100;
+
 /// 160-bit integer representing account address
 pub type Address = H160;
 pub type Bloom = H2048;
 
-pub const BLOCKLIMIT: u64 = 100;
+/// Boolean type for clean/dirty status.
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+pub enum Filth {
+    /// Data has not been changed.
+    Clean,
+    /// Data has been changed.
+    Dirty,
+}
