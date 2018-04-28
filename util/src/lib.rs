@@ -55,7 +55,6 @@ pub mod hashable;
 pub mod common;
 pub mod error;
 pub mod bytes;
-pub mod misc;
 pub mod vector;
 pub mod hashdb;
 pub mod memorydb;
@@ -90,7 +89,6 @@ pub use itertools::Itertools;
 pub use journaldb::JournalDB;
 pub use kvdb::*;
 pub use memorydb::MemoryDB;
-pub use misc::*;
 pub use overlaydb::*;
 pub use panic_hook::set_panic_handler;
 pub use parking_lot::{Condvar, Mutex, MutexGuard, RwLock, RwLockReadGuard, RwLockWriteGuard};
@@ -99,8 +97,17 @@ pub use trie::{SecTrieDB, SecTrieDBMut, Trie, TrieDB, TrieDBMut, TrieError, Trie
 pub use triehash::*;
 pub use vector::*;
 
+pub const BLOCKLIMIT: u64 = 100;
+
 /// 160-bit integer representing account address
 pub type Address = H160;
 pub type Bloom = H2048;
 
-pub const BLOCKLIMIT: u64 = 100;
+/// Boolean type for clean/dirty status.
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+pub enum Filth {
+    /// Data has not been changed.
+    Clean,
+    /// Data has been changed.
+    Dirty,
+}
