@@ -9,7 +9,7 @@ types and some set/get methods.
 
 - [protobuf 3.5.1](https://github.com/google/protobuf/releases)
 - [rust-protobuf v1.4.4](https://github.com/stepancheg/rust-protobuf)
-- [grpc-rust 0.2.1](https://github.com/stepancheg/grpc-rust)
+- [grpc-rust 0.3.0](https://github.com/stepancheg/grpc-rust)
 
 Currently only supports these versions. If there is a break version, 
 it is temporarily not supported.
