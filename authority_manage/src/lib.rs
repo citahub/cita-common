@@ -27,12 +27,15 @@ use wal::Wal;
 const DATA_PATH: &'static str = "DATA_PATH";
 const LOG_TYPE_AUTHORITIES: u8 = 1;
 
+/// prefix_share is the prefix_sum of all shares of all authorities
 #[derive(Debug)]
 pub struct AuthorityManage {
     pub authorities: Vec<Address>,
+    pub prefix_share: Vec<u64>,
     pub authority_n: usize,
     authorities_log: Wal,
     pub authorities_old: Vec<Address>,
+    pub prefix_share_old: Vec<u64>,
     pub authority_n_old: usize,
     pub authority_h_old: usize,
 }
@@ -43,9 +46,11 @@ impl AuthorityManage {
 
         let mut authority_manage = AuthorityManage {
             authorities: Vec::new(),
+            prefix_share: Vec::new(),
             authority_n: 0,
             authorities_log: Wal::new(&*logpath).unwrap(),
             authorities_old: Vec::new(),
+            prefix_share_old: Vec::new(),
             authority_n_old: 0,
             authority_h_old: 0,
         };
@@ -53,17 +58,23 @@ impl AuthorityManage {
         let vec_out = authority_manage.authorities_log.load();
         if !vec_out.is_empty() {
             //out 转换成authorities;
-            if let Ok((h, authorities_old, authorities)) = deserialize(&(vec_out[0].1)) {
-                let auth_old: Vec<Address> = authorities_old;
-                let auth: Vec<Address> = authorities;
-
-                authority_manage.authorities.extend_from_slice(&auth);
+            if let Ok((h, authorities_old, authorities, prefix_share_old, prefix_share)) = deserialize(&(vec_out[0].1))
+            {
+                authority_manage.authorities.extend_from_slice(&authorities);
                 authority_manage.authority_n = authority_manage.authorities.len();
 
                 authority_manage
                     .authorities_old
-                    .extend_from_slice(&auth_old);
+                    .extend_from_slice(&authorities_old);
                 authority_manage.authority_n_old = authority_manage.authorities_old.len();
+
+                authority_manage
+                    .prefix_share
+                    .extend_from_slice(&prefix_share);
+                authority_manage
+                    .prefix_share_old
+                    .extend_from_slice(&prefix_share_old);
+
                 authority_manage.authority_h_old = h;
             }
         }
@@ -71,22 +82,28 @@ impl AuthorityManage {
         authority_manage
     }
 
-    pub fn receive_authorities_list(&mut self, height: usize, authorities: Vec<Address>) {
+    pub fn receive_authorities_list(&mut self, height: usize, authorities: Vec<Address>, prefix_share: Vec<u64>) {
         if self.authorities != authorities {
             self.authorities_old.clear();
             self.authorities_old.extend_from_slice(&self.authorities);
+            self.prefix_share_old.clear();
+            self.prefix_share_old.extend_from_slice(&self.prefix_share);
             self.authority_n_old = self.authority_n;
             self.authority_h_old = height;
 
             self.authorities.clear();
             self.authorities.extend_from_slice(&authorities);
+            self.prefix_share.clear();
+            self.prefix_share.extend_from_slice(&prefix_share);
             self.authority_n = self.authorities.len();
 
             let bmsg = serialize(
                 &(
                     height,
-                    self.authority_n_old.clone(),
+                    self.authority_old.clone(),
                     self.authorities.clone(),
+                    self.prefix_share_old.clone(),
+                    self.prefix_share.clone(),
                 ),
                 Infinite,
             ).unwrap();
