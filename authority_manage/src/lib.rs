@@ -102,6 +102,7 @@ impl AuthorityManage {
                     height,
                     self.authority_old.clone(),
                     self.authorities.clone(),
+                    self.prefix_share_old.clone(),
                     self.prefix_share.clone(),
                 ),
                 Infinite,
