@@ -85,7 +85,7 @@ impl AuthorityManage {
             let bmsg = serialize(
                 &(
                     height,
-                    self.authority_old.clone(),
+                    self.authorities_old.clone(),
                     self.authorities.clone(),
                 ),
                 Infinite,
