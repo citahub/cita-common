@@ -25,7 +25,6 @@ use serde::ser::SerializeSeq;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-use util::H520;
 use util::crypto::Sign;
 
 pub struct Signature(pub [u8; 65]);
@@ -165,21 +164,18 @@ impl<'a> Into<&'a [u8]> for &'a Signature {
     }
 }
 
-impl From<Signature> for H520 {
-    fn from(s: Signature) -> Self {
-        s.0.into()
-    }
-}
-
-impl From<H520> for Signature {
-    fn from(bytes: H520) -> Self {
-        Signature(bytes.into())
+impl fmt::LowerHex for Signature {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for i in &self.0[..] {
+            write!(f, "{:02x}", i)?;
+        }
+        Ok(())
     }
 }
 
 impl From<Signature> for String {
     fn from(s: Signature) -> Self {
-        H520::from(s).hex()
+        format!("{:x}", s)
     }
 }
 
@@ -208,8 +204,8 @@ impl Sign for Signature {
         unsafe {
             sm2_sign(
                 GROUP.as_ptr(),
-                privkey.as_ref().as_ptr(),
-                message.as_ref().as_ptr(),
+                (privkey.as_ref() as &[u8]).as_ptr(),
+                (message.as_ref() as &[u8]).as_ptr(),
                 signature.as_mut_ptr(),
             );
         }

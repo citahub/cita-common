@@ -19,7 +19,7 @@
 extern crate rand;
 
 use bytes::*;
-use hash::*;
+use types::H256;
 use hashable::Hashable;
 use rlp::encode;
 

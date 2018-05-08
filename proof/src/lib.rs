@@ -17,6 +17,7 @@
 
 extern crate bincode;
 extern crate cita_crypto as crypto;
+extern crate cita_types as types;
 extern crate libproto;
 extern crate rustc_serialize;
 #[macro_use]
@@ -66,7 +67,7 @@ mod tests {
     use crypto::Signature;
     use libproto::blockchain::Proof;
     use std::collections::HashMap;
-    use util::*;
+    use types::H256;
 
     #[test]
     fn poa_proof_convert() {

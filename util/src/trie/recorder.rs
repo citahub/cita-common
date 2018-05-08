@@ -17,7 +17,8 @@
 //! Trie query recorder.
 #![rustfmt_skip]
 
-use {Bytes, H256};
+use Bytes;
+use types::H256;
 use hashable::Hashable;
 
 /// A record of a visited node.
@@ -83,7 +84,7 @@ impl Recorder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use H256;
+    use types::H256;
     use hashable::HASH_NAME;
     use hashable::Hashable;
 

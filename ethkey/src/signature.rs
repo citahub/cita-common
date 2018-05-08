@@ -16,7 +16,7 @@
 #![rustfmt_skip]
 
 use {Secret, Public, SECP256K1, Error, Message, public_to_address, Address};
-use bigint::hash::{H520, H256};
+use types::{H520, H256};
 use rustc_hex::{ToHex, FromHex};
 use secp256k1::{Message as SecpMessage, RecoverableSignature, RecoveryId, Error as SecpError};
 use secp256k1::key::{SecretKey, PublicKey};

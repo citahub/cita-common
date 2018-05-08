@@ -17,7 +17,7 @@
 
 use super::{Trie, TrieItem, TrieIterator, Query};
 use super::triedb::TrieDB;
-use hash::H256;
+use types::H256;
 use hashable::Hashable;
 use hashdb::HashDB;
 

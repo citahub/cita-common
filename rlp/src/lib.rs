@@ -42,7 +42,7 @@
 #![rustfmt_skip]
 
 extern crate byteorder;
-extern crate bigint;
+extern crate cita_types as types;
 extern crate elastic_array;
 extern crate rustc_hex;
 

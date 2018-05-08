@@ -17,6 +17,7 @@
 
 #![feature(libc)]
 #![feature(unique)]
+extern crate cita_types as types;
 #[macro_use]
 extern crate lazy_static;
 extern crate libc;
@@ -27,7 +28,7 @@ extern crate util;
 
 use libc::c_int;
 use std::ptr::Unique;
-use util::{Address, H256, H512};
+use types::{Address, H256, H512};
 
 mod keypair;
 mod error;

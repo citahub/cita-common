@@ -19,7 +19,8 @@
 
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::traits::JournalDB;
-use {UtilError, H256, Bytes};
+use {UtilError, Bytes};
+use types::H256;
 use hashdb::*;
 use heapsize::HeapSizeOf;
 use kvdb::{KeyValueDB, DBTransaction};

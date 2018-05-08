@@ -17,11 +17,11 @@
 
 #![allow(unused_extern_crates)]
 extern crate cita_crypto as crypto;
+extern crate cita_types as types;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
-extern crate util;
 
 mod engine;
 mod authority_round;

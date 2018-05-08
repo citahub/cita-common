@@ -22,7 +22,7 @@ extern crate rand;
 extern crate tiny_keccak;
 extern crate secp256k1;
 extern crate rustc_hex;
-extern crate bigint;
+extern crate cita_types as types;
 extern crate crypto as rcrypto;
 extern crate byteorder;
 
@@ -52,7 +52,7 @@ pub use self::random::Random;
 pub use self::secret::Secret;
 pub use self::signature::{sign, verify_public, verify_address, recover, Signature};
 
-use bigint::{H160, H256, H512};
+use types::{H160, H256, H512};
 
 lazy_static! {
     pub static ref SECP256K1: secp256k1::Secp256k1 = secp256k1::Secp256k1::new();

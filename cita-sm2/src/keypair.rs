@@ -19,12 +19,12 @@ use super::{Address, Error, PrivKey, PubKey, sm2_generate_key, sm2_pubkey_from_p
             PUBKEY_BYTES_LEN};
 use rustc_serialize::hex::ToHex;
 use std::fmt;
-use util::H160 as Hash160;
+use types::H160;
 use util::Hashable;
 use util::crypto::CreateKey;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
-    Hash160::from(pubkey.crypt_hash())
+    H160::from(pubkey.crypt_hash())
 }
 
 #[derive(Default)]
@@ -51,7 +51,7 @@ impl CreateKey for KeyPair {
         unsafe {
             sm2_pubkey_from_privkey(
                 GROUP.as_ptr(),
-                privkey.as_ref().as_ptr(),
+                (privkey.as_ref() as &[u8]).as_ptr(),
                 pubkey.as_mut_ptr(),
             );
         }

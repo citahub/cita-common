@@ -14,13 +14,13 @@
 
 #![cfg_attr(test, feature(test))]
 
-extern crate bigint;
+extern crate cita_types as types;
 extern crate rlp;
 extern crate test;
 
-use bigint::U256;
 use rlp::{Rlp, RlpStream};
 use test::Bencher;
+use types::U256;
 
 #[bench]
 fn bench_stream_u64_value(b: &mut Bencher) {

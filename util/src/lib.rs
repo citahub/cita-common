@@ -19,9 +19,9 @@
 #![feature(custom_attribute)]
 #![allow(unused_attributes)]
 extern crate ansi_term;
-extern crate bigint;
 #[cfg(feature = "blake2bhash")]
 extern crate blake2b;
+extern crate cita_types as types;
 extern crate elastic_array;
 extern crate git2;
 extern crate heapsize;
@@ -75,7 +75,6 @@ pub mod instrument;
 pub mod init;
 
 pub use ansi_term::{Colour, Style};
-pub use bigint::*;
 pub use bytes::*;
 pub use datapath::*;
 // pub use timer::*;
@@ -98,10 +97,6 @@ pub use triehash::*;
 pub use vector::*;
 
 pub const BLOCKLIMIT: u64 = 100;
-
-/// 160-bit integer representing account address
-pub type Address = H160;
-pub type Bloom = H2048;
 
 /// Boolean type for clean/dirty status.
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]

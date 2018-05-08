@@ -16,12 +16,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate bincode;
-extern crate util;
+extern crate cita_types as types;
 
 mod wal;
 
 use bincode::{deserialize, serialize, Infinite};
-use util::Address;
+use types::Address;
 use wal::Wal;
 
 const DATA_PATH: &'static str = "DATA_PATH";

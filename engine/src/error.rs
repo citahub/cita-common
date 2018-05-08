@@ -17,7 +17,7 @@
 
 use crypto::Signature;
 use std::fmt;
-use util::Address;
+use types::Address;
 
 #[derive(Debug)]
 pub enum EngineError {

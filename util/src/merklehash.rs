@@ -19,9 +19,9 @@
 //!
 //! This module should be used to generate complete merkle tree root hash.
 
-use H256;
 use hashable::{Hashable, HASH_NULL_RLP};
 use rlp::RlpStream;
+use types::H256;
 
 #[derive(Debug, Clone)]
 pub struct MerkleTree {
@@ -396,8 +396,8 @@ mod tests {
 #[cfg(feature = "sha3hash")]
 mod tests_for_sha3hash {
     use super::MerkleTree;
-    use H256;
     use std::str::FromStr;
+    use types::H256;
 
     #[test]
     fn test_from_bytes() {

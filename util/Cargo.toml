@@ -21,7 +21,7 @@ clippy = {version = "0.0.175", optional = true}
 libc = "0.2.7"
 vergen = "0.1"
 target_info = "0.1"
-bigint = { path = "../bigint", features = ["heapsizeof"] }
+cita-types = { path = "../cita-types" }
 parking_lot = "0.5"
 ansi_term = "0.9"
 tiny-keccak= "1.0"

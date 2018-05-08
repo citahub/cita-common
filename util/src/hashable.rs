@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use H256;
 #[cfg(feature = "blake2bhash")]
 use blake2b::blake2b;
 use sha3::sha3_256;
 #[cfg(feature = "sm3hash")]
 use sm3::sm3;
+use types::H256;
 
 /// The hash of the empty bytes string.
 #[cfg(feature = "sha3hash")]

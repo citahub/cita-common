@@ -19,9 +19,9 @@
 
 use super::{AVLError, Query};
 use super::node::*;
-use H256;
 use hashdb::HashDB;
 use rlp::*;
+use types::H256;
 
 /// AVL lookup helper object.
 pub struct Lookup<'a, Q: Query> {

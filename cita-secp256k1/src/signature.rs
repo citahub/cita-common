@@ -27,7 +27,7 @@ use std::{fmt, mem};
 use std::cmp::PartialEq;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-use util::{H256, H520};
+use types::H256;
 use util::crypto::Sign;
 
 pub struct Signature(pub [u8; 65]);
@@ -209,21 +209,18 @@ impl<'a> Into<&'a [u8]> for &'a Signature {
     }
 }
 
-impl From<Signature> for H520 {
-    fn from(s: Signature) -> Self {
-        s.0.into()
-    }
-}
-
-impl From<H520> for Signature {
-    fn from(bytes: H520) -> Self {
-        Signature(bytes.into())
+impl fmt::LowerHex for Signature {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for i in &self.0[..] {
+            write!(f, "{:02x}", i)?;
+        }
+        Ok(())
     }
 }
 
 impl From<Signature> for String {
     fn from(s: Signature) -> Self {
-        H520::from(s).hex()
+        format!("{:x}", s)
     }
 }
 
@@ -371,7 +368,8 @@ mod tests {
     use bincode::{deserialize, serialize, Infinite};
     use std::str::FromStr;
     use test::Bencher;
-    use util::{H256, Hashable};
+    use types::H256;
+    use util::Hashable;
     use util::crypto::{CreateKey, Sign};
 
     #[test]

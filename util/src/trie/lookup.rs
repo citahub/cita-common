@@ -20,7 +20,7 @@
 
 use super::{TrieError, Query};
 use super::node::Node;
-use H256;
+use types::H256;
 use hashdb::HashDB;
 use nibbleslice::NibbleSlice;
 use rlp::Rlp;

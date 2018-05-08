@@ -20,9 +20,9 @@
 //! Key-value datastore with a modified Merkle tree.
 extern crate rand;
 
-use H256;
 use bytes::*;
 use hashable::*;
+use types::H256;
 
 /// Alphabet to use when creating words for insertion into avls.
 pub enum Alphabet {

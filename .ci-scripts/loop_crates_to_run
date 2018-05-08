@@ -31,9 +31,11 @@ function record_crate_for_check () {
 }
 
 function cargo_run_build () {
+    export RUSTFLAGS='-F warnings'
     CARGO_COMMAND="cargo test --no-run"
     cargo_run_all
     CARGO_COMMAND=
+    unset RUSTFLAGS
 }
 
 function cargo_run_coverage () {
@@ -57,7 +59,7 @@ function cargo_run_coverage () {
 }
 
 function cargo_run_test () {
-    export RUSTFLAGS="-C link-dead-code"
+    export RUSTFLAGS="-F warnings -C link-dead-code"
     CARGO_COMMAND="cargo test --lib"
     cargo_run_all
     CARGO_COMMAND=
@@ -78,7 +80,7 @@ function cargo_run_all () {
 
     [ -z "${CARGO_COMMAND}" ] && exit 1
 
-    cargo_run bigint
+    cargo_run cita-types
     cargo_run panic_hook
 
     cargo_run worker
@@ -89,8 +91,9 @@ function cargo_run_all () {
 
     cargo_run rlp
     cargo_run rlp_derive
-    cargo_run bloomable
     cargo_run ethkey
+
+    cargo_run authority_manage
 
     cargo_run pubsub_rabbitmq
     cargo_run pubsub_zeromq
@@ -104,13 +107,19 @@ function cargo_run_all () {
     cargo_run blake2b
     cargo_run sm3
 
-    for crate in util authority_manage cita-secp256k1 cita-ed25519 cita-sm2; do
+    for crate in util cita-secp256k1 cita-ed25519 cita-sm2; do
         for features in ${FEATURES_FOR_HASH}; do
             cargo_run ${crate} --features "${features}"
         done
     done
 
-    for crate in cita-crypto libproto proof tx_pool engine_json; do
+    for crate in engine_json; do
+        for features in ${FEATURES_FOR_CRYPT}; do
+            cargo_run ${crate} --features "${features}"
+        done
+    done
+
+    for crate in cita-crypto libproto proof tx_pool; do
         for features in "${FEATURES_FOR_HASH_AND_CRYPT[@]}"; do
             cargo_run ${crate} --features "${features}"
         done

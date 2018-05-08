@@ -49,14 +49,18 @@ mod tests {
 
     fn generate_signer() -> String {
         if SIGNATURE_NAME == "ed25519" {
-            "a100df7a048e50ed308ea696dc6002150981\
-             41cb391e9527329df289f9383f65a100df7a0\
-             48e50ed308ea696dc600215098141cb391e95\
-             27329df289f9383f65"
+            "a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65\
+             a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65"
                 .to_string()
         } else if SIGNATURE_NAME == "secp256k1" {
-            "a100df7a048e50ed308ea696dc6002150981\
-             41cb391e9527329df289f9383f65"
+            "a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65"
+                .to_string()
+        } else if SIGNATURE_NAME == "sm2" {
+            "a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65"
                 .to_string()
         } else {
             "".to_string()
@@ -77,7 +81,7 @@ mod tests {
                                 "0x9cce34f7ab185c7aba1b7c8140d620b4bda941d6"
                             ],
                             "duration": 3000,
-                            "signer": "{}"
+                            "signer": "0x{}"
                         }}
                     }}
                 }}
@@ -97,7 +101,7 @@ mod tests {
                     "Tendermint": {{
                         "params": {{
                             "duration": 3,
-                            "signer": "{}",
+                            "signer": "0x{}",
                             "is_test": true
                         }}
                     }}

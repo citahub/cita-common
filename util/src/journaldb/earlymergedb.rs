@@ -19,7 +19,8 @@
 
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::traits::JournalDB;
-use {H256, BaseDataError, UtilError, Bytes};
+use {BaseDataError, UtilError, Bytes};
+use types::H256;
 use hashdb::*;
 use heapsize::HeapSizeOf;
 use itertools::Itertools;
@@ -598,10 +599,12 @@ mod tests {
 
     use super::*;
     use super::super::traits::JournalDB;
-    use {Hashable, H32};
+    use Hashable;
+    use types::H32;
     use hashdb::{HashDB, DBValue};
     use kvdb::DatabaseConfig;
     use std::path::Path;
+    use types::traits::LowerHex;
 
     #[test]
     fn insert_same_in_fork() {
@@ -867,7 +870,7 @@ mod tests {
     #[test]
     fn reopen() {
         let mut dir = ::std::env::temp_dir();
-        dir.push(H32::random().hex());
+        dir.push(H32::random().lower_hex());
         let bar = H256::random();
 
         let foo = {
@@ -1038,7 +1041,7 @@ mod tests {
         logger::silent();
 
         let mut dir = ::std::env::temp_dir();
-        dir.push(H32::random().hex());
+        dir.push(H32::random().lower_hex());
 
         let foo = b"foo".crypt_hash();
 
@@ -1096,7 +1099,7 @@ mod tests {
     #[test]
     fn reopen_fork() {
         let mut dir = ::std::env::temp_dir();
-        dir.push(H32::random().hex());
+        dir.push(H32::random().lower_hex());
         let (foo, bar, baz) = {
             let mut jdb = new_db(&dir);
             // history is 1

@@ -18,7 +18,7 @@
 #![rustfmt_skip]
 
 use elastic_array::ElasticArray128;
-use hash::*;
+use types::H256;
 use std::collections::HashMap;
 
 /// `HashDB` value type.

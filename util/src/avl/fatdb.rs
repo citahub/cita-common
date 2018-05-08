@@ -18,9 +18,9 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{AVLDBIterator, AVLItem, AVLIterator, Query, AVL, AVLDB};
-use H256;
 use hashable::Hashable;
 use hashdb::HashDB;
+use types::H256;
 
 /// A `AVL` implementation which hashes keys and uses a generic `HashDB` backing database.
 /// Additionaly it stores inserted hash-key mappings for later retrieval.

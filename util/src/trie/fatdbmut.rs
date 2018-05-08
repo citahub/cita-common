@@ -16,7 +16,7 @@
 #![rustfmt_skip]
 
 use super::{TrieDBMut, TrieMut};
-use hash::H256;
+use types::H256;
 use hashable::Hashable;
 use hashdb::{HashDB, DBValue};
 

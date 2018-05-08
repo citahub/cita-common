@@ -20,7 +20,7 @@
 #![rustfmt_skip]
 
 use Hashable;
-use hash::*;
+use types::H256;
 use rlp;
 use rlp::RlpStream;
 use std::cmp;
@@ -349,7 +349,7 @@ fn test_hex_prefix_encode() {
 #[cfg(test)]
 mod tests {
     use super::trie_root;
-    use hash::H256;
+    use types::H256;
     use hashable::HASH_NAME;
     use std::str::FromStr;
 
