@@ -155,6 +155,7 @@ impl Pool {
         height: u64,
         block_gas_limit: u64,
         account_gas_limit: AccountGasLimit,
+        check_quota: bool,
     ) -> Vec<SignedTransaction> {
         let mut tx_list = Vec::new();
         let mut invalid_tx_list = Vec::new();
@@ -186,26 +187,28 @@ impl Pool {
                             }
                             break;
                         }
-                        if account_gas_used.contains_key(&signer) {
-                            let value = account_gas_used.get_mut(&signer).unwrap();
-                            if *value < quota {
-                                continue;
-                            }
-                            *value = *value - quota;
-                        } else {
-                            if let Some(value) = specific_gas_limit.get_mut(&signer.hex()) {
-                                gas_limit = *value;
-                            }
 
-                            let mut _remainder = 0;
-                            if quota < gas_limit {
-                                _remainder = gas_limit - quota;
+                        if check_quota {
+                            if account_gas_used.contains_key(&signer) {
+                                let value = account_gas_used.get_mut(&signer).unwrap();
+                                if *value < quota {
+                                    continue;
+                                }
+                                *value = *value - quota;
                             } else {
-                                _remainder = 0;
-                            }
-                            account_gas_used.insert(Address::from(signer), _remainder);
-                        }
+                                if let Some(value) = specific_gas_limit.get_mut(&signer.hex()) {
+                                    gas_limit = *value;
+                                }
 
+                                let mut _remainder = 0;
+                                if quota < gas_limit {
+                                    _remainder = gas_limit - quota;
+                                } else {
+                                    _remainder = 0;
+                                }
+                                account_gas_used.insert(Address::from(signer), _remainder);
+                            }
+                        }
                         n = n - quota;
                         tx_list.push(tx.clone());
                     } else {
@@ -216,7 +219,6 @@ impl Pool {
                 }
             }
         }
-
         self.update(&invalid_tx_list);
         tx_list
     }
@@ -307,13 +309,13 @@ mod tests {
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone()),
+            p.package(5, 30, account_gas_limit.clone(), true),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
-        assert_eq!(p.package(4, 30, account_gas_limit.clone()), vec![tx4]);
+        assert_eq!(p.package(4, 30, account_gas_limit.clone(), true), vec![tx4]);
         assert_eq!(p.len(), 1);
-        assert_eq!(p.package(5, 30, account_gas_limit.clone()), vec![]);
+        assert_eq!(p.package(5, 30, account_gas_limit.clone(), true), vec![]);
         assert_eq!(p.len(), 0);
     }
 }
