@@ -47,6 +47,7 @@ message BlockTxHashes {
     repeated bytes tx_hashes = 2;
     uint64 block_gas_limit = 3;
     AccountGasLimit account_gas_limit = 4;
+    bool check_quota = 5;
 }
 
 message BlockTxHashesReq {
