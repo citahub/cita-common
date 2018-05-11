@@ -68,6 +68,7 @@ pub struct Pool {
     txs: HashMap<H256, SignedTransaction>,
     strategy: Strategy,
     order: u64,
+    prev_txhashes : HashSet<H256>,
 }
 
 impl Pool {
@@ -78,6 +79,8 @@ impl Pool {
             txs: HashMap::new(),
             strategy: Strategy::FIFO,
             order: 0,
+            prev_txhashes : HashSet::new(),
+
         }
     }
 
@@ -88,6 +91,7 @@ impl Pool {
             txs: HashMap::new(),
             strategy: strategy,
             order: 0,
+            prev_txhashes : HashSet::new(),
         }
     }
 
@@ -111,7 +115,7 @@ impl Pool {
     pub fn enqueue(&mut self, tx: SignedTransaction) -> bool {
         let hash = H256::from_slice(tx.get_tx_hash());
 
-        let is_ok = !self.txs.contains_key(&hash);
+        let is_ok = !(self.txs.contains_key(&hash) || self.prev_txhashes.contains_key(&hash) );
         if is_ok {
             let order = match self.strategy {
                 Strategy::FIFO => self.get_order(),
@@ -135,10 +139,12 @@ impl Pool {
 
     pub fn update(&mut self, txs: &[SignedTransaction]) {
         let mut hash_list = HashSet::with_capacity(txs.len());
+        self.prev_txhashes.clear();
         for tx in txs {
             let hash = tx.crypt_hash();
             self.txs.remove(&hash);
             hash_list.insert(hash);
+            self.prev_txhashes.insert(hash);
         }
         self.update_order_set(&hash_list);
     }
@@ -148,6 +154,7 @@ impl Pool {
             self.txs.remove(&tx);
         }
         self.update_order_set(txs);
+        self.prev_txhashes = txs.clone();
     }
 
     pub fn package(
