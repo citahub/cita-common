@@ -11,6 +11,7 @@ enum Ret {
     NotReady = 5;
     Busy = 6;
     BadChainId = 7;
+    QuotaNotEnough = 8;
 }
 
 message VerifyTxReq {
@@ -22,6 +23,7 @@ message VerifyTxReq {
     bytes signer = 6; // public key only set in BlockReq
     string nonce = 7;
     uint32 chain_id = 8;
+    uint64 quota = 9;
 }
 
 message VerifyTxResp {
@@ -47,6 +49,7 @@ message BlockTxHashes {
     repeated bytes tx_hashes = 2;
     uint64 block_gas_limit = 3;
     AccountGasLimit account_gas_limit = 4;
+    bool check_quota = 5;
 }
 
 message BlockTxHashesReq {
