@@ -28,6 +28,7 @@ pub enum EngineError {
     NotAboveThreshold(usize),
     BadSignature(Signature),
     InvalidProof,
+    InvalidTimeInterval,
     /// Message was not expected.
     UnexpectedMessage,
     VoteMsgDelay(usize),
@@ -45,6 +46,7 @@ impl fmt::Display for EngineError {
             DoubleVote(ref address) => format!("Author {} issued too many blocks.", address),
             BadSignature(ref signature) => format!("bad signature {}", signature),
             FutureBlock(time) => format!("Block from future: {}", time),
+            InvalidTimeInterval => "Invalid Time Interval".into(),
             InvalidProof => "Invalid proof.".into(),
             NotAboveThreshold(vote) => format!("Vote is not above threshold: {}", vote),
             UnexpectedMessage => "This Engine should not be fed messages.".into(),
