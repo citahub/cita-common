@@ -17,7 +17,7 @@
 //! Trie interface and implementation.
 #![rustfmt_skip]
 
-use hash::H256;
+use types::H256;
 use hashdb::{HashDB, DBValue};
 use std::fmt;
 

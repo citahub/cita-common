@@ -8,7 +8,7 @@
 #![rustfmt_skip]
 
 use {UntrustedRlp, DecoderError};
-use bigint::{U128, U256, H64, H128, H160, H256, H512, H520, H2048};
+use types::{U128, U256, Bloom, H64, H128, H160, H256, H512, H520};
 use byteorder::{ByteOrder, BigEndian};
 use std::{cmp, mem, str};
 use stream::RlpStream;
@@ -214,7 +214,7 @@ impl_encodable_for_hash!(H160);
 impl_encodable_for_hash!(H256);
 impl_encodable_for_hash!(H512);
 impl_encodable_for_hash!(H520);
-impl_encodable_for_hash!(H2048);
+impl_encodable_for_hash!(Bloom);
 
 impl_decodable_for_hash!(H64, 8);
 impl_decodable_for_hash!(H128, 16);
@@ -222,7 +222,7 @@ impl_decodable_for_hash!(H160, 20);
 impl_decodable_for_hash!(H256, 32);
 impl_decodable_for_hash!(H512, 64);
 impl_decodable_for_hash!(H520, 65);
-impl_decodable_for_hash!(H2048, 256);
+impl_decodable_for_hash!(Bloom, 256);
 
 macro_rules! impl_encodable_for_uint {
     ($name: ident, $size: expr) => {

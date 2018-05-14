@@ -20,8 +20,8 @@
 //! AVL query recorder.
 
 use Bytes;
-use H256;
 use hashable::Hashable;
+use types::H256;
 
 /// A record of a visited node.
 #[derive(PartialEq, Eq, Debug, Clone)]
@@ -87,9 +87,9 @@ impl Recorder {
 mod tests {
     use super::*;
 
-    #[cfg(feature = "sha3hash")]
-    use H256;
     use hashable::Hashable;
+    #[cfg(feature = "sha3hash")]
+    use types::H256;
 
     #[test]
     fn basic_recorder() {

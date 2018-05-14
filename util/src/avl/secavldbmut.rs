@@ -19,9 +19,9 @@
 
 use super::AVLMut;
 use super::avldbmut::AVLDBMut;
-use H256;
 use hashable::Hashable;
 use hashdb::{DBValue, HashDB};
+use types::H256;
 
 /// A mutable `AVL` implementation which hashes keys and uses a generic `HashDB` backing database.
 ///

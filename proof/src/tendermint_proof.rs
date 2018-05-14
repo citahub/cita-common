@@ -22,7 +22,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::usize::MAX;
-use util::{Address, H256};
+use types::{Address, H256};
 use util::Hashable;
 use util::datapath::DataPath;
 

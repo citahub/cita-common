@@ -6,12 +6,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-extern crate bigint;
+extern crate cita_types as types;
 extern crate rlp;
 
-use bigint::U256;
 use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use std::{cmp, fmt};
+use types::U256;
 
 #[test]
 fn rlp_at() {
@@ -178,7 +178,7 @@ fn encode_str() {
 
 #[test]
 fn encode_address() {
-    use bigint::hash::H160;
+    use types::H160;
 
     let tests = vec![
         ETestPair(
@@ -348,7 +348,7 @@ fn decode_untrusted_str() {
 
 #[test]
 fn decode_untrusted_address() {
-    use bigint::hash::H160;
+    use types::H160;
 
     let tests = vec![
         DTestPair(

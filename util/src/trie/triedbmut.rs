@@ -22,7 +22,8 @@ use super::lookup::Lookup;
 use super::node::Node as RlpNode;
 use super::node::NodeKey;
 
-use {HashDB, H256};
+use HashDB;
+use types::H256;
 use bytes::ToPretty;
 
 use elastic_array::ElasticArray1024;

@@ -19,7 +19,7 @@
 
 pub use self::derivation::Error as DerivationError;
 use Public;
-use bigint::hash::H256;
+use types::H256;
 use secret::Secret;
 
 /// Represents label that can be stored as a part of key derivation
@@ -212,8 +212,7 @@ mod derivation {
 
     use super::{Label, Derivation};
     use SECP256K1;
-    use bigint::{U256, U512};
-    use bigint::hash::{H512, H256};
+    use types::{H256, H512, U256, U512};
     use keccak;
     use math::curve_order;
     use rcrypto::hmac::Hmac;
@@ -398,7 +397,7 @@ mod derivation {
 mod tests {
     use super::{derivation, Derivation};
     use super::{ExtendedSecret, ExtendedPublic, ExtendedKeyPair};
-    use bigint::hash::{H128, H256};
+    use types::{H128, H256};
     use secret::Secret;
     use std::str::FromStr;
 

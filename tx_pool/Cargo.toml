@@ -7,6 +7,7 @@ authors = ["Cryptape Technologies <contact@cryptape.com>"]
 libproto = { path = "../libproto" }
 util = { path = "../util" }
 cita-crypto = { path = "../cita-crypto" }
+cita-types = { path = "../cita-types" }
 
 [features]
 default = []

@@ -25,7 +25,6 @@ use sodiumoxide::crypto::sign::{sign_detached, verify_detached, PublicKey as EdP
                                 Signature as EdSignature};
 use std::fmt;
 use std::ops::{Deref, DerefMut};
-use util::H768;
 use util::crypto::{CreateKey, Sign};
 
 pub struct Signature(pub [u8; 96]);
@@ -167,21 +166,18 @@ impl<'a> Into<&'a [u8]> for &'a Signature {
     }
 }
 
-impl From<Signature> for H768 {
-    fn from(s: Signature) -> Self {
-        s.0.into()
-    }
-}
-
-impl From<H768> for Signature {
-    fn from(h: H768) -> Self {
-        Signature(h.into())
+impl fmt::LowerHex for Signature {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for i in &self.0[..] {
+            write!(f, "{:02x}", i)?;
+        }
+        Ok(())
     }
 }
 
 impl From<Signature> for String {
     fn from(s: Signature) -> Self {
-        H768::from(s).hex()
+        format!("{:x}", s)
     }
 }
 
@@ -213,7 +209,7 @@ impl Sign for Signature {
         let sig = sign_detached(message.as_ref(), &secret_key);
 
         ret[0..64].copy_from_slice(&sig.0[..]);
-        ret[64..96].copy_from_slice(&pubkey.as_ref()[..]);
+        ret[64..96].copy_from_slice(pubkey.as_ref() as &[u8]);
         Ok(Signature(ret))
     }
 
@@ -236,7 +232,7 @@ impl Sign for Signature {
     fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Self::Error> {
         let sig = self.sig();
         let pk = self.pk();
-        if pk != pubkey.as_ref() {
+        if pk != pubkey.as_ref() as &[u8] {
             return Err(Error::InvalidPubKey);
         }
 

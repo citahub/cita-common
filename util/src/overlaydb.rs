@@ -18,7 +18,7 @@
 #![rustfmt_skip]
 
 use error::*;
-use hash::*;
+use types::H256;
 use hashdb::*;
 use kvdb::{KeyValueDB, DBTransaction};
 use memorydb::*;

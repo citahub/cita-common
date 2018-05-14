@@ -19,7 +19,9 @@ use crypto::{pubkey_to_address, PubKey};
 use libproto::blockchain::{AccountGasLimit, SignedTransaction};
 use std::cmp::Ordering;
 use std::collections::{BTreeSet, HashMap, HashSet};
-use util::{Address, H256, BLOCKLIMIT};
+use types::{Address, H256};
+use types::traits::LowerHex;
+use util::BLOCKLIMIT;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Strategy {
@@ -196,7 +198,7 @@ impl Pool {
                                 }
                                 *value = *value - quota;
                             } else {
-                                if let Some(value) = specific_gas_limit.get_mut(&signer.hex()) {
+                                if let Some(value) = specific_gas_limit.get_mut(&signer.lower_hex()) {
                                     gas_limit = *value;
                                 }
 

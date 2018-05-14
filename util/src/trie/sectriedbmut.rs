@@ -17,7 +17,7 @@
 
 use super::TrieMut;
 use super::triedbmut::TrieDBMut;
-use hash::H256;
+use types::H256;
 use hashable::Hashable;
 use hashdb::{HashDB, DBValue};
 

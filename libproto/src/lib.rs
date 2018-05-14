@@ -18,6 +18,7 @@
 #![feature(try_from)]
 
 extern crate cita_crypto as crypto;
+extern crate cita_types as types;
 extern crate grpc;
 #[macro_use]
 extern crate log as rlog;
@@ -41,7 +42,8 @@ use rustc_serialize::hex::ToHex;
 use std::convert::{From, TryFrom, TryInto};
 use std::ops::Deref;
 use std::result::Result::Err;
-use util::{merklehash, H256, Hashable};
+use types::H256;
+use util::{merklehash, Hashable};
 
 pub use autoimpl::{Message, MsgClass, OperateType, Origin, RawBytes, TryFromConvertError, TryIntoConvertError,
                    ZERO_ORIGIN};

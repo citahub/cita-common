@@ -17,7 +17,8 @@
 //! Disk-backed `HashDB` implementation.
 #![rustfmt_skip]
 
-use {Bytes, H256, UtilError};
+use {Bytes, UtilError};
+use types::H256;
 use hashdb::*;
 use kvdb::{self, DBTransaction};
 use std::sync::Arc;

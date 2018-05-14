@@ -17,6 +17,7 @@
 
 #[cfg(test)]
 extern crate bincode;
+extern crate cita_types as types;
 extern crate rlp;
 extern crate rustc_serialize;
 extern crate serde;
@@ -28,7 +29,7 @@ mod error;
 mod signature;
 mod signer;
 
-use util::{Address, H256, H512};
+use types::{Address, H256, H512};
 
 pub const ADDR_BYTES_LEN: usize = 20;
 pub const PUBKEY_BYTES_LEN: usize = 32;

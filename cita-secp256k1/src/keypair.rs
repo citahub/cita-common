@@ -20,12 +20,12 @@ use rand::thread_rng;
 use rustc_serialize::hex::ToHex;
 use secp256k1::key;
 use std::fmt;
-use util::H160 as Hash160;
+use types::H160;
 use util::Hashable;
 use util::crypto::CreateKey;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
-    Address::from(Hash160::from(pubkey.crypt_hash()))
+    Address::from(H160::from(pubkey.crypt_hash()))
 }
 
 /// key pair
@@ -97,14 +97,13 @@ impl CreateKey for KeyPair {
 mod tests {
     use super::{KeyPair, PrivKey};
     use std::str::FromStr;
-    use util::H256 as Hash256;
+    use types::H256;
     use util::crypto::CreateKey;
 
     #[test]
     fn from_privkey() {
-        let privkey = PrivKey::from(
-            Hash256::from_str("a100df7a048e50ed308ea696dc600215098141cb391e9527329df289f9383f65").unwrap(),
-        );
+        let privkey =
+            PrivKey::from(H256::from_str("a100df7a048e50ed308ea696dc600215098141cb391e9527329df289f9383f65").unwrap());
         let _ = KeyPair::from_privkey(privkey).unwrap();
     }
 }

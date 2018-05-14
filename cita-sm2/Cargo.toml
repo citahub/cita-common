@@ -8,6 +8,7 @@ lazy_static = "0.2"
 rustc-serialize = "0.3"
 serde = "1.0"
 bincode = "0.8"
+cita-types = { path = "../cita-types" }
 util = { path = "../util" }
 rlp = { path = "../rlp" }
 

@@ -7,8 +7,6 @@ This repository is a collection of crates used by microservices in [CITA](https:
 
 Crates below are extracted from [Parity](https://github.com/paritytech/parity):
 
-- bigint
-- bloomable
 - ethcore-bloom-journal
 - ethcore-io
 - ethkey
@@ -19,7 +17,6 @@ Crates below are extracted from [Parity](https://github.com/paritytech/parity):
 
 with following modifications:
 
-- impl serde for bigint
 - add UtilError::Snappy in util::error
 - add some modules in util:
     - build_info.rs

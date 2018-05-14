@@ -19,9 +19,9 @@
 
 use super::{AVLItem, AVLIterator, Query, AVL};
 use super::avldb::AVLDB;
-use H256;
 use hashable::Hashable;
 use hashdb::HashDB;
+use types::H256;
 
 /// A `AVL` implementation which hashes keys and uses a generic `HashDB` backing database.
 ///

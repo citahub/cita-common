@@ -6,7 +6,7 @@ members = [
     "error",
     "panic_hook",
     "worker",
-    "bigint",
+    "cita-types",
     "util",
 
     "pubsub_zeromq",
@@ -15,7 +15,6 @@ members = [
     "pubsub",
 
     "ethcore-bloom-journal",
-    "bloomable",
     "sha3",
     "blake2b",
     "cita-sm2",

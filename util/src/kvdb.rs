@@ -889,7 +889,7 @@ impl Drop for Database {
 mod tests {
     extern crate mktemp;
     use super::*;
-    use hash::H256;
+    use types::H256;
     use std::str::FromStr;
 
     fn test_db(config: &DatabaseConfig) {

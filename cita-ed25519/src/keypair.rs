@@ -20,7 +20,8 @@ use error::Error;
 use rustc_serialize::hex::ToHex;
 use sodiumoxide::crypto::sign::{gen_keypair, keypair_from_privkey};
 use std::fmt;
-use util::{H160, Hashable};
+use types::H160;
+use util::Hashable;
 use util::crypto::CreateKey;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {

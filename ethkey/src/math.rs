@@ -16,8 +16,7 @@
 #![rustfmt_skip]
 
 use super::{SECP256K1, Public, Secret, Error};
-use bigint::U256;
-use bigint::hash::H256;
+use types::{H256, U256};
 use secp256k1::constants::{GENERATOR_X, GENERATOR_Y, CURVE_ORDER};
 use secp256k1::key;
 

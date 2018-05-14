@@ -18,7 +18,8 @@
 use super::{Trie, TrieItem, TrieError, TrieIterator, Query};
 use super::lookup::Lookup;
 use super::node::{Node, OwnedNode};
-use {ToPretty, Bytes, H256};
+use {ToPretty, Bytes};
+use types::H256;
 use hashdb::*;
 use nibbleslice::*;
 use rlp::*;

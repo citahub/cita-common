@@ -19,10 +19,10 @@
 
 //! AVL interface and implementation.
 
-use H256;
 use hashable::HASH_NULL_RLP;
 use hashdb::{DBValue, HashDB};
 use std::fmt;
+use types::H256;
 
 /// Export the standardmap module.
 pub mod standardmap;

@@ -16,7 +16,7 @@
 #![rustfmt_skip]
 
 use {Error, SECP256K1};
-use bigint::hash::H256;
+use types::H256;
 use rustc_hex::ToHex;
 use secp256k1::key;
 use std::fmt;

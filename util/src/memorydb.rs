@@ -17,7 +17,6 @@
 //! Reference-counted memory-based `HashDB` implementation.
 #![rustfmt_skip]
 
-use hash::*;
 use hashable::{HASH_NULL_RLP, Hashable};
 use hashdb::*;
 use heapsize::*;
@@ -25,6 +24,7 @@ use rlp::*;
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 use std::mem;
+use types::{H256FastMap, H256};
 
 /// Reference-counted memory-based `HashDB` implementation.
 ///

@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use crypto::PrivKey;
-use util::Address;
+use types::Address;
 
 /// Authority params deserialization.
 #[derive(Debug, PartialEq, Deserialize)]
@@ -44,14 +44,18 @@ mod tests {
 
     fn generate_signer() -> String {
         if SIGNATURE_NAME == "ed25519" {
-            "a100df7a048e50ed308ea696dc60021509\
-             8141cb391e9527329df289f9383f65a100d\
-             f7a048e50ed308ea696dc600215098141cb\
-             391e9527329df289f9383f65"
+            "a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65\
+             a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65"
                 .to_string()
         } else if SIGNATURE_NAME == "secp256k1" {
-            "a100df7a048e50ed308ea696dc60021509\
-             8141cb391e9527329df289f9383f65"
+            "a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65"
+                .to_string()
+        } else if SIGNATURE_NAME == "sm2" {
+            "a100df7a048e50ed308ea696dc600215\
+             098141cb391e9527329df289f9383f65"
                 .to_string()
         } else {
             "".to_string()
@@ -65,7 +69,7 @@ mod tests {
             r#"{{
                 "duration": 3,
                 "authorities" : ["0x5b073e9233944b5e729e46d618f0d8edf3d9c34a"],
-                "signer": "{}"
+                "signer": "0x{}"
             }}"#,
             signer
         );
@@ -81,7 +85,7 @@ mod tests {
                 "params": {{
                     "duration": 3,
                     "authorities" : ["0x5b073e9233944b5e729e46d618f0d8edf3d9c34a"],
-                    "signer": "{}"
+                    "signer": "0x{}"
                 }}
             }}"#,
             signer

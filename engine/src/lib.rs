@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate cita_crypto as crypto;
+extern crate cita_types as types;
 extern crate libproto;
 extern crate util;
 
@@ -28,7 +29,7 @@ pub use util::instrument::*;
 use libproto::blockchain::{Block, RichStatus};
 use std::sync::mpsc::Sender;
 use std::time::Duration;
-use util::H256;
+use types::H256;
 use util::SemanticVersion;
 
 pub trait Engine: Sync + Send {

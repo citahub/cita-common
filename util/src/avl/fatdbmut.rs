@@ -18,9 +18,9 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{AVLDBMut, AVLMut};
-use H256;
 use hashable::Hashable;
 use hashdb::{DBValue, HashDB};
+use types::H256;
 
 /// A mutable `AVL` implementation which hashes keys and uses a generic `HashDB` backing database.
 /// Additionaly it stores inserted hash-key mappings for later retrieval.
