@@ -76,13 +76,6 @@ pub const HASH_EMPTY_LIST_RLP: H256 = H256([
 #[cfg(feature = "blake2bhash")]
 pub const BLAKE2BKEY: &str = "CryptapeCryptape";
 
-#[cfg(feature = "sha3hash")]
-pub const HASH_NAME: &str = "sha3";
-#[cfg(feature = "blake2bhash")]
-pub const HASH_NAME: &str = "blake2b";
-#[cfg(feature = "sm3hash")]
-pub const HASH_NAME: &str = "sm3";
-
 pub trait Hashable {
     /// Calculate crypt HASH of this object.
     fn crypt_hash(&self) -> H256 {
