@@ -353,7 +353,7 @@ mod tests {
         let keypair = KeyPair::gen_keypair();
         let privkey = keypair.privkey();
         let keypair1 = KeyPair::gen_keypair();
-        let privkey1 = keypair.privkey();
+        let privkey1 = keypair1.privkey();
 
         let tx1 = generate_tx(vec![1], 99, privkey);
         let tx2 = generate_tx(vec![2], 99, privkey1);
