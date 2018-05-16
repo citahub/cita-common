@@ -183,10 +183,7 @@ impl Pool {
                     if tx_is_valid(tx, height) {
                         let quota = tx.get_transaction_with_sig().get_transaction().quota;
                         let signer = pubkey_to_address(&PubKey::from(tx.get_signer()));
-                        if n <= quota {
-                            if tx_list.is_empty() {
-                                tx_list.push(tx.clone());
-                            }
+                        if n < quota {
                             break;
                         }
 
@@ -283,7 +280,7 @@ mod tests {
         tx.set_to("1234567".to_string());
         tx.set_nonce("0".to_string());
         tx.set_valid_until_block(valid_until_block);
-        tx.set_quota(184467440737095);
+        tx.set_quota(10000);
 
         tx.sign(*privkey)
     }
@@ -311,13 +308,67 @@ mod tests {
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), true),
+            p.package(5, 100000, account_gas_limit.clone(), false),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
-        assert_eq!(p.package(4, 30, account_gas_limit.clone(), true), vec![tx4]);
+        assert_eq!(
+            p.package(4, 100000, account_gas_limit.clone(), false),
+            vec![tx4]
+        );
         assert_eq!(p.len(), 1);
-        assert_eq!(p.package(5, 30, account_gas_limit.clone(), true), vec![]);
+        assert_eq!(
+            p.package(5, 100000, account_gas_limit.clone(), false),
+            vec![]
+        );
         assert_eq!(p.len(), 0);
+    }
+
+    #[test]
+    fn block_limit_test() {
+        let mut p = Pool::new(1);
+        let keypair = KeyPair::gen_keypair();
+        let privkey = keypair.privkey();
+
+        let tx1 = generate_tx(vec![1], 99, privkey);
+        let tx2 = generate_tx(vec![2], 99, privkey);
+        let tx3 = generate_tx(vec![3], 99, privkey);
+
+        let mut account_gas_limit = AccountGasLimit::new();
+        account_gas_limit.set_common_gas_limit(10000);
+        account_gas_limit.set_specific_gas_limit(HashMap::new());
+
+        p.enqueue(tx1.clone());
+        p.enqueue(tx2.clone());
+        p.enqueue(tx3.clone());
+        assert_eq!(
+            p.package(5, 25000, account_gas_limit.clone(), false),
+            vec![tx1.clone(), tx2.clone()]
+        );
+    }
+
+    #[test]
+    fn account_limit_test() {
+        let mut p = Pool::new(1);
+        let keypair = KeyPair::gen_keypair();
+        let privkey = keypair.privkey();
+        let keypair1 = KeyPair::gen_keypair();
+        let privkey1 = keypair.privkey();
+
+        let tx1 = generate_tx(vec![1], 99, privkey);
+        let tx2 = generate_tx(vec![2], 99, privkey1);
+        let tx3 = generate_tx(vec![3], 99, privkey1);
+
+        let mut account_gas_limit = AccountGasLimit::new();
+        account_gas_limit.set_common_gas_limit(15000);
+        account_gas_limit.set_specific_gas_limit(HashMap::new());
+
+        p.enqueue(tx1.clone());
+        p.enqueue(tx2.clone());
+        p.enqueue(tx3.clone());
+        assert_eq!(
+            p.package(5, 100000, account_gas_limit.clone(), true),
+            vec![tx1.clone(), tx2.clone()]
+        );
     }
 }
