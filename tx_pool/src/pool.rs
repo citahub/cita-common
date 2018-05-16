@@ -307,16 +307,12 @@ mod tests {
         assert_eq!(p.len(), 3);
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
+        // tx4 will into invalid list
         assert_eq!(
             p.package(5, 100000, account_gas_limit.clone(), false),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
-        assert_eq!(
-            p.package(4, 100000, account_gas_limit.clone(), false),
-            vec![tx4]
-        );
-        assert_eq!(p.len(), 1);
         assert_eq!(
             p.package(5, 100000, account_gas_limit.clone(), false),
             vec![]
