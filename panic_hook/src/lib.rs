@@ -17,7 +17,7 @@
 
 extern crate backtrace;
 #[macro_use]
-extern crate log;
+extern crate logger;
 
 use backtrace::Backtrace;
 use std::panic::{self, PanicInfo};

@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #[macro_use]
-extern crate log;
+extern crate logger;
 extern crate zmq;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;

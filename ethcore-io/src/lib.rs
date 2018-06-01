@@ -62,7 +62,7 @@
 
 extern crate crossbeam;
 #[macro_use]
-extern crate log as rlog;
+extern crate logger;
 extern crate mio;
 extern crate parking_lot;
 extern crate slab;
