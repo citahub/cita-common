@@ -21,7 +21,7 @@ extern crate cita_crypto as crypto;
 extern crate cita_types as types;
 extern crate grpc;
 #[macro_use]
-extern crate log as rlog;
+extern crate logger;
 extern crate protobuf;
 extern crate rlp;
 extern crate rustc_serialize;

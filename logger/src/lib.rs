@@ -14,11 +14,15 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#![feature(use_extern_macros)]
+
 extern crate chan_signal;
 extern crate chrono;
 extern crate log4rs;
-#[macro_use]
 extern crate log;
+
+pub use log::{debug, error, info, log, log_enabled, trace, warn};
 
 use chan_signal::Signal;
 use chrono::Local;

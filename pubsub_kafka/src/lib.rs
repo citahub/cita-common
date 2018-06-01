@@ -1,7 +1,7 @@
 extern crate futures;
 extern crate futures_cpupool;
 #[macro_use]
-extern crate log;
+extern crate logger;
 extern crate rdkafka;
 
 use futures::*;

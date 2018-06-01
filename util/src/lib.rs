@@ -42,7 +42,7 @@ extern crate sm3;
 extern crate target_info;
 
 #[macro_use]
-extern crate log as rlog;
+extern crate logger;
 extern crate panic_hook;
 extern crate serde;
 extern crate toml;
