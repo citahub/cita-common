@@ -76,6 +76,7 @@ pub enum MsgType {
     SnapshotResp,
     Miscellaneous,
     MiscellaneousReq,
+    BlackList,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -168,6 +169,7 @@ impl fmt::Display for MsgType {
                 &MsgType::SnapshotResp => "snapshot_resp",
                 &MsgType::Miscellaneous => "miscellaneous",
                 &MsgType::MiscellaneousReq => "miscellaneous_req",
+                &MsgType::BlackList => "black_list",
                 // Generate MSG-PROTOS display automatically end.
                 &MsgType::LocalSync => "sync",
                 &MsgType::All => "*",
@@ -230,6 +232,7 @@ impl<'a> From<&'a str> for MsgType {
             "snapshot_resp" => MsgType::SnapshotResp,
             "miscellaneous" => MsgType::Miscellaneous,
             "miscellaneous_req" => MsgType::MiscellaneousReq,
+            "black_list" => MsgType::BlackList,
             // Generate MSG-PROTOS from_str automatically end.
             "sync" => MsgType::LocalSync,
             "*" => MsgType::All,

@@ -147,6 +147,7 @@ macro_rules! loop_macro_for_structs {
             VerifyTxReq,
             VerifyTxResp,
             AccountGasLimit,
+            BlackList,
             Block,
             BlockBody,
             BlockHeader,
@@ -222,6 +223,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             SnapshotResp,
             Miscellaneous,
             MiscellaneousReq,
+            BlackList,
             // Generate MSG-PROTOS struct automatically end.
         );
     }
@@ -495,6 +497,12 @@ impl Message {
     pub fn take_miscellaneous_req(&mut self) -> Option<MiscellaneousReq> {
         match self.take_content() {
             Some(MsgClass::MiscellaneousReq(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_black_list(&mut self) -> Option<BlackList> {
+        match self.take_content() {
+            Some(MsgClass::BlackList(v)) => Some(v),
             _ => None,
         }
     }

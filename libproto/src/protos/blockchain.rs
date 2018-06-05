@@ -3652,6 +3652,181 @@ impl ::protobuf::reflect::ProtobufValue for BlockTxs {
     }
 }
 
+#[derive(PartialEq,Clone,Default)]
+pub struct BlackList {
+    // message fields
+    pub signer: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for BlackList {}
+
+impl BlackList {
+    pub fn new() -> BlackList {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static BlackList {
+        static mut instance: ::protobuf::lazy::Lazy<BlackList> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const BlackList,
+        };
+        unsafe {
+            instance.get(BlackList::new)
+        }
+    }
+
+    // repeated bytes signer = 1;
+
+    pub fn clear_signer(&mut self) {
+        self.signer.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_signer(&mut self, v: ::protobuf::RepeatedField<::std::vec::Vec<u8>>) {
+        self.signer = v;
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_signer(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &mut self.signer
+    }
+
+    // Take field
+    pub fn take_signer(&mut self) -> ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        ::std::mem::replace(&mut self.signer, ::protobuf::RepeatedField::new())
+    }
+
+    pub fn get_signer(&self) -> &[::std::vec::Vec<u8>] {
+        &self.signer
+    }
+
+    fn get_signer_for_reflect(&self) -> &::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &self.signer
+    }
+
+    fn mut_signer_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &mut self.signer
+    }
+}
+
+impl ::protobuf::Message for BlackList {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.signer)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        for value in &self.signer {
+            my_size += ::protobuf::rt::bytes_size(1, &value);
+        };
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        for v in &self.signer {
+            os.write_bytes(1, &v)?;
+        };
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for BlackList {
+    fn new() -> BlackList {
+        BlackList::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<BlackList>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                    "signer",
+                    BlackList::get_signer_for_reflect,
+                    BlackList::mut_signer_for_reflect,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<BlackList>(
+                    "BlackList",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for BlackList {
+    fn clear(&mut self) {
+        self.clear_signer();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for BlackList {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for BlackList {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
 pub enum ProofType {
     AuthorityRound = 0,
@@ -3806,15 +3981,16 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \"H\n\x0eBlockWithProof\x12\x18\n\x03blk\x18\x01\x20\x01(\x0b2\x06.Block\
     R\x03blk\x12\x1c\n\x05proof\x18\x02\x20\x01(\x0b2\x06.ProofR\x05proof\"B\
     \n\x08BlockTxs\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\x06height\x12\
-    \x1e\n\x04body\x18\x03\x20\x01(\x0b2\n.BlockBodyR\x04body*9\n\tProofType\
-    \x12\x12\n\x0eAuthorityRound\x10\0\x12\x08\n\x04Raft\x10\x01\x12\x0e\n\n\
-    Tendermint\x10\x02*\x1b\n\x06Crypto\x12\x08\n\x04SECP\x10\0\x12\x07\n\
-    \x03SM2\x10\x01J\xe7\x1b\n\x06\x12\x04\0\0[\x01\n\x08\n\x01\x0c\x12\x03\
-    \0\0\x12\n\n\n\x02\x05\0\x12\x04\x02\0\x06\x01\n\n\n\x03\x05\0\x01\x12\
-    \x03\x02\x05\x0e\n\x0b\n\x04\x05\0\x02\0\x12\x03\x03\x04\x17\n\x0c\n\x05\
-    \x05\0\x02\0\x01\x12\x03\x03\x04\x12\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\
-    \x03\x15\x16\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x04\x04\r\n\x0c\n\x05\x05\
-    \0\x02\x01\x01\x12\x03\x04\x04\x08\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\
+    \x1e\n\x04body\x18\x03\x20\x01(\x0b2\n.BlockBodyR\x04body\"#\n\tBlackLis\
+    t\x12\x16\n\x06signer\x18\x01\x20\x03(\x0cR\x06signer*9\n\tProofType\x12\
+    \x12\n\x0eAuthorityRound\x10\0\x12\x08\n\x04Raft\x10\x01\x12\x0e\n\nTend\
+    ermint\x10\x02*\x1b\n\x06Crypto\x12\x08\n\x04SECP\x10\0\x12\x07\n\x03SM2\
+    \x10\x01J\xd2\x1c\n\x06\x12\x04\0\0_\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\
+    \n\n\n\x02\x05\0\x12\x04\x02\0\x06\x01\n\n\n\x03\x05\0\x01\x12\x03\x02\
+    \x05\x0e\n\x0b\n\x04\x05\0\x02\0\x12\x03\x03\x04\x17\n\x0c\n\x05\x05\0\
+    \x02\0\x01\x12\x03\x03\x04\x12\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x03\
+    \x15\x16\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x04\x04\r\n\x0c\n\x05\x05\0\
+    \x02\x01\x01\x12\x03\x04\x04\x08\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\
     \x04\x0b\x0c\n\x0b\n\x04\x05\0\x02\x02\x12\x03\x05\x04\x13\n\x0c\n\x05\
     \x05\0\x02\x02\x01\x12\x03\x05\x04\x0e\n\x0c\n\x05\x05\0\x02\x02\x02\x12\
     \x03\x05\x11\x12\n\n\n\x02\x04\0\x12\x04\x08\0\x0b\x01\n\n\n\x03\x04\0\
@@ -3977,7 +4153,11 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x0b\x02\x01\x12\x03Z\x04\x17\n\r\n\x05\x04\x0b\x02\x01\x04\x12\x04Z\
     \x04Y\x16\n\x0c\n\x05\x04\x0b\x02\x01\x06\x12\x03Z\x04\r\n\x0c\n\x05\x04\
     \x0b\x02\x01\x01\x12\x03Z\x0e\x12\n\x0c\n\x05\x04\x0b\x02\x01\x03\x12\
-    \x03Z\x15\x16b\x06proto3\
+    \x03Z\x15\x16\n\n\n\x02\x04\x0c\x12\x04]\0_\x01\n\n\n\x03\x04\x0c\x01\
+    \x12\x03]\x08\x11\n\x19\n\x04\x04\x0c\x02\0\x12\x03^\x04\x1e\"\x0c\x20pu\
+    blic\x20key\n\n\x0c\n\x05\x04\x0c\x02\0\x04\x12\x03^\x04\x0c\n\x0c\n\x05\
+    \x04\x0c\x02\0\x05\x12\x03^\r\x12\n\x0c\n\x05\x04\x0c\x02\0\x01\x12\x03^\
+    \x13\x19\n\x0c\n\x05\x04\x0c\x02\0\x03\x12\x03^\x1c\x1db\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

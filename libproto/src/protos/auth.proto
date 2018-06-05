@@ -12,6 +12,7 @@ enum Ret {
     Busy = 6;
     BadChainId = 7;
     QuotaNotEnough = 8;
+    Forbidden = 9;
 }
 
 message VerifyTxReq {
