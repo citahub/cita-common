@@ -75,6 +75,7 @@ pub enum InnerMessage_oneof_content {
     SnapshotResp(super::snapshot::SnapshotResp),
     Miscellaneous(super::auth::Miscellaneous),
     MiscellaneousReq(super::auth::MiscellaneousReq),
+    BlackList(super::blockchain::BlackList),
 }
 
 impl InnerMessage {
@@ -1218,6 +1219,55 @@ impl InnerMessage {
             _ => super::auth::MiscellaneousReq::default_instance(),
         }
     }
+
+    // .BlackList BlackList = 24;
+
+    pub fn clear_BlackList(&mut self) {
+        self.content = ::std::option::Option::None;
+    }
+
+    pub fn has_BlackList(&self) -> bool {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_BlackList(&mut self, v: super::blockchain::BlackList) {
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_BlackList(&mut self) -> &mut super::blockchain::BlackList {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(_)) = self.content {
+        } else {
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(super::blockchain::BlackList::new()));
+        }
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_BlackList(&mut self) -> super::blockchain::BlackList {
+        if self.has_BlackList() {
+            match self.content.take() {
+                ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            super::blockchain::BlackList::new()
+        }
+    }
+
+    pub fn get_BlackList(&self) -> &super::blockchain::BlackList {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(ref v)) => v,
+            _ => super::blockchain::BlackList::default_instance(),
+        }
+    }
 }
 
 impl ::protobuf::Message for InnerMessage {
@@ -1328,6 +1378,11 @@ impl ::protobuf::Message for InnerMessage {
             }
         }
         if let Some(InnerMessage_oneof_content::MiscellaneousReq(ref v)) = self.content {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(InnerMessage_oneof_content::BlackList(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
@@ -1477,6 +1532,12 @@ impl ::protobuf::Message for InnerMessage {
                     }
                     self.content = ::std::option::Option::Some(InnerMessage_oneof_content::MiscellaneousReq(is.read_message()?));
                 },
+                24 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlackList(is.read_message()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -1579,6 +1640,10 @@ impl ::protobuf::Message for InnerMessage {
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
                 &InnerMessage_oneof_content::MiscellaneousReq(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::BlackList(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -1702,6 +1767,11 @@ impl ::protobuf::Message for InnerMessage {
                 },
                 &InnerMessage_oneof_content::MiscellaneousReq(ref v) => {
                     os.write_tag(23, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::BlackList(ref v) => {
+                    os.write_tag(24, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -1866,6 +1936,11 @@ impl ::protobuf::MessageStatic for InnerMessage {
                     InnerMessage::has_MiscellaneousReq,
                     InnerMessage::get_MiscellaneousReq,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::blockchain::BlackList>(
+                    "BlackList",
+                    InnerMessage::has_BlackList,
+                    InnerMessage::get_BlackList,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<InnerMessage>(
                     "InnerMessage",
                     fields,
@@ -1901,6 +1976,7 @@ impl ::protobuf::Clear for InnerMessage {
         self.clear_SnapshotResp();
         self.clear_Miscellaneous();
         self.clear_MiscellaneousReq();
+        self.clear_BlackList();
         self.unknown_fields.clear();
     }
 }
@@ -1920,7 +1996,7 @@ impl ::protobuf::reflect::ProtobufValue for InnerMessage {
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
-    o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\"\xa4\t\n\x0cInnerMessage\
+    o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\"\xd0\t\n\x0cInnerMessage\
     \x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0R\x08RawBytes\x12$\n\x07Re\
     quest\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\x07Request\x12'\n\x08Respons\
     e\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08Response\x120\n\x0bSyncRequest\
@@ -1946,23 +2022,24 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotResp\x126\n\rMiscellane\
     ous\x18\x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rMiscellaneous\x12?\n\
     \x10MiscellaneousReq\x18\x17\x20\x01(\x0b2\x11.MiscellaneousReqH\0R\x10M\
-    iscellaneousReqB\t\n\x07contentJ\x8f\x0b\n\x06\x12\x04\0\02\x01\n\x08\n\
-    \x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\
-    \x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\
-    \x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\
-    \t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\
-    \x17\n\t\n\x02\x03\x07\x12\x03\t\x07\x17\n\n\n\x02\x04\0\x12\x04\x0b\02\
-    \x01\n\n\n\x03\x04\0\x01\x12\x03\x0b\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\
-    \x04\r\x041\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\x03\r\n\x11\n\x0b\n\x04\
-    \x04\0\x02\0\x12\x03\x0f\x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0f\
-    \x08\r\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x0f\x0e\x16\n\x0c\n\x05\x04\0\
-    \x02\0\x03\x12\x03\x0f\x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x11\x08\
-    \x1c\n\x0c\n\x05\x04\0\x02\x01\x06\x12\x03\x11\x08\x0f\n\x0c\n\x05\x04\0\
-    \x02\x01\x01\x12\x03\x11\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\
-    \x11\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x12\x08\x1e\n\x0c\n\x05\
-    \x04\0\x02\x02\x06\x12\x03\x12\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\
-    \x03\x12\x11\x19\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x12\x1c\x1d\n\x0b\
-    \n\x04\x04\0\x02\x03\x12\x03\x14\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\
+    iscellaneousReq\x12*\n\tBlackList\x18\x18\x20\x01(\x0b2\n.BlackListH\0R\
+    \tBlackListB\t\n\x07contentJ\xc6\x0b\n\x06\x12\x04\0\04\x01\n\x08\n\x01\
+    \x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\
+    \x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\
+    \x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\t\n\
+    \x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\x17\n\
+    \t\n\x02\x03\x07\x12\x03\t\x07\x17\n\n\n\x02\x04\0\x12\x04\x0b\04\x01\n\
+    \n\n\x03\x04\0\x01\x12\x03\x0b\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\x04\r\
+    \x043\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\x03\r\n\x11\n\x0b\n\x04\x04\0\
+    \x02\0\x12\x03\x0f\x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0f\x08\r\
+    \n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x0f\x0e\x16\n\x0c\n\x05\x04\0\x02\0\
+    \x03\x12\x03\x0f\x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x11\x08\x1c\n\
+    \x0c\n\x05\x04\0\x02\x01\x06\x12\x03\x11\x08\x0f\n\x0c\n\x05\x04\0\x02\
+    \x01\x01\x12\x03\x11\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x11\
+    \x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x12\x08\x1e\n\x0c\n\x05\x04\0\
+    \x02\x02\x06\x12\x03\x12\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\
+    \x12\x11\x19\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x12\x1c\x1d\n\x0b\n\
+    \x04\x04\0\x02\x03\x12\x03\x14\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\
     \x03\x14\x08\x13\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x14\x14\x1f\n\x0c\
     \n\x05\x04\0\x02\x03\x03\x12\x03\x14\"#\n\x0b\n\x04\x04\0\x02\x04\x12\
     \x03\x15\x08&\n\x0c\n\x05\x04\0\x02\x04\x06\x12\x03\x15\x08\x14\n\x0c\n\
@@ -2012,7 +2089,10 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0c\n\x05\x04\0\x02\x15\x01\x12\x03.\x16#\n\x0c\n\x05\x04\0\x02\x15\x03\
     \x12\x03.&(\n\x0b\n\x04\x04\0\x02\x16\x12\x03/\x08/\n\x0c\n\x05\x04\0\
     \x02\x16\x06\x12\x03/\x08\x18\n\x0c\n\x05\x04\0\x02\x16\x01\x12\x03/\x19\
-    )\n\x0c\n\x05\x04\0\x02\x16\x03\x12\x03/,.b\x06proto3\
+    )\n\x0c\n\x05\x04\0\x02\x16\x03\x12\x03/,.\n\x0b\n\x04\x04\0\x02\x17\x12\
+    \x031\x08!\n\x0c\n\x05\x04\0\x02\x17\x06\x12\x031\x08\x11\n\x0c\n\x05\
+    \x04\0\x02\x17\x01\x12\x031\x12\x1b\n\x0c\n\x05\x04\0\x02\x17\x03\x12\
+    \x031\x1e\x20b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

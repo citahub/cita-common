@@ -90,3 +90,7 @@ message BlockTxs {
     uint64 height = 1;
     BlockBody body = 3;
 }
+
+message BlackList {
+    repeated bytes signer = 1; // public key
+}
