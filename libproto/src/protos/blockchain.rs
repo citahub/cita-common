@@ -1622,7 +1622,7 @@ pub struct Transaction {
     pub quota: u64,
     pub valid_until_block: u64,
     pub data: ::std::vec::Vec<u8>,
-    pub value: u64,
+    pub value: ::std::vec::Vec<u8>,
     pub chain_id: u32,
     pub version: u32,
     // special fields
@@ -1796,26 +1796,37 @@ impl Transaction {
         &mut self.data
     }
 
-    // uint64 value = 6;
+    // bytes value = 6;
 
     pub fn clear_value(&mut self) {
-        self.value = 0;
+        self.value.clear();
     }
 
     // Param is passed by value, moved
-    pub fn set_value(&mut self, v: u64) {
+    pub fn set_value(&mut self, v: ::std::vec::Vec<u8>) {
         self.value = v;
     }
 
-    pub fn get_value(&self) -> u64 {
-        self.value
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_value(&mut self) -> &mut ::std::vec::Vec<u8> {
+        &mut self.value
     }
 
-    fn get_value_for_reflect(&self) -> &u64 {
+    // Take field
+    pub fn take_value(&mut self) -> ::std::vec::Vec<u8> {
+        ::std::mem::replace(&mut self.value, ::std::vec::Vec::new())
+    }
+
+    pub fn get_value(&self) -> &[u8] {
         &self.value
     }
 
-    fn mut_value_for_reflect(&mut self) -> &mut u64 {
+    fn get_value_for_reflect(&self) -> &::std::vec::Vec<u8> {
+        &self.value
+    }
+
+    fn mut_value_for_reflect(&mut self) -> &mut ::std::vec::Vec<u8> {
         &mut self.value
     }
 
@@ -1899,11 +1910,7 @@ impl ::protobuf::Message for Transaction {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.data)?;
                 },
                 6 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_uint64()?;
-                    self.value = tmp;
+                    ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.value)?;
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
@@ -1946,8 +1953,8 @@ impl ::protobuf::Message for Transaction {
         if !self.data.is_empty() {
             my_size += ::protobuf::rt::bytes_size(5, &self.data);
         }
-        if self.value != 0 {
-            my_size += ::protobuf::rt::value_size(6, self.value, ::protobuf::wire_format::WireTypeVarint);
+        if !self.value.is_empty() {
+            my_size += ::protobuf::rt::bytes_size(6, &self.value);
         }
         if self.chain_id != 0 {
             my_size += ::protobuf::rt::value_size(7, self.chain_id, ::protobuf::wire_format::WireTypeVarint);
@@ -1976,8 +1983,8 @@ impl ::protobuf::Message for Transaction {
         if !self.data.is_empty() {
             os.write_bytes(5, &self.data)?;
         }
-        if self.value != 0 {
-            os.write_uint64(6, self.value)?;
+        if !self.value.is_empty() {
+            os.write_bytes(6, &self.value)?;
         }
         if self.chain_id != 0 {
             os.write_uint32(7, self.chain_id)?;
@@ -2054,7 +2061,7 @@ impl ::protobuf::MessageStatic for Transaction {
                     Transaction::get_data_for_reflect,
                     Transaction::mut_data_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "value",
                     Transaction::get_value_for_reflect,
                     Transaction::mut_value_for_reflect,
@@ -3965,7 +3972,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x02to\x12\x14\n\x05nonce\x18\x02\x20\x01(\tR\x05nonce\x12\x14\n\x05quot\
     a\x18\x03\x20\x01(\x04R\x05quota\x12*\n\x11valid_until_block\x18\x04\x20\
     \x01(\x04R\x0fvalidUntilBlock\x12\x12\n\x04data\x18\x05\x20\x01(\x0cR\
-    \x04data\x12\x14\n\x05value\x18\x06\x20\x01(\x04R\x05value\x12\x19\n\x08\
+    \x04data\x12\x14\n\x05value\x18\x06\x20\x01(\x0cR\x05value\x12\x19\n\x08\
     chain_id\x18\x07\x20\x01(\rR\x07chainId\x12\x18\n\x07version\x18\x08\x20\
     \x01(\rR\x07version\"\x86\x01\n\x15UnverifiedTransaction\x12.\n\x0btrans\
     action\x18\x01\x20\x01(\x0b2\x0c.TransactionR\x0btransaction\x12\x1c\n\t\
@@ -4091,11 +4098,11 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x05\x04\x05\x02\x04\x04\x12\x045\x044!\n\x0c\n\x05\x04\x05\x02\x04\x05\
     \x12\x035\x04\t\n\x0c\n\x05\x04\x05\x02\x04\x01\x12\x035\n\x0e\n\x0c\n\
     \x05\x04\x05\x02\x04\x03\x12\x035\x11\x12\n\x0b\n\x04\x04\x05\x02\x05\
-    \x12\x036\x04\x15\n\r\n\x05\x04\x05\x02\x05\x04\x12\x046\x045\x13\n\x0c\
-    \n\x05\x04\x05\x02\x05\x05\x12\x036\x04\n\n\x0c\n\x05\x04\x05\x02\x05\
-    \x01\x12\x036\x0b\x10\n\x0c\n\x05\x04\x05\x02\x05\x03\x12\x036\x13\x14\n\
+    \x12\x036\x04\x14\n\r\n\x05\x04\x05\x02\x05\x04\x12\x046\x045\x13\n\x0c\
+    \n\x05\x04\x05\x02\x05\x05\x12\x036\x04\t\n\x0c\n\x05\x04\x05\x02\x05\
+    \x01\x12\x036\n\x0f\n\x0c\n\x05\x04\x05\x02\x05\x03\x12\x036\x12\x13\n\
     \x0b\n\x04\x04\x05\x02\x06\x12\x037\x04\x18\n\r\n\x05\x04\x05\x02\x06\
-    \x04\x12\x047\x046\x15\n\x0c\n\x05\x04\x05\x02\x06\x05\x12\x037\x04\n\n\
+    \x04\x12\x047\x046\x14\n\x0c\n\x05\x04\x05\x02\x06\x05\x12\x037\x04\n\n\
     \x0c\n\x05\x04\x05\x02\x06\x01\x12\x037\x0b\x13\n\x0c\n\x05\x04\x05\x02\
     \x06\x03\x12\x037\x16\x17\n\x0b\n\x04\x04\x05\x02\x07\x12\x038\x04\x17\n\
     \r\n\x05\x04\x05\x02\x07\x04\x12\x048\x047\x18\n\x0c\n\x05\x04\x05\x02\
