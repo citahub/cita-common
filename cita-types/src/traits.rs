@@ -176,6 +176,22 @@ mod tests {
     }
 
     #[test]
+    fn test_lower_hex_for_uint_and_hash() {
+        let validation = vec![
+            (0u64, "0"),
+            (10u64, "a"),
+            (2432902008176639999u64, "21c3677c82b3ffff"),
+        ];
+        for (x_uint, x_str) in validation.into_iter() {
+            assert_eq!(U128::from(x_uint).lower_hex(), format!("{}", x_str));
+            assert_eq!(
+                U128::from(x_uint).lower_hex_with_0x(),
+                format!("0x{}", x_str)
+            );
+        }
+    }
+
+    #[test]
     fn test_from_unaligned() {
         let validation = vec![
             (2432902008176639999u64, "0x21c3677c82b3ffff"),
