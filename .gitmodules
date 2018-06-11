@@ -1,0 +1,3 @@
+[submodule "libproto/proto"]
+	path = libproto/proto
+	url = https://github.com/cryptape/cita-proto.git
