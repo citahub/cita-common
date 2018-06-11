@@ -28,18 +28,18 @@ function check_dependencies () {
 }
 
 function remove_all_rs () {
-    find . -name "*.rs" -exec rm -v {} \;
+    find ./src/protos -name "*.rs" -exec rm -v {} \;
 }
 
 function gen_rs_for_protos () {
-    find . -name "*.proto" | while read protofile; do
-        protoc ${protofile} --rust_out .
+    find ./proto -name "*.proto" | while read protofile; do
+        protoc ${protofile} --proto_path ./proto --rust_out ./src/protos
     done
 }
 
 function gen_grpc_rs_for_protos() {
-    protoc --rust-grpc_out=. executor.proto
-    protoc --rust-grpc_out=. citacode.proto
+    protoc --rust-grpc_out=./src/protos ./proto/executor.proto --proto_path ./proto
+    protoc --rust-grpc_out=./src/protos ./proto/citacode.proto --proto_path ./proto
 }
 
 function add_pub_to_oneof_in_generated_code () {
@@ -51,14 +51,14 @@ function add_pub_to_oneof_in_generated_code () {
 }
 
 function add_license () {
-    for i in `find . -name "*.rs"`
+    for i in `find ./src/protos -name "*.rs"`
     do
         if grep -q -e "Copyright 2015-20.. Parity Technologies" -e "Copyright 2016-20.. Cryptape Technologies" $i
         then
             echo "Ignoring the " $i
         else
             echo "Starting modify" $i
-            (cat ../../../LICENSE_HEADER | cat - $i > file1) && mv file1 $i
+            (cat ../LICENSE_HEADER | cat - $i > file1) && mv file1 $i
         fi
     done
 }
@@ -89,33 +89,33 @@ EOF
 }
 
 function gen_modrs_for_protos () {
-    local modrs="mod.rs"
+    local modrs="./src/protos/mod.rs"
     generate_readme > "${modrs}"
-    find . -maxdepth 1 -name "*.proto" \
+    find ./proto -maxdepth 1 -name "*.proto" \
             -exec basename {} \; \
             | sort \
             | cut -d"." -f 1 | while read name; do
         echo "pub mod ${name};" >> "${modrs}"
     done
     echo >> "${modrs}"
-    find . -maxdepth 1 -name "*.proto" \
+    find ./proto -maxdepth 1 -name "*.proto" \
             -exec basename {} \; \
             | sort \
             | cut -d"." -f 1 | while read name; do
-        items=$(grep "^pub [se].* {$" "${name}.rs" | sort | awk '{ printf $3", " }')
+        items=$(grep "^pub [se].* {$" "./src/protos/${name}.rs" | sort | awk '{ printf $3", " }')
         echo "pub use self::${name}::{${items/%, }};" >> "${modrs}"
     done
 }
 
 function gen_modrs_for_protos_grpc () {
-    local modrs="mod.rs"
+    local modrs="./src/protos/mod.rs"
     echo >> "${modrs}"
     echo "// For gprc" >> "${modrs}"
-    find . -maxdepth 1 -name "*_grpc.rs" \
+    find ./src/protos -maxdepth 1 -name "*_grpc.rs" \
             -exec basename {} \; \
             | sort \
             | cut -d"." -f 1 | while read name; do
-        items=$(grep "^pub [set].* {$" "${name}.rs" | sort | awk '{ printf $3", " }')
+        items=$(grep "^pub [set].* {$" "./src/protos/${name}.rs" | sort | awk '{ printf $3", " }')
         echo "pub mod ${name};" >> "${modrs}"
         echo "pub use self::${name}::{${items/%, }};" >> "${modrs}"
     done
@@ -123,13 +123,13 @@ function gen_modrs_for_protos_grpc () {
 
 function remove_all_generated_code () {
     local replace="\\s\\+\\/\\/ Generate .* automatically"
-    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" ../*.rs
+    sed -i "/^${replace} begin:$/,/^${replace} end.$/{//!d}" ./src/*.rs
 }
 
 function generate_impls_for_all () {
-    local rsfile="../autoimpl.rs"
+    local rsfile="./src/autoimpl.rs"
     local replace="            \\/\\/ Generate ALL-PROTOS automatically"
-    grep "^pub struct .* {$" *.rs | sort \
+    grep "^pub struct .* {$" ./src/protos/*.rs | sort \
             | awk '{ print $3 }' | uniq \
             | while read struct; do
         sed -i -e "/^${replace} end.$/i\\            ${struct}," "${rsfile}"
@@ -141,7 +141,7 @@ function generate_impls_for_msg () {
     local indent=$(printf "%${2}s")
     local replace="${indent}\\/\\/ Generate MSG-PROTOS $3 automatically"
     local newcode="$4"
-    sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
+    sed -n '/^    oneof content {$/,/^    }$/p' "./proto/communication.proto" \
             | grep "^\s\{8\}[[:alpha:]].*;$" | awk '{ print $2 }' \
             | while read struct; do
         sed -i -e "/^${replace} end.$/i\\${indent}$(eval echo "${newcode}")" "${rsfile}"
@@ -153,9 +153,9 @@ function camelcase_to_underscore () {
 }
 
 function generate_methods_for_msg () {
-    local rsfile="../autoimpl.rs"
+    local rsfile="./src/autoimpl.rs"
     local replace="    \\/\\/ Generate MSG-PROTOS methods automatically"
-    sed -n '/^    oneof content {$/,/^    }$/p' "communication.proto" \
+    sed -n '/^    oneof content {$/,/^    }$/p' "./proto/communication.proto" \
             | grep "^\s\{8\}[[:alpha:]].*;$" | awk '{ print $2 }' \
             | while read struct; do
         local struct_us=$(camelcase_to_underscore ${struct})
@@ -174,16 +174,16 @@ function main () {
     check_dependencies
     remove_all_rs
     gen_rs_for_protos
-    add_pub_to_oneof_in_generated_code response.rs      data    Response
-    add_pub_to_oneof_in_generated_code request.rs       req     Request
-    add_pub_to_oneof_in_generated_code communication.rs content InnerMessage
+    add_pub_to_oneof_in_generated_code ./src/protos/response.rs      data    Response
+    add_pub_to_oneof_in_generated_code ./src/protos/request.rs       req     Request
+    add_pub_to_oneof_in_generated_code ./src/protos/communication.rs content InnerMessage
     remove_all_generated_code
     generate_impls_for_all
-    generate_impls_for_msg "../autoimpl.rs" 12 "struct"         '${struct},'
-    generate_impls_for_msg "../router.rs"   4  "struct"         '${struct},'
-    generate_impls_for_msg "../router.rs"   16 "display"  \
+    generate_impls_for_msg "./src/autoimpl.rs" 12 "struct"         '${struct},'
+    generate_impls_for_msg "./src/router.rs"   4  "struct"         '${struct},'
+    generate_impls_for_msg "./src/router.rs"   16 "display"  \
         '\&MsgType::${struct} =\> \"$(camelcase_to_underscore ${struct})\",'
-    generate_impls_for_msg "../router.rs"   12 "from_str" \
+    generate_impls_for_msg "./src/router.rs"   12 "from_str" \
         '\"$(camelcase_to_underscore ${struct})\" =\> MsgType::${struct},'
     generate_methods_for_msg
     gen_modrs_for_protos
