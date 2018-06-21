@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: cita/cita-build:latest
+    - image: cita/cita-build:ubuntu-18.04-20180523
   working_directory: ~/cita-build
 
 version: 2
@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: format
-          command: 'cargo fmt --all -- --write-mode diff'
+          command: 'cargo fmt --all  -- --check'
   build:
     <<: *defaults
     steps:
