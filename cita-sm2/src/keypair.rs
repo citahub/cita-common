@@ -15,13 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{Address, Error, PrivKey, PubKey, sm2_generate_key, sm2_pubkey_from_privkey, GROUP, PRIVKEY_BYTES_LEN,
-            PUBKEY_BYTES_LEN};
+use super::{
+    sm2_generate_key, sm2_pubkey_from_privkey, Address, Error, PrivKey, PubKey, GROUP,
+    PRIVKEY_BYTES_LEN, PUBKEY_BYTES_LEN,
+};
 use rustc_serialize::hex::ToHex;
 use std::fmt;
 use types::H160;
-use util::Hashable;
 use util::crypto::CreateKey;
+use util::Hashable;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     H160::from(pubkey.crypt_hash())

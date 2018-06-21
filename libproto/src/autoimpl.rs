@@ -16,8 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use protobuf::{parse_from_bytes, Message as MessageTrait};
-use protos::*;
 pub use protos::InnerMessage_oneof_content as MsgClass;
+use protos::*;
 use std::convert::{From, Into, TryFrom, TryInto};
 use util::snappy;
 
@@ -193,7 +193,7 @@ macro_rules! loop_macro_for_structs {
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
         );
-    }
+    };
 }
 
 macro_rules! loop_macro_for_structs_in_msg {
@@ -226,7 +226,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             BlackList,
             // Generate MSG-PROTOS struct automatically end.
         );
-    }
+    };
 }
 
 loop_macro_for_structs!(impl_convert_for_struct);
@@ -308,7 +308,9 @@ impl Message {
 
     pub fn get_origin(&self) -> Origin {
         if self.is_raw_ok() {
-            ((self.raw[4] as u32) << 24) + ((self.raw[5] as u32) << 16) + ((self.raw[6] as u32) << 8)
+            ((self.raw[4] as u32) << 24)
+                + ((self.raw[5] as u32) << 16)
+                + ((self.raw[6] as u32) << 8)
                 + (self.raw[7] as u32)
         } else {
             ZERO_ORIGIN

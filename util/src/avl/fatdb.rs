@@ -61,7 +61,11 @@ impl<'db> AVL for FatDB<'db> {
         self.raw.contains(&key.crypt_hash())
     }
 
-    fn get_with<'a, 'key, Q: Query>(&'a self, key: &'key [u8], query: Q) -> super::Result<Option<Q::Item>>
+    fn get_with<'a, 'key, Q: Query>(
+        &'a self,
+        key: &'key [u8],
+        query: Q,
+    ) -> super::Result<Option<Q::Item>>
     where
         'a: 'key,
     {
@@ -130,11 +134,9 @@ fn fatdb_to_avl() {
     );
     assert_eq!(
         t.iter().unwrap().map(Result::unwrap).collect::<Vec<_>>(),
-        vec![
-            (
-                vec![0x01u8, 0x23],
-                DBValue::from_slice(&[0x01u8, 0x23] as &[u8]),
-            ),
-        ]
+        vec![(
+            vec![0x01u8, 0x23],
+            DBValue::from_slice(&[0x01u8, 0x23] as &[u8]),
+        )]
     );
 }

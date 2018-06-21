@@ -16,41 +16,40 @@
 #![feature(custom_attribute)]
 #![allow(unused_attributes)]
 
-#![rustfmt_skip]
-
-extern crate rand;
-extern crate tiny_keccak;
-extern crate secp256k1;
-extern crate rustc_hex;
+extern crate byteorder;
 extern crate cita_types as types;
 extern crate crypto as rcrypto;
-extern crate byteorder;
+extern crate rand;
+extern crate rustc_hex;
+extern crate secp256k1;
+extern crate tiny_keccak;
 
 #[macro_use]
 extern crate lazy_static;
 
 mod brain;
 mod error;
-mod keypair;
+mod extended;
 mod keccak;
+mod keypair;
 mod prefix;
 mod random;
-mod signature;
 mod secret;
-mod extended;
+mod signature;
 
 pub mod math;
 
 pub use self::brain::Brain;
 pub use self::error::Error;
-pub use self::extended::{ExtendedPublic, ExtendedSecret, ExtendedKeyPair, DerivationError,
-Derivation};
-pub use self::keypair::{KeyPair, public_to_address};
+pub use self::extended::{
+    Derivation, DerivationError, ExtendedKeyPair, ExtendedPublic, ExtendedSecret,
+};
+pub use self::keypair::{public_to_address, KeyPair};
 pub use self::math::public_is_valid;
 pub use self::prefix::Prefix;
 pub use self::random::Random;
 pub use self::secret::Secret;
-pub use self::signature::{sign, verify_public, verify_address, recover, Signature};
+pub use self::signature::{recover, sign, verify_address, verify_public, Signature};
 
 use types::{H160, H256, H512};
 

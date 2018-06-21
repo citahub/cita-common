@@ -255,7 +255,7 @@ impl<'a> From<&'a str> for RoutingKey {
 }
 
 macro_rules! impl_some_traits {
-    ($struct:ident) => (
+    ($struct:ident) => {
         impl From<String> for $struct {
             fn from(s: String) -> $struct {
                 $struct::from(s.as_str())
@@ -273,7 +273,7 @@ macro_rules! impl_some_traits {
                 self.to_string()
             }
         }
-    );
+    };
 }
 
 impl_some_traits!(SubModules);

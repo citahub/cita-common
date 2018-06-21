@@ -23,10 +23,10 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
-mod engine;
 mod authority_round;
-mod tendermint;
+mod engine;
 mod spec;
+mod tendermint;
 
 pub use self::authority_round::*;
 pub use self::engine::*;

@@ -35,7 +35,10 @@ pub use protos::*;
 mod autoimpl;
 pub mod router;
 
-use crypto::{CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
+use crypto::{
+    CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature,
+    SIGNATURE_BYTES_LEN,
+};
 use protobuf::RepeatedField;
 use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use rustc_serialize::hex::ToHex;
@@ -45,8 +48,10 @@ use std::result::Result::Err;
 use types::H256;
 use util::{merklehash, Hashable};
 
-pub use autoimpl::{Message, MsgClass, OperateType, Origin, RawBytes, TryFromConvertError, TryIntoConvertError,
-                   ZERO_ORIGIN};
+pub use autoimpl::{
+    Message, MsgClass, OperateType, Origin, RawBytes, TryFromConvertError, TryIntoConvertError,
+    ZERO_ORIGIN,
+};
 
 //TODO respone contain error
 #[derive(Serialize, Deserialize, Debug, PartialEq)]

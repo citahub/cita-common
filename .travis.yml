@@ -10,7 +10,7 @@ jobs:
   include:
     - stage: Build
       script:
-        - docker pull cita/cita-build:latest
+        - docker pull cita/cita-build:ubuntu-18.04-20180523
         - bash '.ci-scripts/format'
         - bash '.ci-scripts/test' && bash '.ci-scripts/coverage'
 before_cache:

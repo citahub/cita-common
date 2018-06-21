@@ -22,17 +22,21 @@ extern crate test;
 extern crate util;
 
 use test::Bencher;
-use util::{H256, HashDB};
-use util::avl::AVLMut;
 use util::avl::avldbmut::*;
 use util::avl::standardmap::*;
+use util::avl::AVLMut;
 use util::memorydb::*;
-use util::trie::TrieMut;
 use util::trie::triedbmut::*;
+use util::trie::TrieMut;
+use util::{H256, HashDB};
 
 const SIZE: usize = 1000000;
 
-fn populate_avl<'db>(db: &'db mut HashDB, root: &'db mut H256, v: &[(Vec<u8>, Vec<u8>)]) -> AVLDBMut<'db> {
+fn populate_avl<'db>(
+    db: &'db mut HashDB,
+    root: &'db mut H256,
+    v: &[(Vec<u8>, Vec<u8>)],
+) -> AVLDBMut<'db> {
     let mut t = AVLDBMut::new(db, root);
     for i in 0..v.len() {
         let key: &[u8] = &v[i].0;
@@ -126,7 +130,11 @@ fn bench_avl_query(b: &mut Bencher) {
     });
 }
 
-fn populate_trie<'db>(db: &'db mut HashDB, root: &'db mut H256, v: &[(Vec<u8>, Vec<u8>)]) -> TrieDBMut<'db> {
+fn populate_trie<'db>(
+    db: &'db mut HashDB,
+    root: &'db mut H256,
+    v: &[(Vec<u8>, Vec<u8>)],
+) -> TrieDBMut<'db> {
     let mut t = TrieDBMut::new(db, root);
     for i in 0..v.len() {
         let key: &[u8] = &v[i].0;

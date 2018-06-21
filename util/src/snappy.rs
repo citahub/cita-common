@@ -87,7 +87,11 @@ extern "C" {
         uncompressed_len: *mut size_t,
     ) -> c_int;
 
-    fn snappy_uncompressed_length(compressed: *const c_char, compressed_len: size_t, result: *mut size_t) -> c_int;
+    fn snappy_uncompressed_length(
+        compressed: *const c_char,
+        compressed_len: size_t,
+        result: *mut size_t,
+    ) -> c_int;
 }
 
 /// Compress a buffer using snappy, write the result append to
@@ -224,7 +228,8 @@ mod tests {
     #[test]
     fn decompress_error() {
         let u: Vec<u8> = vec![
-            18, 20, 10, 16, 224, 43, 102, 80, 16, 58, 75, 248, 165, 208, 24, 6, 22, 217, 65, 135, 16, 1
+            18, 20, 10, 16, 224, 43, 102, 80, 16, 58, 75, 248, 165, 208, 24, 6, 22, 217, 65, 135,
+            16, 1,
         ];
         let mut c: Vec<u8> = Vec::new();
         let mut d: Vec<u8> = Vec::new();

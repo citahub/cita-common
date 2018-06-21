@@ -21,8 +21,8 @@ use rustc_serialize::hex::ToHex;
 use sodiumoxide::crypto::sign::{gen_keypair, keypair_from_privkey};
 use std::fmt;
 use types::H160;
-use util::Hashable;
 use util::crypto::CreateKey;
+use util::Hashable;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     Address::from(H160::from(pubkey.crypt_hash()))

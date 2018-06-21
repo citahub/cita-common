@@ -15,13 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, sm2_recover, sm2_sign, GROUP,
-            PUBKEY_BYTES_LEN, SIGNATURE_BYTES_LEN};
+use super::{
+    pubkey_to_address, sm2_recover, sm2_sign, Address, Error, Message, PrivKey, PubKey, GROUP,
+    PUBKEY_BYTES_LEN, SIGNATURE_BYTES_LEN,
+};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};

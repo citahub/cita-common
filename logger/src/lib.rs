@@ -19,8 +19,8 @@
 
 extern crate chan_signal;
 extern crate chrono;
-extern crate log4rs;
 extern crate log;
+extern crate log4rs;
 
 pub use log::{debug, error, info, log, log_enabled, trace, warn};
 
@@ -195,7 +195,8 @@ fn config_file_appender(file_path: &str, directives: Vec<Directive>) -> Config {
         .build(file_path)
         .unwrap();
 
-    let mut config_builder = Config::builder().appender(Appender::builder().build("requests", Box::new(requests)));
+    let mut config_builder =
+        Config::builder().appender(Appender::builder().build("requests", Box::new(requests)));
 
     let loggers = create_loggers(directives, "requests".to_string());
 
@@ -222,7 +223,8 @@ fn config_console_appender(directives: Vec<Directive>) -> Config {
         .encoder(Box::new(PatternEncoder::new("{d} - {l} - {m}{n}")))
         .build();
 
-    let mut config_builder = Config::builder().appender(Appender::builder().build("stdout", Box::new(stdout)));
+    let mut config_builder =
+        Config::builder().appender(Appender::builder().build("stdout", Box::new(stdout)));
 
     let loggers = create_loggers(directives, "stdout".to_string());
 

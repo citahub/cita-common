@@ -39,7 +39,6 @@
 //! * You don't want to decode whole rlp at once.
 #![feature(custom_attribute)]
 #![allow(unused_attributes)]
-#![rustfmt_skip]
 
 extern crate byteorder;
 extern crate cita_types as types;
@@ -49,14 +48,14 @@ extern crate rustc_hex;
 #[macro_use]
 extern crate lazy_static;
 
-mod traits;
-mod error;
-mod rlpin;
-mod untrusted_rlp;
-mod stream;
-mod compression;
 mod common;
+mod compression;
+mod error;
 mod impls;
+mod rlpin;
+mod stream;
+mod traits;
+mod untrusted_rlp;
 
 pub use compression::RlpType;
 use elastic_array::ElasticArray1024;
@@ -65,8 +64,8 @@ pub use error::DecoderError;
 pub use rlpin::{Rlp, RlpIterator};
 use std::borrow::Borrow;
 pub use stream::RlpStream;
-pub use traits::{Decodable, Encodable, Compressible};
-pub use untrusted_rlp::{UntrustedRlp, UntrustedRlpIterator, PayloadInfo, Prototype};
+pub use traits::{Compressible, Decodable, Encodable};
+pub use untrusted_rlp::{PayloadInfo, Prototype, UntrustedRlp, UntrustedRlpIterator};
 
 /// The RLP encoded empty data (used to mean "null value").
 pub const NULL_RLP: [u8; 1] = [0x80; 1];

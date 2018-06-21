@@ -18,13 +18,13 @@
 //!
 //! This module should be used to generate trie root hash.
 
-use Hashable;
 use rlp;
 use rlp::RlpStream;
 use std::cmp;
 use std::collections::BTreeMap;
 use types::H256;
 use vector::SharedPrefix;
+use Hashable;
 
 /// Generates a trie root hash for a vector of values
 ///
@@ -351,12 +351,10 @@ mod tests {
 
     #[test]
     fn simple_test() {
-        let data = trie_root(vec![
-            (
-                b"A".to_vec(),
-                b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".to_vec(),
-            ),
-        ]);
+        let data = trie_root(vec![(
+            b"A".to_vec(),
+            b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".to_vec(),
+        )]);
 
         #[cfg(feature = "sha3hash")]
         let hex_str = "d23786fb4a010da3ce639d66d5e904a11dbc02746d1ce25029e53290cabf28ab";

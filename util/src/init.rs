@@ -26,15 +26,16 @@ where
 
 #[macro_export]
 macro_rules! parse_config {
-    ($type:ty,$path:expr) => {{
+    ($type:ty, $path:expr) => {{
         use std::fs::File;
         use std::io::Read;
         use util::init::parse_config_from_buffer;
 
         let mut buffer = String::new();
-        File::open($path).and_then(|mut f| {
-        f.read_to_string(&mut buffer)
-        }).unwrap_or_else(|err| panic!("Error while loading config: [{}]", err));
-        parse_config_from_buffer::<$type>(&buffer).unwrap_or_else(|err| panic!("Error while parsing config: [{}]", err))
+        File::open($path)
+            .and_then(|mut f| f.read_to_string(&mut buffer))
+            .unwrap_or_else(|err| panic!("Error while loading config: [{}]", err));
+        parse_config_from_buffer::<$type>(&buffer)
+            .unwrap_or_else(|err| panic!("Error while parsing config: [{}]", err))
     }};
 }

@@ -24,8 +24,8 @@ extern crate serde;
 extern crate sodiumoxide;
 extern crate util;
 
-mod keypair;
 mod error;
+mod keypair;
 mod signature;
 mod signer;
 

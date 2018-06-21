@@ -27,7 +27,9 @@ pub fn impl_encodable(ast: &syn::DeriveInput) -> quote::Tokens {
         syn::VariantData::Struct(ref fields) | syn::VariantData::Tuple(ref fields) => {
             fields.iter().enumerate().map(encodable_field_map).collect()
         }
-        syn::VariantData::Unit => panic!("#[derive(RlpEncodable)] is not defined for Unit structs."),
+        syn::VariantData::Unit => {
+            panic!("#[derive(RlpEncodable)] is not defined for Unit structs.")
+        }
     };
 
     let name = &ast.ident;
@@ -67,7 +69,9 @@ pub fn impl_encodable_wrapper(ast: &syn::DeriveInput) -> quote::Tokens {
                 panic!("#[derive(RlpEncodableWrapper)] is only defined for structs with one field.")
             }
         }
-        syn::VariantData::Unit => panic!("#[derive(RlpEncodableWrapper)] is not defined for Unit structs."),
+        syn::VariantData::Unit => {
+            panic!("#[derive(RlpEncodableWrapper)] is not defined for Unit structs.")
+        }
     };
 
     let name = &ast.ident;
@@ -104,7 +108,8 @@ fn encodable_field(index: usize, field: &syn::Field) -> quote::Tokens {
 
     match field.ty {
         syn::Ty::Path(_, ref path) => {
-            let top_segment = path.segments
+            let top_segment = path
+                .segments
                 .first()
                 .expect("there must be at least 1 segment");
             let ident = &top_segment.ident;
@@ -117,7 +122,8 @@ fn encodable_field(index: usize, field: &syn::Field) -> quote::Tokens {
                             .expect("Vec has only one angle bracketed type; qed");
                         match *ty {
                             syn::Ty::Path(_, ref path) => {
-                                &path.segments
+                                &path
+                                    .segments
                                     .first()
                                     .expect("there must be at least 1 segment")
                                     .ident
