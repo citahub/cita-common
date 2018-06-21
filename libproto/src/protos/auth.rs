@@ -38,7 +38,7 @@
 use protobuf::Message as Message_imported_for_functions;
 use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct VerifyTxReq {
     // message fields
     pub valid_until_block: u64,
@@ -47,6 +47,7 @@ pub struct VerifyTxReq {
     pub crypto: super::blockchain::Crypto,
     pub tx_hash: ::std::vec::Vec<u8>,
     pub signer: ::std::vec::Vec<u8>,
+    pub value: ::std::vec::Vec<u8>,
     pub nonce: ::std::string::String,
     pub chain_id: u32,
     pub quota: u64,
@@ -289,6 +290,9 @@ impl VerifyTxReq {
         &mut self.nonce
     }
 
+    pub fn set_value(&mut self, v: ::std::vec::Vec<u8>) {
+        self.value = v;
+    }
     // uint32 chain_id = 8;
 
     pub fn clear_chain_id(&mut self) {
@@ -351,46 +355,46 @@ impl ::protobuf::Message for VerifyTxReq {
                     }
                     let tmp = is.read_uint64()?;
                     self.valid_until_block = tmp;
-                },
+                }
                 2 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.hash)?;
-                },
+                }
                 3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signature)?;
-                },
+                }
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.crypto = tmp;
-                },
+                }
                 5 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.tx_hash)?;
-                },
+                }
                 6 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signer)?;
-                },
+                }
                 7 => {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.nonce)?;
-                },
+                }
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
                     self.chain_id = tmp;
-                },
+                }
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
                     self.quota = tmp;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -552,7 +556,7 @@ impl ::protobuf::MessageStatic for VerifyTxReq {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyTxReq>(
                     "VerifyTxReq",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -586,7 +590,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyTxReq {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct VerifyTxResp {
     // message fields
     pub tx_hash: ::std::vec::Vec<u8>,
@@ -766,34 +770,34 @@ impl ::protobuf::Message for VerifyTxResp {
             match field_number {
                 1 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.tx_hash)?;
-                },
+                }
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.ret = tmp;
-                },
+                }
                 3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signer)?;
-                },
+                }
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
                     self.received_chain_id = tmp;
-                },
+                }
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
                     self.expected_chain_id = tmp;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -911,7 +915,7 @@ impl ::protobuf::MessageStatic for VerifyTxResp {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyTxResp>(
                     "VerifyTxResp",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -941,7 +945,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyTxResp {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct VerifyBlockReq {
     // message fields
     pub id: u64,
@@ -1046,13 +1050,13 @@ impl ::protobuf::Message for VerifyBlockReq {
                     }
                     let tmp = is.read_uint64()?;
                     self.id = tmp;
-                },
+                }
                 2 => {
                     ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.reqs)?;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -1140,7 +1144,7 @@ impl ::protobuf::MessageStatic for VerifyBlockReq {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyBlockReq>(
                     "VerifyBlockReq",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -1167,7 +1171,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyBlockReq {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct VerifyBlockResp {
     // message fields
     pub id: u64,
@@ -1257,17 +1261,17 @@ impl ::protobuf::Message for VerifyBlockResp {
                     }
                     let tmp = is.read_uint64()?;
                     self.id = tmp;
-                },
+                }
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.ret = tmp;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -1352,7 +1356,7 @@ impl ::protobuf::MessageStatic for VerifyBlockResp {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyBlockResp>(
                     "VerifyBlockResp",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -1379,7 +1383,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyBlockResp {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct BlockTxHashes {
     // message fields
     pub height: u64,
@@ -1574,30 +1578,30 @@ impl ::protobuf::Message for BlockTxHashes {
                     }
                     let tmp = is.read_uint64()?;
                     self.height = tmp;
-                },
+                }
                 2 => {
                     ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.tx_hashes)?;
-                },
+                }
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
                     self.block_gas_limit = tmp;
-                },
+                }
                 4 => {
                     ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.account_gas_limit)?;
-                },
+                }
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_bool()?;
                     self.check_quota = tmp;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -1718,7 +1722,7 @@ impl ::protobuf::MessageStatic for BlockTxHashes {
                 ::protobuf::reflect::MessageDescriptor::new::<BlockTxHashes>(
                     "BlockTxHashes",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -1748,7 +1752,7 @@ impl ::protobuf::reflect::ProtobufValue for BlockTxHashes {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct BlockTxHashesReq {
     // message fields
     pub height: u64,
@@ -1814,10 +1818,10 @@ impl ::protobuf::Message for BlockTxHashesReq {
                     }
                     let tmp = is.read_uint64()?;
                     self.height = tmp;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -1891,7 +1895,7 @@ impl ::protobuf::MessageStatic for BlockTxHashesReq {
                 ::protobuf::reflect::MessageDescriptor::new::<BlockTxHashesReq>(
                     "BlockTxHashesReq",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -1917,7 +1921,7 @@ impl ::protobuf::reflect::ProtobufValue for BlockTxHashesReq {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct Miscellaneous {
     // message fields
     pub chain_id: u32,
@@ -1983,10 +1987,10 @@ impl ::protobuf::Message for Miscellaneous {
                     }
                     let tmp = is.read_uint32()?;
                     self.chain_id = tmp;
-                },
+                }
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -2060,7 +2064,7 @@ impl ::protobuf::MessageStatic for Miscellaneous {
                 ::protobuf::reflect::MessageDescriptor::new::<Miscellaneous>(
                     "Miscellaneous",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -2086,7 +2090,7 @@ impl ::protobuf::reflect::ProtobufValue for Miscellaneous {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct MiscellaneousReq {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
@@ -2123,7 +2127,7 @@ impl ::protobuf::Message for MiscellaneousReq {
             match field_number {
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -2186,7 +2190,7 @@ impl ::protobuf::MessageStatic for MiscellaneousReq {
                 ::protobuf::reflect::MessageDescriptor::new::<MiscellaneousReq>(
                     "MiscellaneousReq",
                     fields,
-                    file_descriptor_proto()
+                    file_descriptor_proto(),
                 )
             })
         }
@@ -2211,7 +2215,7 @@ impl ::protobuf::reflect::ProtobufValue for MiscellaneousReq {
     }
 }
 
-#[derive(Clone,PartialEq,Eq,Debug,Hash)]
+#[derive(Clone, PartialEq, Eq, Debug, Hash)]
 pub enum Ret {
     OK = 0,
     InvalidNonce = 1,
@@ -2275,8 +2279,7 @@ impl ::protobuf::ProtobufEnum for Ret {
     }
 }
 
-impl ::std::marker::Copy for Ret {
-}
+impl ::std::marker::Copy for Ret {}
 
 impl ::std::default::Default for Ret {
     fn default() -> Self {

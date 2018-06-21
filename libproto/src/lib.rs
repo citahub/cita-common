@@ -149,6 +149,7 @@ impl UnverifiedTransaction {
         verify_tx_req.set_crypto(self.get_crypto());
         verify_tx_req.set_signature(self.get_signature().to_vec());
         verify_tx_req.set_nonce(self.get_transaction().get_nonce().to_string());
+        verify_tx_req.set_value(self.get_transaction().get_value().to_vec());
         verify_tx_req.set_chain_id(self.get_transaction().get_chain_id());
         verify_tx_req.set_quota(self.get_transaction().get_quota());
 
