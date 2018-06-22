@@ -2227,7 +2227,6 @@ pub enum Ret {
     BadChainId = 7,
     QuotaNotEnough = 8,
     Forbidden = 9,
-    InvalidValue = 10,
 }
 
 impl ::protobuf::ProtobufEnum for Ret {
@@ -2247,7 +2246,6 @@ impl ::protobuf::ProtobufEnum for Ret {
             7 => ::std::option::Option::Some(Ret::BadChainId),
             8 => ::std::option::Option::Some(Ret::QuotaNotEnough),
             9 => ::std::option::Option::Some(Ret::Forbidden),
-            10 => ::std::option::Option::Some(Ret::InvalidValue),
             _ => ::std::option::Option::None
         }
     }
@@ -2264,7 +2262,6 @@ impl ::protobuf::ProtobufEnum for Ret {
             Ret::BadChainId,
             Ret::QuotaNotEnough,
             Ret::Forbidden,
-            Ret::InvalidValue,
         ];
         values
     }
