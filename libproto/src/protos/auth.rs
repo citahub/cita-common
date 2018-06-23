@@ -38,7 +38,7 @@
 use protobuf::Message as Message_imported_for_functions;
 use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct VerifyTxReq {
     // message fields
     pub valid_until_block: u64,
@@ -47,10 +47,10 @@ pub struct VerifyTxReq {
     pub crypto: super::blockchain::Crypto,
     pub tx_hash: ::std::vec::Vec<u8>,
     pub signer: ::std::vec::Vec<u8>,
-    pub value: ::std::vec::Vec<u8>,
     pub nonce: ::std::string::String,
     pub chain_id: u32,
     pub quota: u64,
+    pub value: ::std::vec::Vec<u8>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -290,9 +290,6 @@ impl VerifyTxReq {
         &mut self.nonce
     }
 
-    pub fn set_value(&mut self, v: ::std::vec::Vec<u8>) {
-        self.value = v;
-    }
     // uint32 chain_id = 8;
 
     pub fn clear_chain_id(&mut self) {
@@ -338,6 +335,40 @@ impl VerifyTxReq {
     fn mut_quota_for_reflect(&mut self) -> &mut u64 {
         &mut self.quota
     }
+
+    // bytes value = 10;
+
+    pub fn clear_value(&mut self) {
+        self.value.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_value(&mut self, v: ::std::vec::Vec<u8>) {
+        self.value = v;
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_value(&mut self) -> &mut ::std::vec::Vec<u8> {
+        &mut self.value
+    }
+
+    // Take field
+    pub fn take_value(&mut self) -> ::std::vec::Vec<u8> {
+        ::std::mem::replace(&mut self.value, ::std::vec::Vec::new())
+    }
+
+    pub fn get_value(&self) -> &[u8] {
+        &self.value
+    }
+
+    fn get_value_for_reflect(&self) -> &::std::vec::Vec<u8> {
+        &self.value
+    }
+
+    fn mut_value_for_reflect(&mut self) -> &mut ::std::vec::Vec<u8> {
+        &mut self.value
+    }
 }
 
 impl ::protobuf::Message for VerifyTxReq {
@@ -355,46 +386,49 @@ impl ::protobuf::Message for VerifyTxReq {
                     }
                     let tmp = is.read_uint64()?;
                     self.valid_until_block = tmp;
-                }
+                },
                 2 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.hash)?;
-                }
+                },
                 3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signature)?;
-                }
+                },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.crypto = tmp;
-                }
+                },
                 5 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.tx_hash)?;
-                }
+                },
                 6 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signer)?;
-                }
+                },
                 7 => {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.nonce)?;
-                }
+                },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
                     self.chain_id = tmp;
-                }
+                },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
                     self.quota = tmp;
-                }
+                },
+                10 => {
+                    ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.value)?;
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -431,6 +465,9 @@ impl ::protobuf::Message for VerifyTxReq {
         if self.quota != 0 {
             my_size += ::protobuf::rt::value_size(9, self.quota, ::protobuf::wire_format::WireTypeVarint);
         }
+        if !self.value.is_empty() {
+            my_size += ::protobuf::rt::bytes_size(10, &self.value);
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -463,6 +500,9 @@ impl ::protobuf::Message for VerifyTxReq {
         }
         if self.quota != 0 {
             os.write_uint64(9, self.quota)?;
+        }
+        if !self.value.is_empty() {
+            os.write_bytes(10, &self.value)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -553,10 +593,15 @@ impl ::protobuf::MessageStatic for VerifyTxReq {
                     VerifyTxReq::get_quota_for_reflect,
                     VerifyTxReq::mut_quota_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                    "value",
+                    VerifyTxReq::get_value_for_reflect,
+                    VerifyTxReq::mut_value_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyTxReq>(
                     "VerifyTxReq",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -574,6 +619,7 @@ impl ::protobuf::Clear for VerifyTxReq {
         self.clear_nonce();
         self.clear_chain_id();
         self.clear_quota();
+        self.clear_value();
         self.unknown_fields.clear();
     }
 }
@@ -590,7 +636,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyTxReq {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct VerifyTxResp {
     // message fields
     pub tx_hash: ::std::vec::Vec<u8>,
@@ -770,34 +816,34 @@ impl ::protobuf::Message for VerifyTxResp {
             match field_number {
                 1 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.tx_hash)?;
-                }
+                },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.ret = tmp;
-                }
+                },
                 3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.signer)?;
-                }
+                },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
                     self.received_chain_id = tmp;
-                }
+                },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint32()?;
                     self.expected_chain_id = tmp;
-                }
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -915,7 +961,7 @@ impl ::protobuf::MessageStatic for VerifyTxResp {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyTxResp>(
                     "VerifyTxResp",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -945,7 +991,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyTxResp {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct VerifyBlockReq {
     // message fields
     pub id: u64,
@@ -1050,13 +1096,13 @@ impl ::protobuf::Message for VerifyBlockReq {
                     }
                     let tmp = is.read_uint64()?;
                     self.id = tmp;
-                }
+                },
                 2 => {
                     ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.reqs)?;
-                }
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -1144,7 +1190,7 @@ impl ::protobuf::MessageStatic for VerifyBlockReq {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyBlockReq>(
                     "VerifyBlockReq",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -1171,7 +1217,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyBlockReq {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct VerifyBlockResp {
     // message fields
     pub id: u64,
@@ -1261,17 +1307,17 @@ impl ::protobuf::Message for VerifyBlockResp {
                     }
                     let tmp = is.read_uint64()?;
                     self.id = tmp;
-                }
+                },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_enum()?;
                     self.ret = tmp;
-                }
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -1356,7 +1402,7 @@ impl ::protobuf::MessageStatic for VerifyBlockResp {
                 ::protobuf::reflect::MessageDescriptor::new::<VerifyBlockResp>(
                     "VerifyBlockResp",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -1383,7 +1429,7 @@ impl ::protobuf::reflect::ProtobufValue for VerifyBlockResp {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct BlockTxHashes {
     // message fields
     pub height: u64,
@@ -1578,30 +1624,30 @@ impl ::protobuf::Message for BlockTxHashes {
                     }
                     let tmp = is.read_uint64()?;
                     self.height = tmp;
-                }
+                },
                 2 => {
                     ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.tx_hashes)?;
-                }
+                },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
                     self.block_gas_limit = tmp;
-                }
+                },
                 4 => {
                     ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.account_gas_limit)?;
-                }
+                },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_bool()?;
                     self.check_quota = tmp;
-                }
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -1722,7 +1768,7 @@ impl ::protobuf::MessageStatic for BlockTxHashes {
                 ::protobuf::reflect::MessageDescriptor::new::<BlockTxHashes>(
                     "BlockTxHashes",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -1752,7 +1798,7 @@ impl ::protobuf::reflect::ProtobufValue for BlockTxHashes {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct BlockTxHashesReq {
     // message fields
     pub height: u64,
@@ -1818,10 +1864,10 @@ impl ::protobuf::Message for BlockTxHashesReq {
                     }
                     let tmp = is.read_uint64()?;
                     self.height = tmp;
-                }
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -1895,7 +1941,7 @@ impl ::protobuf::MessageStatic for BlockTxHashesReq {
                 ::protobuf::reflect::MessageDescriptor::new::<BlockTxHashesReq>(
                     "BlockTxHashesReq",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -1921,7 +1967,7 @@ impl ::protobuf::reflect::ProtobufValue for BlockTxHashesReq {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct Miscellaneous {
     // message fields
     pub chain_id: u32,
@@ -1987,10 +2033,10 @@ impl ::protobuf::Message for Miscellaneous {
                     }
                     let tmp = is.read_uint32()?;
                     self.chain_id = tmp;
-                }
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -2064,7 +2110,7 @@ impl ::protobuf::MessageStatic for Miscellaneous {
                 ::protobuf::reflect::MessageDescriptor::new::<Miscellaneous>(
                     "Miscellaneous",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -2090,7 +2136,7 @@ impl ::protobuf::reflect::ProtobufValue for Miscellaneous {
     }
 }
 
-#[derive(PartialEq, Clone, Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct MiscellaneousReq {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
@@ -2127,7 +2173,7 @@ impl ::protobuf::Message for MiscellaneousReq {
             match field_number {
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                }
+                },
             };
         }
         ::std::result::Result::Ok(())
@@ -2190,7 +2236,7 @@ impl ::protobuf::MessageStatic for MiscellaneousReq {
                 ::protobuf::reflect::MessageDescriptor::new::<MiscellaneousReq>(
                     "MiscellaneousReq",
                     fields,
-                    file_descriptor_proto(),
+                    file_descriptor_proto()
                 )
             })
         }
@@ -2215,7 +2261,7 @@ impl ::protobuf::reflect::ProtobufValue for MiscellaneousReq {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug, Hash)]
+#[derive(Clone,PartialEq,Eq,Debug,Hash)]
 pub enum Ret {
     OK = 0,
     InvalidNonce = 1,
@@ -2227,6 +2273,7 @@ pub enum Ret {
     BadChainId = 7,
     QuotaNotEnough = 8,
     Forbidden = 9,
+    InvalidValue = 10,
 }
 
 impl ::protobuf::ProtobufEnum for Ret {
@@ -2246,6 +2293,7 @@ impl ::protobuf::ProtobufEnum for Ret {
             7 => ::std::option::Option::Some(Ret::BadChainId),
             8 => ::std::option::Option::Some(Ret::QuotaNotEnough),
             9 => ::std::option::Option::Some(Ret::Forbidden),
+            10 => ::std::option::Option::Some(Ret::InvalidValue),
             _ => ::std::option::Option::None
         }
     }
@@ -2262,6 +2310,7 @@ impl ::protobuf::ProtobufEnum for Ret {
             Ret::BadChainId,
             Ret::QuotaNotEnough,
             Ret::Forbidden,
+            Ret::InvalidValue,
         ];
         values
     }
@@ -2279,7 +2328,8 @@ impl ::protobuf::ProtobufEnum for Ret {
     }
 }
 
-impl ::std::marker::Copy for Ret {}
+impl ::std::marker::Copy for Ret {
+}
 
 impl ::std::default::Default for Ret {
     fn default() -> Self {
@@ -2294,151 +2344,157 @@ impl ::protobuf::reflect::ProtobufValue for Ret {
 }
 
 static file_descriptor_proto_data: &'static [u8] = b"\
-    \n\nauth.proto\x1a\x10blockchain.proto\"\x84\x02\n\x0bVerifyTxReq\x12*\n\
+    \n\nauth.proto\x1a\x10blockchain.proto\"\x9a\x02\n\x0bVerifyTxReq\x12*\n\
     \x11valid_until_block\x18\x01\x20\x01(\x04R\x0fvalidUntilBlock\x12\x12\n\
     \x04hash\x18\x02\x20\x01(\x0cR\x04hash\x12\x1c\n\tsignature\x18\x03\x20\
     \x01(\x0cR\tsignature\x12\x1f\n\x06crypto\x18\x04\x20\x01(\x0e2\x07.Cryp\
     toR\x06crypto\x12\x17\n\x07tx_hash\x18\x05\x20\x01(\x0cR\x06txHash\x12\
     \x16\n\x06signer\x18\x06\x20\x01(\x0cR\x06signer\x12\x14\n\x05nonce\x18\
     \x07\x20\x01(\tR\x05nonce\x12\x19\n\x08chain_id\x18\x08\x20\x01(\rR\x07c\
-    hainId\x12\x14\n\x05quota\x18\t\x20\x01(\x04R\x05quota\"\xaf\x01\n\x0cVe\
-    rifyTxResp\x12\x17\n\x07tx_hash\x18\x01\x20\x01(\x0cR\x06txHash\x12\x16\
-    \n\x03ret\x18\x02\x20\x01(\x0e2\x04.RetR\x03ret\x12\x16\n\x06signer\x18\
-    \x03\x20\x01(\x0cR\x06signer\x12*\n\x11received_chain_id\x18\x04\x20\x01\
-    (\rR\x0freceivedChainId\x12*\n\x11expected_chain_id\x18\x05\x20\x01(\rR\
-    \x0fexpectedChainId\"B\n\x0eVerifyBlockReq\x12\x0e\n\x02id\x18\x01\x20\
-    \x01(\x04R\x02id\x12\x20\n\x04reqs\x18\x02\x20\x03(\x0b2\x0c.VerifyTxReq\
-    R\x04reqs\"9\n\x0fVerifyBlockResp\x12\x0e\n\x02id\x18\x01\x20\x01(\x04R\
-    \x02id\x12\x16\n\x03ret\x18\x02\x20\x01(\x0e2\x04.RetR\x03ret\"\xcb\x01\
-    \n\rBlockTxHashes\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\x06height\
-    \x12\x1b\n\ttx_hashes\x18\x02\x20\x03(\x0cR\x08txHashes\x12&\n\x0fblock_\
-    gas_limit\x18\x03\x20\x01(\x04R\rblockGasLimit\x12<\n\x11account_gas_lim\
-    it\x18\x04\x20\x01(\x0b2\x10.AccountGasLimitR\x0faccountGasLimit\x12\x1f\
-    \n\x0bcheck_quota\x18\x05\x20\x01(\x08R\ncheckQuota\"*\n\x10BlockTxHashe\
-    sReq\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\x06height\"*\n\rMiscellan\
-    eous\x12\x19\n\x08chain_id\x18\x01\x20\x01(\rR\x07chainId\"\x12\n\x10Mis\
-    cellaneousReq*\x96\x01\n\x03Ret\x12\x06\n\x02OK\x10\0\x12\x10\n\x0cInval\
-    idNonce\x10\x01\x12\x07\n\x03Dup\x10\x02\x12\x15\n\x11InvalidUntilBlock\
-    \x10\x03\x12\n\n\x06BadSig\x10\x04\x12\x0c\n\x08NotReady\x10\x05\x12\x08\
-    \n\x04Busy\x10\x06\x12\x0e\n\nBadChainId\x10\x07\x12\x12\n\x0eQuotaNotEn\
-    ough\x10\x08\x12\r\n\tForbidden\x10\tJ\xa7\x13\n\x06\x12\x04\0\0@\x01\n\
-    \x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\
-    \x02\x05\0\x12\x04\x04\0\x0f\x01\n\n\n\x03\x05\0\x01\x12\x03\x04\x05\x08\
-    \n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\x04\x0b\n\x0c\n\x05\x05\0\x02\0\x01\
-    \x12\x03\x05\x04\x06\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x05\t\n\n\x0b\n\
-    \x04\x05\0\x02\x01\x12\x03\x06\x04\x15\n\x0c\n\x05\x05\0\x02\x01\x01\x12\
-    \x03\x06\x04\x10\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x06\x13\x14\n\x0b\
-    \n\x04\x05\0\x02\x02\x12\x03\x07\x04\x0c\n\x0c\n\x05\x05\0\x02\x02\x01\
-    \x12\x03\x07\x04\x07\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\x07\n\x0b\n\
-    \x0b\n\x04\x05\0\x02\x03\x12\x03\x08\x04\x1a\n\x0c\n\x05\x05\0\x02\x03\
-    \x01\x12\x03\x08\x04\x15\n\x0c\n\x05\x05\0\x02\x03\x02\x12\x03\x08\x18\
-    \x19\n\x0b\n\x04\x05\0\x02\x04\x12\x03\t\x04\x0f\n\x0c\n\x05\x05\0\x02\
-    \x04\x01\x12\x03\t\x04\n\n\x0c\n\x05\x05\0\x02\x04\x02\x12\x03\t\r\x0e\n\
-    \x0b\n\x04\x05\0\x02\x05\x12\x03\n\x04\x11\n\x0c\n\x05\x05\0\x02\x05\x01\
-    \x12\x03\n\x04\x0c\n\x0c\n\x05\x05\0\x02\x05\x02\x12\x03\n\x0f\x10\n\x0b\
-    \n\x04\x05\0\x02\x06\x12\x03\x0b\x04\r\n\x0c\n\x05\x05\0\x02\x06\x01\x12\
-    \x03\x0b\x04\x08\n\x0c\n\x05\x05\0\x02\x06\x02\x12\x03\x0b\x0b\x0c\n\x0b\
-    \n\x04\x05\0\x02\x07\x12\x03\x0c\x04\x13\n\x0c\n\x05\x05\0\x02\x07\x01\
-    \x12\x03\x0c\x04\x0e\n\x0c\n\x05\x05\0\x02\x07\x02\x12\x03\x0c\x11\x12\n\
-    \x0b\n\x04\x05\0\x02\x08\x12\x03\r\x04\x17\n\x0c\n\x05\x05\0\x02\x08\x01\
-    \x12\x03\r\x04\x12\n\x0c\n\x05\x05\0\x02\x08\x02\x12\x03\r\x15\x16\n\x0b\
-    \n\x04\x05\0\x02\t\x12\x03\x0e\x04\x12\n\x0c\n\x05\x05\0\x02\t\x01\x12\
-    \x03\x0e\x04\r\n\x0c\n\x05\x05\0\x02\t\x02\x12\x03\x0e\x10\x11\n\n\n\x02\
-    \x04\0\x12\x04\x11\0\x1b\x01\n\n\n\x03\x04\0\x01\x12\x03\x11\x08\x13\n\
-    \x0b\n\x04\x04\0\x02\0\x12\x03\x12\x04!\n\r\n\x05\x04\0\x02\0\x04\x12\
-    \x04\x12\x04\x11\x15\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x12\x04\n\n\x0c\
-    \n\x05\x04\0\x02\0\x01\x12\x03\x12\x0b\x1c\n\x0c\n\x05\x04\0\x02\0\x03\
-    \x12\x03\x12\x1f\x20\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x13\x04\x13\n\r\n\
-    \x05\x04\0\x02\x01\x04\x12\x04\x13\x04\x12!\n\x0c\n\x05\x04\0\x02\x01\
-    \x05\x12\x03\x13\x04\t\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x13\n\x0e\n\
-    \x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x13\x11\x12\n\x0b\n\x04\x04\0\x02\
-    \x02\x12\x03\x14\x04\x18\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\x14\x04\x13\
-    \x13\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x14\x04\t\n\x0c\n\x05\x04\0\
-    \x02\x02\x01\x12\x03\x14\n\x13\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x14\
-    \x16\x17\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x15\x04\x16\n\r\n\x05\x04\0\
-    \x02\x03\x04\x12\x04\x15\x04\x14\x18\n\x0c\n\x05\x04\0\x02\x03\x06\x12\
-    \x03\x15\x04\n\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x15\x0b\x11\n\x0c\n\
-    \x05\x04\0\x02\x03\x03\x12\x03\x15\x14\x15\n\x0b\n\x04\x04\0\x02\x04\x12\
-    \x03\x16\x04\x16\n\r\n\x05\x04\0\x02\x04\x04\x12\x04\x16\x04\x15\x16\n\
-    \x0c\n\x05\x04\0\x02\x04\x05\x12\x03\x16\x04\t\n\x0c\n\x05\x04\0\x02\x04\
-    \x01\x12\x03\x16\n\x11\n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x16\x14\x15\
-    \n.\n\x04\x04\0\x02\x05\x12\x03\x17\x04\x15\"!\x20public\x20key\x20only\
-    \x20set\x20in\x20BlockReq\n\n\r\n\x05\x04\0\x02\x05\x04\x12\x04\x17\x04\
-    \x16\x16\n\x0c\n\x05\x04\0\x02\x05\x05\x12\x03\x17\x04\t\n\x0c\n\x05\x04\
-    \0\x02\x05\x01\x12\x03\x17\n\x10\n\x0c\n\x05\x04\0\x02\x05\x03\x12\x03\
-    \x17\x13\x14\n\x0b\n\x04\x04\0\x02\x06\x12\x03\x18\x04\x15\n\r\n\x05\x04\
-    \0\x02\x06\x04\x12\x04\x18\x04\x17\x15\n\x0c\n\x05\x04\0\x02\x06\x05\x12\
-    \x03\x18\x04\n\n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x18\x0b\x10\n\x0c\n\
-    \x05\x04\0\x02\x06\x03\x12\x03\x18\x13\x14\n\x0b\n\x04\x04\0\x02\x07\x12\
-    \x03\x19\x04\x18\n\r\n\x05\x04\0\x02\x07\x04\x12\x04\x19\x04\x18\x15\n\
-    \x0c\n\x05\x04\0\x02\x07\x05\x12\x03\x19\x04\n\n\x0c\n\x05\x04\0\x02\x07\
-    \x01\x12\x03\x19\x0b\x13\n\x0c\n\x05\x04\0\x02\x07\x03\x12\x03\x19\x16\
-    \x17\n\x0b\n\x04\x04\0\x02\x08\x12\x03\x1a\x04\x15\n\r\n\x05\x04\0\x02\
-    \x08\x04\x12\x04\x1a\x04\x19\x18\n\x0c\n\x05\x04\0\x02\x08\x05\x12\x03\
-    \x1a\x04\n\n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\x1a\x0b\x10\n\x0c\n\x05\
-    \x04\0\x02\x08\x03\x12\x03\x1a\x13\x14\n\n\n\x02\x04\x01\x12\x04\x1d\0#\
-    \x01\n\n\n\x03\x04\x01\x01\x12\x03\x1d\x08\x14\n\x0b\n\x04\x04\x01\x02\0\
-    \x12\x03\x1e\x04\x16\n\r\n\x05\x04\x01\x02\0\x04\x12\x04\x1e\x04\x1d\x16\
-    \n\x0c\n\x05\x04\x01\x02\0\x05\x12\x03\x1e\x04\t\n\x0c\n\x05\x04\x01\x02\
-    \0\x01\x12\x03\x1e\n\x11\n\x0c\n\x05\x04\x01\x02\0\x03\x12\x03\x1e\x14\
-    \x15\n\x0b\n\x04\x04\x01\x02\x01\x12\x03\x1f\x04\x10\n\r\n\x05\x04\x01\
-    \x02\x01\x04\x12\x04\x1f\x04\x1e\x16\n\x0c\n\x05\x04\x01\x02\x01\x06\x12\
-    \x03\x1f\x04\x07\n\x0c\n\x05\x04\x01\x02\x01\x01\x12\x03\x1f\x08\x0b\n\
-    \x0c\n\x05\x04\x01\x02\x01\x03\x12\x03\x1f\x0e\x0f\n,\n\x04\x04\x01\x02\
-    \x02\x12\x03\x20\x04\x15\"\x1f\x20public\x20key\x20only\x20set\x20in\x20\
-    TxResp\n\n\r\n\x05\x04\x01\x02\x02\x04\x12\x04\x20\x04\x1f\x10\n\x0c\n\
-    \x05\x04\x01\x02\x02\x05\x12\x03\x20\x04\t\n\x0c\n\x05\x04\x01\x02\x02\
-    \x01\x12\x03\x20\n\x10\n\x0c\n\x05\x04\x01\x02\x02\x03\x12\x03\x20\x13\
-    \x14\n\x0b\n\x04\x04\x01\x02\x03\x12\x03!\x04!\n\r\n\x05\x04\x01\x02\x03\
-    \x04\x12\x04!\x04\x20\x15\n\x0c\n\x05\x04\x01\x02\x03\x05\x12\x03!\x04\n\
-    \n\x0c\n\x05\x04\x01\x02\x03\x01\x12\x03!\x0b\x1c\n\x0c\n\x05\x04\x01\
-    \x02\x03\x03\x12\x03!\x1f\x20\n\x0b\n\x04\x04\x01\x02\x04\x12\x03\"\x04!\
-    \n\r\n\x05\x04\x01\x02\x04\x04\x12\x04\"\x04!!\n\x0c\n\x05\x04\x01\x02\
-    \x04\x05\x12\x03\"\x04\n\n\x0c\n\x05\x04\x01\x02\x04\x01\x12\x03\"\x0b\
-    \x1c\n\x0c\n\x05\x04\x01\x02\x04\x03\x12\x03\"\x1f\x20\n\n\n\x02\x04\x02\
-    \x12\x04%\0(\x01\n\n\n\x03\x04\x02\x01\x12\x03%\x08\x16\n\x0b\n\x04\x04\
-    \x02\x02\0\x12\x03&\x04\x12\n\r\n\x05\x04\x02\x02\0\x04\x12\x04&\x04%\
-    \x18\n\x0c\n\x05\x04\x02\x02\0\x05\x12\x03&\x04\n\n\x0c\n\x05\x04\x02\
-    \x02\0\x01\x12\x03&\x0b\r\n\x0c\n\x05\x04\x02\x02\0\x03\x12\x03&\x10\x11\
-    \n\x0b\n\x04\x04\x02\x02\x01\x12\x03'\x04\"\n\x0c\n\x05\x04\x02\x02\x01\
-    \x04\x12\x03'\x04\x0c\n\x0c\n\x05\x04\x02\x02\x01\x06\x12\x03'\r\x18\n\
-    \x0c\n\x05\x04\x02\x02\x01\x01\x12\x03'\x19\x1d\n\x0c\n\x05\x04\x02\x02\
-    \x01\x03\x12\x03'\x20!\n\n\n\x02\x04\x03\x12\x04*\0-\x01\n\n\n\x03\x04\
-    \x03\x01\x12\x03*\x08\x17\n\x0b\n\x04\x04\x03\x02\0\x12\x03+\x04\x12\n\r\
-    \n\x05\x04\x03\x02\0\x04\x12\x04+\x04*\x19\n\x0c\n\x05\x04\x03\x02\0\x05\
-    \x12\x03+\x04\n\n\x0c\n\x05\x04\x03\x02\0\x01\x12\x03+\x0b\r\n\x0c\n\x05\
-    \x04\x03\x02\0\x03\x12\x03+\x10\x11\n\x0b\n\x04\x04\x03\x02\x01\x12\x03,\
-    \x04\x10\n\r\n\x05\x04\x03\x02\x01\x04\x12\x04,\x04+\x12\n\x0c\n\x05\x04\
-    \x03\x02\x01\x06\x12\x03,\x04\x07\n\x0c\n\x05\x04\x03\x02\x01\x01\x12\
-    \x03,\x08\x0b\n\x0c\n\x05\x04\x03\x02\x01\x03\x12\x03,\x0e\x0f\n\n\n\x02\
-    \x04\x04\x12\x04/\05\x01\n\n\n\x03\x04\x04\x01\x12\x03/\x08\x15\n\x0b\n\
-    \x04\x04\x04\x02\0\x12\x030\x04\x16\n\r\n\x05\x04\x04\x02\0\x04\x12\x040\
-    \x04/\x17\n\x0c\n\x05\x04\x04\x02\0\x05\x12\x030\x04\n\n\x0c\n\x05\x04\
-    \x04\x02\0\x01\x12\x030\x0b\x11\n\x0c\n\x05\x04\x04\x02\0\x03\x12\x030\
-    \x14\x15\n\x0b\n\x04\x04\x04\x02\x01\x12\x031\x04!\n\x0c\n\x05\x04\x04\
-    \x02\x01\x04\x12\x031\x04\x0c\n\x0c\n\x05\x04\x04\x02\x01\x05\x12\x031\r\
-    \x12\n\x0c\n\x05\x04\x04\x02\x01\x01\x12\x031\x13\x1c\n\x0c\n\x05\x04\
-    \x04\x02\x01\x03\x12\x031\x1f\x20\n\x0b\n\x04\x04\x04\x02\x02\x12\x032\
-    \x04\x1f\n\r\n\x05\x04\x04\x02\x02\x04\x12\x042\x041!\n\x0c\n\x05\x04\
-    \x04\x02\x02\x05\x12\x032\x04\n\n\x0c\n\x05\x04\x04\x02\x02\x01\x12\x032\
-    \x0b\x1a\n\x0c\n\x05\x04\x04\x02\x02\x03\x12\x032\x1d\x1e\n\x0b\n\x04\
-    \x04\x04\x02\x03\x12\x033\x04*\n\r\n\x05\x04\x04\x02\x03\x04\x12\x043\
-    \x042\x1f\n\x0c\n\x05\x04\x04\x02\x03\x06\x12\x033\x04\x13\n\x0c\n\x05\
-    \x04\x04\x02\x03\x01\x12\x033\x14%\n\x0c\n\x05\x04\x04\x02\x03\x03\x12\
-    \x033()\n\x0b\n\x04\x04\x04\x02\x04\x12\x034\x04\x19\n\r\n\x05\x04\x04\
-    \x02\x04\x04\x12\x044\x043*\n\x0c\n\x05\x04\x04\x02\x04\x05\x12\x034\x04\
-    \x08\n\x0c\n\x05\x04\x04\x02\x04\x01\x12\x034\t\x14\n\x0c\n\x05\x04\x04\
-    \x02\x04\x03\x12\x034\x17\x18\n\n\n\x02\x04\x05\x12\x047\09\x01\n\n\n\
-    \x03\x04\x05\x01\x12\x037\x08\x18\n\x0b\n\x04\x04\x05\x02\0\x12\x038\x04\
-    \x16\n\r\n\x05\x04\x05\x02\0\x04\x12\x048\x047\x1a\n\x0c\n\x05\x04\x05\
-    \x02\0\x05\x12\x038\x04\n\n\x0c\n\x05\x04\x05\x02\0\x01\x12\x038\x0b\x11\
-    \n\x0c\n\x05\x04\x05\x02\0\x03\x12\x038\x14\x15\n\n\n\x02\x04\x06\x12\
-    \x04;\0=\x01\n\n\n\x03\x04\x06\x01\x12\x03;\x08\x15\n\x0b\n\x04\x04\x06\
-    \x02\0\x12\x03<\x04\x18\n\r\n\x05\x04\x06\x02\0\x04\x12\x04<\x04;\x17\n\
-    \x0c\n\x05\x04\x06\x02\0\x05\x12\x03<\x04\n\n\x0c\n\x05\x04\x06\x02\0\
-    \x01\x12\x03<\x0b\x13\n\x0c\n\x05\x04\x06\x02\0\x03\x12\x03<\x16\x17\n\n\
-    \n\x02\x04\x07\x12\x04?\0@\x01\n\n\n\x03\x04\x07\x01\x12\x03?\x08\x18b\
-    \x06proto3\
+    hainId\x12\x14\n\x05quota\x18\t\x20\x01(\x04R\x05quota\x12\x14\n\x05valu\
+    e\x18\n\x20\x01(\x0cR\x05value\"\xaf\x01\n\x0cVerifyTxResp\x12\x17\n\x07\
+    tx_hash\x18\x01\x20\x01(\x0cR\x06txHash\x12\x16\n\x03ret\x18\x02\x20\x01\
+    (\x0e2\x04.RetR\x03ret\x12\x16\n\x06signer\x18\x03\x20\x01(\x0cR\x06sign\
+    er\x12*\n\x11received_chain_id\x18\x04\x20\x01(\rR\x0freceivedChainId\
+    \x12*\n\x11expected_chain_id\x18\x05\x20\x01(\rR\x0fexpectedChainId\"B\n\
+    \x0eVerifyBlockReq\x12\x0e\n\x02id\x18\x01\x20\x01(\x04R\x02id\x12\x20\n\
+    \x04reqs\x18\x02\x20\x03(\x0b2\x0c.VerifyTxReqR\x04reqs\"9\n\x0fVerifyBl\
+    ockResp\x12\x0e\n\x02id\x18\x01\x20\x01(\x04R\x02id\x12\x16\n\x03ret\x18\
+    \x02\x20\x01(\x0e2\x04.RetR\x03ret\"\xcb\x01\n\rBlockTxHashes\x12\x16\n\
+    \x06height\x18\x01\x20\x01(\x04R\x06height\x12\x1b\n\ttx_hashes\x18\x02\
+    \x20\x03(\x0cR\x08txHashes\x12&\n\x0fblock_gas_limit\x18\x03\x20\x01(\
+    \x04R\rblockGasLimit\x12<\n\x11account_gas_limit\x18\x04\x20\x01(\x0b2\
+    \x10.AccountGasLimitR\x0faccountGasLimit\x12\x1f\n\x0bcheck_quota\x18\
+    \x05\x20\x01(\x08R\ncheckQuota\"*\n\x10BlockTxHashesReq\x12\x16\n\x06hei\
+    ght\x18\x01\x20\x01(\x04R\x06height\"*\n\rMiscellaneous\x12\x19\n\x08cha\
+    in_id\x18\x01\x20\x01(\rR\x07chainId\"\x12\n\x10MiscellaneousReq*\xa8\
+    \x01\n\x03Ret\x12\x06\n\x02OK\x10\0\x12\x10\n\x0cInvalidNonce\x10\x01\
+    \x12\x07\n\x03Dup\x10\x02\x12\x15\n\x11InvalidUntilBlock\x10\x03\x12\n\n\
+    \x06BadSig\x10\x04\x12\x0c\n\x08NotReady\x10\x05\x12\x08\n\x04Busy\x10\
+    \x06\x12\x0e\n\nBadChainId\x10\x07\x12\x12\n\x0eQuotaNotEnough\x10\x08\
+    \x12\r\n\tForbidden\x10\t\x12\x10\n\x0cInvalidValue\x10\nJ\x96\x14\n\x06\
+    \x12\x04\0\0B\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\
+    \x03\x02\x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\x10\x01\n\n\n\x03\x05\0\
+    \x01\x12\x03\x04\x05\x08\n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\x04\x0b\n\
+    \x0c\n\x05\x05\0\x02\0\x01\x12\x03\x05\x04\x06\n\x0c\n\x05\x05\0\x02\0\
+    \x02\x12\x03\x05\t\n\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x06\x04\x15\n\x0c\
+    \n\x05\x05\0\x02\x01\x01\x12\x03\x06\x04\x10\n\x0c\n\x05\x05\0\x02\x01\
+    \x02\x12\x03\x06\x13\x14\n\x0b\n\x04\x05\0\x02\x02\x12\x03\x07\x04\x0c\n\
+    \x0c\n\x05\x05\0\x02\x02\x01\x12\x03\x07\x04\x07\n\x0c\n\x05\x05\0\x02\
+    \x02\x02\x12\x03\x07\n\x0b\n\x0b\n\x04\x05\0\x02\x03\x12\x03\x08\x04\x1a\
+    \n\x0c\n\x05\x05\0\x02\x03\x01\x12\x03\x08\x04\x15\n\x0c\n\x05\x05\0\x02\
+    \x03\x02\x12\x03\x08\x18\x19\n\x0b\n\x04\x05\0\x02\x04\x12\x03\t\x04\x0f\
+    \n\x0c\n\x05\x05\0\x02\x04\x01\x12\x03\t\x04\n\n\x0c\n\x05\x05\0\x02\x04\
+    \x02\x12\x03\t\r\x0e\n\x0b\n\x04\x05\0\x02\x05\x12\x03\n\x04\x11\n\x0c\n\
+    \x05\x05\0\x02\x05\x01\x12\x03\n\x04\x0c\n\x0c\n\x05\x05\0\x02\x05\x02\
+    \x12\x03\n\x0f\x10\n\x0b\n\x04\x05\0\x02\x06\x12\x03\x0b\x04\r\n\x0c\n\
+    \x05\x05\0\x02\x06\x01\x12\x03\x0b\x04\x08\n\x0c\n\x05\x05\0\x02\x06\x02\
+    \x12\x03\x0b\x0b\x0c\n\x0b\n\x04\x05\0\x02\x07\x12\x03\x0c\x04\x13\n\x0c\
+    \n\x05\x05\0\x02\x07\x01\x12\x03\x0c\x04\x0e\n\x0c\n\x05\x05\0\x02\x07\
+    \x02\x12\x03\x0c\x11\x12\n\x0b\n\x04\x05\0\x02\x08\x12\x03\r\x04\x17\n\
+    \x0c\n\x05\x05\0\x02\x08\x01\x12\x03\r\x04\x12\n\x0c\n\x05\x05\0\x02\x08\
+    \x02\x12\x03\r\x15\x16\n\x0b\n\x04\x05\0\x02\t\x12\x03\x0e\x04\x12\n\x0c\
+    \n\x05\x05\0\x02\t\x01\x12\x03\x0e\x04\r\n\x0c\n\x05\x05\0\x02\t\x02\x12\
+    \x03\x0e\x10\x11\n\x0b\n\x04\x05\0\x02\n\x12\x03\x0f\x04\x16\n\x0c\n\x05\
+    \x05\0\x02\n\x01\x12\x03\x0f\x04\x10\n\x0c\n\x05\x05\0\x02\n\x02\x12\x03\
+    \x0f\x13\x15\n\n\n\x02\x04\0\x12\x04\x12\0\x1d\x01\n\n\n\x03\x04\0\x01\
+    \x12\x03\x12\x08\x13\n\x0b\n\x04\x04\0\x02\0\x12\x03\x13\x04!\n\r\n\x05\
+    \x04\0\x02\0\x04\x12\x04\x13\x04\x12\x15\n\x0c\n\x05\x04\0\x02\0\x05\x12\
+    \x03\x13\x04\n\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x13\x0b\x1c\n\x0c\n\
+    \x05\x04\0\x02\0\x03\x12\x03\x13\x1f\x20\n\x0b\n\x04\x04\0\x02\x01\x12\
+    \x03\x14\x04\x13\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x14\x04\x13!\n\x0c\
+    \n\x05\x04\0\x02\x01\x05\x12\x03\x14\x04\t\n\x0c\n\x05\x04\0\x02\x01\x01\
+    \x12\x03\x14\n\x0e\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x14\x11\x12\n\
+    \x0b\n\x04\x04\0\x02\x02\x12\x03\x15\x04\x18\n\r\n\x05\x04\0\x02\x02\x04\
+    \x12\x04\x15\x04\x14\x13\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x15\x04\t\
+    \n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x15\n\x13\n\x0c\n\x05\x04\0\x02\
+    \x02\x03\x12\x03\x15\x16\x17\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x16\x04\
+    \x16\n\r\n\x05\x04\0\x02\x03\x04\x12\x04\x16\x04\x15\x18\n\x0c\n\x05\x04\
+    \0\x02\x03\x06\x12\x03\x16\x04\n\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\
+    \x16\x0b\x11\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\x16\x14\x15\n\x0b\n\
+    \x04\x04\0\x02\x04\x12\x03\x17\x04\x16\n\r\n\x05\x04\0\x02\x04\x04\x12\
+    \x04\x17\x04\x16\x16\n\x0c\n\x05\x04\0\x02\x04\x05\x12\x03\x17\x04\t\n\
+    \x0c\n\x05\x04\0\x02\x04\x01\x12\x03\x17\n\x11\n\x0c\n\x05\x04\0\x02\x04\
+    \x03\x12\x03\x17\x14\x15\n.\n\x04\x04\0\x02\x05\x12\x03\x18\x04\x15\"!\
+    \x20public\x20key\x20only\x20set\x20in\x20BlockReq\n\n\r\n\x05\x04\0\x02\
+    \x05\x04\x12\x04\x18\x04\x17\x16\n\x0c\n\x05\x04\0\x02\x05\x05\x12\x03\
+    \x18\x04\t\n\x0c\n\x05\x04\0\x02\x05\x01\x12\x03\x18\n\x10\n\x0c\n\x05\
+    \x04\0\x02\x05\x03\x12\x03\x18\x13\x14\n\x0b\n\x04\x04\0\x02\x06\x12\x03\
+    \x19\x04\x15\n\r\n\x05\x04\0\x02\x06\x04\x12\x04\x19\x04\x18\x15\n\x0c\n\
+    \x05\x04\0\x02\x06\x05\x12\x03\x19\x04\n\n\x0c\n\x05\x04\0\x02\x06\x01\
+    \x12\x03\x19\x0b\x10\n\x0c\n\x05\x04\0\x02\x06\x03\x12\x03\x19\x13\x14\n\
+    \x0b\n\x04\x04\0\x02\x07\x12\x03\x1a\x04\x18\n\r\n\x05\x04\0\x02\x07\x04\
+    \x12\x04\x1a\x04\x19\x15\n\x0c\n\x05\x04\0\x02\x07\x05\x12\x03\x1a\x04\n\
+    \n\x0c\n\x05\x04\0\x02\x07\x01\x12\x03\x1a\x0b\x13\n\x0c\n\x05\x04\0\x02\
+    \x07\x03\x12\x03\x1a\x16\x17\n\x0b\n\x04\x04\0\x02\x08\x12\x03\x1b\x04\
+    \x15\n\r\n\x05\x04\0\x02\x08\x04\x12\x04\x1b\x04\x1a\x18\n\x0c\n\x05\x04\
+    \0\x02\x08\x05\x12\x03\x1b\x04\n\n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\
+    \x1b\x0b\x10\n\x0c\n\x05\x04\0\x02\x08\x03\x12\x03\x1b\x13\x14\n\x0b\n\
+    \x04\x04\0\x02\t\x12\x03\x1c\x04\x15\n\r\n\x05\x04\0\x02\t\x04\x12\x04\
+    \x1c\x04\x1b\x15\n\x0c\n\x05\x04\0\x02\t\x05\x12\x03\x1c\x04\t\n\x0c\n\
+    \x05\x04\0\x02\t\x01\x12\x03\x1c\n\x0f\n\x0c\n\x05\x04\0\x02\t\x03\x12\
+    \x03\x1c\x12\x14\n\n\n\x02\x04\x01\x12\x04\x1f\0%\x01\n\n\n\x03\x04\x01\
+    \x01\x12\x03\x1f\x08\x14\n\x0b\n\x04\x04\x01\x02\0\x12\x03\x20\x04\x16\n\
+    \r\n\x05\x04\x01\x02\0\x04\x12\x04\x20\x04\x1f\x16\n\x0c\n\x05\x04\x01\
+    \x02\0\x05\x12\x03\x20\x04\t\n\x0c\n\x05\x04\x01\x02\0\x01\x12\x03\x20\n\
+    \x11\n\x0c\n\x05\x04\x01\x02\0\x03\x12\x03\x20\x14\x15\n\x0b\n\x04\x04\
+    \x01\x02\x01\x12\x03!\x04\x10\n\r\n\x05\x04\x01\x02\x01\x04\x12\x04!\x04\
+    \x20\x16\n\x0c\n\x05\x04\x01\x02\x01\x06\x12\x03!\x04\x07\n\x0c\n\x05\
+    \x04\x01\x02\x01\x01\x12\x03!\x08\x0b\n\x0c\n\x05\x04\x01\x02\x01\x03\
+    \x12\x03!\x0e\x0f\n,\n\x04\x04\x01\x02\x02\x12\x03\"\x04\x15\"\x1f\x20pu\
+    blic\x20key\x20only\x20set\x20in\x20TxResp\n\n\r\n\x05\x04\x01\x02\x02\
+    \x04\x12\x04\"\x04!\x10\n\x0c\n\x05\x04\x01\x02\x02\x05\x12\x03\"\x04\t\
+    \n\x0c\n\x05\x04\x01\x02\x02\x01\x12\x03\"\n\x10\n\x0c\n\x05\x04\x01\x02\
+    \x02\x03\x12\x03\"\x13\x14\n\x0b\n\x04\x04\x01\x02\x03\x12\x03#\x04!\n\r\
+    \n\x05\x04\x01\x02\x03\x04\x12\x04#\x04\"\x15\n\x0c\n\x05\x04\x01\x02\
+    \x03\x05\x12\x03#\x04\n\n\x0c\n\x05\x04\x01\x02\x03\x01\x12\x03#\x0b\x1c\
+    \n\x0c\n\x05\x04\x01\x02\x03\x03\x12\x03#\x1f\x20\n\x0b\n\x04\x04\x01\
+    \x02\x04\x12\x03$\x04!\n\r\n\x05\x04\x01\x02\x04\x04\x12\x04$\x04#!\n\
+    \x0c\n\x05\x04\x01\x02\x04\x05\x12\x03$\x04\n\n\x0c\n\x05\x04\x01\x02\
+    \x04\x01\x12\x03$\x0b\x1c\n\x0c\n\x05\x04\x01\x02\x04\x03\x12\x03$\x1f\
+    \x20\n\n\n\x02\x04\x02\x12\x04'\0*\x01\n\n\n\x03\x04\x02\x01\x12\x03'\
+    \x08\x16\n\x0b\n\x04\x04\x02\x02\0\x12\x03(\x04\x12\n\r\n\x05\x04\x02\
+    \x02\0\x04\x12\x04(\x04'\x18\n\x0c\n\x05\x04\x02\x02\0\x05\x12\x03(\x04\
+    \n\n\x0c\n\x05\x04\x02\x02\0\x01\x12\x03(\x0b\r\n\x0c\n\x05\x04\x02\x02\
+    \0\x03\x12\x03(\x10\x11\n\x0b\n\x04\x04\x02\x02\x01\x12\x03)\x04\"\n\x0c\
+    \n\x05\x04\x02\x02\x01\x04\x12\x03)\x04\x0c\n\x0c\n\x05\x04\x02\x02\x01\
+    \x06\x12\x03)\r\x18\n\x0c\n\x05\x04\x02\x02\x01\x01\x12\x03)\x19\x1d\n\
+    \x0c\n\x05\x04\x02\x02\x01\x03\x12\x03)\x20!\n\n\n\x02\x04\x03\x12\x04,\
+    \0/\x01\n\n\n\x03\x04\x03\x01\x12\x03,\x08\x17\n\x0b\n\x04\x04\x03\x02\0\
+    \x12\x03-\x04\x12\n\r\n\x05\x04\x03\x02\0\x04\x12\x04-\x04,\x19\n\x0c\n\
+    \x05\x04\x03\x02\0\x05\x12\x03-\x04\n\n\x0c\n\x05\x04\x03\x02\0\x01\x12\
+    \x03-\x0b\r\n\x0c\n\x05\x04\x03\x02\0\x03\x12\x03-\x10\x11\n\x0b\n\x04\
+    \x04\x03\x02\x01\x12\x03.\x04\x10\n\r\n\x05\x04\x03\x02\x01\x04\x12\x04.\
+    \x04-\x12\n\x0c\n\x05\x04\x03\x02\x01\x06\x12\x03.\x04\x07\n\x0c\n\x05\
+    \x04\x03\x02\x01\x01\x12\x03.\x08\x0b\n\x0c\n\x05\x04\x03\x02\x01\x03\
+    \x12\x03.\x0e\x0f\n\n\n\x02\x04\x04\x12\x041\07\x01\n\n\n\x03\x04\x04\
+    \x01\x12\x031\x08\x15\n\x0b\n\x04\x04\x04\x02\0\x12\x032\x04\x16\n\r\n\
+    \x05\x04\x04\x02\0\x04\x12\x042\x041\x17\n\x0c\n\x05\x04\x04\x02\0\x05\
+    \x12\x032\x04\n\n\x0c\n\x05\x04\x04\x02\0\x01\x12\x032\x0b\x11\n\x0c\n\
+    \x05\x04\x04\x02\0\x03\x12\x032\x14\x15\n\x0b\n\x04\x04\x04\x02\x01\x12\
+    \x033\x04!\n\x0c\n\x05\x04\x04\x02\x01\x04\x12\x033\x04\x0c\n\x0c\n\x05\
+    \x04\x04\x02\x01\x05\x12\x033\r\x12\n\x0c\n\x05\x04\x04\x02\x01\x01\x12\
+    \x033\x13\x1c\n\x0c\n\x05\x04\x04\x02\x01\x03\x12\x033\x1f\x20\n\x0b\n\
+    \x04\x04\x04\x02\x02\x12\x034\x04\x1f\n\r\n\x05\x04\x04\x02\x02\x04\x12\
+    \x044\x043!\n\x0c\n\x05\x04\x04\x02\x02\x05\x12\x034\x04\n\n\x0c\n\x05\
+    \x04\x04\x02\x02\x01\x12\x034\x0b\x1a\n\x0c\n\x05\x04\x04\x02\x02\x03\
+    \x12\x034\x1d\x1e\n\x0b\n\x04\x04\x04\x02\x03\x12\x035\x04*\n\r\n\x05\
+    \x04\x04\x02\x03\x04\x12\x045\x044\x1f\n\x0c\n\x05\x04\x04\x02\x03\x06\
+    \x12\x035\x04\x13\n\x0c\n\x05\x04\x04\x02\x03\x01\x12\x035\x14%\n\x0c\n\
+    \x05\x04\x04\x02\x03\x03\x12\x035()\n\x0b\n\x04\x04\x04\x02\x04\x12\x036\
+    \x04\x19\n\r\n\x05\x04\x04\x02\x04\x04\x12\x046\x045*\n\x0c\n\x05\x04\
+    \x04\x02\x04\x05\x12\x036\x04\x08\n\x0c\n\x05\x04\x04\x02\x04\x01\x12\
+    \x036\t\x14\n\x0c\n\x05\x04\x04\x02\x04\x03\x12\x036\x17\x18\n\n\n\x02\
+    \x04\x05\x12\x049\0;\x01\n\n\n\x03\x04\x05\x01\x12\x039\x08\x18\n\x0b\n\
+    \x04\x04\x05\x02\0\x12\x03:\x04\x16\n\r\n\x05\x04\x05\x02\0\x04\x12\x04:\
+    \x049\x1a\n\x0c\n\x05\x04\x05\x02\0\x05\x12\x03:\x04\n\n\x0c\n\x05\x04\
+    \x05\x02\0\x01\x12\x03:\x0b\x11\n\x0c\n\x05\x04\x05\x02\0\x03\x12\x03:\
+    \x14\x15\n\n\n\x02\x04\x06\x12\x04=\0?\x01\n\n\n\x03\x04\x06\x01\x12\x03\
+    =\x08\x15\n\x0b\n\x04\x04\x06\x02\0\x12\x03>\x04\x18\n\r\n\x05\x04\x06\
+    \x02\0\x04\x12\x04>\x04=\x17\n\x0c\n\x05\x04\x06\x02\0\x05\x12\x03>\x04\
+    \n\n\x0c\n\x05\x04\x06\x02\0\x01\x12\x03>\x0b\x13\n\x0c\n\x05\x04\x06\
+    \x02\0\x03\x12\x03>\x16\x17\n\n\n\x02\x04\x07\x12\x04A\0B\x01\n\n\n\x03\
+    \x04\x07\x01\x12\x03A\x08\x18b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
