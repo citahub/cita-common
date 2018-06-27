@@ -19,5 +19,5 @@ use std::convert::Into;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 
-mod channel;
-mod tracing_channel;
+pub mod channel;
+//mod tracing_channel;

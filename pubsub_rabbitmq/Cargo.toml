@@ -6,3 +6,6 @@ authors = ["Cryptape Technologies <contact@cryptape.com>"]
 [dependencies.amqp]
 version = "0.1"
 default-features = false
+
+[dependencies]
+message_queue = { path = "../message_queue" }
