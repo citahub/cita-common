@@ -45,6 +45,7 @@ pub struct SnapshotReq {
     pub start_height: u64,
     pub end_height: u64,
     pub file: ::std::string::String,
+    pub proof: ::protobuf::SingularPtrField<super::blockchain::Proof>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -170,10 +171,56 @@ impl SnapshotReq {
     fn mut_file_for_reflect(&mut self) -> &mut ::std::string::String {
         &mut self.file
     }
+
+    // .Proof proof = 5;
+
+    pub fn clear_proof(&mut self) {
+        self.proof.clear();
+    }
+
+    pub fn has_proof(&self) -> bool {
+        self.proof.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_proof(&mut self, v: super::blockchain::Proof) {
+        self.proof = ::protobuf::SingularPtrField::some(v);
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_proof(&mut self) -> &mut super::blockchain::Proof {
+        if self.proof.is_none() {
+            self.proof.set_default();
+        }
+        self.proof.as_mut().unwrap()
+    }
+
+    // Take field
+    pub fn take_proof(&mut self) -> super::blockchain::Proof {
+        self.proof.take().unwrap_or_else(|| super::blockchain::Proof::new())
+    }
+
+    pub fn get_proof(&self) -> &super::blockchain::Proof {
+        self.proof.as_ref().unwrap_or_else(|| super::blockchain::Proof::default_instance())
+    }
+
+    fn get_proof_for_reflect(&self) -> &::protobuf::SingularPtrField<super::blockchain::Proof> {
+        &self.proof
+    }
+
+    fn mut_proof_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<super::blockchain::Proof> {
+        &mut self.proof
+    }
 }
 
 impl ::protobuf::Message for SnapshotReq {
     fn is_initialized(&self) -> bool {
+        for v in &self.proof {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
         true
     }
 
@@ -205,6 +252,9 @@ impl ::protobuf::Message for SnapshotReq {
                 4 => {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.file)?;
                 },
+                5 => {
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.proof)?;
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -229,6 +279,10 @@ impl ::protobuf::Message for SnapshotReq {
         if !self.file.is_empty() {
             my_size += ::protobuf::rt::string_size(4, &self.file);
         }
+        if let Some(ref v) = self.proof.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -246,6 +300,11 @@ impl ::protobuf::Message for SnapshotReq {
         }
         if !self.file.is_empty() {
             os.write_string(4, &self.file)?;
+        }
+        if let Some(ref v) = self.proof.as_ref() {
+            os.write_tag(5, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -311,6 +370,11 @@ impl ::protobuf::MessageStatic for SnapshotReq {
                     SnapshotReq::get_file_for_reflect,
                     SnapshotReq::mut_file_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::blockchain::Proof>>(
+                    "proof",
+                    SnapshotReq::get_proof_for_reflect,
+                    SnapshotReq::mut_proof_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<SnapshotReq>(
                     "SnapshotReq",
                     fields,
@@ -327,6 +391,7 @@ impl ::protobuf::Clear for SnapshotReq {
         self.clear_start_height();
         self.clear_end_height();
         self.clear_file();
+        self.clear_proof();
         self.unknown_fields.clear();
     }
 }
@@ -347,6 +412,8 @@ impl ::protobuf::reflect::ProtobufValue for SnapshotReq {
 pub struct SnapshotResp {
     // message fields
     pub resp: Resp,
+    pub proof: ::protobuf::SingularPtrField<super::blockchain::Proof>,
+    pub height: u64,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -392,10 +459,79 @@ impl SnapshotResp {
     fn mut_resp_for_reflect(&mut self) -> &mut Resp {
         &mut self.resp
     }
+
+    // .Proof proof = 2;
+
+    pub fn clear_proof(&mut self) {
+        self.proof.clear();
+    }
+
+    pub fn has_proof(&self) -> bool {
+        self.proof.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_proof(&mut self, v: super::blockchain::Proof) {
+        self.proof = ::protobuf::SingularPtrField::some(v);
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_proof(&mut self) -> &mut super::blockchain::Proof {
+        if self.proof.is_none() {
+            self.proof.set_default();
+        }
+        self.proof.as_mut().unwrap()
+    }
+
+    // Take field
+    pub fn take_proof(&mut self) -> super::blockchain::Proof {
+        self.proof.take().unwrap_or_else(|| super::blockchain::Proof::new())
+    }
+
+    pub fn get_proof(&self) -> &super::blockchain::Proof {
+        self.proof.as_ref().unwrap_or_else(|| super::blockchain::Proof::default_instance())
+    }
+
+    fn get_proof_for_reflect(&self) -> &::protobuf::SingularPtrField<super::blockchain::Proof> {
+        &self.proof
+    }
+
+    fn mut_proof_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<super::blockchain::Proof> {
+        &mut self.proof
+    }
+
+    // uint64 height = 3;
+
+    pub fn clear_height(&mut self) {
+        self.height = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_height(&mut self, v: u64) {
+        self.height = v;
+    }
+
+    pub fn get_height(&self) -> u64 {
+        self.height
+    }
+
+    fn get_height_for_reflect(&self) -> &u64 {
+        &self.height
+    }
+
+    fn mut_height_for_reflect(&mut self) -> &mut u64 {
+        &mut self.height
+    }
 }
 
 impl ::protobuf::Message for SnapshotResp {
     fn is_initialized(&self) -> bool {
+        for v in &self.proof {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
         true
     }
 
@@ -409,6 +545,16 @@ impl ::protobuf::Message for SnapshotResp {
                     }
                     let tmp = is.read_enum()?;
                     self.resp = tmp;
+                },
+                2 => {
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.proof)?;
+                },
+                3 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint64()?;
+                    self.height = tmp;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -425,6 +571,13 @@ impl ::protobuf::Message for SnapshotResp {
         if self.resp != Resp::BeginAck {
             my_size += ::protobuf::rt::enum_size(1, self.resp);
         }
+        if let Some(ref v) = self.proof.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        }
+        if self.height != 0 {
+            my_size += ::protobuf::rt::value_size(3, self.height, ::protobuf::wire_format::WireTypeVarint);
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -433,6 +586,14 @@ impl ::protobuf::Message for SnapshotResp {
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if self.resp != Resp::BeginAck {
             os.write_enum(1, self.resp.value())?;
+        }
+        if let Some(ref v) = self.proof.as_ref() {
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
+        }
+        if self.height != 0 {
+            os.write_uint64(3, self.height)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -483,6 +644,16 @@ impl ::protobuf::MessageStatic for SnapshotResp {
                     SnapshotResp::get_resp_for_reflect,
                     SnapshotResp::mut_resp_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::blockchain::Proof>>(
+                    "proof",
+                    SnapshotResp::get_proof_for_reflect,
+                    SnapshotResp::mut_proof_for_reflect,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                    "height",
+                    SnapshotResp::get_height_for_reflect,
+                    SnapshotResp::mut_height_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<SnapshotResp>(
                     "SnapshotResp",
                     fields,
@@ -496,6 +667,8 @@ impl ::protobuf::MessageStatic for SnapshotResp {
 impl ::protobuf::Clear for SnapshotResp {
     fn clear(&mut self) {
         self.clear_resp();
+        self.clear_proof();
+        self.clear_height();
         self.unknown_fields.clear();
     }
 }
@@ -641,59 +814,72 @@ impl ::protobuf::reflect::ProtobufValue for Resp {
 }
 
 static file_descriptor_proto_data: &'static [u8] = b"\
-    \n\x0esnapshot.proto\"{\n\x0bSnapshotReq\x12\x16\n\x03cmd\x18\x01\x20\
-    \x01(\x0e2\x04.CmdR\x03cmd\x12!\n\x0cstart_height\x18\x02\x20\x01(\x04R\
-    \x0bstartHeight\x12\x1d\n\nend_height\x18\x03\x20\x01(\x04R\tendHeight\
-    \x12\x12\n\x04file\x18\x04\x20\x01(\tR\x04file\")\n\x0cSnapshotResp\x12\
-    \x19\n\x04resp\x18\x01\x20\x01(\x0e2\x05.RespR\x04resp*?\n\x03Cmd\x12\t\
-    \n\x05Begin\x10\0\x12\t\n\x05Clear\x10\x01\x12\x0c\n\x08Snapshot\x10\x02\
-    \x12\x0b\n\x07Restore\x10\x03\x12\x07\n\x03End\x10\x04*O\n\x04Resp\x12\
-    \x0c\n\x08BeginAck\x10\0\x12\x0c\n\x08ClearAck\x10\x01\x12\x0f\n\x0bSnap\
-    shotAck\x10\x02\x12\x0e\n\nRestoreAck\x10\x03\x12\n\n\x06EndAck\x10\x04J\
-    \xea\x06\n\x06\x12\x04\0\0\x1c\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\n\n\
-    \x02\x05\0\x12\x04\x02\0\x08\x01\n\n\n\x03\x05\0\x01\x12\x03\x02\x05\x08\
-    \n\x0b\n\x04\x05\0\x02\0\x12\x03\x03\x04\x0e\n\x0c\n\x05\x05\0\x02\0\x01\
-    \x12\x03\x03\x04\t\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x03\x0c\r\n\x0b\n\
-    \x04\x05\0\x02\x01\x12\x03\x04\x04\x0e\n\x0c\n\x05\x05\0\x02\x01\x01\x12\
-    \x03\x04\x04\t\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x04\x0c\r\n\x0b\n\
-    \x04\x05\0\x02\x02\x12\x03\x05\x04\x11\n\x0c\n\x05\x05\0\x02\x02\x01\x12\
-    \x03\x05\x04\x0c\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\x05\x0f\x10\n\x0b\
-    \n\x04\x05\0\x02\x03\x12\x03\x06\x04\x10\n\x0c\n\x05\x05\0\x02\x03\x01\
-    \x12\x03\x06\x04\x0b\n\x0c\n\x05\x05\0\x02\x03\x02\x12\x03\x06\x0e\x0f\n\
-    \x0b\n\x04\x05\0\x02\x04\x12\x03\x07\x04\x0c\n\x0c\n\x05\x05\0\x02\x04\
-    \x01\x12\x03\x07\x04\x07\n\x0c\n\x05\x05\0\x02\x04\x02\x12\x03\x07\n\x0b\
-    \n\n\n\x02\x05\x01\x12\x04\n\0\x10\x01\n\n\n\x03\x05\x01\x01\x12\x03\n\
-    \x05\t\n\x0b\n\x04\x05\x01\x02\0\x12\x03\x0b\x04\x11\n\x0c\n\x05\x05\x01\
-    \x02\0\x01\x12\x03\x0b\x04\x0c\n\x0c\n\x05\x05\x01\x02\0\x02\x12\x03\x0b\
-    \x0f\x10\n\x0b\n\x04\x05\x01\x02\x01\x12\x03\x0c\x04\x11\n\x0c\n\x05\x05\
-    \x01\x02\x01\x01\x12\x03\x0c\x04\x0c\n\x0c\n\x05\x05\x01\x02\x01\x02\x12\
-    \x03\x0c\x0f\x10\n\x0b\n\x04\x05\x01\x02\x02\x12\x03\r\x04\x14\n\x0c\n\
-    \x05\x05\x01\x02\x02\x01\x12\x03\r\x04\x0f\n\x0c\n\x05\x05\x01\x02\x02\
-    \x02\x12\x03\r\x12\x13\n\x0b\n\x04\x05\x01\x02\x03\x12\x03\x0e\x04\x13\n\
-    \x0c\n\x05\x05\x01\x02\x03\x01\x12\x03\x0e\x04\x0e\n\x0c\n\x05\x05\x01\
-    \x02\x03\x02\x12\x03\x0e\x11\x12\n\x0b\n\x04\x05\x01\x02\x04\x12\x03\x0f\
-    \x04\x0f\n\x0c\n\x05\x05\x01\x02\x04\x01\x12\x03\x0f\x04\n\n\x0c\n\x05\
-    \x05\x01\x02\x04\x02\x12\x03\x0f\r\x0e\n\n\n\x02\x04\0\x12\x04\x12\0\x17\
-    \x01\n\n\n\x03\x04\0\x01\x12\x03\x12\x08\x13\n\x0b\n\x04\x04\0\x02\0\x12\
-    \x03\x13\x04\x10\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x13\x04\x12\x15\n\x0c\
-    \n\x05\x04\0\x02\0\x06\x12\x03\x13\x04\x07\n\x0c\n\x05\x04\0\x02\0\x01\
-    \x12\x03\x13\x08\x0b\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x13\x0e\x0f\n\
-    \x0b\n\x04\x04\0\x02\x01\x12\x03\x14\x04\x1c\n\r\n\x05\x04\0\x02\x01\x04\
-    \x12\x04\x14\x04\x13\x10\n\x0c\n\x05\x04\0\x02\x01\x05\x12\x03\x14\x04\n\
-    \n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x14\x0b\x17\n\x0c\n\x05\x04\0\x02\
-    \x01\x03\x12\x03\x14\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x15\x04\
-    \x1a\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\x15\x04\x14\x1c\n\x0c\n\x05\x04\
-    \0\x02\x02\x05\x12\x03\x15\x04\n\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\
-    \x15\x0b\x15\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x15\x18\x19\n\x0b\n\
-    \x04\x04\0\x02\x03\x12\x03\x16\x04\x14\n\r\n\x05\x04\0\x02\x03\x04\x12\
-    \x04\x16\x04\x15\x1a\n\x0c\n\x05\x04\0\x02\x03\x05\x12\x03\x16\x04\n\n\
-    \x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x16\x0b\x0f\n\x0c\n\x05\x04\0\x02\
-    \x03\x03\x12\x03\x16\x12\x13\n\n\n\x02\x04\x01\x12\x04\x1a\0\x1c\x01\n\n\
-    \n\x03\x04\x01\x01\x12\x03\x1a\x08\x14\n\x0b\n\x04\x04\x01\x02\0\x12\x03\
-    \x1b\x04\x12\n\r\n\x05\x04\x01\x02\0\x04\x12\x04\x1b\x04\x1a\x16\n\x0c\n\
-    \x05\x04\x01\x02\0\x06\x12\x03\x1b\x04\x08\n\x0c\n\x05\x04\x01\x02\0\x01\
-    \x12\x03\x1b\t\r\n\x0c\n\x05\x04\x01\x02\0\x03\x12\x03\x1b\x10\x11b\x06p\
-    roto3\
+    \n\x0esnapshot.proto\x1a\x10blockchain.proto\"\x99\x01\n\x0bSnapshotReq\
+    \x12\x16\n\x03cmd\x18\x01\x20\x01(\x0e2\x04.CmdR\x03cmd\x12!\n\x0cstart_\
+    height\x18\x02\x20\x01(\x04R\x0bstartHeight\x12\x1d\n\nend_height\x18\
+    \x03\x20\x01(\x04R\tendHeight\x12\x12\n\x04file\x18\x04\x20\x01(\tR\x04f\
+    ile\x12\x1c\n\x05proof\x18\x05\x20\x01(\x0b2\x06.ProofR\x05proof\"_\n\
+    \x0cSnapshotResp\x12\x19\n\x04resp\x18\x01\x20\x01(\x0e2\x05.RespR\x04re\
+    sp\x12\x1c\n\x05proof\x18\x02\x20\x01(\x0b2\x06.ProofR\x05proof\x12\x16\
+    \n\x06height\x18\x03\x20\x01(\x04R\x06height*?\n\x03Cmd\x12\t\n\x05Begin\
+    \x10\0\x12\t\n\x05Clear\x10\x01\x12\x0c\n\x08Snapshot\x10\x02\x12\x0b\n\
+    \x07Restore\x10\x03\x12\x07\n\x03End\x10\x04*O\n\x04Resp\x12\x0c\n\x08Be\
+    ginAck\x10\0\x12\x0c\n\x08ClearAck\x10\x01\x12\x0f\n\x0bSnapshotAck\x10\
+    \x02\x12\x0e\n\nRestoreAck\x10\x03\x12\n\n\x06EndAck\x10\x04J\xc7\x08\n\
+    \x06\x12\x04\0\0!\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\
+    \x12\x03\x02\x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\n\x01\n\n\n\x03\x05\0\
+    \x01\x12\x03\x04\x05\x08\n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\x04\x0e\n\
+    \x0c\n\x05\x05\0\x02\0\x01\x12\x03\x05\x04\t\n\x0c\n\x05\x05\0\x02\0\x02\
+    \x12\x03\x05\x0c\r\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x06\x04\x0e\n\x0c\n\
+    \x05\x05\0\x02\x01\x01\x12\x03\x06\x04\t\n\x0c\n\x05\x05\0\x02\x01\x02\
+    \x12\x03\x06\x0c\r\n\x0b\n\x04\x05\0\x02\x02\x12\x03\x07\x04\x11\n\x0c\n\
+    \x05\x05\0\x02\x02\x01\x12\x03\x07\x04\x0c\n\x0c\n\x05\x05\0\x02\x02\x02\
+    \x12\x03\x07\x0f\x10\n\x0b\n\x04\x05\0\x02\x03\x12\x03\x08\x04\x10\n\x0c\
+    \n\x05\x05\0\x02\x03\x01\x12\x03\x08\x04\x0b\n\x0c\n\x05\x05\0\x02\x03\
+    \x02\x12\x03\x08\x0e\x0f\n\x0b\n\x04\x05\0\x02\x04\x12\x03\t\x04\x0c\n\
+    \x0c\n\x05\x05\0\x02\x04\x01\x12\x03\t\x04\x07\n\x0c\n\x05\x05\0\x02\x04\
+    \x02\x12\x03\t\n\x0b\n\n\n\x02\x05\x01\x12\x04\x0c\0\x12\x01\n\n\n\x03\
+    \x05\x01\x01\x12\x03\x0c\x05\t\n\x0b\n\x04\x05\x01\x02\0\x12\x03\r\x04\
+    \x11\n\x0c\n\x05\x05\x01\x02\0\x01\x12\x03\r\x04\x0c\n\x0c\n\x05\x05\x01\
+    \x02\0\x02\x12\x03\r\x0f\x10\n\x0b\n\x04\x05\x01\x02\x01\x12\x03\x0e\x04\
+    \x11\n\x0c\n\x05\x05\x01\x02\x01\x01\x12\x03\x0e\x04\x0c\n\x0c\n\x05\x05\
+    \x01\x02\x01\x02\x12\x03\x0e\x0f\x10\n\x0b\n\x04\x05\x01\x02\x02\x12\x03\
+    \x0f\x04\x14\n\x0c\n\x05\x05\x01\x02\x02\x01\x12\x03\x0f\x04\x0f\n\x0c\n\
+    \x05\x05\x01\x02\x02\x02\x12\x03\x0f\x12\x13\n\x0b\n\x04\x05\x01\x02\x03\
+    \x12\x03\x10\x04\x13\n\x0c\n\x05\x05\x01\x02\x03\x01\x12\x03\x10\x04\x0e\
+    \n\x0c\n\x05\x05\x01\x02\x03\x02\x12\x03\x10\x11\x12\n\x0b\n\x04\x05\x01\
+    \x02\x04\x12\x03\x11\x04\x0f\n\x0c\n\x05\x05\x01\x02\x04\x01\x12\x03\x11\
+    \x04\n\n\x0c\n\x05\x05\x01\x02\x04\x02\x12\x03\x11\r\x0e\n\n\n\x02\x04\0\
+    \x12\x04\x14\0\x1a\x01\n\n\n\x03\x04\0\x01\x12\x03\x14\x08\x13\n\x0b\n\
+    \x04\x04\0\x02\0\x12\x03\x15\x04\x10\n\r\n\x05\x04\0\x02\0\x04\x12\x04\
+    \x15\x04\x14\x15\n\x0c\n\x05\x04\0\x02\0\x06\x12\x03\x15\x04\x07\n\x0c\n\
+    \x05\x04\0\x02\0\x01\x12\x03\x15\x08\x0b\n\x0c\n\x05\x04\0\x02\0\x03\x12\
+    \x03\x15\x0e\x0f\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x16\x04\x1c\n\r\n\x05\
+    \x04\0\x02\x01\x04\x12\x04\x16\x04\x15\x10\n\x0c\n\x05\x04\0\x02\x01\x05\
+    \x12\x03\x16\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x16\x0b\x17\n\
+    \x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x16\x1a\x1b\n\x0b\n\x04\x04\0\x02\
+    \x02\x12\x03\x17\x04\x1a\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\x17\x04\x16\
+    \x1c\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x17\x04\n\n\x0c\n\x05\x04\0\
+    \x02\x02\x01\x12\x03\x17\x0b\x15\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\
+    \x17\x18\x19\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x18\x04\x14\n\r\n\x05\x04\
+    \0\x02\x03\x04\x12\x04\x18\x04\x17\x1a\n\x0c\n\x05\x04\0\x02\x03\x05\x12\
+    \x03\x18\x04\n\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x18\x0b\x0f\n\x0c\n\
+    \x05\x04\0\x02\x03\x03\x12\x03\x18\x12\x13\n\x0b\n\x04\x04\0\x02\x04\x12\
+    \x03\x19\x04\x14\n\r\n\x05\x04\0\x02\x04\x04\x12\x04\x19\x04\x18\x14\n\
+    \x0c\n\x05\x04\0\x02\x04\x06\x12\x03\x19\x04\t\n\x0c\n\x05\x04\0\x02\x04\
+    \x01\x12\x03\x19\n\x0f\n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x19\x12\x13\
+    \n\n\n\x02\x04\x01\x12\x04\x1d\0!\x01\n\n\n\x03\x04\x01\x01\x12\x03\x1d\
+    \x08\x14\n\x0b\n\x04\x04\x01\x02\0\x12\x03\x1e\x04\x12\n\r\n\x05\x04\x01\
+    \x02\0\x04\x12\x04\x1e\x04\x1d\x16\n\x0c\n\x05\x04\x01\x02\0\x06\x12\x03\
+    \x1e\x04\x08\n\x0c\n\x05\x04\x01\x02\0\x01\x12\x03\x1e\t\r\n\x0c\n\x05\
+    \x04\x01\x02\0\x03\x12\x03\x1e\x10\x11\n\x0b\n\x04\x04\x01\x02\x01\x12\
+    \x03\x1f\x04\x14\n\r\n\x05\x04\x01\x02\x01\x04\x12\x04\x1f\x04\x1e\x12\n\
+    \x0c\n\x05\x04\x01\x02\x01\x06\x12\x03\x1f\x04\t\n\x0c\n\x05\x04\x01\x02\
+    \x01\x01\x12\x03\x1f\n\x0f\n\x0c\n\x05\x04\x01\x02\x01\x03\x12\x03\x1f\
+    \x12\x13\n\x0b\n\x04\x04\x01\x02\x02\x12\x03\x20\x04\x16\n\r\n\x05\x04\
+    \x01\x02\x02\x04\x12\x04\x20\x04\x1f\x14\n\x0c\n\x05\x04\x01\x02\x02\x05\
+    \x12\x03\x20\x04\n\n\x0c\n\x05\x04\x01\x02\x02\x01\x12\x03\x20\x0b\x11\n\
+    \x0c\n\x05\x04\x01\x02\x02\x03\x12\x03\x20\x14\x15b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
