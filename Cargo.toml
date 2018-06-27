@@ -13,6 +13,7 @@ members = [
     "pubsub_rabbitmq",
     "pubsub_kafka",
     "pubsub",
+    "message_queue",
 
     "ethcore-bloom-journal",
     "sha3",
