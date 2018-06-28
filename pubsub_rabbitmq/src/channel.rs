@@ -18,7 +18,7 @@
 use std;
 use std::thread;
 use amqp::{protocol, Consumer, Table, Basic};
-use mq::channel::{Channel, Type, Message, MQMessage};
+use mq::channel::{Channel, Type, Payload, Message};
 use std::sync::mpsc::{Receiver, Sender, channel};
 
 pub struct MQChannel {
@@ -27,7 +27,7 @@ pub struct MQChannel {
 }
 
 pub struct Handler {
-    f: Box<Fn(MQMessage)>
+    f: Box<Fn(Message)>
 }
 
 unsafe impl Send for Handler {}
@@ -40,7 +40,7 @@ impl Consumer for Handler {
         _: protocol::basic::BasicProperties,
         body: Vec<u8>,
     ) {
-        let msg = MQMessage {
+        let msg = Message {
             delivery_id: deliver.delivery_tag,
             payload: body,
             msg_type: "".to_string(),
@@ -51,7 +51,7 @@ impl Consumer for Handler {
 }
 
 impl Channel for MQChannel {
-    fn sub(&mut self, f: Box<Fn(MQMessage)>) {
+    fn sub(&mut self, f: Box<Fn(Message)>) {
         let callback = Handler { f };
         self.channel
             .basic_consume(
@@ -69,11 +69,11 @@ impl Channel for MQChannel {
         let _ = self.channel.close(200, "Bye");
     }
 
-    fn ack(&mut self, msg: &MQMessage) {
+    fn ack(&mut self, msg: &Message) {
         self.channel.basic_ack(msg.delivery_id, false);
     }
 
-    fn publish(&mut self, routing_key: &str, payload: &Message) {
+    fn publish(&mut self, routing_key: &str, payload: &Payload) {
         self.channel.basic_publish(
             "cita",
             &routing_key,

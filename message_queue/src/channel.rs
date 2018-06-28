@@ -17,14 +17,14 @@
 
 use std;
 
-pub struct MQMessage {
+pub struct Message {
     pub routing_key: String,
     pub msg_type: String,
     pub payload: Vec<u8>,
     pub delivery_id: u64,
 }
 
-pub trait Message {
+pub trait Payload {
     fn msg_type(&self) -> &str;
     fn to_bytes(&self) -> Vec<u8>;
 }
@@ -35,8 +35,8 @@ pub enum Type {
 }
 
 pub trait Channel {
-    fn ack(&mut self, msg: &MQMessage);
-    fn sub(&mut self, f: Box<Fn(MQMessage)>);
-    fn publish(&mut self, routing_key: &str, payload: &Message);
+    fn ack(&mut self, msg: &Message);
+    fn sub(&mut self, f: Box<Fn(Message)>);
+    fn publish(&mut self, routing_key: &str, payload: &Payload);
 }
 
