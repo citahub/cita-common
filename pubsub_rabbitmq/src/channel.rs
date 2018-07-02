@@ -132,3 +132,35 @@ pub fn new_channel(queue: &str, keys: Vec<String>, channel_type: Type) -> MQChan
     let queue = queue.to_string();
     MQChannel { queue: queue, channel: channel }
 }
+
+#[cfg(test)]
+mod tests {
+    use std;
+    use super::Channel;
+
+    struct A {
+        name: String
+    }
+
+    impl super::Payload for A {
+        fn msg_type(&self) -> &str {
+            "A"
+        }
+        fn to_bytes(&self) -> Vec<u8> {
+            self.name.to_string().into_bytes()
+        }
+    }
+
+    #[test]
+    fn test() {
+        if std::env::var(super::AMQP_URL).is_ok() {
+            let mut mq = super::new_channel("hehe", vec!["a".to_string()], super::Type::Broadcast);
+            let t = super::thread::spawn(move || {
+                let msg = A { name: "nihao".to_string() };
+                mq.publish("", &msg);
+                println!("val is {}", mq.queue);
+            });
+            t.join().unwrap();
+        }
+    }
+}
