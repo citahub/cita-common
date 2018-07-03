@@ -174,9 +174,9 @@ function main () {
     check_dependencies
     remove_all_rs
     gen_rs_for_protos
-    add_pub_to_oneof_in_generated_code ./src/protos/response.rs      data    Response
-    add_pub_to_oneof_in_generated_code ./src/protos/request.rs       req     Request
-    add_pub_to_oneof_in_generated_code ./src/protos/communication.rs content InnerMessage
+#    add_pub_to_oneof_in_generated_code ./src/protos/response.rs      data    Response
+#    add_pub_to_oneof_in_generated_code ./src/protos/request.rs       req     Request
+#    add_pub_to_oneof_in_generated_code ./src/protos/communication.rs content InnerMessage
     remove_all_generated_code
     generate_impls_for_all
     generate_impls_for_msg "./src/autoimpl.rs" 12 "struct"         '${struct},'
