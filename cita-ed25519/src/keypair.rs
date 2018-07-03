@@ -18,7 +18,7 @@
 use super::{Address, PrivKey, PubKey};
 use error::Error;
 use rustc_serialize::hex::ToHex;
-use sodiumoxide::crypto::sign::{gen_keypair, keypair_from_privkey};
+use sodiumoxide::crypto::sign::gen_keypair;
 use std::fmt;
 use types::H160;
 use util::crypto::CreateKey;
@@ -48,14 +48,8 @@ impl CreateKey for KeyPair {
     type Error = Error;
 
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
-        let keypair = keypair_from_privkey(privkey.as_ref());
-        match keypair {
-            None => Err(Error::InvalidPrivKey),
-            Some((pk, sk)) => Ok(KeyPair {
-                privkey: PrivKey::from(sk.0),
-                pubkey: PubKey::from(pk.0),
-            }),
-        }
+        let pubkey = PubKey::from(&privkey.0[32..]);
+        Ok(KeyPair { privkey, pubkey })
     }
 
     fn gen_keypair() -> Self {

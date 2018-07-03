@@ -5,7 +5,7 @@ authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
 rustc-serialize = "0.3"
-sodiumoxide = { git = "https://github.com/cryptape/sodiumoxide.git", rev = "c324e11a2db461ec6878c55bd6616f75b2e4d16a" }
+sodiumoxide = "0.1.0"
 cita-types = { path = "../cita-types" }
 util = { path = "../util" }
 rlp = { path = "../rlp" }
