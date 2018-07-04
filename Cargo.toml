@@ -2,7 +2,6 @@
 
 members = [
     "logger",
-    "ethcore-io",
     "error",
     "panic_hook",
     "worker",
