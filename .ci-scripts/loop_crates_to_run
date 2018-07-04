@@ -91,7 +91,6 @@ function cargo_run_all () {
 
     cargo_run rlp
     cargo_run rlp_derive
-    cargo_run ethkey
 
     cargo_run authority_manage
 
