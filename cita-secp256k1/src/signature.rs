@@ -15,18 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SECP256K1, SIGNATURE_BYTES_LEN};
+use super::{
+    pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SECP256K1, SIGNATURE_BYTES_LEN,
+};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
-use secp256k1::{Error as SecpError, Message as SecpMessage, RecoverableSignature, RecoveryId};
 use secp256k1::key::{PublicKey, SecretKey};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use secp256k1::{Error as SecpError, Message as SecpMessage, RecoverableSignature, RecoveryId};
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
-use std::{fmt, mem};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::cmp::PartialEq;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
+use std::{fmt, mem};
 use types::H256;
 use util::crypto::Sign;
 
@@ -59,15 +61,18 @@ impl Signature {
 
     /// Check if this is a "low" signature.
     pub fn is_low_s(&self) -> bool {
-        H256::from_slice(self.s()) <= "7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0".into()
+        H256::from_slice(self.s())
+            <= "7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0".into()
     }
 
     /// Check if each component of the signature is in range.
     pub fn is_valid(&self) -> bool {
         self.v() <= 1
-            && H256::from_slice(self.r()) < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
+            && H256::from_slice(self.r())
+                < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
             && H256::from_slice(self.r()) >= 1.into()
-            && H256::from_slice(self.s()) < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
+            && H256::from_slice(self.s())
+                < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
             && H256::from_slice(self.s()) >= 1.into()
     }
 }
@@ -252,7 +257,11 @@ pub fn sign(privkey: &PrivKey, message: &Message) -> Result<Signature, Error> {
     Ok(Signature(data_arr))
 }
 
-pub fn verify_public(pubkey: &PubKey, signature: &Signature, message: &Message) -> Result<bool, Error> {
+pub fn verify_public(
+    pubkey: &PubKey,
+    signature: &Signature,
+    message: &Message,
+) -> Result<bool, Error> {
     let context = &SECP256K1;
     let rsig = RecoverableSignature::from_compact(
         context,
@@ -275,7 +284,11 @@ pub fn verify_public(pubkey: &PubKey, signature: &Signature, message: &Message) 
     }
 }
 
-pub fn verify_address(address: &Address, signature: &Signature, message: &Message) -> Result<bool, Error> {
+pub fn verify_address(
+    address: &Address,
+    signature: &Signature,
+    message: &Message,
+) -> Result<bool, Error> {
     let pubkey = recover(signature, message)?;
     let recovered_address = pubkey_to_address(&pubkey);
     Ok(address == &recovered_address)
@@ -331,7 +344,11 @@ impl Sign for Signature {
         Ok(pubkey)
     }
 
-    fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Self::Error> {
+    fn verify_public(
+        &self,
+        pubkey: &Self::PubKey,
+        message: &Self::Message,
+    ) -> Result<bool, Self::Error> {
         let context = &SECP256K1;
         let rsig = RecoverableSignature::from_compact(
             context,
@@ -354,7 +371,11 @@ impl Sign for Signature {
         }
     }
 
-    fn verify_address(&self, address: &Address, message: &Self::Message) -> Result<bool, Self::Error> {
+    fn verify_address(
+        &self,
+        address: &Address,
+        message: &Self::Message,
+    ) -> Result<bool, Self::Error> {
         let pubkey = self.recover(message)?;
         let recovered_address = pubkey_to_address(&pubkey);
         Ok(address == &recovered_address)
@@ -363,14 +384,14 @@ impl Sign for Signature {
 
 #[cfg(test)]
 mod tests {
-    use super::{Message, PrivKey, Signature};
     use super::super::KeyPair;
+    use super::{Message, PrivKey, Signature};
     use bincode::{deserialize, serialize, Infinite};
     use std::str::FromStr;
     use test::Bencher;
     use types::H256;
-    use util::Hashable;
     use util::crypto::{CreateKey, Sign};
+    use util::Hashable;
 
     #[test]
     fn test_sign_verify() {
@@ -418,8 +439,10 @@ mod tests {
 
     #[test]
     fn test_show_signature() {
-        let sk =
-            PrivKey::from(H256::from_str("80762b900f072d199e35ea9b1ee0e2e631a87762f8855b32d4ec13e37a3a65c1").unwrap());
+        let sk = PrivKey::from(
+            H256::from_str("80762b900f072d199e35ea9b1ee0e2e631a87762f8855b32d4ec13e37a3a65c1")
+                .unwrap(),
+        );
         let str = "".to_owned();
         let message = str.crypt_hash();
         println!("message {:?}", message);
@@ -436,8 +459,9 @@ mod tests {
     #[bench]
     fn bench_sign(b: &mut Bencher) {
         const MESSAGE: [u8; 32] = [
-            0x01, 0x02, 0x03, 0x04, 0x19, 0xab, 0xfe, 0x39, 0x6f, 0x28, 0x79, 0x00, 0x08, 0xdf, 0x9a, 0xef, 0xfb, 0x77,
-            0x42, 0xae, 0xad, 0xfc, 0xcf, 0x12, 0x24, 0x45, 0x29, 0x89, 0x29, 0x45, 0x3f, 0xf8,
+            0x01, 0x02, 0x03, 0x04, 0x19, 0xab, 0xfe, 0x39, 0x6f, 0x28, 0x79, 0x00, 0x08, 0xdf,
+            0x9a, 0xef, 0xfb, 0x77, 0x42, 0xae, 0xad, 0xfc, 0xcf, 0x12, 0x24, 0x45, 0x29, 0x89,
+            0x29, 0x45, 0x3f, 0xf8,
         ];
         let keypair = KeyPair::gen_keypair();
         let privkey = keypair.privkey();

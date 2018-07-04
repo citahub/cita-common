@@ -37,8 +37,12 @@ use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 
 #[cfg(feature = "rabbitmq")]
-pub fn start_pubsub<K>(name: &str, keys: Vec<K>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>)
-where
+pub fn start_pubsub<K>(
+    name: &str,
+    keys: Vec<K>,
+    tx: Sender<(String, Vec<u8>)>,
+    rx: Receiver<(String, Vec<u8>)>,
+) where
     K: Into<String>,
 {
     dotenv().ok();
@@ -47,8 +51,12 @@ where
 }
 
 #[cfg(feature = "zeromq")]
-pub fn start_pubsub<K>(name: &str, keys: Vec<K>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>)
-where
+pub fn start_pubsub<K>(
+    name: &str,
+    keys: Vec<K>,
+    tx: Sender<(String, Vec<u8>)>,
+    rx: Receiver<(String, Vec<u8>)>,
+) where
     K: Into<String>,
 {
     dotenv().ok();
@@ -56,8 +64,12 @@ where
     start_zeromq(name, keys, tx, rx);
 }
 #[cfg(feature = "kafka")]
-pub fn start_pubsub<K>(name: &str, keys: Vec<K>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>)
-where
+pub fn start_pubsub<K>(
+    name: &str,
+    keys: Vec<K>,
+    tx: Sender<(String, Vec<u8>)>,
+    rx: Receiver<(String, Vec<u8>)>,
+) where
     K: Into<String>,
 {
     dotenv().ok();

@@ -17,10 +17,10 @@
 
 use std::str::FromStr;
 
+use super::{clean_0x, delete_left0, pad_left0};
 use super::{Bloom, BloomInput};
 use super::{H1024, H128, H160, H256, H264, H32, H512, H520, H64};
 use super::{U1024, U128, U256, U512, U64};
-use super::{clean_0x, delete_left0, pad_left0};
 
 pub trait LowerHex {
     fn lower_hex(&self) -> String;
@@ -149,9 +149,9 @@ impl BloomTools for Bloom {
 
 #[cfg(test)]
 mod tests {
-    use super::{ConvertType, LowerHex};
-    use super::U128;
     use super::convert_u8_to_char;
+    use super::U128;
+    use super::{ConvertType, LowerHex};
 
     #[test]
     fn test_convert_u8_to_char() {

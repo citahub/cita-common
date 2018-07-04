@@ -31,8 +31,8 @@ use libc::c_int;
 use std::ptr::Unique;
 use types::{Address, H256, H512};
 
-mod keypair;
 mod error;
+mod keypair;
 mod signature;
 mod signer;
 
@@ -62,12 +62,20 @@ extern "C" {
     //pub fn EC_GROUP_free(group: *mut EcGroup);
     pub fn sm2_generate_key(group: *const EcGroup, privkey: *mut u8, pubkey: *mut u8);
     pub fn sm2_pubkey_from_privkey(group: *const EcGroup, privkey: *const u8, pubkey: *mut u8);
-    pub fn sm2_sign(group: *const EcGroup, privkey: *const u8, message: *const u8, signature: *mut u8);
-    pub fn sm2_recover(group: *const EcGroup, signature: *const u8, message: *const u8, pubkey: *mut u8) -> c_int;
+    pub fn sm2_sign(
+        group: *const EcGroup,
+        privkey: *const u8,
+        message: *const u8,
+        signature: *mut u8,
+    );
+    pub fn sm2_recover(
+        group: *const EcGroup,
+        signature: *const u8,
+        message: *const u8,
+        pubkey: *mut u8,
+    ) -> c_int;
 }
 
 lazy_static! {
-    pub static ref GROUP: Unique<EcGroup> = unsafe {
-        Unique::new(ec_group()).unwrap()
-    };
+    pub static ref GROUP: Unique<EcGroup> = unsafe { Unique::new(ec_group()).unwrap() };
 }

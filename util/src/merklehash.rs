@@ -136,7 +136,11 @@ fn generate_merkle_tree_from_hash(input: Vec<H256>) -> MerkleTree {
                 // The lowest row is full.
                 calc_merkle_tree_at_row(&mut nodes, lowest_row_index, 0)
             } else {
-                calc_merkle_tree_at_row(&mut nodes, lowest_row_index, nodes_size_of_lowest_row >> 1);
+                calc_merkle_tree_at_row(
+                    &mut nodes,
+                    lowest_row_index,
+                    nodes_size_of_lowest_row >> 1,
+                );
             }
 
             // From the second row from the bottom to the second row from the top.
@@ -380,7 +384,8 @@ mod tests {
                 } else {
                     input[index].crypt_hash()
                 };
-                let proof = tree.get_proof_by_input_index(index)
+                let proof = tree
+                    .get_proof_by_input_index(index)
                     .expect("proof is not none");
                 assert!(super::verify_proof(root_hash, &proof, data_hash));
                 // encode and decode
@@ -496,7 +501,9 @@ mod tests_for_sha3hash {
         ];
         for (x, y) in check {
             assert_eq!(
-                MerkleTree::from_hashes(x.into_iter().map(|x| H256::from_str(x).unwrap()).collect()).get_root_hash(),
+                MerkleTree::from_hashes(
+                    x.into_iter().map(|x| H256::from_str(x).unwrap()).collect()
+                ).get_root_hash(),
                 H256::from_str(y).unwrap()
             );
         }

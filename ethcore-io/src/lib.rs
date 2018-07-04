@@ -70,8 +70,8 @@ extern crate slab;
 mod service;
 mod worker;
 
-use mio::Token;
 use mio::deprecated::{EventLoop, NotifyError};
+use mio::Token;
 use std::fmt;
 
 pub use worker::LOCAL_STACK_SIZE;
@@ -134,11 +134,28 @@ where
     /// Called when an IO stream can be written to
     fn stream_writable(&self, _io: &IoContext<Message>, _stream: StreamToken) {}
     /// Register a new stream with the event loop
-    fn register_stream(&self, _stream: StreamToken, _reg: Token, _event_loop: &mut EventLoop<IoManager<Message>>) {}
+    fn register_stream(
+        &self,
+        _stream: StreamToken,
+        _reg: Token,
+        _event_loop: &mut EventLoop<IoManager<Message>>,
+    ) {
+    }
     /// Re-register a stream with the event loop
-    fn update_stream(&self, _stream: StreamToken, _reg: Token, _event_loop: &mut EventLoop<IoManager<Message>>) {}
+    fn update_stream(
+        &self,
+        _stream: StreamToken,
+        _reg: Token,
+        _event_loop: &mut EventLoop<IoManager<Message>>,
+    ) {
+    }
     /// Deregister a stream. Called whenstream is removed from event loop
-    fn deregister_stream(&self, _stream: StreamToken, _event_loop: &mut EventLoop<IoManager<Message>>) {}
+    fn deregister_stream(
+        &self,
+        _stream: StreamToken,
+        _event_loop: &mut EventLoop<IoManager<Message>>,
+    ) {
+    }
 }
 
 pub use service::IoChannel;
@@ -146,8 +163,8 @@ pub use service::IoContext;
 pub use service::IoManager;
 pub use service::IoService;
 pub use service::StreamToken;
-pub use service::TOKENS_PER_HANDLER;
 pub use service::TimerToken;
+pub use service::TOKENS_PER_HANDLER;
 
 #[cfg(test)]
 mod tests {

@@ -17,9 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{AVLError, AVLItem, AVLIterator, Query, AVL};
 use super::lookup::Lookup;
 use super::node::{Node, NodeKey, OwnedNode};
+use super::{AVLError, AVLItem, AVLIterator, Query, AVL};
 use bytes::*;
 use hashdb::*;
 use rlp::*;
@@ -151,7 +151,11 @@ impl<'db> AVL for AVLDB<'db> {
         self.root
     }
 
-    fn get_with<'a, 'key, Q: Query>(&'a self, key: &'key [u8], query: Q) -> super::Result<Option<Q::Item>>
+    fn get_with<'a, 'key, Q: Query>(
+        &'a self,
+        key: &'key [u8],
+        query: Q,
+    ) -> super::Result<Option<Q::Item>>
     where
         'a: 'key,
     {
@@ -290,7 +294,9 @@ impl<'a> Iterator for AVLDBIterator<'a> {
                     return Some(Ok((k, v)));
                 }
                 (Status::At, OwnedNode::Branch(_, _, _)) => {}
-                (Status::AtChild(i), OwnedNode::Branch(_, _, ref children)) if children[i].len() > 0 => {
+                (Status::AtChild(i), OwnedNode::Branch(_, _, ref children))
+                    if children[i].len() > 0 =>
+                {
                     if let Err(e) = self.descend(&*children[i]) {
                         return Some(Err(e));
                     }
@@ -307,8 +313,8 @@ impl<'a> Iterator for AVLDBIterator<'a> {
 
 #[test]
 fn iterator() {
-    use super::AVLMut;
     use super::avldbmut::*;
+    use super::AVLMut;
     use memorydb::*;
 
     let d = vec![
@@ -340,8 +346,8 @@ fn iterator() {
 
 #[test]
 fn iterator_seek() {
-    use super::AVLMut;
     use super::avldbmut::*;
+    use super::AVLMut;
     use memorydb::*;
 
     let d = vec![
@@ -393,8 +399,8 @@ fn iterator_seek() {
 
 #[test]
 fn get_len() {
-    use super::AVLMut;
     use super::avldbmut::*;
+    use super::AVLMut;
     use memorydb::*;
 
     let mut memdb = MemoryDB::new();

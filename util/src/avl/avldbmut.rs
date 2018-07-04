@@ -19,10 +19,10 @@
 
 //! In-memory avl representation.
 
-use super::{AVLError, AVLMut};
 use super::lookup::Lookup;
 use super::node::Node as RlpNode;
 use super::node::NodeKey;
+use super::{AVLError, AVLMut};
 
 use bytes::ToPretty;
 use types::H256;
@@ -317,7 +317,8 @@ impl<'a> AVLDBMut<'a> {
 
     // cache a node by hash
     fn cache(&mut self, hash: H256) -> super::Result<StorageHandle> {
-        let node_rlp = self.db
+        let node_rlp = self
+            .db
             .get(&hash)
             .ok_or_else(|| Box::new(AVLError::IncompleteDatabase(hash)))?;
         let node = Node::from_rlp(&node_rlp, &*self.db, &mut self.storage);
@@ -525,7 +526,8 @@ impl<'a> AVLDBMut<'a> {
 
     pub fn tree_height(&mut self) -> super::Result<(super::Result<u32>, u32, super::Result<u32>)> {
         let h = self.root.clone();
-        let node_rlp = self.db
+        let node_rlp = self
+            .db
             .get(&h)
             .ok_or_else(|| Box::new(AVLError::IncompleteDatabase(h)))?;
         let mut node = Node::from_rlp(&node_rlp, &*self.db, &mut self.storage);
@@ -549,10 +551,11 @@ impl<'a> AVLDBMut<'a> {
             NodeHandle::Hash(h) => self.cache(h)?,
         };
         let stored = self.storage.destroy(h);
-        let (new_stored, changed) = self.inspect(stored, move |avl, stored| {
-            avl.insert_inspector(stored, key, value, old_val)
-                .map(|a| a.into_action())
-        })?
+        let (new_stored, changed) = self
+            .inspect(stored, move |avl, stored| {
+                avl.insert_inspector(stored, key, value, old_val)
+                    .map(|a| a.into_action())
+            })?
             .expect("Insertion never deletes.");
 
         match changed {
@@ -670,7 +673,12 @@ impl<'a> AVLDBMut<'a> {
     }
 
     /// the removal inspector
-    fn remove_inspector(&mut self, node: Node, key: NodeKey, old_val: &mut Option<DBValue>) -> super::Result<Action> {
+    fn remove_inspector(
+        &mut self,
+        node: Node,
+        key: NodeKey,
+        old_val: &mut Option<DBValue>,
+    ) -> super::Result<Action> {
         Ok(match node {
             Node::Empty => Action::Delete,
             Node::Leaf(k, v) => match k == key {
@@ -740,7 +748,8 @@ impl<'a> AVLDBMut<'a> {
             Stored::Cached(node, hash) => {
                 // probably won't happen, but update the root and move on.
                 *self.root = hash;
-                self.root_handle = NodeHandle::InMemory(self.storage.alloc(Stored::Cached(node, hash)));
+                self.root_handle =
+                    NodeHandle::InMemory(self.storage.alloc(Stored::Cached(node, hash)));
             }
         }
     }
@@ -852,8 +861,8 @@ impl<'a> Drop for AVLDBMut<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::AVLMut;
+    use super::*;
     use memorydb::*;
     // use super::super::standardmap::*;
 

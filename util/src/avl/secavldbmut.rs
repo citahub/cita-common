@@ -17,8 +17,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::AVLMut;
 use super::avldbmut::AVLDBMut;
+use super::AVLMut;
 use hashable::Hashable;
 use hashdb::{DBValue, HashDB};
 use types::H256;
@@ -91,8 +91,8 @@ impl<'db> AVLMut for SecAVLDBMut<'db> {
 
 #[test]
 fn secavl_to_avl() {
-    use super::AVL;
     use super::avldb::*;
+    use super::AVL;
     use memorydb::*;
 
     let mut memdb = MemoryDB::new();

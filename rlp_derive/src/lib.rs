@@ -20,8 +20,8 @@ extern crate proc_macro;
 extern crate quote;
 extern crate syn;
 
-mod en;
 mod de;
+mod en;
 
 use de::{impl_decodable, impl_decodable_wrapper};
 use en::{impl_encodable, impl_encodable_wrapper};

@@ -7,14 +7,14 @@ extern crate rdkafka;
 use futures::*;
 use futures_cpupool::CpuPool;
 
-use rdkafka::Message;
 use rdkafka::client::Context;
 use rdkafka::config::{ClientConfig, RDKafkaLogLevel, TopicConfig};
-use rdkafka::consumer::{CommitMode, Consumer, ConsumerContext, Rebalance};
 use rdkafka::consumer::stream_consumer::StreamConsumer;
+use rdkafka::consumer::{CommitMode, Consumer, ConsumerContext, Rebalance};
 use rdkafka::error::KafkaResult;
 use rdkafka::producer::FutureProducer;
 use rdkafka::types;
+use rdkafka::Message;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 use std::thread;
@@ -35,14 +35,23 @@ impl ConsumerContext for ConsumerContextExample {
         trace!("Post rebalance {:?}", rebalance);
     }
 
-    fn commit_callback(&self, _result: KafkaResult<()>, _offsets: *mut types::RDKafkaTopicPartitionList) {
+    fn commit_callback(
+        &self,
+        _result: KafkaResult<()>,
+        _offsets: *mut types::RDKafkaTopicPartitionList,
+    ) {
         trace!("Committing offsets");
     }
 }
 
 pub const KAFKA_URL: &'static str = "KAFKA_URL";
 
-pub fn start_kafka(name: &str, keys: Vec<String>, tx: Sender<(String, Vec<u8>)>, rx: Receiver<(String, Vec<u8>)>) {
+pub fn start_kafka(
+    name: &str,
+    keys: Vec<String>,
+    tx: Sender<(String, Vec<u8>)>,
+    rx: Receiver<(String, Vec<u8>)>,
+) {
     let brokers = std::env::var(KAFKA_URL).expect(format!("{} must be set", KAFKA_URL).as_str());
     let consumer_brokers = brokers.clone();
     let _ = thread::Builder::new()

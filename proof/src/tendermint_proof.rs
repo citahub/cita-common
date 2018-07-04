@@ -23,8 +23,8 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::usize::MAX;
 use types::{Address, H256};
-use util::Hashable;
 use util::datapath::DataPath;
+use util::Hashable;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum Step {
@@ -49,7 +49,12 @@ pub struct TendermintProof {
 }
 
 impl TendermintProof {
-    pub fn new(height: usize, round: usize, proposal: H256, commits: HashMap<Address, Signature>) -> TendermintProof {
+    pub fn new(
+        height: usize,
+        round: usize,
+        proposal: H256,
+        commits: HashMap<Address, Signature>,
+    ) -> TendermintProof {
         TendermintProof {
             height: height,
             round: round,

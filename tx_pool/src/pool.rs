@@ -19,8 +19,8 @@ use crypto::{pubkey_to_address, PubKey};
 use libproto::blockchain::{AccountGasLimit, SignedTransaction};
 use std::cmp::Ordering;
 use std::collections::{BTreeSet, HashMap, HashSet};
-use types::{Address, H256};
 use types::traits::LowerHex;
+use types::{Address, H256};
 use util::BLOCKLIMIT;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -128,7 +128,8 @@ impl Pool {
     }
 
     fn update_order_set(&mut self, hash_list: &HashSet<H256>) {
-        self.order_set = self.order_set
+        self.order_set = self
+            .order_set
             .iter()
             .cloned()
             .filter(|order| !hash_list.contains(&order.hash))
@@ -177,7 +178,8 @@ impl Pool {
                 let tx_is_valid = |signed_tx: &SignedTransaction, height: u64| {
                     let valid_until_block = signed_tx.get_transaction().get_valid_until_block();
                     (valid_until_block == 0)
-                        || (height < valid_until_block && valid_until_block <= (height + BLOCKLIMIT))
+                        || (height < valid_until_block
+                            && valid_until_block <= (height + BLOCKLIMIT))
                 };
                 if let Some(tx) = tx {
                     if tx_is_valid(tx, height) {
@@ -198,7 +200,8 @@ impl Pool {
                                 }
                                 *value = *value - quota;
                             } else {
-                                if let Some(value) = specific_gas_limit.get_mut(&signer.lower_hex()) {
+                                if let Some(value) = specific_gas_limit.get_mut(&signer.lower_hex())
+                                {
                                     gas_limit = *value;
                                 }
 
@@ -239,10 +242,12 @@ impl Pool {
                 let hash = order.unwrap().hash;
                 let tx = self.txs.get(&hash);
                 if let Some(tx) = tx {
-                    if tx.get_transaction_with_sig()
+                    if tx
+                        .get_transaction_with_sig()
                         .get_transaction()
                         .valid_until_block >= height
-                        && tx.get_transaction_with_sig()
+                        && tx
+                            .get_transaction_with_sig()
                             .get_transaction()
                             .valid_until_block < (height + BLOCKLIMIT)
                     {
@@ -277,7 +282,11 @@ mod tests {
     use crypto::{CreateKey, KeyPair, PrivKey};
     use libproto::blockchain::{AccountGasLimit, SignedTransaction, Transaction};
 
-    pub fn generate_tx(data: Vec<u8>, valid_until_block: u64, privkey: &PrivKey) -> SignedTransaction {
+    pub fn generate_tx(
+        data: Vec<u8>,
+        valid_until_block: u64,
+        privkey: &PrivKey,
+    ) -> SignedTransaction {
         let mut tx = Transaction::new();
         tx.set_data(data);
         tx.set_to("1234567".to_string());

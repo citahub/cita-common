@@ -24,20 +24,20 @@ use hashdb::{DBValue, HashDB};
 use std::fmt;
 use types::H256;
 
-/// Export the standardmap module.
-pub mod standardmap;
-/// Export the node module.
-pub mod node;
 /// Export the avldb module.
 pub mod avldb;
 /// Export the avldbmut module.
 pub mod avldbmut;
+/// Export the node module.
+pub mod node;
+/// AVL query recording.
+pub mod recorder;
 /// Export the secavldb module.
 pub mod secavldb;
 /// Export the secavldbmut module.
 pub mod secavldbmut;
-/// AVL query recording.
-pub mod recorder;
+/// Export the standardmap module.
+pub mod standardmap;
 
 mod fatdb;
 mod fatdbmut;
@@ -69,7 +69,9 @@ impl fmt::Display for AVLError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             AVLError::InvalidStateRoot(ref root) => write!(f, "Invalid state root: {}", root),
-            AVLError::IncompleteDatabase(ref missing) => write!(f, "Database missing expected key: {}", missing),
+            AVLError::IncompleteDatabase(ref missing) => {
+                write!(f, "Database missing expected key: {}", missing)
+            }
         }
     }
 }
@@ -294,7 +296,11 @@ impl AVLFactory {
     }
 
     /// Create new mutable instance of AVL and check for errors.
-    pub fn from_existing<'db>(&self, db: &'db mut HashDB, root: &'db mut H256) -> Result<Box<AVLMut + 'db>> {
+    pub fn from_existing<'db>(
+        &self,
+        db: &'db mut HashDB,
+        root: &'db mut H256,
+    ) -> Result<Box<AVLMut + 'db>> {
         match self.spec {
             AVLSpec::Generic => Ok(Box::new(AVLDBMut::from_existing(db, root)?)),
             AVLSpec::Secure => Ok(Box::new(SecAVLDBMut::from_existing(db, root)?)),

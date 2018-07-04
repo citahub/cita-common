@@ -15,14 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
+use super::{
+    pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
+};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
-use sodiumoxide::crypto::sign::{sign_detached, verify_detached, PublicKey as EdPublicKey, SecretKey,
-                                Signature as EdSignature};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use sodiumoxide::crypto::sign::{
+    sign_detached, verify_detached, PublicKey as EdPublicKey, SecretKey, Signature as EdSignature,
+};
 use std::fmt;
 use std::ops::{Deref, DerefMut};
 use util::crypto::{CreateKey, Sign};
@@ -229,7 +232,11 @@ impl Sign for Signature {
         }
     }
 
-    fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Self::Error> {
+    fn verify_public(
+        &self,
+        pubkey: &Self::PubKey,
+        message: &Self::Message,
+    ) -> Result<bool, Self::Error> {
         let sig = self.sig();
         let pk = self.pk();
         if pk != pubkey.as_ref() as &[u8] {
@@ -262,8 +269,9 @@ mod tests {
     use util::crypto::CreateKey;
 
     const MESSAGE: [u8; 32] = [
-        0x01, 0x02, 0x03, 0x04, 0x19, 0xab, 0xfe, 0x39, 0x6f, 0x28, 0x79, 0x00, 0x08, 0xdf, 0x9a, 0xef, 0xfb, 0x77,
-        0x42, 0xae, 0xad, 0xfc, 0xcf, 0x12, 0x24, 0x45, 0x29, 0x89, 0x29, 0x45, 0x3f, 0xf8,
+        0x01, 0x02, 0x03, 0x04, 0x19, 0xab, 0xfe, 0x39, 0x6f, 0x28, 0x79, 0x00, 0x08, 0xdf, 0x9a,
+        0xef, 0xfb, 0x77, 0x42, 0xae, 0xad, 0xfc, 0xcf, 0x12, 0x24, 0x45, 0x29, 0x89, 0x29, 0x45,
+        0x3f, 0xf8,
     ];
 
     #[test]
