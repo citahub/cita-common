@@ -25,5 +25,6 @@ $ cargo install protobuf-codegen --vers 2.0.2
 $ cargo install grpc-compiler --vers 0.5.0
 ```
 
-3. You can start modifying `./src/protos/*.proto` 
-and use `./src/protos/create_protobuf.sh` regenerate `*.rs`
+3. You can start modifying `./src/proto/*.proto`
+and use `./src/protos/create_protobuf.sh` regenerate `*.rs`,
+finally synchronized to the cita-proto library

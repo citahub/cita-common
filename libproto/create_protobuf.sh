@@ -42,14 +42,6 @@ function gen_grpc_rs_for_protos() {
     protoc --rust-grpc_out=./src/protos ./proto/citacode.proto --proto_path ./proto
 }
 
-function add_pub_to_oneof_in_generated_code () {
-    local update_file="$1"
-    local dataname="$2"
-    local datatype="$3"
-    local update_part="${dataname}: ::std::option::Option<${datatype}_oneof_${dataname}>,"
-    sed -i ${sed_opts} "s/\(\s\)\(${update_part}\)/\1pub \2/g" "${update_file}"
-}
-
 function add_license () {
     for i in `find ./src/protos -name "*.rs"`
     do
@@ -174,9 +166,6 @@ function main () {
     check_dependencies
     remove_all_rs
     gen_rs_for_protos
-#    add_pub_to_oneof_in_generated_code ./src/protos/response.rs      data    Response
-#    add_pub_to_oneof_in_generated_code ./src/protos/request.rs       req     Request
-#    add_pub_to_oneof_in_generated_code ./src/protos/communication.rs content InnerMessage
     remove_all_generated_code
     generate_impls_for_all
     generate_impls_for_msg "./src/autoimpl.rs" 12 "struct"         '${struct},'
