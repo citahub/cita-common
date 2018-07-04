@@ -22,7 +22,6 @@ members = [
     "cita-secp256k1",
     "cita-ed25519",
     "cita-crypto",
-    "ethkey",
 
     "rlp",
     "rlp_derive",
