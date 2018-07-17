@@ -32,5 +32,7 @@ members = [
     "engine_json",
     "authority_manage",
 
+    "jsonrpc-types",
+
     "engine",
 ]
