@@ -33,6 +33,7 @@ members = [
     "authority_manage",
 
     "jsonrpc-types",
+    "cita-web3",
 
     "engine",
 ]

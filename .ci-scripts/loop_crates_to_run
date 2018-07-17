@@ -117,7 +117,7 @@ function cargo_run_all () {
         cargo_run ${crate} --features "${SELECT_CRYPTO}"
     done
 
-    for crate in cita-crypto libproto proof tx_pool jsonrpc-types; do
+    for crate in cita-crypto libproto proof tx_pool jsonrpc-types cita-web3; do
         cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
 
