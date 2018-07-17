@@ -5,11 +5,15 @@ set -xe -o pipefail
 CARGO_COMMAND=
 
 FEATURES_FOR_PUBSUB="rabbitmq zeromq kafka"
-FEATURES_FOR_HASH="sha3hash blake2bhash sm3hash"
-FEATURES_FOR_CRYPT="secp256k1 ed25519 sm2"
-FEATURES_FOR_HASH_AND_CRYPT=("secp256k1 sha3hash" "ed25519 blake2bhash" "sm2 sm3hash")
 
 CRATES_HAVE_RUN=".crates.have-run"
+
+DEFAULT_HASH="sha3hash"
+DEFAULT_CRYPTO="secp256k1"
+SELECT_HASH=
+SELECT_CRYPTO=
+
+UPLOAD_COVERAGE=
 
 function check_crates_list () {
     find . -maxdepth 1 -mindepth 1 -type d \
@@ -38,12 +42,7 @@ function cargo_run_build () {
     unset RUSTFLAGS
 }
 
-function cargo_run_coverage () {
-    # For: check_crates_list()
-    CARGO_COMMAND="echo"
-    cargo_run_all
-    CARGO_COMMAND=
-
+function upload_coverage () {
     KCOV_TARGET="target/cov"
     KCOV_FLAGS="--verify"
     EXCLUDE="/usr/lib,/usr/include,$HOME/.cargo,$HOME/.multirust,rocksdb,secp256k1"
@@ -64,6 +63,9 @@ function cargo_run_test () {
     cargo_run_all
     CARGO_COMMAND=
     unset RUSTFLAGS
+    if [ "${UPLOAD_COVERAGE}" = "true" ]; then
+        upload_coverage
+    fi
 }
 
 function cargo_run () {
@@ -97,8 +99,10 @@ function cargo_run_all () {
     cargo_run pubsub_zeromq
     cargo_run pubsub_kafka
 
-    for features in ${FEATURES_FOR_PUBSUB}; do
-        cargo_run pubsub --features "${features}"
+    for crate in pubsub; do
+        for features in ${FEATURES_FOR_PUBSUB}; do
+            cargo_run ${crate} --features "${features}"
+        done
     done
 
     cargo_run sha3
@@ -106,36 +110,75 @@ function cargo_run_all () {
     cargo_run sm3
 
     for crate in util cita-secp256k1 cita-ed25519 cita-sm2; do
-        for features in ${FEATURES_FOR_HASH}; do
-            cargo_run ${crate} --features "${features}"
-        done
+        cargo_run ${crate} --features "${SELECT_HASH}"
     done
 
     for crate in engine_json; do
-        for features in ${FEATURES_FOR_CRYPT}; do
-            cargo_run ${crate} --features "${features}"
-        done
+        cargo_run ${crate} --features "${SELECT_CRYPTO}"
     done
 
     for crate in cita-crypto libproto proof tx_pool; do
-        for features in "${FEATURES_FOR_HASH_AND_CRYPT[@]}"; do
-            cargo_run ${crate} --features "${features}"
-        done
+        cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
 
-    for pubsub_feature in ${FEATURES_FOR_PUBSUB}; do
-        for features in "${FEATURES_FOR_HASH_AND_CRYPT[@]}"; do
-            cargo_run engine --features "${features} ${pubsub_feature}"
+    for crate in engine; do
+        for pubsub_feature in ${FEATURES_FOR_PUBSUB}; do
+            cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO} ${pubsub_feature}"
         done
     done
 }
 
+function check_args () {
+    local select_hash="$1"
+    local select_crypto="$2"
+    local upload_coverage="$3"
+    if [ -z "${select_hash}" ]; then
+        echo "[Info ] Use the default hash algorithm."
+        SELECT_HASH="${DEFAULT_HASH}"
+    elif [ "${select_hash}" = "sha3hash" ] \
+            || [ "${select_hash}" = "blake2bhash" ] \
+            || [ "${select_hash}" = "sm3hash" ]; then
+        SELECT_HASH="${select_hash}"
+        echo "[Info ] Select the hash algorithm [${SELECT_HASH}]."
+    else
+        echo "[ERROR] Unknown algorithm [${select_hash}]."
+        exit 1
+    fi
+    if [ -z "${select_crypto}" ]; then
+        echo "[Info ] Use the default crypto algorithm."
+        SELECT_CRYPTO="${DEFAULT_CRYPTO}"
+    elif [ "${select_crypto}" = "secp256k1" ] \
+            || [ "${select_crypto}" = "ed25519" ] \
+            || [ "${select_crypto}" = "sm2" ]; then
+        SELECT_CRYPTO="${select_crypto}"
+        echo "[Info ] Select the crypto algorithm [${SELECT_CRYPTO}]."
+    else
+        echo "[ERROR] Unknown algorithm [${select_crypto}]."
+        exit 1
+    fi
+    if [ -n "${upload_coverage}" ]; then
+        UPLOAD_COVERAGE="${upload_coverage}"
+    fi
+}
+
 function main () {
     local currdir=$(pwd)
-    : > "${CRATES_HAVE_RUN}"
-    cargo_run_$1
+    local action="$1"
+    shift 1
+    case ${action} in
+        build | test)
+            check_args "$@"
+            : > "${CRATES_HAVE_RUN}"
+            cargo_run_${action}
+            cd "${currdir}"
+            check_crates_list
+            ;;
+        *)
+            echo "[Error] Unknown action [${action}]."
+            exit 1
+            ;;
+    esac
     cd "${currdir}"
-    check_crates_list
 }
 
 main "$@"

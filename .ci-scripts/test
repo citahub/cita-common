@@ -5,4 +5,4 @@ set -xe
 SCRIPT_PATH=`readlink -f $0`
 source "$(dirname "${SCRIPT_PATH}")/library"
 
-loop_run_in_docker test
+loop_run_in_docker test "$@"
