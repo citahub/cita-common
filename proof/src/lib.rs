@@ -28,7 +28,7 @@ mod authority_round_proof;
 mod bft_proof;
 
 pub use authority_round_proof::AuthorityRoundProof;
-pub use bft_proof::BftProof;\
+pub use bft_proof::BftProof;
 use libproto::blockchain::{Proof, ProofType};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
