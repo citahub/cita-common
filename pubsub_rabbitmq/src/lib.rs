@@ -15,11 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#![feature(extern_prelude)]
 extern crate amqp;
+extern crate message_queue as mq;
+
 use amqp::{protocol, Basic, Channel, Consumer, Session, Table};
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 use std::thread;
+
+mod channel;
 
 pub struct Handler {
     tx: Sender<(String, Vec<u8>)>,

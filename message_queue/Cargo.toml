@@ -1,0 +1,4 @@
+[package]
+name = "message_queue"
+version = "0.6.0"
+authors = ["Cryptape Technologies <contact@cryptape.com>"]
