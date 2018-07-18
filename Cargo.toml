@@ -32,5 +32,8 @@ members = [
     "engine_json",
     "authority_manage",
 
+    "jsonrpc-types",
+    "cita-web3",
+
     "engine",
 ]
