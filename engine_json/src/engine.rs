@@ -18,13 +18,13 @@
 //! Engine deserialization.
 
 use super::AuthorityRound;
-use super::Tendermint;
+use super::Bft;
 
 /// Engine deserialization.
 #[derive(Debug, PartialEq, Deserialize)]
 pub enum Engine {
     AuthorityRound(AuthorityRound),
-    Tendermint(Tendermint),
+    Bft(Bft),
 }
 
 #[cfg(test)]
@@ -76,11 +76,11 @@ mod tests {
     }
 
     #[test]
-    fn tendermint_engine_deserialization() {
+    fn bft_engine_deserialization() {
         let signer = generate_signer();
         let s = format!(
             r#"{{
-            "Tendermint": {{
+            "Bft": {{
                 "params": {{
                     "duration": 3,
                     "signer": "0x{}",

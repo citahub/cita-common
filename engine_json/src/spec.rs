@@ -92,13 +92,13 @@ mod tests {
     }
 
     #[test]
-    fn tendermint_spec_deserialization() {
+    fn bft_spec_deserialization() {
         let signer = generate_signer();
         let s = format!(
             r#"{{
-                "name": "TestTendermint",
+                "name": "TestBft",
                 "engine": {{
-                    "Tendermint": {{
+                    "Bft": {{
                         "params": {{
                             "duration": 3,
                             "signer": "0x{}",

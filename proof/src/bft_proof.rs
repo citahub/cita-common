@@ -40,7 +40,7 @@ pub enum Step {
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
-pub struct TendermintProof {
+pub struct BftProof {
     pub proposal: H256,
     // Prev height
     pub height: usize,
@@ -48,14 +48,14 @@ pub struct TendermintProof {
     pub commits: HashMap<Address, Signature>,
 }
 
-impl TendermintProof {
+impl BftProof {
     pub fn new(
         height: usize,
         round: usize,
         proposal: H256,
         commits: HashMap<Address, Signature>,
-    ) -> TendermintProof {
-        TendermintProof {
+    ) -> BftProof {
+        BftProof {
             height: height,
             round: round,
             proposal: proposal,
@@ -64,7 +64,7 @@ impl TendermintProof {
     }
 
     pub fn default() -> Self {
-        TendermintProof {
+        BftProof {
             height: MAX,
             round: MAX,
             proposal: H256::default(),
@@ -135,34 +135,34 @@ impl TendermintProof {
     }
 }
 
-impl From<Proof> for TendermintProof {
+impl From<Proof> for BftProof {
     fn from(p: Proof) -> Self {
-        let decoded: TendermintProof = deserialize(&p.get_content()[..]).unwrap();
+        let decoded: BftProof = deserialize(&p.get_content()[..]).unwrap();
         decoded
     }
 }
 
-impl Into<Proof> for TendermintProof {
+impl Into<Proof> for BftProof {
     fn into(self) -> Proof {
         let mut proof = Proof::new();
         let encoded_proof: Vec<u8> = serialize(&self, Infinite).unwrap();
         proof.set_content(encoded_proof);
-        proof.set_field_type(ProofType::Tendermint);
+        proof.set_field_type(ProofType::Bft);
         proof
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{H256, TendermintProof};
+    use super::{H256, BftProof};
     use libproto::blockchain::Proof;
     use std::collections::HashMap;
 
     #[test]
     fn proof_convert() {
-        let o_proof = TendermintProof::new(0, 1, H256::default(), HashMap::new());
+        let o_proof = BftProof::new(0, 1, H256::default(), HashMap::new());
         let proto_proof: Proof = o_proof.clone().into();
-        let de_proof: TendermintProof = proto_proof.into();
+        let de_proof: BftProof = proto_proof.into();
         assert_eq!(o_proof, de_proof);
     }
 }
