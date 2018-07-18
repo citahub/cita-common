@@ -3462,7 +3462,7 @@ impl ::protobuf::reflect::ProtobufValue for BlackList {
 pub enum ProofType {
     AuthorityRound = 0,
     Raft = 1,
-    Tendermint = 2,
+    Bft = 2,
 }
 
 impl ::protobuf::ProtobufEnum for ProofType {
@@ -3474,7 +3474,7 @@ impl ::protobuf::ProtobufEnum for ProofType {
         match value {
             0 => ::std::option::Option::Some(ProofType::AuthorityRound),
             1 => ::std::option::Option::Some(ProofType::Raft),
-            2 => ::std::option::Option::Some(ProofType::Tendermint),
+            2 => ::std::option::Option::Some(ProofType::Bft),
             _ => ::std::option::Option::None
         }
     }
@@ -3483,7 +3483,7 @@ impl ::protobuf::ProtobufEnum for ProofType {
         static values: &'static [ProofType] = &[
             ProofType::AuthorityRound,
             ProofType::Raft,
-            ProofType::Tendermint,
+            ProofType::Bft,
         ];
         values
     }
@@ -3615,7 +3615,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x1e\n\x04body\x18\x03\x20\x01(\x0b2\n.BlockBodyR\x04body\"I\n\tBlackLis\
     t\x12\x1d\n\nblack_list\x18\x01\x20\x03(\x0cR\tblackList\x12\x1d\n\nclea\
     r_list\x18\x02\x20\x03(\x0cR\tclearList*9\n\tProofType\x12\x12\n\x0eAuth\
-    orityRound\x10\0\x12\x08\n\x04Raft\x10\x01\x12\x0e\n\nTendermint\x10\x02\
+    orityRound\x10\0\x12\x08\n\x04Raft\x10\x01\x12\x0e\n\nBft\x10\x02\
     *\x1b\n\x06Crypto\x12\x08\n\x04SECP\x10\0\x12\x07\n\x03SM2\x10\x01J\xfc\
     \x1d\n\x06\x12\x04\0\0d\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\n\n\x02\
     \x05\0\x12\x04\x02\0\x06\x01\n\n\n\x03\x05\0\x01\x12\x03\x02\x05\x0e\n\

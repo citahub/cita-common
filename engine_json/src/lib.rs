@@ -26,12 +26,12 @@ extern crate serde_json;
 mod authority_round;
 mod engine;
 mod spec;
-mod tendermint;
+mod bft;
 
 pub use self::authority_round::*;
 pub use self::engine::*;
 pub use self::spec::*;
-pub use self::tendermint::*;
+pub use self::bft::*;
 
 #[test]
 fn it_works() {}
