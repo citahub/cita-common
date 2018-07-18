@@ -28,8 +28,8 @@ mod authority_round_proof;
 mod bft_proof;
 
 pub use authority_round_proof::AuthorityRoundProof;
+pub use bft_proof::BftProof;\
 use libproto::blockchain::{Proof, ProofType};
-pub use bft_proof::BftProof;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -79,8 +79,7 @@ mod tests {
 
     #[test]
     fn bft_proof_convert() {
-        let o_proof =
-            CitaProof::Bft(BftProof::new(0, 1, H256::default(), HashMap::new()));
+        let o_proof = CitaProof::Bft(BftProof::new(0, 1, H256::default(), HashMap::new()));
         let proto_proof: Proof = o_proof.clone().into();
         let de_proof: CitaProof = proto_proof.into();
         assert_eq!(o_proof, de_proof);

@@ -154,7 +154,7 @@ impl Into<Proof> for BftProof {
 
 #[cfg(test)]
 mod tests {
-    use super::{H256, BftProof};
+    use super::{BftProof, H256};
     use libproto::blockchain::Proof;
     use std::collections::HashMap;
 
