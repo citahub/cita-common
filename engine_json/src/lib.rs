@@ -24,14 +24,14 @@ extern crate serde_derive;
 extern crate serde_json;
 
 mod authority_round;
+mod bft;
 mod engine;
 mod spec;
-mod bft;
 
 pub use self::authority_round::*;
+pub use self::bft::*;
 pub use self::engine::*;
 pub use self::spec::*;
-pub use self::bft::*;
 
 #[test]
 fn it_works() {}
