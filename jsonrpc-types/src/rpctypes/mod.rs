@@ -29,8 +29,11 @@ mod specs;
 mod transaction;
 mod tx_response;
 
+#[cfg(test)]
+mod tests;
+
 pub use self::basic::{
-    BlockTag, Boolean, Data, Data20, Data32, OneItemTupleTrick, Quantity, VariadicValue,
+    BlockTag, Boolean, Data, Data20, Data32, Integer, OneItemTupleTrick, Quantity, VariadicValue,
 };
 pub use self::exchange::{BlockParamsByHash, BlockParamsByNumber, CountOrCode, RpcBlock};
 pub use self::specs::{Id, Params, Version};
@@ -43,5 +46,25 @@ pub use self::log::Log;
 pub use self::meta_data::MetaData;
 pub use self::proof::{AuthorityRoundProof, Proof, TendermintProof};
 pub use self::receipt::Receipt;
-pub use self::transaction::{BlockTransaction, FullTransaction, RpcTransaction};
+pub use self::transaction::{BlockTransaction, FullTransaction, RpcTransaction, Transaction};
 pub use self::tx_response::TxResponse;
+
+use serde_json;
+
+macro_rules! impl_from_jsonstr_for {
+    ($type:ty) => {
+        impl $type {
+            pub fn from_jsonstr(s: &str) -> Result<Self, serde_json::Error> {
+                serde_json::from_str(s)
+            }
+        }
+    };
+    ($( $type:ident ),+) => {
+        $( impl_from_jsonstr_for!($type); )+
+    };
+    ($( $type:ident ),+ ,) => {
+        impl_from_jsonstr_for!($($type),+);
+    };
+}
+
+impl_from_jsonstr_for!(BlockTag, Boolean, Data, Data20, Data32, Quantity, Integer);

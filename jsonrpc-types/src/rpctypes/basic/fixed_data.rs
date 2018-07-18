@@ -78,8 +78,9 @@ macro_rules! impl_for_fixed_type {
                     let data = $inner::from_str(&value[2..]).map_err(|_| {
                         if value.len() > 12 {
                             E::custom(format!(
-                                "invalid hexadecimal string: [{}..{}]",
+                                "invalid hexadecimal string: [{}..(omit {})..{}]",
                                 &value[..6],
+                                value.len() - 12,
                                 &value[value.len() - 6..value.len()]
                             ))
                         } else {
@@ -90,8 +91,9 @@ macro_rules! impl_for_fixed_type {
                 } else {
                     if value.len() > 12 {
                         Err(E::custom(format!(
-                            "invalid format: [{}..{}]",
+                            "invalid format: [{}..(omit {})..{}]",
                             &value[..6],
+                            value.len() - 12,
                             &value[value.len() - 6..value.len()]
                         )))
                     } else {
