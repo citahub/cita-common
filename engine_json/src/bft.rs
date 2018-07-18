@@ -19,7 +19,7 @@ use crypto::PrivKey;
 
 /// Authority params deserialization.
 #[derive(Debug, PartialEq, Deserialize)]
-pub struct TendermintParams {
+pub struct BftParams {
     /// Block duration.
     pub duration: u64,
     pub is_test: bool,
@@ -40,8 +40,8 @@ pub struct TendermintParams {
 
 /// Authority engine deserialization.
 #[derive(Debug, PartialEq, Deserialize)]
-pub struct Tendermint {
-    pub params: TendermintParams,
+pub struct Bft {
+    pub params: BftParams,
 }
 
 #[cfg(test)]
@@ -73,7 +73,7 @@ mod tests {
     }
 
     #[test]
-    fn tendermint_params_deserialization() {
+    fn bft_params_deserialization() {
         let signer = generate_signer();
         let s = format!(
             r#"{{
@@ -84,11 +84,11 @@ mod tests {
             signer
         );
 
-        let _deserialize: TendermintParams = serde_json::from_str(&s).unwrap();
+        let _deserialize: BftParams = serde_json::from_str(&s).unwrap();
     }
 
     #[test]
-    fn tendermint_deserialization() {
+    fn bft_deserialization() {
         let signer = generate_signer();
         let s = format!(
             r#"{{
@@ -101,6 +101,6 @@ mod tests {
             signer
         );
 
-        let _deserialize: Tendermint = serde_json::from_str(&s).unwrap();
+        let _deserialize: Bft = serde_json::from_str(&s).unwrap();
     }
 }
