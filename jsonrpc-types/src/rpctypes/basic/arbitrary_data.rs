@@ -71,8 +71,9 @@ impl<'de> Visitor<'de> for DataVisitor {
             let data = FromHex::from_hex(&value[2..]).map_err(|_| {
                 if value.len() > 12 {
                     E::custom(format!(
-                        "invalid hexadecimal string: [{}..{}]",
+                        "invalid hexadecimal string: [{}..(omit {})..{}]",
                         &value[..6],
+                        value.len() - 12,
                         &value[value.len() - 6..value.len()]
                     ))
                 } else {
@@ -83,8 +84,9 @@ impl<'de> Visitor<'de> for DataVisitor {
         } else {
             if value.len() > 12 {
                 Err(E::custom(format!(
-                    "invalid format: [{}..{}]",
+                    "invalid format: [{}..(omit {})..{}]",
                     &value[..6],
+                    value.len() - 12,
                     &value[value.len() - 6..value.len()]
                 )))
             } else {

@@ -15,6 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use std::convert::{TryFrom, TryInto};
+use std::num::TryFromIntError;
+
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -75,10 +78,31 @@ impl Into<u64> for Integer {
     }
 }
 
+macro_rules! impl_convert_with_uint {
+    ($uint:ty) => {
+        impl From<$uint> for Integer {
+            fn from(data: $uint) -> Integer {
+                Integer::new(data as u64)
+            }
+        }
+        impl TryInto<$uint> for Integer {
+            type Error = TryFromIntError;
+            fn try_into(self) -> Result<$uint, Self::Error> {
+                TryFrom::try_from(self.0)
+            }
+        }
+    };
+}
+
+impl_convert_with_uint!(u32);
+impl_convert_with_uint!(u16);
+impl_convert_with_uint!(u8);
+
 #[cfg(test)]
 mod tests {
     use super::Integer;
     use serde_json;
+    use std::convert::{Into, TryInto};
 
     #[test]
     fn serialize() {
@@ -106,5 +130,20 @@ mod tests {
                 assert!(result.is_err());
             }
         }
+    }
+
+    #[test]
+    fn convert() {
+        let auint: u8 = 123;
+        let data = Integer::new(auint as u64);
+        assert_eq!(data, (auint as u32).into());
+        assert_eq!(data, (auint as u16).into());
+        assert_eq!(data, (auint as u8).into());
+        let expected: u32 = data.clone().try_into().unwrap();
+        assert_eq!(expected, 123);
+        let expected: u16 = data.clone().try_into().unwrap();
+        assert_eq!(expected, 123);
+        let expected: u8 = data.clone().try_into().unwrap();
+        assert_eq!(expected, 123);
     }
 }

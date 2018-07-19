@@ -68,8 +68,9 @@ impl<'de> Visitor<'de> for QuantityVisitor {
             let data = U256::from_str(&value[2..]).map_err(|_| {
                 if value.len() > 12 {
                     E::custom(format!(
-                        "invalid hexadecimal string: [{}..{}]",
+                        "invalid hexadecimal string: [{}..(omit {})..{}]",
                         &value[..6],
+                        value.len() - 12,
                         &value[value.len() - 6..value.len()]
                     ))
                 } else {
@@ -81,8 +82,9 @@ impl<'de> Visitor<'de> for QuantityVisitor {
             let data = U256::from_dec_str(&value[..]).map_err(|_| {
                 if value.len() > 12 {
                     E::custom(format!(
-                        "invalid decimal string: [{}..{}]",
+                        "invalid decimal string: [{}..(omit {})..{}]",
                         &value[..6],
+                        value.len() - 12,
                         &value[value.len() - 6..value.len()]
                     ))
                 } else {
