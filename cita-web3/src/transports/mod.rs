@@ -15,16 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#[macro_use]
-extern crate futures;
-extern crate hyper;
-extern crate jsonrpc_core;
-extern crate parking_lot;
-extern crate serde_json;
-extern crate tokio_core;
+mod http;
+mod shared;
 
-pub extern crate jsonrpc_types as types;
-pub extern crate web3;
-
-pub mod api;
-pub mod transports;
+pub use self::http::Http;
