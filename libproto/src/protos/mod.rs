@@ -52,7 +52,7 @@ pub use self::citacode::{ActionParams, EnvInfo, InvokeRequest, InvokeResponse, K
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
 pub use self::consensus::{Proposal, SignedProposal, Vote};
 pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LoadRequest, LoadResponse, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, RegisterRequest, RegisterResponse, StateRoot};
-pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request};
+pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request, StateProof};
 pub use self::response::{Response_oneof_data, FullTransaction, Response};
 pub use self::snapshot::{Cmd, Resp, SnapshotReq, SnapshotResp};
 pub use self::sync::{SyncRequest, SyncResponse};
