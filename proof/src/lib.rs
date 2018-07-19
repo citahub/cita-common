@@ -25,18 +25,18 @@ extern crate serde_derive;
 extern crate util;
 
 mod authority_round_proof;
-mod tendermint_proof;
+mod bft_proof;
 
 pub use authority_round_proof::AuthorityRoundProof;
+pub use bft_proof::BftProof;
 use libproto::blockchain::{Proof, ProofType};
-pub use tendermint_proof::TendermintProof;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CitaProof {
     AuthorityRound(AuthorityRoundProof),
     Raft,
-    Tendermint(TendermintProof),
+    Bft(BftProof),
 }
 
 impl From<Proof> for CitaProof {
@@ -44,7 +44,7 @@ impl From<Proof> for CitaProof {
         match p.get_field_type() {
             ProofType::AuthorityRound => CitaProof::AuthorityRound(AuthorityRoundProof::from(p)),
             ProofType::Raft => CitaProof::Raft,
-            ProofType::Tendermint => CitaProof::Tendermint(TendermintProof::from(p)),
+            ProofType::Bft => CitaProof::Bft(BftProof::from(p)),
         }
     }
 }
@@ -54,7 +54,7 @@ impl Into<Proof> for CitaProof {
         match self {
             CitaProof::AuthorityRound(proof) => proof.into(),
             CitaProof::Raft => Proof::new(),
-            CitaProof::Tendermint(proof) => proof.into(),
+            CitaProof::Bft(proof) => proof.into(),
         }
     }
 }
@@ -62,7 +62,7 @@ impl Into<Proof> for CitaProof {
 #[cfg(test)]
 mod tests {
     use super::authority_round_proof::AuthorityRoundProof;
-    use super::tendermint_proof::TendermintProof;
+    use super::bft_proof::BftProof;
     use super::CitaProof;
     use crypto::Signature;
     use libproto::blockchain::Proof;
@@ -78,9 +78,8 @@ mod tests {
     }
 
     #[test]
-    fn tendermint_proof_convert() {
-        let o_proof =
-            CitaProof::Tendermint(TendermintProof::new(0, 1, H256::default(), HashMap::new()));
+    fn bft_proof_convert() {
+        let o_proof = CitaProof::Bft(BftProof::new(0, 1, H256::default(), HashMap::new()));
         let proto_proof: Proof = o_proof.clone().into();
         let de_proof: CitaProof = proto_proof.into();
         assert_eq!(o_proof, de_proof);

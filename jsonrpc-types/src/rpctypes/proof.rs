@@ -18,14 +18,14 @@
 use bincode::deserialize;
 use cita_types::{Address, H256};
 use libproto::blockchain::{Proof as ProtoProof, ProofType};
-use proof::{AuthorityRoundProof as AProof, TendermintProof as TProof};
+use proof::{AuthorityRoundProof as AProof, BftProof as TProof};
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub enum Proof {
     AuthorityRound(AuthorityRoundProof),
     Raft,
-    Tendermint(TendermintProof),
+    Bft(BftProof),
 }
 
 impl From<ProtoProof> for Proof {
@@ -33,20 +33,20 @@ impl From<ProtoProof> for Proof {
         match p.get_field_type() {
             ProofType::AuthorityRound => Proof::AuthorityRound(AuthorityRoundProof::from(p)),
             ProofType::Raft => Proof::Raft,
-            ProofType::Tendermint => Proof::Tendermint(TendermintProof::from(p)),
+            ProofType::Bft => Proof::Bft(BftProof::from(p)),
         }
     }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct TendermintProof {
+pub struct BftProof {
     pub proposal: H256,
     pub height: usize,
     pub round: usize,
     pub commits: HashMap<Address, String>,
 }
 
-impl From<ProtoProof> for TendermintProof {
+impl From<ProtoProof> for BftProof {
     fn from(p: ProtoProof) -> Self {
         let decoded: TProof = deserialize(&p.get_content()[..]).unwrap();
         let mut commits: HashMap<Address, String> = HashMap::new();
@@ -54,7 +54,7 @@ impl From<ProtoProof> for TendermintProof {
         for (addr, sign) in decoded.commits {
             commits.insert(addr, str_0x.clone() + &String::from(sign));
         }
-        TendermintProof {
+        BftProof {
             proposal: decoded.proposal,
             height: decoded.height,
             round: decoded.round,
