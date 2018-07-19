@@ -185,6 +185,7 @@ macro_rules! loop_macro_for_structs {
             BatchRequest,
             Call,
             Request,
+            StateProof,
             FullTransaction,
             Response,
             SnapshotReq,

@@ -159,6 +159,12 @@ impl Output {
                             serde_json::from_str::<MetaData>(&data).unwrap(),
                         ))
                         .output(),
+                    Response_oneof_data::state_proof(data) => success
+                        .set_result(ResponseResult::GetStateProof(data.into()))
+                        .output(),
+                    Response_oneof_data::block_header(data) => success
+                        .set_result(ResponseResult::GetBlockHeader(data.into()))
+                        .output(),
                 }
             }
             _ => match data.data.unwrap() {

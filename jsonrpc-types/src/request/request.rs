@@ -297,4 +297,6 @@ define_call!(
     (GetFilterLogs, GetFilterLogsParams: [Quantity], Logs),
     (GetTransactionProof, GetTransactionProofParams: [Data32], Data),
     (GetMetaData, GetMetaDataParams: [BlockNumber], MetaData),
+    (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
+    (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
 );

@@ -24,15 +24,18 @@ use uuid::Uuid;
 
 use cita_types::clean_0x;
 use cita_types::traits::LowerHex;
-use libproto::request::{Call as ProtoCall, Request as ProtoRequest};
+use libproto::request::{
+    Call as ProtoCall, Request as ProtoRequest, StateProof as ProtoStateProof,
+};
 use libproto::UnverifiedTransaction;
 
 use super::request::{
     BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
-    GetBlockByNumberParams, GetCodeParams, GetFilterChangesParams, GetFilterLogsParams,
-    GetLogsParams, GetMetaDataParams, GetTransactionCountParams, GetTransactionParams,
-    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
+    GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
+    GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
+    GetTransactionCountParams, GetTransactionParams, GetTransactionProofParams,
+    GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams, PeerCountParams,
+    SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
 };
 use error::Error;
 use rpctypes::{BlockParamsByHash, BlockParamsByNumber, CountOrCode};
@@ -315,6 +318,36 @@ impl TryInto<ProtoRequest> for GetMetaDataParams {
             .map_err(|err| Error::invalid_params(err.to_string()))
             .map(|data| {
                 request.set_meta_data(data);
+                request
+            })
+    }
+}
+
+impl TryInto<ProtoRequest> for GetStateProofParams {
+    type Error = Error;
+    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut state_proof = ProtoStateProof::new();
+        state_proof.set_address(self.0.into());
+        state_proof.set_position(self.1.into());
+        serde_json::to_string(&self.2)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                state_proof.set_height(height);
+                request.set_state_proof(state_proof);
+                request
+            })
+    }
+}
+
+impl TryInto<ProtoRequest> for GetBlockHeaderParams {
+    type Error = Error;
+    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        serde_json::to_string(&self.0)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                request.set_block_header_height(height);
                 request
             })
     }
