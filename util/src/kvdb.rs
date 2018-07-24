@@ -766,7 +766,7 @@ impl Database {
 
         let mut backup_db = PathBuf::from(&self.path);
         backup_db.pop();
-        backup_db.push("backup_db");
+        backup_db.push(self.path.clone() + "_backup_db");
 
         let existed = match fs::rename(&self.path, &backup_db) {
             Ok(_) => true,
