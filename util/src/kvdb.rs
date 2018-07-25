@@ -764,9 +764,7 @@ impl Database {
     pub fn restore(&self, new_db: &str) -> Result<(), UtilError> {
         self.close();
 
-        let mut backup_db = PathBuf::from(&self.path);
-        backup_db.pop();
-        backup_db.push(self.path.clone() + "_backup_db");
+        let backup_db = PathBuf::from(self.path.clone() + "_backup_db");
 
         let existed = match fs::rename(&self.path, &backup_db) {
             Ok(_) => true,
