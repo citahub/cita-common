@@ -200,7 +200,7 @@ impl<'db> TrieDB<'db> {
     }
 }
 
-pub fn verify_value_proof(key: &[u8], root_hash: H256, proof: &[Bytes]) -> Option<DBValue>
+pub fn verify_value_proof<Q: Query>(key: &[u8], root_hash: H256, proof: &[Bytes], query: Q) -> Option<Q::Item>
 {
     if proof.len() == 0 { return None; }
 
@@ -215,7 +215,7 @@ pub fn verify_value_proof(key: &[u8], root_hash: H256, proof: &[Bytes]) -> Optio
         match Node::decoded(node) {
             Node::Leaf(slice, value) => {
                 return match slice == key {
-                    true => Some(DBValue::from_slice(value)),
+                    true => Some(query.decode(value)),
                     false => None,
                 };
             }
@@ -228,7 +228,7 @@ pub fn verify_value_proof(key: &[u8], root_hash: H256, proof: &[Bytes]) -> Optio
                 }
             }
             Node::Branch(children, value) => match key.is_empty() {
-                true => return value.map(move |val| DBValue::from_slice(val)),
+                true => return value.map(move |val| query.decode(val)),
                 false => {
                     next_node_data = children[key.at(0) as usize];
                     key = key.mid(1);
@@ -659,7 +659,7 @@ fn value_proof() {
     let proof = trie.get_value_proof(&[0x64u8, 0x6f, 0x67, 0x65]).unwrap();
 
     // verify proof and extract value
-    let val = verify_value_proof(&[0x64u8, 0x6f, 0x67, 0x65], root, &proof).unwrap();
+    let val = verify_value_proof(&[0x64u8, 0x6f, 0x67, 0x65], root, &proof, DBValue::from_slice).unwrap();
 
     assert_eq!(val, DBValue::from_slice(b"coin"));
 }
