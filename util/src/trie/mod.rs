@@ -20,6 +20,7 @@
 use types::H256;
 use hashdb::{HashDB, DBValue};
 use std::fmt;
+use Bytes;
 
 /// Export the standardmap module.
 pub mod standardmap;
@@ -158,6 +159,11 @@ pub trait Trie {
     where
         'a: 'key;
 
+    /// get merkle proof for the key in the trie
+    fn get_value_proof<'a, 'key>(&'a self, key: &'key [u8]) -> Option<Vec<Bytes>>
+    where
+        'a: 'key;
+
     /// Returns a depth-first iterator over the elements of trie.
     fn iter<'a>(&'a self) -> Result<Box<TrieIterator<Item = TrieItem> + 'a>>;
 }
@@ -258,6 +264,13 @@ impl<'db> Trie for TrieKinds<'db> {
         'a: 'key,
     {
         wrapper!(self, get_with, key, query)
+    }
+
+    fn get_value_proof<'a, 'key>(&'a self, key: &'key [u8]) -> Option<Vec<Bytes>>
+    where
+        'a: 'key,
+    {
+        wrapper!(self, get_value_proof, key)
     }
 
     fn iter<'a>(&'a self) -> Result<Box<TrieIterator<Item = TrieItem> + 'a>> {

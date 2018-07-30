@@ -19,6 +19,7 @@ use super::{TrieDB, Trie, TrieDBIterator, TrieItem, TrieIterator, Query};
 use types::H256;
 use hashable::Hashable;
 use hashdb::HashDB;
+use Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 /// Additionaly it stores inserted hash-key mappings for later retrieval.
@@ -63,6 +64,10 @@ impl<'db> Trie for FatDB<'db> {
     {
         self.raw.get_with(&key.crypt_hash(), query)
     }
+
+    fn get_value_proof<'a, 'key>(&'a self, _key: &'key [u8]) -> Option<Vec<Bytes>>
+        where
+            'a: 'key, { None }
 }
 
 /// Itarator over inserted pairs of key values.

@@ -20,6 +20,7 @@ use super::triedb::TrieDB;
 use types::H256;
 use hashable::Hashable;
 use hashdb::HashDB;
+use Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 ///
@@ -68,6 +69,10 @@ impl<'db> Trie for SecTrieDB<'db> {
     {
         self.raw.get_with(&key.crypt_hash(), query)
     }
+
+    fn get_value_proof<'a, 'key>(&'a self, _key: &'key [u8]) -> Option<Vec<Bytes>>
+        where
+            'a: 'key, { None }
 }
 
 #[test]
