@@ -146,58 +146,6 @@ impl<'db> TrieDB<'db> {
             false => Ok(DBValue::from_slice(node)),
         }
     }
-
-    pub fn get_value_proof<'a, 'key>(&'a self, key: &'key [u8]) -> Option<Vec<Bytes>>
-        where
-            'a: 'key,
-    {
-        let mut path = Vec::new();
-        let mut key = NibbleSlice::new(key);
-        let mut hash = self.root.clone();
-
-        // this loop iterates through non-inline nodes.
-        loop {
-            let node_data = match self.db.get(&hash) {
-                Some(value) => value,
-                None => return None,
-            };
-
-            // this loop iterates through all inline children (usually max 1)
-            // without incrementing the depth.
-            let mut node_data = &node_data[..];
-            loop {
-                path.push(node_data.into());
-                match Node::decoded(node_data) {
-                    Node::Leaf(_slice, _value) => {
-                        return Some(path);
-                    }
-                    Node::Extension(slice, item) => {
-                        if key.starts_with(&slice) {
-                            node_data = item;
-                            key = key.mid(slice.len());
-                        } else {
-                            return None;
-                        }
-                    }
-                    Node::Branch(children, _value) => match key.is_empty() {
-                        true => return Some(path),
-                        false => {
-                            node_data = children[key.at(0) as usize];
-                            key = key.mid(1);
-                        }
-                    },
-                    _ => return None,
-                }
-
-                // check if new node data is inline or hash.
-                let r = Rlp::new(node_data);
-                if r.is_data() && r.size() == 32 {
-                    hash = r.as_val();
-                    break;
-                }
-            }
-        }
-    }
 }
 
 pub fn verify_value_proof<Q: Query>(key: &[u8], root_hash: H256, proof: &[Bytes], query: Q) -> Option<Q::Item>
@@ -267,6 +215,58 @@ impl<'db> Trie for TrieDB<'db> {
             hash: self.root.clone(),
         }
         .look_up(NibbleSlice::new(key))
+    }
+
+    fn get_value_proof<'a, 'key>(&'a self, key: &'key [u8]) -> Option<Vec<Bytes>>
+        where
+            'a: 'key,
+    {
+        let mut path = Vec::new();
+        let mut key = NibbleSlice::new(key);
+        let mut hash = self.root.clone();
+
+        // this loop iterates through non-inline nodes.
+        loop {
+            let node_data = match self.db.get(&hash) {
+                Some(value) => value,
+                None => return None,
+            };
+
+            // this loop iterates through all inline children (usually max 1)
+            // without incrementing the depth.
+            let mut node_data = &node_data[..];
+            loop {
+                path.push(node_data.into());
+                match Node::decoded(node_data) {
+                    Node::Leaf(_slice, _value) => {
+                        return Some(path);
+                    }
+                    Node::Extension(slice, item) => {
+                        if key.starts_with(&slice) {
+                            node_data = item;
+                            key = key.mid(slice.len());
+                        } else {
+                            return None;
+                        }
+                    }
+                    Node::Branch(children, _value) => match key.is_empty() {
+                        true => return Some(path),
+                        false => {
+                            node_data = children[key.at(0) as usize];
+                            key = key.mid(1);
+                        }
+                    },
+                    _ => return None,
+                }
+
+                // check if new node data is inline or hash.
+                let r = Rlp::new(node_data);
+                if r.is_data() && r.size() == 32 {
+                    hash = r.as_val();
+                    break;
+                }
+            }
+        }
     }
 }
 
