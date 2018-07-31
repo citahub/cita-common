@@ -214,7 +214,7 @@ pub enum TrieSpec {
 
 impl Default for TrieSpec {
     fn default() -> TrieSpec {
-        TrieSpec::Secure
+        TrieSpec::Generic
     }
 }
 
