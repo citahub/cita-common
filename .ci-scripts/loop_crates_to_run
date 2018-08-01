@@ -105,7 +105,6 @@ function cargo_run_all () {
         done
     done
 
-    cargo_run sha3
     cargo_run blake2b
     cargo_run sm3
 

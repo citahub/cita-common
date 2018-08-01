@@ -4,7 +4,6 @@ version = "0.6.0"
 authors = ["Parity Technologies <admin@parity.io>", "Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-sha3 = { path = "../sha3" }
 blake2b = { path = "../blake2b", optional = true }
 sm3 = { path = "../sm3", optional = true }
 logger = { path = "../logger" }
@@ -24,7 +23,7 @@ target_info = "0.1"
 cita-types = { path = "../cita-types" }
 parking_lot = "0.5"
 ansi_term = "0.9"
-tiny-keccak= "1.0"
+tiny-keccak= "1.4"
 ethcore-bloom-journal = { path = "../ethcore-bloom-journal" }
 regex = "0.2"
 lru-cache = "0.1.0"

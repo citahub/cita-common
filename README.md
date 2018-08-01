@@ -10,7 +10,6 @@ Crates below are extracted from [Parity](https://github.com/paritytech/parity):
 - ethcore-bloom-journal
 - rlp
 - rlp_derive
-- sha3
 - util
 
 with following modifications:
