@@ -17,7 +17,8 @@
 
 #[cfg(feature = "blake2bhash")]
 use blake2b::blake2b;
-use sha3::sha3_256;
+#[cfg(feature = "sha3hash")]
+use sha3;
 #[cfg(feature = "sm3hash")]
 use sm3::sm3;
 use types::H256;
@@ -95,10 +96,7 @@ where
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
         let input: &[u8] = self.as_ref();
-
-        unsafe {
-            sha3_256(dest.as_mut_ptr(), dest.len(), input.as_ptr(), input.len());
-        }
+        sha3::Keccak::keccak256(input, dest);
     }
 }
 
@@ -134,15 +132,6 @@ where
             sm3(input.as_ptr(), input.len(), dest.as_mut_ptr());
         }
     }
-}
-
-pub fn sha3(val: &[u8]) -> H256 {
-    let out: &mut [u8; 32] = &mut [0; 32];
-    let outptr = out.as_mut_ptr();
-    unsafe {
-        sha3_256(outptr, 32, val.as_ptr(), val.len());
-    }
-    H256::from_slice(out)
 }
 
 #[cfg(test)]

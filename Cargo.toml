@@ -14,7 +14,6 @@ members = [
     "pubsub",
 
     "ethcore-bloom-journal",
-    "sha3",
     "blake2b",
     "cita-sm2",
     "sm3",

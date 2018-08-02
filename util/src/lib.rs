@@ -36,10 +36,10 @@ extern crate rlp_derive;
 extern crate rocksdb;
 extern crate rustc_hex;
 extern crate rustc_version;
-extern crate sha3;
 #[cfg(feature = "sm3hash")]
 extern crate sm3;
 extern crate target_info;
+pub extern crate tiny_keccak as sha3;
 
 #[macro_use]
 extern crate logger;
