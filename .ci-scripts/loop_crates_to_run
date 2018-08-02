@@ -106,7 +106,6 @@ function cargo_run_all () {
     done
 
     cargo_run blake2b
-    cargo_run sm3
 
     for crate in util cita-secp256k1 cita-ed25519 cita-sm2; do
         cargo_run ${crate} --features "${SELECT_HASH}"

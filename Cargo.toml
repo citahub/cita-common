@@ -16,7 +16,6 @@ members = [
     "ethcore-bloom-journal",
     "blake2b",
     "cita-sm2",
-    "sm3",
     "cita-secp256k1",
     "cita-ed25519",
     "cita-crypto",

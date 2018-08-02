@@ -33,11 +33,11 @@ extern crate regex;
 extern crate rlp;
 #[macro_use]
 extern crate rlp_derive;
+#[cfg(feature = "sm3hash")]
+extern crate libsm;
 extern crate rocksdb;
 extern crate rustc_hex;
 extern crate rustc_version;
-#[cfg(feature = "sm3hash")]
-extern crate sm3;
 extern crate target_info;
 pub extern crate tiny_keccak as sha3;
 
