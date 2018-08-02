@@ -17,10 +17,10 @@
 
 #[cfg(feature = "blake2bhash")]
 use blake2b::blake2b;
+#[cfg(feature = "sm3hash")]
+use libsm::sm3;
 #[cfg(feature = "sha3hash")]
 use sha3;
-#[cfg(feature = "sm3hash")]
-use sm3::sm3;
 use types::H256;
 
 /// The hash of the empty bytes string.
@@ -128,9 +128,7 @@ where
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
         let input: &[u8] = self.as_ref();
-        unsafe {
-            sm3(input.as_ptr(), input.len(), dest.as_mut_ptr());
-        }
+        dest.copy_from_slice(sm3::hash::Sm3Hash::new(input).get_hash().as_ref());
     }
 }
 
