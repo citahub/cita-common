@@ -55,6 +55,3 @@ use types::{Address, H256, H512};
 lazy_static! {
     pub static ref SECP256K1: secp256k1::Secp256k1 = secp256k1::Secp256k1::new();
 }
-
-#[test]
-fn it_works() {}

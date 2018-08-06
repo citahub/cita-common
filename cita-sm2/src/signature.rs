@@ -15,10 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{
-    pubkey_to_address, sm2_recover, sm2_sign, Address, Error, Message, PrivKey, PubKey, GROUP,
-    PUBKEY_BYTES_LEN, SIGNATURE_BYTES_LEN,
-};
+use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
+use libsm::sm2::signature::SigCtx;
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
@@ -29,7 +27,7 @@ use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use util::crypto::Sign;
 
-pub struct Signature(pub [u8; 65]);
+pub struct Signature(pub [u8; 96]);
 
 impl PartialEq for Signature {
     fn eq(&self, other: &Self) -> bool {
@@ -40,8 +38,8 @@ impl PartialEq for Signature {
 impl Decodable for Signature {
     fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| {
-            let mut sig = [0u8; 65];
-            sig[0..65].copy_from_slice(bytes);
+            let mut sig = [0u8; 96];
+            sig.copy_from_slice(bytes);
             Ok(Signature(sig))
         })
     }
@@ -49,11 +47,10 @@ impl Decodable for Signature {
 
 impl Encodable for Signature {
     fn rlp_append(&self, s: &mut RlpStream) {
-        s.encoder().encode_value(&self.0[0..65]);
+        s.encoder().encode_value(&self.0[0..SIGNATURE_BYTES_LEN]);
     }
 }
 
-// TODO: Maybe it should be implemented with rust macro(https://github.com/rust-lang/rfcs/issues/1038)
 impl<'de> Deserialize<'de> for Signature {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -108,9 +105,9 @@ impl Eq for Signature {}
 impl fmt::Debug for Signature {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
         f.debug_struct("Signature")
-            .field("r", &self.0[1..33].to_hex())
-            .field("s", &self.0[33..65].to_hex())
-            .field("v", &self.0[0..1].to_hex())
+            .field("r", &self.0[0..32].to_hex())
+            .field("s", &self.0[32..64].to_hex())
+            .field("p", &self.0[64..].to_hex())
             .finish()
     }
 }
@@ -123,7 +120,7 @@ impl fmt::Display for Signature {
 
 impl Default for Signature {
     fn default() -> Self {
-        Signature([0; 65])
+        Signature([0; 96])
     }
 }
 
@@ -139,14 +136,14 @@ impl Clone for Signature {
     }
 }
 
-impl From<[u8; 65]> for Signature {
-    fn from(s: [u8; 65]) -> Self {
+impl From<[u8; 96]> for Signature {
+    fn from(s: [u8; 96]) -> Self {
         Signature(s)
     }
 }
 
-impl Into<[u8; 65]> for Signature {
-    fn into(self) -> [u8; 65] {
+impl Into<[u8; 96]> for Signature {
+    fn into(self) -> [u8; 96] {
         self.0
     }
 }
@@ -154,7 +151,7 @@ impl Into<[u8; 65]> for Signature {
 impl<'a> From<&'a [u8]> for Signature {
     fn from(slice: &'a [u8]) -> Signature {
         assert_eq!(slice.len(), SIGNATURE_BYTES_LEN);
-        let mut bytes = [0u8; 65];
+        let mut bytes = [0u8; SIGNATURE_BYTES_LEN];
         bytes.copy_from_slice(&slice[..]);
         Signature(bytes)
     }
@@ -182,7 +179,7 @@ impl From<Signature> for String {
 }
 
 impl Deref for Signature {
-    type Target = [u8; 65];
+    type Target = [u8; 96];
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -202,31 +199,24 @@ impl Sign for Signature {
     type Error = Error;
 
     fn sign(privkey: &Self::PrivKey, message: &Self::Message) -> Result<Self, Error> {
-        let mut signature: [u8; SIGNATURE_BYTES_LEN] = [0; SIGNATURE_BYTES_LEN];
-        unsafe {
-            sm2_sign(
-                GROUP.as_ptr(),
-                (privkey.as_ref() as &[u8]).as_ptr(),
-                (message.as_ref() as &[u8]).as_ptr(),
-                signature.as_mut_ptr(),
-            );
-        }
-        Ok(Signature(signature))
+        let ctx = SigCtx::new();
+        ctx.load_seckey(&privkey.0)
+            .map_err(|_| Error::RecoverError)
+            .map(|sk| {
+                let pk = ctx.pk_from_sk(&sk);
+                let signature = ctx.sign(&message, &sk, &pk);
+                let mut sig_bytes = [0u8; SIGNATURE_BYTES_LEN];
+                let r_bytes = signature.get_r().to_bytes_be();
+                let s_bytes = signature.get_s().to_bytes_be();
+                sig_bytes[32 - r_bytes.len()..32].copy_from_slice(&r_bytes[..]);
+                sig_bytes[64 - s_bytes.len()..64].copy_from_slice(&s_bytes[..]);
+                sig_bytes[64..].copy_from_slice(&ctx.serialize_pubkey(&pk, true)[1..]);
+                sig_bytes.into()
+            })
     }
 
-    fn recover(&self, message: &Message) -> Result<Self::PubKey, Error> {
-        let mut pubkey: [u8; PUBKEY_BYTES_LEN] = [0; PUBKEY_BYTES_LEN];
-        unsafe {
-            let result = sm2_recover(
-                GROUP.as_ptr(),
-                self.0.as_ptr(),
-                message.as_ptr(),
-                pubkey.as_mut_ptr(),
-            );
-            if result <= 0 {
-                return Err(Error::RecoverError);
-            }
-        }
+    fn recover(&self, _message: &Message) -> Result<Self::PubKey, Error> {
+        let pubkey = &self.0[64..];
         Ok(PubKey::from(pubkey))
     }
 
@@ -241,13 +231,10 @@ impl Sign for Signature {
     }
 }
 
-/*
 #[cfg(test)]
 mod tests {
-    extern crate bincode;
-    use self::bincode::{serialize, deserialize, Infinite};
-    use super::{Signature, Message};
-    use super::super::KeyPair;
+    use super::{Message, Signature};
+    use keypair::KeyPair;
     use util::crypto::{CreateKey, Sign};
 
     #[test]
@@ -283,15 +270,4 @@ mod tests {
         let slice: &[u8] = sig.into();
         assert_eq!(Signature::from(slice), *sig);
     }
-
-    #[test]
-    fn test_de_serialize() {
-        let keypair = KeyPair::gen_keypair();
-        let message = Message::default();
-        let signature = Signature::sign(keypair.privkey().into(), &message.into()).unwrap();
-        let se_result = serialize(&signature, Infinite).unwrap();
-        let de_result: Signature = deserialize(&se_result).unwrap();
-        assert_eq!(signature, de_result);
-    }
 }
-*/

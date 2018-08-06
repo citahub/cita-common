@@ -4,13 +4,12 @@ version = "0.1.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-lazy_static = "0.2"
 rustc-serialize = "0.3"
 serde = "1.0"
-bincode = "0.8"
 cita-types = { path = "../cita-types" }
 util = { path = "../util" }
 rlp = { path = "../rlp" }
+libsm = { git = "https://github.com/cryptape/libsm", rev = "2c8295a576659ecef8ad18443646d236539cccf5" }
 
 [features]
 default = []
