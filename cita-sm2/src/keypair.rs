@@ -15,10 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{
-    sm2_generate_key, sm2_pubkey_from_privkey, Address, Error, PrivKey, PubKey, GROUP,
-    PRIVKEY_BYTES_LEN, PUBKEY_BYTES_LEN,
-};
+use super::{Address, Error, PrivKey, PubKey};
+use libsm::sm2::signature::SigCtx;
 use rustc_serialize::hex::ToHex;
 use std::fmt;
 use types::H160;
@@ -49,27 +47,22 @@ impl CreateKey for KeyPair {
     type Error = Error;
 
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
-        let mut pubkey: [u8; PUBKEY_BYTES_LEN] = [0; PUBKEY_BYTES_LEN];
-        unsafe {
-            sm2_pubkey_from_privkey(
-                GROUP.as_ptr(),
-                (privkey.as_ref() as &[u8]).as_ptr(),
-                pubkey.as_mut_ptr(),
-            );
-        }
-        Ok(KeyPair {
-            privkey: privkey,
-            pubkey: PubKey::from(pubkey),
-        })
+        let ctx = SigCtx::new();
+        ctx.load_seckey(&privkey.0)
+            .map_err(|_| Error::RecoverError)
+            .map(|sk| {
+                let pk = ctx.pk_from_sk(&sk);
+                let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, true)[1..]);
+                KeyPair { privkey, pubkey }
+            })
     }
 
     fn gen_keypair() -> Self {
-        let mut privkey: [u8; PRIVKEY_BYTES_LEN] = [0; PRIVKEY_BYTES_LEN];
-        let mut pubkey: [u8; PUBKEY_BYTES_LEN] = [0; PUBKEY_BYTES_LEN];
-        unsafe {
-            sm2_generate_key(GROUP.as_ptr(), privkey.as_mut_ptr(), pubkey.as_mut_ptr());
-        }
-        KeyPair::from_privkey(PrivKey::from(privkey)).unwrap()
+        let ctx = SigCtx::new();
+        let (pk, sk) = ctx.new_keypair();
+        let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, true)[1..]);
+        let privkey = PrivKey::from(&ctx.serialize_seckey(&sk)[..]);
+        KeyPair { privkey, pubkey }
     }
 
     fn privkey(&self) -> &Self::PrivKey {

@@ -15,21 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#![feature(ptr_internals)]
-#![feature(libc)]
-#![feature(unique)]
 extern crate cita_types as types;
-#[macro_use]
-extern crate lazy_static;
-extern crate libc;
+extern crate libsm;
 extern crate rlp;
 extern crate rustc_serialize;
 extern crate serde;
 extern crate util;
 
-use libc::c_int;
-use std::ptr::Unique;
-use types::{Address, H256, H512};
+use types::{Address, H256};
 
 mod error;
 mod keypair;
@@ -42,40 +35,12 @@ pub use self::signature::*;
 pub use self::signer::*;
 
 pub type PrivKey = H256;
-pub type PubKey = H512;
+pub type PubKey = H256;
 pub type Message = H256;
-pub type Public = H512;
+pub type Public = H256;
 
 pub const ADDR_BYTES_LEN: usize = 20;
-pub const PUBKEY_BYTES_LEN: usize = 64;
+pub const PUBKEY_BYTES_LEN: usize = 32;
 pub const PRIVKEY_BYTES_LEN: usize = 32;
-pub const SIGNATURE_BYTES_LEN: usize = 65;
+pub const SIGNATURE_BYTES_LEN: usize = 96;
 pub const HASH_BYTES_LEN: usize = 32;
-
-pub enum EcGroup {}
-unsafe impl std::marker::Sync for EcGroup {}
-
-#[link(name = "gmssl")]
-extern "C" {
-    pub fn ec_group() -> *mut EcGroup;
-    //not used
-    //pub fn EC_GROUP_free(group: *mut EcGroup);
-    pub fn sm2_generate_key(group: *const EcGroup, privkey: *mut u8, pubkey: *mut u8);
-    pub fn sm2_pubkey_from_privkey(group: *const EcGroup, privkey: *const u8, pubkey: *mut u8);
-    pub fn sm2_sign(
-        group: *const EcGroup,
-        privkey: *const u8,
-        message: *const u8,
-        signature: *mut u8,
-    );
-    pub fn sm2_recover(
-        group: *const EcGroup,
-        signature: *const u8,
-        message: *const u8,
-        pubkey: *mut u8,
-    ) -> c_int;
-}
-
-lazy_static! {
-    pub static ref GROUP: Unique<EcGroup> = unsafe { Unique::new(ec_group()).unwrap() };
-}
