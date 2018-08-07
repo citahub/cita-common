@@ -174,7 +174,7 @@ impl Error {
         Error {
             code: ErrorCode::ParseError,
             message: message.into(),
-            data: Some(Value::Null),
+            data: None,
         }
     }
 
@@ -193,7 +193,7 @@ impl From<serde_json::Error> for Error {
         Error {
             code: ErrorCode::ParseError,
             message: err.to_string(),
-            data: Some(Value::Null),
+            data: None,
         }
     }
 }
