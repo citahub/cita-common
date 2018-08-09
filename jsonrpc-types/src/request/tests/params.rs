@@ -18,10 +18,11 @@
 use cita_types::{H160, H256, U256};
 use request::{
     BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
-    GetBlockByNumberParams, GetCodeParams, GetFilterChangesParams, GetFilterLogsParams,
-    GetLogsParams, GetMetaDataParams, GetTransactionCountParams, GetTransactionParams,
-    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, SendRawTransactionParams, UninstallFilterParams,
+    GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
+    GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
+    GetTransactionCountParams, GetTransactionParams, GetTransactionProofParams,
+    GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams, PeerCountParams,
+    SendRawTransactionParams, UninstallFilterParams,
 };
 use rpctypes::{BlockNumber, CallRequest, Filter, VariadicValue};
 use serde_json;
@@ -206,4 +207,24 @@ fn serialize_and_deserialize() {
     );
 
     test_ser_and_de!(GetMetaDataParams, ["earliest"], (BlockNumber::earliest()));
+
+    test_ser_and_de!(
+        GetStateProofParams,
+        [
+            "0x000000000000000000000000000000000000000a",
+            "0x000000000000000000000000000000000000000000000000000000000000000b",
+            "earliest"
+        ],
+        (
+            H160::from(10).into(),
+            H256::from(11).into(),
+            BlockNumber::earliest()
+        )
+    );
+
+    test_ser_and_de!(
+        GetBlockHeaderParams,
+        ["earliest"],
+        (BlockNumber::earliest())
+    );
 }
