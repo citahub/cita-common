@@ -5,7 +5,7 @@ authors = ["Parity Technologies <admin@parity.io>", "Cryptape Technologies <cont
 
 [dependencies]
 blake2b = { path = "../blake2b", optional = true }
-libsm = { git = "https://github.com/cryptape/libsm", rev = "2c8295a576659ecef8ad18443646d236539cccf5", optional = true }
+libsm = { git = "https://github.com/cryptape/libsm", rev = "ac323abd3512a9fdb8bfd6cd349a6fc46deb688f", optional = true }
 logger = { path = "../logger" }
 rustc-hex = "1.0"
 rand = "0.3.12"

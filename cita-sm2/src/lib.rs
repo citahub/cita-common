@@ -22,7 +22,7 @@ extern crate rustc_serialize;
 extern crate serde;
 extern crate util;
 
-use types::{Address, H256};
+use types::{Address, H256, H512};
 
 mod error;
 mod keypair;
@@ -35,12 +35,12 @@ pub use self::signature::*;
 pub use self::signer::*;
 
 pub type PrivKey = H256;
-pub type PubKey = H256;
+pub type PubKey = H512;
 pub type Message = H256;
 pub type Public = H256;
 
 pub const ADDR_BYTES_LEN: usize = 20;
-pub const PUBKEY_BYTES_LEN: usize = 32;
+pub const PUBKEY_BYTES_LEN: usize = 64;
 pub const PRIVKEY_BYTES_LEN: usize = 32;
-pub const SIGNATURE_BYTES_LEN: usize = 96;
+pub const SIGNATURE_BYTES_LEN: usize = 128;
 pub const HASH_BYTES_LEN: usize = 32;

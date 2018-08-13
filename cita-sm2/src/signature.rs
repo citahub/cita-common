@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
-use libsm::sm2::signature::SigCtx;
+use libsm::sm2::signature::{SigCtx, Signature as Sm2Signature};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
@@ -27,7 +27,24 @@ use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use util::crypto::Sign;
 
-pub struct Signature(pub [u8; 96]);
+pub struct Signature(pub [u8; 128]);
+
+impl Signature {
+    #[inline]
+    fn r(&self) -> &[u8] {
+        &self.0[0..32]
+    }
+
+    #[inline]
+    fn s(&self) -> &[u8] {
+        &self.0[32..64]
+    }
+
+    #[inline]
+    fn pk(&self) -> &[u8] {
+        &self.0[64..]
+    }
+}
 
 impl PartialEq for Signature {
     fn eq(&self, other: &Self) -> bool {
@@ -38,7 +55,7 @@ impl PartialEq for Signature {
 impl Decodable for Signature {
     fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| {
-            let mut sig = [0u8; 96];
+            let mut sig = [0u8; 128];
             sig.copy_from_slice(bytes);
             Ok(Signature(sig))
         })
@@ -105,9 +122,9 @@ impl Eq for Signature {}
 impl fmt::Debug for Signature {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
         f.debug_struct("Signature")
-            .field("r", &self.0[0..32].to_hex())
-            .field("s", &self.0[32..64].to_hex())
-            .field("p", &self.0[64..].to_hex())
+            .field("r", &self.r().to_hex())
+            .field("s", &self.s().to_hex())
+            .field("pk", &self.pk().to_hex())
             .finish()
     }
 }
@@ -120,7 +137,7 @@ impl fmt::Display for Signature {
 
 impl Default for Signature {
     fn default() -> Self {
-        Signature([0; 96])
+        Signature([0; 128])
     }
 }
 
@@ -136,14 +153,14 @@ impl Clone for Signature {
     }
 }
 
-impl From<[u8; 96]> for Signature {
-    fn from(s: [u8; 96]) -> Self {
+impl From<[u8; 128]> for Signature {
+    fn from(s: [u8; 128]) -> Self {
         Signature(s)
     }
 }
 
-impl Into<[u8; 96]> for Signature {
-    fn into(self) -> [u8; 96] {
+impl Into<[u8; 128]> for Signature {
+    fn into(self) -> [u8; 128] {
         self.0
     }
 }
@@ -179,7 +196,7 @@ impl From<Signature> for String {
 }
 
 impl Deref for Signature {
-    type Target = [u8; 96];
+    type Target = [u8; 128];
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -210,18 +227,42 @@ impl Sign for Signature {
                 let s_bytes = signature.get_s().to_bytes_be();
                 sig_bytes[32 - r_bytes.len()..32].copy_from_slice(&r_bytes[..]);
                 sig_bytes[64 - s_bytes.len()..64].copy_from_slice(&s_bytes[..]);
-                sig_bytes[64..].copy_from_slice(&ctx.serialize_pubkey(&pk, true)[1..]);
+                sig_bytes[64..].copy_from_slice(&ctx.serialize_pubkey(&pk, false)[1..]);
                 sig_bytes.into()
             })
     }
 
-    fn recover(&self, _message: &Message) -> Result<Self::PubKey, Error> {
-        let pubkey = &self.0[64..];
-        Ok(PubKey::from(pubkey))
+    fn recover(&self, message: &Message) -> Result<Self::PubKey, Error> {
+        let ctx = SigCtx::new();
+        let sig = Sm2Signature::new(self.r(), self.s());
+        let mut pk_full = [0u8; 65];
+        pk_full[0] = 4;
+        pk_full[1..].copy_from_slice(self.pk());
+        ctx.load_pubkey(&pk_full[..])
+            .map_err(|_| Error::RecoverError)
+            .and_then(|pk| {
+                if ctx.verify(&message, &pk, &sig) {
+                    Ok(PubKey::from(self.pk()))
+                } else {
+                    Err(Error::RecoverError)
+                }
+            })
     }
 
     fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Error> {
-        self.recover(message).map(|key| *pubkey == key)
+        let pubkey_from_sig = PubKey::from(self.pk());
+        if pubkey_from_sig == *pubkey {
+            let ctx = SigCtx::new();
+            let sig = Sm2Signature::new(self.r(), self.s());
+            let mut pk_full = [0u8; 65];
+            pk_full[0] = 4;
+            pk_full[1..].copy_from_slice(self.pk());
+            ctx.load_pubkey(&pk_full[..])
+                .map_err(|_| Error::RecoverError)
+                .map(|pk| ctx.verify(&message, &pk, &sig))
+        } else {
+            Ok(false)
+        }
     }
 
     fn verify_address(&self, address: &Address, message: &Self::Message) -> Result<bool, Error> {
