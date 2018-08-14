@@ -28,5 +28,9 @@ jobs:
     - stage: Format
       env:
       script: bash '.ci-scripts/format'
+    - stage: Test
+      name: Run Benches
+      env:
+      script: bash '.ci-scripts/bench'
 before_cache:
     - sudo chown -R travis:travis $HOME/.cargo
