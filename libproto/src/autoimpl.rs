@@ -156,6 +156,7 @@ macro_rules! loop_macro_for_structs {
             Proof,
             RichStatus,
             SignedTransaction,
+            StateSignal,
             Status,
             Transaction,
             UnverifiedTransaction,
@@ -225,6 +226,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             Miscellaneous,
             MiscellaneousReq,
             BlackList,
+            StateSignal,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -506,6 +508,12 @@ impl Message {
     pub fn take_black_list(&mut self) -> Option<BlackList> {
         match self.take_content() {
             Some(MsgClass::BlackList(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_state_signal(&mut self) -> Option<StateSignal> {
+        match self.take_content() {
+            Some(MsgClass::StateSignal(v)) => Some(v),
             _ => None,
         }
     }
