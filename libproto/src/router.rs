@@ -77,13 +77,13 @@ pub enum MsgType {
     Miscellaneous,
     MiscellaneousReq,
     BlackList,
+    StateSignal,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
     // TODO This is a issue left over by history.
     //      The Request is too big (send from Jsonrpc).
     //      To remove follow items should be better.
-    LocalSync,
     RequestNewTx,
     RequestNewTxBatch,
     RequestNet,
@@ -170,8 +170,8 @@ impl fmt::Display for MsgType {
                 &MsgType::Miscellaneous => "miscellaneous",
                 &MsgType::MiscellaneousReq => "miscellaneous_req",
                 &MsgType::BlackList => "black_list",
+                &MsgType::StateSignal => "state_signal",
                 // Generate MSG-PROTOS display automatically end.
-                &MsgType::LocalSync => "sync",
                 &MsgType::All => "*",
                 &MsgType::Unknown => UNKNOWN,
                 &MsgType::RequestNewTx => "request_new_tx",
@@ -233,8 +233,8 @@ impl<'a> From<&'a str> for MsgType {
             "miscellaneous" => MsgType::Miscellaneous,
             "miscellaneous_req" => MsgType::MiscellaneousReq,
             "black_list" => MsgType::BlackList,
+            "state_signal" => MsgType::StateSignal,
             // Generate MSG-PROTOS from_str automatically end.
-            "sync" => MsgType::LocalSync,
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
             "request_new_tx_batch" => MsgType::RequestNewTxBatch,
