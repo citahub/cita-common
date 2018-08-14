@@ -1,6 +1,8 @@
 [workspace]
 
 members = [
+    "cita-common-benches",
+
     "logger",
     "error",
     "panic_hook",
