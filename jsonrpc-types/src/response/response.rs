@@ -70,28 +70,33 @@ impl Output {
     /// Creates new output given `Result`, `Id` and `Version`.
     pub fn from(data: Response, info: RequestInfo) -> Self {
         let code = data.get_code();
-        match code {
-            0 => {
+        if let Some(response) = data.data {
+            if code == 0 {
                 let success = RpcSuccess::new(info.clone());
-                //success
-                match data.data.unwrap() {
+                match response {
                     Response_oneof_data::tx_state(tx_state) => {
-                        let tx_response = serde_json::from_str(&tx_state).unwrap();
-                        // SendTransaction, SendRawTransaction
-                        success
-                            .set_result(ResponseResult::SendTransaction(tx_response))
-                            .output()
+                        serde_json::from_str(&tx_state)
+                            .map(|tx_response| {
+                                // SendTransaction, SendRawTransaction
+                                success
+                                    .set_result(ResponseResult::SendTransaction(tx_response))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
                     }
                     Response_oneof_data::block_number(bn) => success
                         .set_result(ResponseResult::BlockNumber(bn.into()))
                         .output(),
                     Response_oneof_data::none(_) => success.output(),
                     Response_oneof_data::block(rpc_block) => {
-                        let rpc_block: RpcBlock = serde_json::from_str(&rpc_block).unwrap();
-                        // GetBlockByHash, GetBlockByNumber
-                        success
-                            .set_result(ResponseResult::GetBlockByHash(rpc_block.into()))
-                            .output()
+                        serde_json::from_str::<RpcBlock>(&rpc_block)
+                            .map(|rpc_block| {
+                                // GetBlockByHash, GetBlockByNumber
+                                success
+                                    .set_result(ResponseResult::GetBlockByHash(rpc_block.into()))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
                     }
                     Response_oneof_data::ts(x) => success
                         .set_result(ResponseResult::GetTransaction(RpcTransaction::from(x)))
@@ -102,11 +107,11 @@ impl Output {
                     Response_oneof_data::call_result(x) => {
                         success.set_result(ResponseResult::Call(x.into())).output()
                     }
-                    Response_oneof_data::logs(serialized) => success
-                        .set_result(ResponseResult::GetLogs(
-                            serde_json::from_str::<Vec<Log>>(&serialized).unwrap(),
-                        ))
-                        .output(),
+                    Response_oneof_data::logs(serialized) => {
+                        serde_json::from_str::<Vec<Log>>(&serialized)
+                            .map(|logs| success.set_result(ResponseResult::GetLogs(logs)).output())
+                            .unwrap_or_else(|_| Output::system_error(0))
+                    }
                     Response_oneof_data::receipt(serialized) => {
                         success
                             .set_result(serde_json::from_str::<Receipt>(&serialized).ok().map_or(
@@ -137,28 +142,34 @@ impl Output {
                         .set_result(ResponseResult::UninstallFilter(is_uninstall.into()))
                         .output(),
                     Response_oneof_data::filter_changes(data) => {
-                        let changes = serde_json::from_str::<FilterChanges>(&data)
-                            .expect("failed to parse into FilterChanges");
-                        success
-                            .set_result(ResponseResult::GetFilterChanges(changes))
-                            .output()
+                        serde_json::from_str::<FilterChanges>(&data)
+                            .map(|changes| {
+                                success
+                                    .set_result(ResponseResult::GetFilterChanges(changes))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
                     }
-                    Response_oneof_data::filter_logs(log) => success
-                        .set_result(ResponseResult::GetFilterLogs(
-                            serde_json::from_str::<Vec<Log>>(&log).unwrap(),
-                        ))
-                        .output(),
+                    Response_oneof_data::filter_logs(log) => serde_json::from_str::<Vec<Log>>(&log)
+                        .map(|log| {
+                            success
+                                .set_result(ResponseResult::GetFilterLogs(log))
+                                .output()
+                        })
+                        .unwrap_or_else(|_| Output::system_error(0)),
                     Response_oneof_data::transaction_proof(proof) => success
                         .set_result(ResponseResult::GetTransactionProof(proof.into()))
                         .output(),
                     Response_oneof_data::error_msg(err_msg) => Output::Failure(
                         RpcFailure::from_options(info, Error::server_error(code, err_msg)),
                     ),
-                    Response_oneof_data::meta_data(data) => success
-                        .set_result(ResponseResult::GetMetaData(
-                            serde_json::from_str::<MetaData>(&data).unwrap(),
-                        ))
-                        .output(),
+                    Response_oneof_data::meta_data(data) => serde_json::from_str::<MetaData>(&data)
+                        .map(|data| {
+                            success
+                                .set_result(ResponseResult::GetMetaData(data))
+                                .output()
+                        })
+                        .unwrap_or_else(|_| Output::system_error(0)),
                     Response_oneof_data::state_proof(data) => success
                         .set_result(ResponseResult::GetStateProof(data.into()))
                         .output(),
@@ -166,22 +177,34 @@ impl Output {
                         .set_result(ResponseResult::GetBlockHeader(data.into()))
                         .output(),
                 }
-            }
-            _ => match data.data.unwrap() {
-                Response_oneof_data::error_msg(err_msg) => Output::Failure(
-                    RpcFailure::from_options(info, Error::server_error(code, err_msg)),
-                ),
-                _ => {
-                    error!("return system error!!!");
-                    Output::Failure(RpcFailure::from(Error::server_error(code, "system error!")))
+            } else {
+                match response {
+                    Response_oneof_data::error_msg(err_msg) => Output::Failure(
+                        RpcFailure::from_options(info, Error::server_error(code, err_msg)),
+                    ),
+                    _ => {
+                        error!(
+                            "system error, code[{}] != 0, response is not an error",
+                            code
+                        );
+                        Output::system_error(code)
+                    }
                 }
-            },
+            }
+        } else {
+            error!("system error, code = {}, data is empty", code);
+            Output::system_error(code)
         }
     }
 
     /// Creates new failure output indicating malformed request.
     pub fn invalid_request(info: RequestInfo) -> Self {
         Output::Failure(RpcFailure::from_options(info, Error::invalid_request()))
+    }
+
+    /// Creates a system error
+    fn system_error(code: i64) -> Self {
+        Output::Failure(RpcFailure::from(Error::server_error(code, "system error")))
     }
 }
 
