@@ -9,7 +9,7 @@ serde = "1.0"
 cita-types = { path = "../cita-types" }
 util = { path = "../util" }
 rlp = { path = "../rlp" }
-libsm = { git = "https://github.com/cryptape/libsm", rev = "2c8295a576659ecef8ad18443646d236539cccf5" }
+libsm = { git = "https://github.com/cryptape/libsm", rev = "ac323abd3512a9fdb8bfd6cd349a6fc46deb688f" }
 
 [features]
 default = []

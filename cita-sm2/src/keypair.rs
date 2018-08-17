@@ -52,7 +52,7 @@ impl CreateKey for KeyPair {
             .map_err(|_| Error::RecoverError)
             .map(|sk| {
                 let pk = ctx.pk_from_sk(&sk);
-                let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, true)[1..]);
+                let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, false)[1..]);
                 KeyPair { privkey, pubkey }
             })
     }
@@ -60,7 +60,7 @@ impl CreateKey for KeyPair {
     fn gen_keypair() -> Self {
         let ctx = SigCtx::new();
         let (pk, sk) = ctx.new_keypair();
-        let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, true)[1..]);
+        let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, false)[1..]);
         let privkey = PrivKey::from(&ctx.serialize_seckey(&sk)[..]);
         KeyPair { privkey, pubkey }
     }
