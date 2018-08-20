@@ -136,11 +136,13 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
         .replace("\n", "\\n");
     let code = format!(
         "
+        #[allow(unknown_lints)]
         #[allow(clippy)]
         pub fn get_build_info_str(short: bool) -> &'static str {{
            if short {{ \"{}\" }} else {{ \"{}\" }}
         }}
 
+        #[allow(unknown_lints)]
         #[allow(clippy)]
         pub fn get_build_info() -> (
            &'static str,          // ASCII Logo
