@@ -33,7 +33,6 @@ extern crate util;
 pub type PrivKey = H256;
 pub type PubKey = H512;
 pub type Message = H256;
-pub type Public = H512;
 
 pub const ADDR_BYTES_LEN: usize = 20;
 pub const PUBKEY_BYTES_LEN: usize = 64;

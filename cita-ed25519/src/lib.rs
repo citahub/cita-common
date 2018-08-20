@@ -40,7 +40,6 @@ pub const HASH_BYTES_LEN: usize = 32;
 pub type PrivKey = H512;
 pub type PubKey = H256;
 pub type Message = H256;
-pub type Public = H256;
 
 pub use self::error::*;
 pub use self::keypair::*;
