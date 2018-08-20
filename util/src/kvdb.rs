@@ -283,7 +283,7 @@ pub struct CompactionProfile {
 impl Default for CompactionProfile {
     /// Default profile suitable for most storage
     fn default() -> CompactionProfile {
-        CompactionProfile::ssd()
+        CompactionProfile::hdd()
     }
 }
 
