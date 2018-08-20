@@ -283,7 +283,7 @@ pub struct CompactionProfile {
 impl Default for CompactionProfile {
     /// Default profile suitable for most storage
     fn default() -> CompactionProfile {
-        CompactionProfile::hdd()
+        CompactionProfile::ssd()
     }
 }
 
@@ -348,8 +348,8 @@ impl CompactionProfile {
     /// Default profile suitable for SSD storage
     pub fn ssd() -> CompactionProfile {
         CompactionProfile {
-            initial_file_size: 32 * 1024 * 1024,
-            file_size_multiplier: 2,
+            initial_file_size: 64 * 1024 * 1024,
+            file_size_multiplier: 1,
             write_rate_limit: None,
         }
     }
