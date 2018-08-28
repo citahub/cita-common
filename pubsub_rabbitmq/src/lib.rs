@@ -104,6 +104,7 @@ pub fn start_rabbitmq(
         .spawn(move || {
             channel.start_consuming();
             let _ = channel.close(200, "Bye");
+            panic!("rabbitmq connection closed");
         });
 
     let mut session = match Session::open_url(&amqp_url) {
@@ -135,7 +136,7 @@ pub fn start_rabbitmq(
                     break;
                 }
                 let (routing_key, msg) = ret.unwrap();
-                let _ = channel.basic_publish(
+                let ret = channel.basic_publish(
                     "cita",
                     &routing_key,
                     false,
@@ -146,7 +147,11 @@ pub fn start_rabbitmq(
                     },
                     msg,
                 );
+                if ret.is_err() {
+                    break;
+                }
             }
             let _ = channel.close(200, "Bye");
+            panic!("rabbitmq connection closed");
         });
 }
