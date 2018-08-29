@@ -434,7 +434,7 @@ fn col_config(col: u32, config: &DatabaseConfig) -> Options {
     const DEFAULT_CACHE: usize = 2;
 
     let mut opts = Options::new();
-    opts.set_compaction_style(DBCompactionStyle::DBUniversalCompaction);
+    opts.set_compaction_style(DBCompactionStyle::DBLevelCompaction);
     opts.set_target_file_size_base(config.compaction.initial_file_size);
     opts.set_target_file_size_multiplier(config.compaction.file_size_multiplier);
     opts.set_db_write_buffer_size(DB_WRITE_BUFFER_SIZE);
@@ -491,7 +491,7 @@ impl Database {
         opts.set_max_background_compactions(DB_BACKGROUND_COMPACTIONS);
 
         // compaction settings
-        opts.set_compaction_style(DBCompactionStyle::DBUniversalCompaction);
+        opts.set_compaction_style(DBCompactionStyle::DBLevelCompaction);
         opts.set_target_file_size_base(config.compaction.initial_file_size);
         opts.set_target_file_size_multiplier(config.compaction.file_size_multiplier);
 
