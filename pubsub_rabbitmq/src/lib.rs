@@ -17,6 +17,7 @@
 
 extern crate amqp;
 use amqp::{protocol, Basic, Channel, Consumer, Session, Table};
+use std::process;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 use std::thread;
@@ -104,7 +105,9 @@ pub fn start_rabbitmq(
         .spawn(move || {
             channel.start_consuming();
             let _ = channel.close(200, "Bye");
-            panic!("rabbitmq connection closed");
+            // Rabbitmq connection closed, amqp didn't handle this failure
+            // So we must exit the process, wait for restart
+            process::exit(0);
         });
 
     let mut session = match Session::open_url(&amqp_url) {
@@ -152,6 +155,8 @@ pub fn start_rabbitmq(
                 }
             }
             let _ = channel.close(200, "Bye");
-            panic!("rabbitmq connection closed");
+            // Rabbitmq connection closed, amqp didn't handle this failure
+            // So we must exit the process, wait for restart
+            process::exit(0);
         });
 }
