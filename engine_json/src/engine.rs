@@ -17,13 +17,11 @@
 
 //! Engine deserialization.
 
-use super::AuthorityRound;
 use super::Bft;
 
 /// Engine deserialization.
 #[derive(Debug, PartialEq, Deserialize)]
 pub enum Engine {
-    AuthorityRound(AuthorityRound),
     Bft(Bft),
 }
 
@@ -53,26 +51,6 @@ mod tests {
         } else {
             "".to_string()
         }
-    }
-
-    #[test]
-    fn poa_engine_deserialization() {
-        let signer = generate_signer();
-        let s = format!(
-            r#"{{
-                "AuthorityRound": {{
-                    "params": {{
-                        "authorities" : ["0x5b073e9233944b5e729e46d618f0d8edf3d9c34a"],
-                        "duration": 3,
-                        "signer": "0x{}",
-                        "is_test": true
-                    }}
-                }}
-            }}"#,
-            signer
-        );
-
-        let _deserialized: Engine = serde_json::from_str(&s).unwrap();
     }
 
     #[test]

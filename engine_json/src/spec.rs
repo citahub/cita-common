@@ -68,30 +68,6 @@ mod tests {
     }
 
     #[test]
-    fn poa_spec_deserialization() {
-        let signer = generate_signer();
-        let s = format!(
-            r#"{{
-                "name": "TestPOA",
-                "engine": {{
-                    "AuthorityRound": {{
-                        "params": {{
-                            "authorities": [
-                                "0x5b073e9233944b5e729e46d618f0d8edf3d9c34a",
-                                "0x9cce34f7ab185c7aba1b7c8140d620b4bda941d6"
-                            ],
-                            "duration": 3000,
-                            "signer": "0x{}"
-                        }}
-                    }}
-                }}
-            }}"#,
-            signer
-        );
-        let _deserialized: Spec = serde_json::from_str(&s).unwrap();
-    }
-
-    #[test]
     fn bft_spec_deserialization() {
         let signer = generate_signer();
         let s = format!(

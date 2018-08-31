@@ -18,12 +18,11 @@
 use bincode::deserialize;
 use cita_types::{Address, H256};
 use libproto::blockchain::{Proof as ProtoProof, ProofType};
-use proof::{AuthorityRoundProof as AProof, BftProof as TProof};
+use proof::BftProof as TProof;
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub enum Proof {
-    AuthorityRound(AuthorityRoundProof),
     Raft,
     Bft(BftProof),
 }
@@ -31,7 +30,7 @@ pub enum Proof {
 impl From<ProtoProof> for Proof {
     fn from(p: ProtoProof) -> Self {
         match p.get_field_type() {
-            ProofType::AuthorityRound => Proof::AuthorityRound(AuthorityRoundProof::from(p)),
+            ProofType::AuthorityRound => Proof::Bft(BftProof::from(p)),
             ProofType::Raft => Proof::Raft,
             ProofType::Bft => Proof::Bft(BftProof::from(p)),
         }
@@ -59,23 +58,6 @@ impl From<ProtoProof> for BftProof {
             height: decoded.height,
             round: decoded.round,
             commits: commits,
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct AuthorityRoundProof {
-    pub signature: String,
-    pub step: u64,
-}
-
-impl From<ProtoProof> for AuthorityRoundProof {
-    fn from(p: ProtoProof) -> Self {
-        let decoded: AProof = deserialize(&p.get_content()[..]).unwrap();
-        let signature: String = decoded.signature.into();
-        AuthorityRoundProof {
-            signature: signature,
-            step: decoded.step,
         }
     }
 }
