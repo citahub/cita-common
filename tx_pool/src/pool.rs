@@ -159,6 +159,7 @@ impl Pool {
         block_gas_limit: u64,
         account_gas_limit: AccountGasLimit,
         check_quota: bool,
+        admin_address: Option<Address>,
     ) -> Vec<SignedTransaction> {
         let mut tx_list = Vec::new();
         let mut invalid_tx_list = Vec::new();
@@ -175,16 +176,19 @@ impl Pool {
                 }
                 let hash = order.unwrap().hash;
                 let tx = self.txs.get(&hash);
-                let tx_is_valid = |signed_tx: &SignedTransaction, height: u64| {
+                let tx_is_valid = |signed_tx: &SignedTransaction, height: u64, address: Address| {
                     let valid_until_block = signed_tx.get_transaction().get_valid_until_block();
                     (valid_until_block == 0)
                         || (height < valid_until_block
                             && valid_until_block <= (height + BLOCKLIMIT))
+                            && admin_address
+                                .map(|admin| address == admin)
+                                .unwrap_or_else(|| true)
                 };
                 if let Some(tx) = tx {
-                    if tx_is_valid(tx, height) {
+                    let address = pubkey_to_address(&PubKey::from(tx.get_signer()));
+                    if tx_is_valid(tx, height, address) {
                         let quota = tx.get_transaction_with_sig().get_transaction().quota;
-                        let signer = pubkey_to_address(&PubKey::from(tx.get_signer()));
                         if n <= quota {
                             if tx_list.is_empty() {
                                 tx_list.push(tx.clone());
@@ -193,14 +197,15 @@ impl Pool {
                         }
 
                         if check_quota {
-                            if account_gas_used.contains_key(&signer) {
-                                let value = account_gas_used.get_mut(&signer).unwrap();
+                            if account_gas_used.contains_key(&address) {
+                                let value = account_gas_used.get_mut(&address).unwrap();
                                 if *value < quota {
                                     continue;
                                 }
                                 *value = *value - quota;
                             } else {
-                                if let Some(value) = specific_gas_limit.get_mut(&signer.lower_hex())
+                                if let Some(value) =
+                                    specific_gas_limit.get_mut(&address.lower_hex())
                                 {
                                     gas_limit = *value;
                                 }
@@ -211,7 +216,7 @@ impl Pool {
                                 } else {
                                     _remainder = 0;
                                 }
-                                account_gas_used.insert(Address::from(signer), _remainder);
+                                account_gas_used.insert(address, _remainder);
                             }
                         }
                         n = n - quota;
@@ -320,13 +325,19 @@ mod tests {
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), true),
+            p.package(5, 30, account_gas_limit.clone(), true, None),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
-        assert_eq!(p.package(4, 30, account_gas_limit.clone(), true), vec![tx4]);
+        assert_eq!(
+            p.package(4, 30, account_gas_limit.clone(), true, None),
+            vec![tx4]
+        );
         assert_eq!(p.len(), 1);
-        assert_eq!(p.package(5, 30, account_gas_limit.clone(), true), vec![]);
+        assert_eq!(
+            p.package(5, 30, account_gas_limit.clone(), true, None),
+            vec![]
+        );
         assert_eq!(p.len(), 0);
     }
 }

@@ -8,7 +8,7 @@ types and some set/get methods.
 ## Dependences
 
 - [protobuf 3.5.1](https://github.com/google/protobuf/releases)
-- [rust-protobuf v2.0.2](https://github.com/stepancheg/rust-protobuf)
+- [rust-protobuf v2.0.4](https://github.com/stepancheg/rust-protobuf)
 - [grpc-rust 0.5.0](https://github.com/stepancheg/grpc-rust)
 
 Currently only supports these versions. If there is a break version, 
@@ -21,7 +21,7 @@ it is temporarily not supported.
 2. Install rust plugin
 
 ```
-$ cargo install protobuf-codegen --vers 2.0.2
+$ cargo install protobuf-codegen --vers 2.0.4
 $ cargo install grpc-compiler --vers 0.5.0
 ```
 

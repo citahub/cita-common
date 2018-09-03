@@ -5,7 +5,7 @@ version = "0.6.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-protobuf = { version = "2.0.2", features = ["with-bytes"]}
+protobuf = { version = "2.0.4", features = ["with-bytes"]}
 cita-types = { path = "../cita-types" }
 cita-crypto = { path = "../cita-crypto" }
 util = { path = "../util" }
