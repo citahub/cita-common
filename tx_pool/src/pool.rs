@@ -159,8 +159,7 @@ impl Pool {
         block_gas_limit: u64,
         account_gas_limit: AccountGasLimit,
         check_quota: bool,
-        emergency_brake: bool,
-        admin_address: Address,
+        admin_address: Option<Address>,
     ) -> Vec<SignedTransaction> {
         let mut tx_list = Vec::new();
         let mut invalid_tx_list = Vec::new();
@@ -182,7 +181,9 @@ impl Pool {
                     (valid_until_block == 0)
                         || (height < valid_until_block
                             && valid_until_block <= (height + BLOCKLIMIT))
-                            && (!emergency_brake || address == admin_address)
+                            && admin_address
+                                .map(|admin| address == admin)
+                                .unwrap_or_else(|| true)
                 };
                 if let Some(tx) = tx {
                     let address = pubkey_to_address(&PubKey::from(tx.get_signer()));
@@ -324,38 +325,17 @@ mod tests {
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
         assert_eq!(
-            p.package(
-                5,
-                30,
-                account_gas_limit.clone(),
-                true,
-                false,
-                Address::default()
-            ),
+            p.package(5, 30, account_gas_limit.clone(), true, None),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
         assert_eq!(
-            p.package(
-                4,
-                30,
-                account_gas_limit.clone(),
-                true,
-                false,
-                Address::default()
-            ),
+            p.package(4, 30, account_gas_limit.clone(), true, None),
             vec![tx4]
         );
         assert_eq!(p.len(), 1);
         assert_eq!(
-            p.package(
-                5,
-                30,
-                account_gas_limit.clone(),
-                true,
-                false,
-                Address::default()
-            ),
+            p.package(5, 30, account_gas_limit.clone(), true, None),
             vec![]
         );
         assert_eq!(p.len(), 0);
