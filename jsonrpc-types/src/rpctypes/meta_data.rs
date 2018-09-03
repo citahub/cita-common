@@ -47,6 +47,7 @@ pub struct MetaData {
     pub token_symbol: String,
     #[serde(rename = "tokenAvatar")]
     pub token_avatar: String,
+    pub version: u32,
 }
 
 #[cfg(test)]
@@ -72,7 +73,8 @@ mod tests {
             "blockInterval": 3000,
             "tokenName": "Nervos",
             "tokenSymbol": "NOS",
-            "tokenAvatar": "https://avatars1.githubusercontent.com/u/35361817"
+            "tokenAvatar": "https://avatars1.githubusercontent.com/u/35361817",
+            "version":108
         });
         let metadata = MetaData {
             chain_id: 123,
@@ -92,6 +94,7 @@ mod tests {
             token_name: "Nervos".to_owned(),
             token_symbol: "NOS".to_owned(),
             token_avatar: "https://avatars1.githubusercontent.com/u/35361817".to_owned(),
+            version: 108,
         };
         assert_eq!(serde_json::to_value(metadata).unwrap(), value);
     }
