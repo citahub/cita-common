@@ -33,7 +33,8 @@ mod tx_response;
 mod tests;
 
 pub use self::basic::{
-    BlockTag, Boolean, Data, Data20, Data32, Integer, OneItemTupleTrick, Quantity, VariadicValue,
+    BlockTag, Boolean, Data, Data20, Data32, EconomicalModel, Integer, OneItemTupleTrick, Quantity,
+    VariadicValue,
 };
 pub use self::exchange::{BlockParamsByHash, BlockParamsByNumber, CountOrCode, RpcBlock};
 pub use self::specs::{Id, Params, Version};

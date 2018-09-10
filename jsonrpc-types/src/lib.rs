@@ -39,6 +39,9 @@ extern crate uuid;
 
 pub extern crate jsonrpc_types_internals as internals;
 
+#[macro_use]
+mod macros;
+
 mod error;
 pub use error::{Error, ErrorCode};
 pub mod request;
