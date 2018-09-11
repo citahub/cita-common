@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::Address;
+use rpctypes::EconomicalModel;
 
 /// Metadata of current chain.
 ///
@@ -48,11 +49,13 @@ pub struct MetaData {
     #[serde(rename = "tokenAvatar")]
     pub token_avatar: String,
     pub version: u32,
+    #[serde(rename = "economicalModel")]
+    pub economical_model: EconomicalModel,
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{Address, MetaData};
+    use super::{Address, EconomicalModel, MetaData};
     use serde_json;
     use std::str::FromStr;
 
@@ -74,7 +77,8 @@ mod tests {
             "tokenName": "Nervos",
             "tokenSymbol": "NOS",
             "tokenAvatar": "https://avatars1.githubusercontent.com/u/35361817",
-            "version":108
+            "version":108,
+            "economicalModel": 1
         });
         let metadata = MetaData {
             chain_id: 123,
@@ -95,6 +99,7 @@ mod tests {
             token_symbol: "NOS".to_owned(),
             token_avatar: "https://avatars1.githubusercontent.com/u/35361817".to_owned(),
             version: 108,
+            economical_model: EconomicalModel::Charge,
         };
         assert_eq!(serde_json::to_value(metadata).unwrap(), value);
     }
