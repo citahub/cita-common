@@ -28,7 +28,7 @@ pub use self::boolean::Boolean;
 pub use self::fixed_data::{Data20, Data32};
 pub use self::integer::Integer;
 pub use self::quantity::Quantity;
-pub use self::tags::BlockTag;
+pub use self::tags::{BlockTag, EconomicalModel};
 pub use self::variadic::VariadicValue;
 
 // serde: Tuple enums with single element should not be a json-array

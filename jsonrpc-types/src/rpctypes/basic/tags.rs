@@ -23,13 +23,21 @@ pub enum BlockTag {
     Earliest,
 }
 
+/// Economical Model
+enum_number!(
+    EconomicalModel {
+        Quota = 0,
+        Charge = 1,
+    }
+);
+
 #[cfg(test)]
-mod tests_blocktag {
-    use super::BlockTag;
+mod tests_tags {
+    use super::{BlockTag, EconomicalModel};
     use serde_json;
 
     #[test]
-    fn serialize() {
+    fn blocktag_serialize() {
         let serialized = serde_json::to_string(&BlockTag::Latest).unwrap();
         assert_eq!(serialized, r#""latest""#);
         let serialized = serde_json::to_string(&BlockTag::Earliest).unwrap();
@@ -37,7 +45,7 @@ mod tests_blocktag {
     }
 
     #[test]
-    fn deserialize() {
+    fn blocktag_deserialize() {
         let testdata = vec![
             (r#""#, None),
             (r#""""#, None),
@@ -55,6 +63,38 @@ mod tests_blocktag {
         ];
         for (data, expected_opt) in testdata.into_iter() {
             let result: Result<BlockTag, serde_json::Error> = serde_json::from_str(data);
+            if let Some(expected) = expected_opt {
+                assert_eq!(result.unwrap(), expected);
+            } else {
+                assert!(result.is_err());
+            }
+        }
+    }
+
+    #[test]
+    fn economicalmodel_serialize() {
+        let serialized = serde_json::to_string(&EconomicalModel::Quota).unwrap();
+        assert_eq!(serialized, r#"0"#);
+        let serialized = serde_json::to_string(&EconomicalModel::Charge).unwrap();
+        assert_eq!(serialized, r#"1"#);
+    }
+
+    #[test]
+    fn economicalmodel_deserialize() {
+        let testdata = vec![
+            (r#""#, None),
+            (r#""""#, None),
+            (r#"quota"#, None),
+            (r#"charge"#, None),
+            (r#"-1"#, None),
+            (r#"2"#, None),
+            (r#""0""#, None),
+            (r#""1""#, None),
+            (r#"0"#, Some(EconomicalModel::Quota)),
+            (r#"1"#, Some(EconomicalModel::Charge)),
+        ];
+        for (data, expected_opt) in testdata.into_iter() {
+            let result: Result<EconomicalModel, serde_json::Error> = serde_json::from_str(data);
             if let Some(expected) = expected_opt {
                 assert_eq!(result.unwrap(), expected);
             } else {
