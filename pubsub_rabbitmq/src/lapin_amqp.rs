@@ -24,29 +24,30 @@ pub type Payload = (String, Vec<u8>);
 pub const EXCHANGE: &str = "cita";
 pub const EXCHANGE_TYPE: &str = "topic";
 
-fn amqp_connect(
+fn connect_consumer(
     addr: SocketAddr,
     name: &'static str,
     keys: Vec<String>,
-    publisher_rx: mpsc::Receiver<Payload>,
     consumer_tx: std_mpsc::Sender<Payload>,
 ) -> impl Future<Item = (), Error = io::Error> + Send + 'static {
     TcpStream::connect(&addr)
-        .and_then(|stream| {
-            // connect() returns a future of an AMQP Client
-            // that resolves once the handshake is done
-            Client::connect(stream, ConnectionOptions::default())
-        })
+        .and_then(|stream| Client::connect(stream, ConnectionOptions::default()))
         .and_then(move |(client, heartbeat)| {
             tokio::spawn(heartbeat.map_err(|_| ()));
-            // create_channel returns a future that is resolved
-            // once the channel is successfully created
-            let publisher = publisher(&client, name, publisher_rx);
-            let consumer = consumer(&client, name, keys, consumer_tx);
-            publisher
-                .select2(consumer)
-                .map(|_| ())
-                .map_err(|_| Error::new(ErrorKind::Other, "channel closed!"))
+            consumer(&client, name, keys, consumer_tx)
+        })
+}
+
+fn connect_publisher(
+    addr: SocketAddr,
+    name: &'static str,
+    publisher_rx: mpsc::Receiver<Payload>,
+) -> impl Future<Item = (), Error = io::Error> + Send + 'static {
+    TcpStream::connect(&addr)
+        .and_then(|stream| Client::connect(stream, ConnectionOptions::default()))
+        .and_then(move |(client, heartbeat)| {
+            tokio::spawn(heartbeat.map_err(|_| ()));
+            publisher(&client, name, publisher_rx)
         })
 }
 
@@ -172,14 +173,17 @@ pub fn start_amqp(
     let (consumer_tx, consumer_rx) = std_mpsc::channel();
 
     thread::spawn(move || {
-        Runtime::new().unwrap().block_on_all(amqp_connect(
-            addr,
-            name,
-            keys,
-            publisher_rx,
-            consumer_tx,
-        ))
+        Runtime::new()
+            .unwrap()
+            .block_on_all(connect_publisher(addr, name, publisher_rx))
     });
+
+    thread::spawn(move || {
+        Runtime::new()
+            .unwrap()
+            .block_on_all(connect_consumer(addr, name, keys, consumer_tx))
+    });
+
     (publisher_tx, consumer_rx)
 }
 
@@ -187,7 +191,7 @@ pub fn start_amqp(
 mod test {
     use super::*;
     #[test]
-    #[ignore]
+    // #[ignore]
     fn basics() {
         let addr = "127.0.0.1:5672".parse().unwrap();
 
