@@ -3,6 +3,13 @@ name = "pubsub_rabbitmq"
 version = "0.1.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
+[dependencies]
+lapin-futures = "0.13"
+tokio = "=0.1.8"
+futures = "0.1.24"
+logger = { path = "../logger" }
+tokio-io = "0.1"
+
 [dependencies.amqp]
 version = "0.1"
 default-features = false

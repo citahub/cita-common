@@ -16,6 +16,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate amqp;
+
+extern crate futures;
+extern crate lapin_futures as lapin;
+extern crate tokio;
+extern crate tokio_io;
+#[macro_use]
+extern crate logger;
+
+mod lapin_amqp;
+
 use amqp::{protocol, Basic, Channel, Consumer, Session, Table};
 use std::process;
 use std::sync::mpsc::Receiver;
