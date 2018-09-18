@@ -1842,6 +1842,7 @@ dependencies = [
 name = "pubsub_rabbitmq"
 version = "0.1.0"
 dependencies = [
+ "amq-protocol 0.21.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "amqp 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "lapin-futures 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",

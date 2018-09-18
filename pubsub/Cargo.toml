@@ -12,5 +12,6 @@ pubsub_kafka = { path = "../pubsub_kafka", optional = true }
 [features]
 default = []
 rabbitmq = ["pubsub_rabbitmq"]
+rabbitmq-rust-amqp = ["rabbitmq", "pubsub_rabbitmq/rust-amqp"]
 zeromq = ["pubsub_zeromq"]
 kafka = ["pubsub_kafka"]
