@@ -182,7 +182,7 @@ impl Error {
     pub fn invalid_params_len() -> Self {
         Error {
             code: ErrorCode::InvalidParams,
-            message: "invalid JsonRpc params length".to_owned(),
+            message: "Invalid JSON-RPC params length".to_owned(),
             data: None,
         }
     }
