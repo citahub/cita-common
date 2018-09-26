@@ -21,6 +21,8 @@ pub enum BlockTag {
     Latest,
     #[serde(rename = "earliest")]
     Earliest,
+    #[serde(rename = "pending")]
+    Pending,
 }
 
 /// Economical Model
@@ -42,6 +44,8 @@ mod tests_tags {
         assert_eq!(serialized, r#""latest""#);
         let serialized = serde_json::to_string(&BlockTag::Earliest).unwrap();
         assert_eq!(serialized, r#""earliest""#);
+        let serialized = serde_json::to_string(&BlockTag::Pending).unwrap();
+        assert_eq!(serialized, r#""pending""#);
     }
 
     #[test]
@@ -55,11 +59,13 @@ mod tests_tags {
             (r#"" latest""#, None),
             (r#""lat est""#, None),
             (r#""Latest""#, None),
+            (r#""Pending""#, None),
             (r#""Earliest""#, None),
             (r#""LATEST""#, None),
             (r#""EARLIEST""#, None),
             (r#""latest""#, Some(BlockTag::Latest)),
             (r#""earliest""#, Some(BlockTag::Earliest)),
+            (r#""pending""#, Some(BlockTag::Pending)),
         ];
         for (data, expected_opt) in testdata.into_iter() {
             let result: Result<BlockTag, serde_json::Error> = serde_json::from_str(data);
