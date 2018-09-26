@@ -36,6 +36,9 @@ impl BlockNumber {
     pub fn earliest() -> Self {
         BlockNumber::Tag(BlockTag::Earliest)
     }
+    pub fn pending() -> Self {
+        BlockNumber::Tag(BlockTag::Pending)
+    }
     pub fn is_default(&self) -> bool {
         *self == BlockNumber::Tag(BlockTag::Latest)
     }
@@ -59,6 +62,7 @@ mod tests {
             (BlockNumber::new(16u64.into()), Some(r#""0x10""#)),
             (BlockNumber::latest(), Some(r#""latest""#)),
             (BlockNumber::earliest(), Some(r#""earliest""#)),
+            (BlockNumber::pending(), Some(r#""pending""#)),
         ];
         for (data, expected_opt) in testdata.into_iter() {
             let result = serde_json::to_string(&data);
@@ -81,6 +85,7 @@ mod tests {
             (r#"earliest"#, None),
             (r#""latest""#, Some(BlockNumber::latest())),
             (r#""earliest""#, Some(BlockNumber::earliest())),
+            (r#""pending""#, Some(BlockNumber::pending())),
             (r#""10""#, Some(BlockNumber::new(10u64.into()))),
             (r#""0x10""#, Some(BlockNumber::new(16u64.into()))),
             (r#""0xa""#, Some(BlockNumber::new(10u64.into()))),
