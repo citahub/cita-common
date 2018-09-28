@@ -26,6 +26,7 @@ use cita_types::clean_0x;
 use cita_types::traits::LowerHex;
 use libproto::request::{
     Call as ProtoCall, Request as ProtoRequest, StateProof as ProtoStateProof,
+    StorageKey as ProtoStorageKey,
 };
 use libproto::UnverifiedTransaction;
 
@@ -33,9 +34,9 @@ use super::request::{
     BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
-    GetTransactionCountParams, GetTransactionParams, GetTransactionProofParams,
-    GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams, PeerCountParams,
-    SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
+    GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
+    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
+    PeerCountParams, SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
 };
 use error::Error;
 use rpctypes::{BlockParamsByHash, BlockParamsByNumber, CountOrCode};
@@ -348,6 +349,23 @@ impl TryInto<ProtoRequest> for GetBlockHeaderParams {
             .map_err(|err| Error::invalid_params(err.to_string()))
             .map(|height| {
                 request.set_block_header_height(height);
+                request
+            })
+    }
+}
+
+impl TryInto<ProtoRequest> for GetStorageKeyParams {
+    type Error = Error;
+    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut skey = ProtoStorageKey::new();
+        skey.set_address(self.0.into());
+        skey.set_position(self.1.into());
+        serde_json::to_string(&self.2)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                skey.set_height(height);
+                request.set_storage_key(skey);
                 request
             })
     }

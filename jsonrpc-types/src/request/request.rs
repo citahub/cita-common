@@ -299,4 +299,5 @@ define_call!(
     (GetMetaData, GetMetaDataParams: [BlockNumber], MetaData),
     (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
     (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
+    (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
 );

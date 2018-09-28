@@ -187,6 +187,7 @@ macro_rules! loop_macro_for_structs {
             Call,
             Request,
             StateProof,
+            StorageKey,
             FullTransaction,
             Response,
             SnapshotReq,
