@@ -160,6 +160,7 @@ impl Pool {
         account_gas_limit: AccountGasLimit,
         check_quota: bool,
         admin_address: Option<Address>,
+        version: u32,
     ) -> Vec<SignedTransaction> {
         let mut tx_list = Vec::new();
         let mut invalid_tx_list = Vec::new();
@@ -176,18 +177,19 @@ impl Pool {
                 }
                 let hash = order.unwrap().hash;
                 let tx = self.txs.get(&hash);
-                let tx_is_valid = |signed_tx: &SignedTransaction, height: u64, address: Address| {
-                    let valid_until_block = signed_tx.get_transaction().get_valid_until_block();
-                    (valid_until_block == 0)
-                        || (height < valid_until_block
-                            && valid_until_block <= (height + BLOCKLIMIT))
+                let tx_is_valid =
+                    |signed_tx: &SignedTransaction, height: u64, address: Address, version: u32| {
+                        let valid_until_block = signed_tx.get_transaction().get_valid_until_block();
+                        let tx_version = signed_tx.get_transaction().get_version();
+                        (height < valid_until_block && valid_until_block <= (height + BLOCKLIMIT))
                             && admin_address
                                 .map(|admin| address == admin)
                                 .unwrap_or_else(|| true)
-                };
+                            && (tx_version == version)
+                    };
                 if let Some(tx) = tx {
                     let address = pubkey_to_address(&PubKey::from(tx.get_signer()));
-                    if tx_is_valid(tx, height, address) {
+                    if tx_is_valid(tx, height, address, version) {
                         let quota = tx.get_transaction_with_sig().get_transaction().quota;
                         if n <= quota {
                             if tx_list.is_empty() {
@@ -291,6 +293,7 @@ mod tests {
         data: Vec<u8>,
         valid_until_block: u64,
         privkey: &PrivKey,
+        version: u32,
     ) -> SignedTransaction {
         let mut tx = Transaction::new();
         tx.set_data(data);
@@ -298,6 +301,7 @@ mod tests {
         tx.set_nonce("0".to_string());
         tx.set_valid_until_block(valid_until_block);
         tx.set_quota(184467440737095);
+        tx.set_version(version);
 
         tx.sign(*privkey)
     }
@@ -308,10 +312,10 @@ mod tests {
         let keypair = KeyPair::gen_keypair();
         let privkey = keypair.privkey();
 
-        let tx1 = generate_tx(vec![1], 99, privkey);
-        let tx2 = generate_tx(vec![1], 99, privkey);
-        let tx3 = generate_tx(vec![2], 99, privkey);
-        let tx4 = generate_tx(vec![3], 5, privkey);
+        let tx1 = generate_tx(vec![1], 99, privkey, 0);
+        let tx2 = generate_tx(vec![1], 99, privkey, 0);
+        let tx3 = generate_tx(vec![2], 99, privkey, 0);
+        let tx4 = generate_tx(vec![3], 5, privkey, 0);
 
         let mut account_gas_limit = AccountGasLimit::new();
         account_gas_limit.set_common_gas_limit(10000);
@@ -325,17 +329,46 @@ mod tests {
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), true, None),
+            p.package(5, 30, account_gas_limit.clone(), true, None, 0),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
         assert_eq!(
-            p.package(4, 30, account_gas_limit.clone(), true, None),
+            p.package(4, 30, account_gas_limit.clone(), true, None, 0),
             vec![tx4]
         );
         assert_eq!(p.len(), 1);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), true, None),
+            p.package(5, 30, account_gas_limit.clone(), true, None, 0),
+            vec![]
+        );
+        assert_eq!(p.len(), 0);
+    }
+
+    #[test]
+    fn version_test() {
+        let mut p = Pool::new(1);
+        let keypair = KeyPair::gen_keypair();
+        let privkey = keypair.privkey();
+
+        let tx1 = generate_tx(vec![1], 99, privkey, 0);
+        let tx2 = generate_tx(vec![2], 99, privkey, 1);
+
+        let mut account_gas_limit = AccountGasLimit::new();
+        account_gas_limit.set_common_gas_limit(10000);
+        account_gas_limit.set_specific_gas_limit(HashMap::new());
+
+        assert_eq!(p.enqueue(tx1.clone()), true);
+        assert_eq!(p.enqueue(tx2.clone()), true);
+        assert_eq!(p.len(), 2);
+
+        assert_eq!(
+            p.package(5, 30, account_gas_limit.clone(), false, None, 0),
+            vec![tx1.clone()]
+        );
+        p.update(&vec![tx1.clone()]);
+        assert_eq!(
+            p.package(5, 30, account_gas_limit.clone(), false, None, 0),
             vec![]
         );
         assert_eq!(p.len(), 0);
