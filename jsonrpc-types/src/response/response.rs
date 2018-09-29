@@ -176,6 +176,9 @@ impl Output {
                     Response_oneof_data::block_header(data) => success
                         .set_result(ResponseResult::GetBlockHeader(data.into()))
                         .output(),
+                    Response_oneof_data::storage_value(data) => success
+                        .set_result(ResponseResult::GetStorageAt(data.into()))
+                        .output(),
                 }
             } else {
                 match response {
