@@ -28,7 +28,7 @@ use util::avl::AVLMut;
 use util::memorydb::*;
 use util::trie::triedbmut::*;
 use util::trie::TrieMut;
-use util::{H256, HashDB};
+use util::{HashDB, H256};
 
 const SIZE: usize = 1000000;
 
@@ -62,7 +62,8 @@ fn bench_avl_update(b: &mut Bencher) {
         journal_key: 0,
         value_mode: ValueMode::Mirror,
         count: SIZE,
-    }.make_with(&mut seed);
+    }
+    .make_with(&mut seed);
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
@@ -88,7 +89,8 @@ fn bench_avl_commit(b: &mut Bencher) {
         journal_key: 0,
         value_mode: ValueMode::Mirror,
         count: SIZE,
-    }.make_with(&mut seed);
+    }
+    .make_with(&mut seed);
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
@@ -114,7 +116,8 @@ fn bench_avl_query(b: &mut Bencher) {
         journal_key: 0,
         value_mode: ValueMode::Mirror,
         count: SIZE,
-    }.make_with(&mut seed);
+    }
+    .make_with(&mut seed);
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
@@ -160,7 +163,8 @@ fn bench_trie_update(b: &mut Bencher) {
         journal_key: 0,
         value_mode: ValueMode::Mirror,
         count: SIZE,
-    }.make_with(&mut seed);
+    }
+    .make_with(&mut seed);
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
@@ -186,7 +190,8 @@ fn bench_trie_commit(b: &mut Bencher) {
         journal_key: 0,
         value_mode: ValueMode::Mirror,
         count: SIZE,
-    }.make_with(&mut seed);
+    }
+    .make_with(&mut seed);
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
@@ -212,7 +217,8 @@ fn bench_trie_query(b: &mut Bencher) {
         journal_key: 0,
         value_mode: ValueMode::Mirror,
         count: SIZE,
-    }.make_with(&mut seed);
+    }
+    .make_with(&mut seed);
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

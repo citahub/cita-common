@@ -17,7 +17,6 @@
 
 #![feature(try_from)]
 #![feature(concat_idents)]
-#![feature(proc_macro)]
 #![allow(unused_attributes)]
 #![allow(unused_extern_crates)]
 extern crate bincode;

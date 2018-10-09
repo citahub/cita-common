@@ -58,7 +58,7 @@ where
         .collect::<BTreeMap<_, _>>()
         // then move them to a vector
         .into_iter()
-        .map(|(k, v)| (as_nibbles(&k), v) )
+        .map(|(k, v)| (as_nibbles(&k), v))
         .collect();
 
     gen_trie_root(gen_input)
@@ -97,7 +97,7 @@ where
         .collect::<BTreeMap<_, _>>()
         // then move them to a vector
         .into_iter()
-        .map(|(k, v)| (as_nibbles(&k), v) )
+        .map(|(k, v)| (as_nibbles(&k), v))
         .collect();
 
     gen_trie_root(gen_input)
@@ -134,7 +134,7 @@ pub fn sec_trie_root(input: Vec<(Vec<u8>, Vec<u8>)>) -> H256 {
         .collect::<BTreeMap<_, _>>()
         // then move them to a vector
         .into_iter()
-        .map(|(k, v)| (as_nibbles(&k), v) )
+        .map(|(k, v)| (as_nibbles(&k), v))
         .collect();
 
     gen_trie_root(gen_input)
@@ -227,11 +227,12 @@ fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStre
     }
 
     // get length of the longest shared prefix in slice keys
-    let shared_prefix = input.iter()
+    let shared_prefix = input
+        .iter()
         // skip first element
         .skip(1)
         // get minimum number of shared nibbles between first and each successive
-        .fold(key.len(), | acc, &(ref k, _) | {
+        .fold(key.len(), |acc, &(ref k, _)| {
             cmp::min(key.shared_prefix_len(k), acc)
         });
 
@@ -375,12 +376,11 @@ mod tests {
                 (vec![0x01u8, 0x23], vec![0x01u8, 0x23]),
                 (vec![0x81u8, 0x23], vec![0x81u8, 0x23]),
                 (vec![0xf1u8, 0x23], vec![0xf1u8, 0x23]),
+            ]) == trie_root(vec![
+                (vec![0x01u8, 0x23], vec![0x01u8, 0x23]),
+                (vec![0xf1u8, 0x23], vec![0xf1u8, 0x23]),
+                (vec![0x81u8, 0x23], vec![0x81u8, 0x23]),
             ])
-                == trie_root(vec![
-                    (vec![0x01u8, 0x23], vec![0x01u8, 0x23]),
-                    (vec![0xf1u8, 0x23], vec![0xf1u8, 0x23]),
-                    (vec![0x81u8, 0x23], vec![0x81u8, 0x23]),
-                ])
         );
     }
 

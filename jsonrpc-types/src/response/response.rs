@@ -306,7 +306,8 @@ mod tests {
         let rpc = RpcSuccess::new(RequestInfo::new(
             Some(Version::V2),
             Id::Str("2".to_string()),
-        )).set_result(ResponseResult::BlockNumber(3u64.into()));
+        ))
+        .set_result(ResponseResult::BlockNumber(3u64.into()));
 
         let rpc_body = serde_json::to_string(&rpc).unwrap();
         assert_eq!(rpc_body, r#"{"jsonrpc":"2.0","id":"2","result":"0x3"}"#);

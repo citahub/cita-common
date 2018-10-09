@@ -252,11 +252,13 @@ impl Pool {
                     if tx
                         .get_transaction_with_sig()
                         .get_transaction()
-                        .valid_until_block >= height
+                        .valid_until_block
+                        >= height
                         && tx
                             .get_transaction_with_sig()
                             .get_transaction()
-                            .valid_until_block < (height + BLOCKLIMIT)
+                            .valid_until_block
+                            < (height + BLOCKLIMIT)
                     {
                         tx_list.push(tx.clone());
                         n = n - 1;

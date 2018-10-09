@@ -358,7 +358,8 @@ impl<'a> AVLDBMut<'a> {
                 db: &*self.db,
                 query: DBValue::from_slice,
                 hash: hash.clone(),
-            }.look_up(key),
+            }
+            .look_up(key),
             NodeHandle::InMemory(ref handle) => match self.storage[handle] {
                 Node::Empty => Ok(None),
                 Node::Leaf(ref k, ref value) => {

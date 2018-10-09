@@ -503,7 +503,8 @@ mod tests_for_sha3hash {
             assert_eq!(
                 MerkleTree::from_hashes(
                     x.into_iter().map(|x| H256::from_str(x).unwrap()).collect()
-                ).get_root_hash(),
+                )
+                .get_root_hash(),
                 H256::from_str(y).unwrap()
             );
         }
