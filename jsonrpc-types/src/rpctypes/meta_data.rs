@@ -91,9 +91,10 @@ mod tests {
                 "bc1fafd5ba5485f97e937fe574f836b275e593dd",
                 "fc788efe3fda574e21691d383e429be02c530e4c",
                 "e9deeae8b2a43675f113d11573119b9c68e5e3d8",
-            ].into_iter()
-                .map(|s| Address::from_str(s).unwrap())
-                .collect::<Vec<_>>(),
+            ]
+            .into_iter()
+            .map(|s| Address::from_str(s).unwrap())
+            .collect::<Vec<_>>(),
             block_interval: 3000,
             token_name: "Nervos".to_owned(),
             token_symbol: "NOS".to_owned(),

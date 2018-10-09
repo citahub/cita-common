@@ -33,10 +33,18 @@ pub type Topic = VariadicValue<Data32>;
 #[serde(deny_unknown_fields)]
 pub struct Filter {
     /// From Block
-    #[serde(rename = "fromBlock", default, skip_serializing_if = "BlockNumber::is_default")]
+    #[serde(
+        rename = "fromBlock",
+        default,
+        skip_serializing_if = "BlockNumber::is_default"
+    )]
     pub from_block: BlockNumber,
     /// To Block
-    #[serde(rename = "toBlock", default, skip_serializing_if = "BlockNumber::is_default")]
+    #[serde(
+        rename = "toBlock",
+        default,
+        skip_serializing_if = "BlockNumber::is_default"
+    )]
     pub to_block: BlockNumber,
     /// Address
     pub address: Option<FilterAddress>,
@@ -174,7 +182,8 @@ mod tests {
             json!(["0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"]),
             serde_json::to_value(FilterChanges::Hashes(vec![Data32::new(
                 "000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b".into(),
-            )])).unwrap()
+            )]))
+            .unwrap()
         );
 
         assert_eq!(
@@ -183,7 +192,8 @@ mod tests {
             )]),
             serde_json::from_value(json!([
                 "0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"
-            ])).unwrap()
+            ]))
+            .unwrap()
         );
 
         let value = json!([{

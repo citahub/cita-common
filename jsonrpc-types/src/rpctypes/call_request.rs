@@ -45,7 +45,8 @@ mod tests {
                 "from": "0x0000000000000000000000000000000000000001",
                 "to": "0x0000000000000000000000000000000000000002",
                 "data": "0xabcdef"
-            }).to_string(),
+            })
+            .to_string(),
             Some(CallRequest::new(
                 Some(H160::from(1).into()),
                 H160::from(2).into(),

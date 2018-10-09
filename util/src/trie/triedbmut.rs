@@ -949,7 +949,6 @@ mod tests {
     use super::super::standardmap::*;
     use bytes::ToPretty;
     use hashable::HASH_NULL_RLP;
-    use hashdb::*;
     use memorydb::*;
     use triehash::trie_root;
 

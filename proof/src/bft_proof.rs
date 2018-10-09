@@ -124,7 +124,8 @@ impl BftProof {
                         Some(self.proposal.clone()),
                     ),
                     Infinite,
-                ).unwrap();
+                )
+                .unwrap();
                 let signature = Signature(sig.0.into());
                 if let Ok(pubkey) = signature.recover(&msg.crypt_hash().into()) {
                     return pubkey_to_address(&pubkey) == sender.clone().into();

@@ -163,7 +163,8 @@ impl<'db> AVL for AVLDB<'db> {
             db: self.db,
             query: query,
             hash: self.root.clone(),
-        }.look_up(key.to_vec())
+        }
+        .look_up(key.to_vec())
     }
 }
 

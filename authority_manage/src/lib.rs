@@ -91,7 +91,8 @@ impl AuthorityManage {
                     self.authorities.clone(),
                 ),
                 Infinite,
-            ).unwrap();
+            )
+            .unwrap();
             let _ = self.authorities_log.save(LOG_TYPE_AUTHORITIES, &bmsg);
         }
     }

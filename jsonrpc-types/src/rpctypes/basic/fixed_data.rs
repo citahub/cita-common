@@ -164,7 +164,8 @@ macro_rules! test_for_fixed_type {
                     $outer_size * 2 - 1,
                     $outer_size * 2 + 1,
                     $outer_size * 2 + 2,
-                ].into_iter()
+                ]
+                .into_iter()
                 {
                     let data = format!(r#""0x{}""#, pad_left0("0", sz));
                     let result: Result<$outer, serde_json::Error> = serde_json::from_str(&data);
