@@ -64,7 +64,6 @@ pub enum InnerMessage_oneof_content {
     BlockTxHashes(super::auth::BlockTxHashes),
     BlockTxHashesReq(super::auth::BlockTxHashesReq),
     VerifyTxReq(super::auth::VerifyTxReq),
-    VerifyTxResp(super::auth::VerifyTxResp),
     VerifyBlockReq(super::auth::VerifyBlockReq),
     VerifyBlockResp(super::auth::VerifyBlockResp),
     ExecutedResult(super::executor::ExecutedResult),
@@ -816,55 +815,6 @@ impl InnerMessage {
         }
     }
 
-    // .VerifyTxResp VerifyTxResp = 16;
-
-    pub fn clear_VerifyTxResp(&mut self) {
-        self.content = ::std::option::Option::None;
-    }
-
-    pub fn has_VerifyTxResp(&self) -> bool {
-        match self.content {
-            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(..)) => true,
-            _ => false,
-        }
-    }
-
-    // Param is passed by value, moved
-    pub fn set_VerifyTxResp(&mut self, v: super::auth::VerifyTxResp) {
-        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(v))
-    }
-
-    // Mutable pointer to the field.
-    pub fn mut_VerifyTxResp(&mut self) -> &mut super::auth::VerifyTxResp {
-        if let ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(_)) = self.content {
-        } else {
-            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(super::auth::VerifyTxResp::new()));
-        }
-        match self.content {
-            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(ref mut v)) => v,
-            _ => panic!(),
-        }
-    }
-
-    // Take field
-    pub fn take_VerifyTxResp(&mut self) -> super::auth::VerifyTxResp {
-        if self.has_VerifyTxResp() {
-            match self.content.take() {
-                ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(v)) => v,
-                _ => panic!(),
-            }
-        } else {
-            super::auth::VerifyTxResp::new()
-        }
-    }
-
-    pub fn get_VerifyTxResp(&self) -> &super::auth::VerifyTxResp {
-        match self.content {
-            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(ref v)) => v,
-            _ => super::auth::VerifyTxResp::default_instance(),
-        }
-    }
-
     // .VerifyBlockReq VerifyBlockReq = 17;
 
     pub fn clear_VerifyBlockReq(&mut self) {
@@ -1379,11 +1329,6 @@ impl ::protobuf::Message for InnerMessage {
                 return false;
             }
         }
-        if let Some(InnerMessage_oneof_content::VerifyTxResp(ref v)) = self.content {
-            if !v.is_initialized() {
-                return false;
-            }
-        }
         if let Some(InnerMessage_oneof_content::VerifyBlockReq(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
@@ -1526,12 +1471,6 @@ impl ::protobuf::Message for InnerMessage {
                     }
                     self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(is.read_message()?));
                 },
-                16 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxResp(is.read_message()?));
-                },
                 17 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
@@ -1659,10 +1598,6 @@ impl ::protobuf::Message for InnerMessage {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &InnerMessage_oneof_content::VerifyTxResp(ref v) => {
-                    let len = v.compute_size();
-                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-                },
                 &InnerMessage_oneof_content::VerifyBlockReq(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
@@ -1779,11 +1714,6 @@ impl ::protobuf::Message for InnerMessage {
                 },
                 &InnerMessage_oneof_content::VerifyTxReq(ref v) => {
                     os.write_tag(15, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-                    os.write_raw_varint32(v.get_cached_size())?;
-                    v.write_to_with_cached_sizes(os)?;
-                },
-                &InnerMessage_oneof_content::VerifyTxResp(ref v) => {
-                    os.write_tag(16, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -1951,11 +1881,6 @@ impl ::protobuf::Message for InnerMessage {
                     InnerMessage::has_VerifyTxReq,
                     InnerMessage::get_VerifyTxReq,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyTxResp>(
-                    "VerifyTxResp",
-                    InnerMessage::has_VerifyTxResp,
-                    InnerMessage::get_VerifyTxResp,
-                ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyBlockReq>(
                     "VerifyBlockReq",
                     InnerMessage::has_VerifyBlockReq,
@@ -2038,7 +1963,6 @@ impl ::protobuf::Clear for InnerMessage {
         self.clear_BlockTxHashes();
         self.clear_BlockTxHashesReq();
         self.clear_VerifyTxReq();
-        self.clear_VerifyTxResp();
         self.clear_VerifyBlockReq();
         self.clear_VerifyBlockResp();
         self.clear_ExecutedResult();
@@ -2067,7 +1991,7 @@ impl ::protobuf::reflect::ProtobufValue for InnerMessage {
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
-    o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\"\x82\n\n\x0cInnerMessage\
+    o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\"\xcd\t\n\x0cInnerMessage\
     \x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0R\x08RawBytes\x12$\n\x07Re\
     quest\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\x07Request\x12'\n\x08Respons\
     e\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08Response\x120\n\x0bSyncRequest\
@@ -2083,35 +2007,34 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x08BlockTxs\x126\n\rBlockTxHashes\x18\r\x20\x01(\x0b2\x0e.BlockTxHashes\
     H\0R\rBlockTxHashes\x12?\n\x10BlockTxHashesReq\x18\x0e\x20\x01(\x0b2\x11\
     .BlockTxHashesReqH\0R\x10BlockTxHashesReq\x120\n\x0bVerifyTxReq\x18\x0f\
-    \x20\x01(\x0b2\x0c.VerifyTxReqH\0R\x0bVerifyTxReq\x123\n\x0cVerifyTxResp\
-    \x18\x10\x20\x01(\x0b2\r.VerifyTxRespH\0R\x0cVerifyTxResp\x129\n\x0eVeri\
-    fyBlockReq\x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\x0eVerifyBlockRe\
-    q\x12<\n\x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.VerifyBlockRespH\0\
-    R\x0fVerifyBlockResp\x129\n\x0eExecutedResult\x18\x13\x20\x01(\x0b2\x0f.\
-    ExecutedResultH\0R\x0eExecutedResult\x120\n\x0bSnapshotReq\x18\x14\x20\
-    \x01(\x0b2\x0c.SnapshotReqH\0R\x0bSnapshotReq\x123\n\x0cSnapshotResp\x18\
-    \x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotResp\x126\n\rMiscellane\
-    ous\x18\x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rMiscellaneous\x12?\n\
-    \x10MiscellaneousReq\x18\x17\x20\x01(\x0b2\x11.MiscellaneousReqH\0R\x10M\
-    iscellaneousReq\x12*\n\tBlackList\x18\x18\x20\x01(\x0b2\n.BlackListH\0R\
-    \tBlackList\x120\n\x0bStateSignal\x18\x19\x20\x01(\x0b2\x0c.StateSignalH\
-    \0R\x0bStateSignalB\t\n\x07contentJ\xfd\x0b\n\x06\x12\x04\0\04\x01\n\x08\
-    \n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\
-    \x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\
-    \x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\
-    \t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\
-    \x17\n\t\n\x02\x03\x07\x12\x03\t\x07\x17\n\n\n\x02\x04\0\x12\x04\x0b\04\
-    \x01\n\n\n\x03\x04\0\x01\x12\x03\x0b\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\
-    \x04\r\x043\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\x03\r\n\x11\n\x0b\n\x04\
-    \x04\0\x02\0\x12\x03\x0f\x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0f\
-    \x08\r\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x0f\x0e\x16\n\x0c\n\x05\x04\0\
-    \x02\0\x03\x12\x03\x0f\x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x11\x08\
-    \x1c\n\x0c\n\x05\x04\0\x02\x01\x06\x12\x03\x11\x08\x0f\n\x0c\n\x05\x04\0\
-    \x02\x01\x01\x12\x03\x11\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\
-    \x11\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x12\x08\x1e\n\x0c\n\x05\
-    \x04\0\x02\x02\x06\x12\x03\x12\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\
-    \x03\x12\x11\x19\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x12\x1c\x1d\n\x0b\
-    \n\x04\x04\0\x02\x03\x12\x03\x14\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\
+    \x20\x01(\x0b2\x0c.VerifyTxReqH\0R\x0bVerifyTxReq\x129\n\x0eVerifyBlockR\
+    eq\x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\x0eVerifyBlockReq\x12<\n\
+    \x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.VerifyBlockRespH\0R\x0fVer\
+    ifyBlockResp\x129\n\x0eExecutedResult\x18\x13\x20\x01(\x0b2\x0f.Executed\
+    ResultH\0R\x0eExecutedResult\x120\n\x0bSnapshotReq\x18\x14\x20\x01(\x0b2\
+    \x0c.SnapshotReqH\0R\x0bSnapshotReq\x123\n\x0cSnapshotResp\x18\x15\x20\
+    \x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotResp\x126\n\rMiscellaneous\x18\
+    \x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rMiscellaneous\x12?\n\x10Miscel\
+    laneousReq\x18\x17\x20\x01(\x0b2\x11.MiscellaneousReqH\0R\x10Miscellaneo\
+    usReq\x12*\n\tBlackList\x18\x18\x20\x01(\x0b2\n.BlackListH\0R\tBlackList\
+    \x120\n\x0bStateSignal\x18\x19\x20\x01(\x0b2\x0c.StateSignalH\0R\x0bStat\
+    eSignalB\t\n\x07contentJ\xc6\x0b\n\x06\x12\x04\0\04\x01\n\x08\n\x01\x0c\
+    \x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\
+    \x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\
+    \x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\t\n\x02\
+    \x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\x17\n\t\n\
+    \x02\x03\x07\x12\x03\t\x07\x17\n\n\n\x02\x04\0\x12\x04\x0b\04\x01\n\n\n\
+    \x03\x04\0\x01\x12\x03\x0b\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\x04\r\x04\
+    3\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\x03\r\n\x11\n\x0b\n\x04\x04\0\x02\
+    \0\x12\x03\x0f\x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0f\x08\r\n\
+    \x0c\n\x05\x04\0\x02\0\x01\x12\x03\x0f\x0e\x16\n\x0c\n\x05\x04\0\x02\0\
+    \x03\x12\x03\x0f\x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x11\x08\x1c\n\
+    \x0c\n\x05\x04\0\x02\x01\x06\x12\x03\x11\x08\x0f\n\x0c\n\x05\x04\0\x02\
+    \x01\x01\x12\x03\x11\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x11\
+    \x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x12\x08\x1e\n\x0c\n\x05\x04\0\
+    \x02\x02\x06\x12\x03\x12\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\
+    \x12\x11\x19\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x12\x1c\x1d\n\x0b\n\
+    \x04\x04\0\x02\x03\x12\x03\x14\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\
     \x03\x14\x08\x13\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x14\x14\x1f\n\x0c\
     \n\x05\x04\0\x02\x03\x03\x12\x03\x14\"#\n\x0b\n\x04\x04\0\x02\x04\x12\
     \x03\x15\x08&\n\x0c\n\x05\x04\0\x02\x04\x06\x12\x03\x15\x08\x14\n\x0c\n\
@@ -2142,31 +2065,29 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0c\n\x05\x04\0\x02\r\x03\x12\x03\",.\n\x0b\n\x04\x04\0\x02\x0e\x12\x03\
     $\x08%\n\x0c\n\x05\x04\0\x02\x0e\x06\x12\x03$\x08\x13\n\x0c\n\x05\x04\0\
     \x02\x0e\x01\x12\x03$\x14\x1f\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03$\"$\
-    \n\x0b\n\x04\x04\0\x02\x0f\x12\x03%\x08'\n\x0c\n\x05\x04\0\x02\x0f\x06\
-    \x12\x03%\x08\x14\n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03%\x15!\n\x0c\n\
-    \x05\x04\0\x02\x0f\x03\x12\x03%$&\n\x0b\n\x04\x04\0\x02\x10\x12\x03&\x08\
-    +\n\x0c\n\x05\x04\0\x02\x10\x06\x12\x03&\x08\x16\n\x0c\n\x05\x04\0\x02\
-    \x10\x01\x12\x03&\x17%\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03&(*\n\x0b\n\
-    \x04\x04\0\x02\x11\x12\x03'\x08-\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03'\
-    \x08\x17\n\x0c\n\x05\x04\0\x02\x11\x01\x12\x03'\x18'\n\x0c\n\x05\x04\0\
-    \x02\x11\x03\x12\x03'*,\n\x0b\n\x04\x04\0\x02\x12\x12\x03)\x08+\n\x0c\n\
-    \x05\x04\0\x02\x12\x06\x12\x03)\x08\x16\n\x0c\n\x05\x04\0\x02\x12\x01\
-    \x12\x03)\x17%\n\x0c\n\x05\x04\0\x02\x12\x03\x12\x03)(*\n\x0b\n\x04\x04\
-    \0\x02\x13\x12\x03+\x08%\n\x0c\n\x05\x04\0\x02\x13\x06\x12\x03+\x08\x13\
-    \n\x0c\n\x05\x04\0\x02\x13\x01\x12\x03+\x14\x1f\n\x0c\n\x05\x04\0\x02\
-    \x13\x03\x12\x03+\"$\n\x0b\n\x04\x04\0\x02\x14\x12\x03,\x08'\n\x0c\n\x05\
-    \x04\0\x02\x14\x06\x12\x03,\x08\x14\n\x0c\n\x05\x04\0\x02\x14\x01\x12\
-    \x03,\x15!\n\x0c\n\x05\x04\0\x02\x14\x03\x12\x03,$&\n\x0b\n\x04\x04\0\
-    \x02\x15\x12\x03.\x08)\n\x0c\n\x05\x04\0\x02\x15\x06\x12\x03.\x08\x15\n\
-    \x0c\n\x05\x04\0\x02\x15\x01\x12\x03.\x16#\n\x0c\n\x05\x04\0\x02\x15\x03\
-    \x12\x03.&(\n\x0b\n\x04\x04\0\x02\x16\x12\x03/\x08/\n\x0c\n\x05\x04\0\
-    \x02\x16\x06\x12\x03/\x08\x18\n\x0c\n\x05\x04\0\x02\x16\x01\x12\x03/\x19\
-    )\n\x0c\n\x05\x04\0\x02\x16\x03\x12\x03/,.\n\x0b\n\x04\x04\0\x02\x17\x12\
-    \x031\x08!\n\x0c\n\x05\x04\0\x02\x17\x06\x12\x031\x08\x11\n\x0c\n\x05\
-    \x04\0\x02\x17\x01\x12\x031\x12\x1b\n\x0c\n\x05\x04\0\x02\x17\x03\x12\
-    \x031\x1e\x20\n\x0b\n\x04\x04\0\x02\x18\x12\x032\x08%\n\x0c\n\x05\x04\0\
-    \x02\x18\x06\x12\x032\x08\x13\n\x0c\n\x05\x04\0\x02\x18\x01\x12\x032\x14\
-    \x1f\n\x0c\n\x05\x04\0\x02\x18\x03\x12\x032\"$b\x06proto3\
+    \n\x0b\n\x04\x04\0\x02\x0f\x12\x03&\x08+\n\x0c\n\x05\x04\0\x02\x0f\x06\
+    \x12\x03&\x08\x16\n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03&\x17%\n\x0c\n\
+    \x05\x04\0\x02\x0f\x03\x12\x03&(*\n\x0b\n\x04\x04\0\x02\x10\x12\x03'\x08\
+    -\n\x0c\n\x05\x04\0\x02\x10\x06\x12\x03'\x08\x17\n\x0c\n\x05\x04\0\x02\
+    \x10\x01\x12\x03'\x18'\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03'*,\n\x0b\n\
+    \x04\x04\0\x02\x11\x12\x03)\x08+\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03)\
+    \x08\x16\n\x0c\n\x05\x04\0\x02\x11\x01\x12\x03)\x17%\n\x0c\n\x05\x04\0\
+    \x02\x11\x03\x12\x03)(*\n\x0b\n\x04\x04\0\x02\x12\x12\x03+\x08%\n\x0c\n\
+    \x05\x04\0\x02\x12\x06\x12\x03+\x08\x13\n\x0c\n\x05\x04\0\x02\x12\x01\
+    \x12\x03+\x14\x1f\n\x0c\n\x05\x04\0\x02\x12\x03\x12\x03+\"$\n\x0b\n\x04\
+    \x04\0\x02\x13\x12\x03,\x08'\n\x0c\n\x05\x04\0\x02\x13\x06\x12\x03,\x08\
+    \x14\n\x0c\n\x05\x04\0\x02\x13\x01\x12\x03,\x15!\n\x0c\n\x05\x04\0\x02\
+    \x13\x03\x12\x03,$&\n\x0b\n\x04\x04\0\x02\x14\x12\x03.\x08)\n\x0c\n\x05\
+    \x04\0\x02\x14\x06\x12\x03.\x08\x15\n\x0c\n\x05\x04\0\x02\x14\x01\x12\
+    \x03.\x16#\n\x0c\n\x05\x04\0\x02\x14\x03\x12\x03.&(\n\x0b\n\x04\x04\0\
+    \x02\x15\x12\x03/\x08/\n\x0c\n\x05\x04\0\x02\x15\x06\x12\x03/\x08\x18\n\
+    \x0c\n\x05\x04\0\x02\x15\x01\x12\x03/\x19)\n\x0c\n\x05\x04\0\x02\x15\x03\
+    \x12\x03/,.\n\x0b\n\x04\x04\0\x02\x16\x12\x031\x08!\n\x0c\n\x05\x04\0\
+    \x02\x16\x06\x12\x031\x08\x11\n\x0c\n\x05\x04\0\x02\x16\x01\x12\x031\x12\
+    \x1b\n\x0c\n\x05\x04\0\x02\x16\x03\x12\x031\x1e\x20\n\x0b\n\x04\x04\0\
+    \x02\x17\x12\x032\x08%\n\x0c\n\x05\x04\0\x02\x17\x06\x12\x032\x08\x13\n\
+    \x0c\n\x05\x04\0\x02\x17\x01\x12\x032\x14\x1f\n\x0c\n\x05\x04\0\x02\x17\
+    \x03\x12\x032\"$b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

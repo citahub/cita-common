@@ -145,7 +145,6 @@ macro_rules! loop_macro_for_structs {
             VerifyBlockReq,
             VerifyBlockResp,
             VerifyTxReq,
-            VerifyTxResp,
             AccountGasLimit,
             BlackList,
             Block,
@@ -218,7 +217,6 @@ macro_rules! loop_macro_for_structs_in_msg {
             BlockTxHashes,
             BlockTxHashesReq,
             VerifyTxReq,
-            VerifyTxResp,
             VerifyBlockReq,
             VerifyBlockResp,
             ExecutedResult,
@@ -455,12 +453,6 @@ impl Message {
     pub fn take_verify_tx_req(&mut self) -> Option<VerifyTxReq> {
         match self.take_content() {
             Some(MsgClass::VerifyTxReq(v)) => Some(v),
-            _ => None,
-        }
-    }
-    pub fn take_verify_tx_resp(&mut self) -> Option<VerifyTxResp> {
-        match self.take_content() {
-            Some(MsgClass::VerifyTxResp(v)) => Some(v),
             _ => None,
         }
     }

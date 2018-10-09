@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use cita_types::traits::LowerHex;
 use cita_types::{H256, U256};
 use libproto::{
     FullTransaction as ProtoFullTransaction, SignedTransaction as ProtoSignedTransaction,
-    Transaction as ProtoTransaction,
 };
-use rpctypes::{Data, Integer, Quantity};
+use rpctypes::Data;
 use std::convert::TryInto;
 
 // TODO: No need Deserialize. Just because test in trans.rs
@@ -56,13 +56,20 @@ impl From<ProtoFullTransaction> for RpcTransaction {
 
         let unverified_tx = stx.get_transaction_with_sig();
         let tx = unverified_tx.get_transaction();
+        let version = tx.get_version();
         trace!(
             "GET ProtoTransaction: nonce {:?}, block_limit {:?}, data {:?}, quota {:?}, to {:?}",
             tx.get_nonce(),
             tx.get_valid_until_block(),
             tx.get_data(),
             tx.get_quota(),
-            tx.get_to()
+            if version == 0 {
+                tx.get_to().to_owned()
+            } else if version == 1 {
+                tx.get_to_v1().lower_hex()
+            } else {
+                panic!("unexpected version {}!", version)
+            }
         );
 
         RpcTransaction {
@@ -80,33 +87,6 @@ impl From<ProtoSignedTransaction> for FullTransaction {
         FullTransaction {
             hash: H256::from_slice(stx.get_tx_hash()),
             content: Data::new(stx.get_transaction_with_sig().try_into().unwrap()),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq)]
-pub struct Transaction {
-    pub to: String,
-    pub nonce: String,
-    pub quota: Integer,
-    pub valid_until_block: Integer,
-    pub data: Data,
-    pub value: Quantity,
-    pub chain_id: Integer,
-    pub version: Integer,
-}
-
-impl From<ProtoTransaction> for Transaction {
-    fn from(tx: ProtoTransaction) -> Self {
-        Transaction {
-            to: tx.to,
-            nonce: tx.nonce,
-            quota: tx.quota.into(),
-            valid_until_block: tx.valid_until_block.into(),
-            data: tx.data.into(),
-            value: tx.value.into(),
-            chain_id: tx.chain_id.into(),
-            version: tx.version.into(),
         }
     }
 }
