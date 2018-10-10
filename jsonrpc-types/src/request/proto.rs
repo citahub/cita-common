@@ -107,26 +107,38 @@ impl SendRawTransactionParams {
         })?;
         {
             let tx = un_tx.get_transaction();
-            let to = clean_0x(tx.get_to());
-            if to.len() != 40 && !to.is_empty() {
-                return Err(Error::invalid_params(
-                    "param 'to' length too short, or are you create contract?",
-                ));
+            let version = tx.get_version();
+            if version == 0 {
+                let to = clean_0x(tx.get_to());
+                if to.len() != 40 && !to.is_empty() {
+                    return Err(Error::invalid_params(
+                        "param 'to' length too short, or are you create contract?",
+                    ));
+                } else {
+                    let _ = to.from_hex().map_err(|err| {
+                        let err_msg = format!("param not hex string : {:?}", err);
+                        Error::parse_error_with_message(err_msg)
+                    })?;
+                }
+                trace!(
+                    "SEND ProtoTransaction: nonce {:?}, block_limit {:?}, data {}, quota {:?}, to {:?}, hash {}",
+                    tx.get_nonce(),
+                    tx.get_valid_until_block(),
+                    tx.get_data().lower_hex(),
+                    tx.get_quota(),
+                    tx.get_to(),
+                    un_tx.crypt_hash().lower_hex()
+                );
+            } else if version == 1 {
+                let to = tx.get_to();
+                if to.len() != 20 && !to.is_empty() {
+                    return Err(Error::invalid_params(
+                        "param 'to' length too short, or are you create contract?",
+                    ));
+                }
             } else {
-                let _ = to.from_hex().map_err(|err| {
-                    let err_msg = format!("param not hex string : {:?}", err);
-                    Error::parse_error_with_message(err_msg)
-                })?;
+                panic!("unexpected version {}!", version);
             }
-            trace!(
-                "SEND ProtoTransaction: nonce {:?}, block_limit {:?}, data {}, quota {:?}, to {:?}, hash {}",
-                tx.get_nonce(),
-                tx.get_valid_until_block(),
-                tx.get_data().lower_hex(),
-                tx.get_quota(),
-                tx.get_to(),
-                un_tx.crypt_hash().lower_hex()
-            );
         }
         Ok(un_tx)
     }

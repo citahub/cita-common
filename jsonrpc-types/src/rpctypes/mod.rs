@@ -47,7 +47,7 @@ pub use self::log::Log;
 pub use self::meta_data::MetaData;
 pub use self::proof::{BftProof, Proof};
 pub use self::receipt::Receipt;
-pub use self::transaction::{BlockTransaction, FullTransaction, RpcTransaction, Transaction};
+pub use self::transaction::{BlockTransaction, FullTransaction, RpcTransaction};
 pub use self::tx_response::TxResponse;
 
 use serde_json;

@@ -145,6 +145,7 @@ impl UnverifiedTransaction {
     }
 
     pub fn tx_verify_req_msg(&self) -> VerifyTxReq {
+        let version = self.get_transaction().get_version();
         let bytes: Vec<u8> = self.get_transaction().try_into().unwrap();
         let hash = bytes.crypt_hash();
         let mut verify_tx_req = VerifyTxReq::new();
@@ -155,7 +156,14 @@ impl UnverifiedTransaction {
         verify_tx_req.set_signature(self.get_signature().to_vec());
         verify_tx_req.set_nonce(self.get_transaction().get_nonce().to_string());
         verify_tx_req.set_value(self.get_transaction().get_value().to_vec());
-        verify_tx_req.set_chain_id(self.get_transaction().get_chain_id());
+        if version == 0 {
+            verify_tx_req.set_chain_id(self.get_transaction().get_chain_id());
+        } else if version == 1 {
+            verify_tx_req.set_chain_id_v1(self.get_transaction().get_chain_id_v1().to_vec());
+        } else {
+            panic!("unexpected version {}!", version);
+        }
+
         verify_tx_req.set_quota(self.get_transaction().get_quota());
 
         // unverified tx hash
@@ -276,6 +284,9 @@ mod tests {
         tx.set_to("123".to_string());
         tx.set_valid_until_block(99999);
         tx.set_quota(999999999);
+        tx.set_value(vec![1]);
+        tx.set_chain_id(0);
+        tx.set_version(0);
 
         let signed_tx = tx.sign(*pv);
         assert_eq!(
@@ -284,4 +295,27 @@ mod tests {
         );
     }
 
+    #[test]
+    fn create_tx_v1() {
+        use super::{CreateKey, KeyPair, Transaction};
+        let keypair = KeyPair::gen_keypair();
+        let pv = keypair.privkey();
+
+        let data = vec![1];
+        let mut tx = Transaction::new();
+        tx.set_data(data);
+        tx.set_nonce("0".to_string());
+        tx.set_to_v1(vec![1, 2, 3]);
+        tx.set_valid_until_block(99999);
+        tx.set_quota(999999999);
+        tx.set_value(vec![1]);
+        tx.set_chain_id_v1(vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+        tx.set_version(1);
+
+        let signed_tx = tx.sign(*pv);
+        assert_eq!(
+            signed_tx.crypt_hash(),
+            signed_tx.get_transaction_with_sig().crypt_hash()
+        );
+    }
 }
