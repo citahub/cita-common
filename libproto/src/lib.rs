@@ -161,7 +161,7 @@ impl UnverifiedTransaction {
         } else if version == 1 {
             verify_tx_req.set_chain_id_v1(self.get_transaction().get_chain_id_v1().to_vec());
         } else {
-            panic!("unexpected version {}!", version);
+            error!("unexpected version {}!", version);
         }
 
         verify_tx_req.set_quota(self.get_transaction().get_quota());

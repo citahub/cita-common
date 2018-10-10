@@ -68,7 +68,8 @@ impl From<ProtoFullTransaction> for RpcTransaction {
             } else if version == 1 {
                 tx.get_to_v1().lower_hex()
             } else {
-                panic!("unexpected version {}!", version)
+                error!("unexpected version {}!", version);
+                "unknown".to_owned()
             }
         );
 

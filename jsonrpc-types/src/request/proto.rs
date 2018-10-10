@@ -137,7 +137,8 @@ impl SendRawTransactionParams {
                     ));
                 }
             } else {
-                panic!("unexpected version {}!", version);
+                error!("unexpected version {}!", version);
+                return Err(Error::invalid_params("param 'version' is unexpected"));
             }
         }
         Ok(un_tx)
