@@ -25,7 +25,10 @@ use rpctypes::EconomicalModel;
 pub struct MetaData {
     /// The id of current chain
     #[serde(rename = "chainId")]
-    pub chain_id: String,
+    pub chain_id: u32,
+    /// The id v1 of current chain
+    #[serde(rename = "chainIdV1")]
+    pub chain_id_v1: String,
     /// The name of current chain
     #[serde(rename = "chainName")]
     pub chain_name: String,
@@ -62,7 +65,8 @@ mod tests {
     #[test]
     fn metadata_serialization() {
         let value = json!({
-            "chainId": "123",
+            "chainId": 123,
+            "chainIdV1": "123",
             "chainName": "test-chain-name",
             "operator": "test-operator",
             "website": "https://www.google.com",
@@ -81,7 +85,8 @@ mod tests {
             "economicalModel": 1
         });
         let metadata = MetaData {
-            chain_id: "123".to_owned(),
+            chain_id: 123,
+            chain_id_v1: "123".to_owned(),
             chain_name: "test-chain-name".to_owned(),
             operator: "test-operator".to_owned(),
             website: "https://www.google.com".to_owned(),
