@@ -48,7 +48,7 @@ pub struct ExecutedHeader {
     pub transactions_root: ::std::vec::Vec<u8>,
     pub receipts_root: ::std::vec::Vec<u8>,
     pub log_bloom: ::std::vec::Vec<u8>,
-    pub gas_used: u64,
+    pub quota_used: u64,
     pub gas_limit: u64,
     pub proposer: ::std::vec::Vec<u8>,
     // special fields
@@ -221,19 +221,17 @@ impl ExecutedHeader {
         &self.log_bloom
     }
 
-    // uint64 gas_used = 8;
-
-    pub fn clear_gas_used(&mut self) {
-        self.gas_used = 0;
+    pub fn clear_quota_used(&mut self) {
+        self.quota_used = 0;
     }
 
     // Param is passed by value, moved
-    pub fn set_gas_used(&mut self, v: u64) {
-        self.gas_used = v;
+    pub fn set_quota_used(&mut self, v: u64) {
+        self.quota_used = v;
     }
 
-    pub fn get_gas_used(&self) -> u64 {
-        self.gas_used
+    pub fn get_quota_used(&self) -> u64 {
+        self.quota_used
     }
 
     // uint64 gas_limit = 9;
@@ -321,7 +319,7 @@ impl ::protobuf::Message for ExecutedHeader {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
-                    self.gas_used = tmp;
+                    self.quota_used = tmp;
                 },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
@@ -366,8 +364,8 @@ impl ::protobuf::Message for ExecutedHeader {
         if !self.log_bloom.is_empty() {
             my_size += ::protobuf::rt::bytes_size(7, &self.log_bloom);
         }
-        if self.gas_used != 0 {
-            my_size += ::protobuf::rt::value_size(8, self.gas_used, ::protobuf::wire_format::WireTypeVarint);
+        if self.quota_used != 0 {
+            my_size += ::protobuf::rt::value_size(8, self.quota_used, ::protobuf::wire_format::WireTypeVarint);
         }
         if self.gas_limit != 0 {
             my_size += ::protobuf::rt::value_size(9, self.gas_limit, ::protobuf::wire_format::WireTypeVarint);
@@ -402,8 +400,8 @@ impl ::protobuf::Message for ExecutedHeader {
         if !self.log_bloom.is_empty() {
             os.write_bytes(7, &self.log_bloom)?;
         }
-        if self.gas_used != 0 {
-            os.write_uint64(8, self.gas_used)?;
+        if self.quota_used != 0 {
+            os.write_uint64(8, self.quota_used)?;
         }
         if self.gas_limit != 0 {
             os.write_uint64(9, self.gas_limit)?;
@@ -489,9 +487,9 @@ impl ::protobuf::Message for ExecutedHeader {
                     |m: &mut ExecutedHeader| { &mut m.log_bloom },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
-                    "gas_used",
-                    |m: &ExecutedHeader| { &m.gas_used },
-                    |m: &mut ExecutedHeader| { &mut m.gas_used },
+                    "quota_used",
+                    |m: &ExecutedHeader| { &m.quota_used },
+                    |m: &mut ExecutedHeader| { &mut m.quota_used },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "gas_limit",
@@ -532,7 +530,7 @@ impl ::protobuf::Clear for ExecutedHeader {
         self.clear_transactions_root();
         self.clear_receipts_root();
         self.clear_log_bloom();
-        self.clear_gas_used();
+        self.clear_quota_used();
         self.clear_gas_limit();
         self.clear_proposer();
         self.unknown_fields.clear();
@@ -1116,7 +1114,7 @@ impl ::protobuf::reflect::ProtobufValue for StateRoot {
 pub struct Receipt {
     // message fields
     pub state_root: ::protobuf::SingularPtrField<StateRoot>,
-    pub gas_used: ::std::string::String,
+    pub quota_used: ::std::string::String,
     pub log_bloom: ::std::vec::Vec<u8>,
     pub logs: ::protobuf::RepeatedField<LogEntry>,
     pub error: ::protobuf::SingularPtrField<ReceiptErrorWithOption>,
@@ -1165,30 +1163,28 @@ impl Receipt {
         self.state_root.as_ref().unwrap_or_else(|| StateRoot::default_instance())
     }
 
-    // string gas_used = 2;
-
-    pub fn clear_gas_used(&mut self) {
-        self.gas_used.clear();
+    pub fn clear_quota_used(&mut self) {
+        self.quota_used.clear();
     }
 
     // Param is passed by value, moved
-    pub fn set_gas_used(&mut self, v: ::std::string::String) {
-        self.gas_used = v;
+    pub fn set_quota_used(&mut self, v: ::std::string::String) {
+        self.quota_used = v;
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_gas_used(&mut self) -> &mut ::std::string::String {
-        &mut self.gas_used
+    pub fn mut_quota_used(&mut self) -> &mut ::std::string::String {
+        &mut self.quota_used
     }
 
     // Take field
-    pub fn take_gas_used(&mut self) -> ::std::string::String {
-        ::std::mem::replace(&mut self.gas_used, ::std::string::String::new())
+    pub fn take_quota_used(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.quota_used, ::std::string::String::new())
     }
 
-    pub fn get_gas_used(&self) -> &str {
-        &self.gas_used
+    pub fn get_quota_used(&self) -> &str {
+        &self.quota_used
     }
 
     // bytes log_bloom = 3;
@@ -1345,7 +1341,7 @@ impl ::protobuf::Message for Receipt {
                     ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.state_root)?;
                 },
                 2 => {
-                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.gas_used)?;
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.quota_used)?;
                 },
                 3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.log_bloom)?;
@@ -1382,8 +1378,8 @@ impl ::protobuf::Message for Receipt {
             let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         }
-        if !self.gas_used.is_empty() {
-            my_size += ::protobuf::rt::string_size(2, &self.gas_used);
+        if !self.quota_used.is_empty() {
+            my_size += ::protobuf::rt::string_size(2, &self.quota_used);
         }
         if !self.log_bloom.is_empty() {
             my_size += ::protobuf::rt::bytes_size(3, &self.log_bloom);
@@ -1413,8 +1409,8 @@ impl ::protobuf::Message for Receipt {
             os.write_raw_varint32(v.get_cached_size())?;
             v.write_to_with_cached_sizes(os)?;
         }
-        if !self.gas_used.is_empty() {
-            os.write_string(2, &self.gas_used)?;
+        if !self.quota_used.is_empty() {
+            os.write_string(2, &self.quota_used)?;
         }
         if !self.log_bloom.is_empty() {
             os.write_bytes(3, &self.log_bloom)?;
@@ -1483,9 +1479,9 @@ impl ::protobuf::Message for Receipt {
                     |m: &mut Receipt| { &mut m.state_root },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
-                    "gas_used",
-                    |m: &Receipt| { &m.gas_used },
-                    |m: &mut Receipt| { &mut m.gas_used },
+                    "quota_used",
+                    |m: &Receipt| { &m.quota_used },
+                    |m: &mut Receipt| { &mut m.quota_used },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "log_bloom",
@@ -1535,7 +1531,7 @@ impl ::protobuf::Message for Receipt {
 impl ::protobuf::Clear for Receipt {
     fn clear(&mut self) {
         self.clear_state_root();
-        self.clear_gas_used();
+        self.clear_quota_used();
         self.clear_log_bloom();
         self.clear_logs();
         self.clear_error();
@@ -3524,8 +3520,8 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x01(\x04R\x06height\x12\x1d\n\nstate_root\x18\x04\x20\x01(\x0cR\tstateR\
     oot\x12+\n\x11transactions_root\x18\x05\x20\x01(\x0cR\x10transactionsRoo\
     t\x12#\n\rreceipts_root\x18\x06\x20\x01(\x0cR\x0creceiptsRoot\x12\x1b\n\
-    \tlog_bloom\x18\x07\x20\x01(\x0cR\x08logBloom\x12\x19\n\x08gas_used\x18\
-    \x08\x20\x01(\x04R\x07gasUsed\x12\x1b\n\tgas_limit\x18\t\x20\x01(\x04R\
+    \tlog_bloom\x18\x07\x20\x01(\x0cR\x08logBloom\x12\x19\n\x08quota_used\x18\
+    \x08\x20\x01(\x04R\x07quotaUsed\x12\x1b\n\tgas_limit\x18\t\x20\x01(\x04R\
     \x08gasLimit\x12\x1a\n\x08proposer\x18\n\x20\x01(\x0cR\x08proposer\"P\n\
     \x08LogEntry\x12\x18\n\x07address\x18\x01\x20\x01(\x0cR\x07address\x12\
     \x16\n\x06topics\x18\x02\x20\x03(\x0cR\x06topics\x12\x12\n\x04data\x18\
@@ -3533,7 +3529,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     r\x18\x01\x20\x01(\x0e2\r.ReceiptErrorR\x05error\"*\n\tStateRoot\x12\x1d\
     \n\nstate_root\x18\x01\x20\x01(\x0cR\tstateRoot\"\x8a\x02\n\x07Receipt\
     \x12)\n\nstate_root\x18\x01\x20\x01(\x0b2\n.StateRootR\tstateRoot\x12\
-    \x19\n\x08gas_used\x18\x02\x20\x01(\tR\x07gasUsed\x12\x1b\n\tlog_bloom\
+    \x19\n\x08quota_used\x18\x02\x20\x01(\tR\x07quotaUsed\x12\x1b\n\tlog_bloom\
     \x18\x03\x20\x01(\x0cR\x08logBloom\x12\x1d\n\x04logs\x18\x04\x20\x03(\
     \x0b2\t.LogEntryR\x04logs\x12-\n\x05error\x18\x05\x20\x01(\x0b2\x17.Rece\
     iptErrorWithOptionR\x05error\x12#\n\raccount_nonce\x18\x06\x20\x01(\x04R\

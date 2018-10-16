@@ -241,7 +241,7 @@ pub struct BlockHeader {
     pub state_root: ::std::vec::Vec<u8>,
     pub transactions_root: ::std::vec::Vec<u8>,
     pub receipts_root: ::std::vec::Vec<u8>,
-    pub gas_used: u64,
+    pub quota_used: u64,
     pub gas_limit: u64,
     pub proof: ::protobuf::SingularPtrField<Proof>,
     pub proposer: ::std::vec::Vec<u8>,
@@ -389,19 +389,17 @@ impl BlockHeader {
         &self.receipts_root
     }
 
-    // uint64 gas_used = 7;
-
-    pub fn clear_gas_used(&mut self) {
-        self.gas_used = 0;
+    pub fn clear_quota_used(&mut self) {
+        self.quota_used = 0;
     }
 
     // Param is passed by value, moved
-    pub fn set_gas_used(&mut self, v: u64) {
-        self.gas_used = v;
+    pub fn set_quota_used(&mut self, v: u64) {
+        self.quota_used = v;
     }
 
-    pub fn get_gas_used(&self) -> u64 {
-        self.gas_used
+    pub fn get_quota_used(&self) -> u64 {
+        self.quota_used
     }
 
     // uint64 gas_limit = 8;
@@ -524,7 +522,7 @@ impl ::protobuf::Message for BlockHeader {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
-                    self.gas_used = tmp;
+                    self.quota_used = tmp;
                 },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
@@ -569,8 +567,8 @@ impl ::protobuf::Message for BlockHeader {
         if !self.receipts_root.is_empty() {
             my_size += ::protobuf::rt::bytes_size(6, &self.receipts_root);
         }
-        if self.gas_used != 0 {
-            my_size += ::protobuf::rt::value_size(7, self.gas_used, ::protobuf::wire_format::WireTypeVarint);
+        if self.quota_used != 0 {
+            my_size += ::protobuf::rt::value_size(7, self.quota_used, ::protobuf::wire_format::WireTypeVarint);
         }
         if self.gas_limit != 0 {
             my_size += ::protobuf::rt::value_size(8, self.gas_limit, ::protobuf::wire_format::WireTypeVarint);
@@ -606,8 +604,8 @@ impl ::protobuf::Message for BlockHeader {
         if !self.receipts_root.is_empty() {
             os.write_bytes(6, &self.receipts_root)?;
         }
-        if self.gas_used != 0 {
-            os.write_uint64(7, self.gas_used)?;
+        if self.quota_used != 0 {
+            os.write_uint64(7, self.quota_used)?;
         }
         if self.gas_limit != 0 {
             os.write_uint64(8, self.gas_limit)?;
@@ -693,9 +691,9 @@ impl ::protobuf::Message for BlockHeader {
                     |m: &mut BlockHeader| { &mut m.receipts_root },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
-                    "gas_used",
-                    |m: &BlockHeader| { &m.gas_used },
-                    |m: &mut BlockHeader| { &mut m.gas_used },
+                    "quota_used",
+                    |m: &BlockHeader| { &m.quota_used },
+                    |m: &mut BlockHeader| { &mut m.quota_used },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "gas_limit",
@@ -740,7 +738,7 @@ impl ::protobuf::Clear for BlockHeader {
         self.clear_state_root();
         self.clear_transactions_root();
         self.clear_receipts_root();
-        self.clear_gas_used();
+        self.clear_quota_used();
         self.clear_gas_limit();
         self.clear_proof();
         self.clear_proposer();
@@ -3854,8 +3852,8 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     tamp\x12\x16\n\x06height\x18\x03\x20\x01(\x04R\x06height\x12\x1d\n\nstat\
     e_root\x18\x04\x20\x01(\x0cR\tstateRoot\x12+\n\x11transactions_root\x18\
     \x05\x20\x01(\x0cR\x10transactionsRoot\x12#\n\rreceipts_root\x18\x06\x20\
-    \x01(\x0cR\x0creceiptsRoot\x12\x19\n\x08gas_used\x18\x07\x20\x01(\x04R\
-    \x07gasUsed\x12\x1b\n\tgas_limit\x18\x08\x20\x01(\x04R\x08gasLimit\x12\
+    \x01(\x0cR\x0creceiptsRoot\x12\x19\n\x08quota_used\x18\x07\x20\x01(\x04R\
+    \x07quotaUsed\x12\x1b\n\tgas_limit\x18\x08\x20\x01(\x04R\x08gasLimit\x12\
     \x1c\n\x05proof\x18\t\x20\x01(\x0b2\x06.ProofR\x05proof\x12\x1a\n\x08pro\
     poser\x18\n\x20\x01(\x0cR\x08proposer\"4\n\x06Status\x12\x12\n\x04hash\
     \x18\x01\x20\x01(\x0cR\x04hash\x12\x16\n\x06height\x18\x02\x20\x01(\x04R\

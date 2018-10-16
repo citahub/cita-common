@@ -167,7 +167,7 @@ impl Pool {
         let mut n = block_gas_limit;
         let mut gas_limit = account_gas_limit.get_common_gas_limit();
         let mut specific_gas_limit = account_gas_limit.get_specific_gas_limit().clone();
-        let mut account_gas_used: HashMap<Address, u64> = HashMap::new();
+        let mut account_quota_used: HashMap<Address, u64> = HashMap::new();
         {
             let mut iter = self.order_set.iter();
             loop {
@@ -199,8 +199,8 @@ impl Pool {
                         }
 
                         if check_quota {
-                            if account_gas_used.contains_key(&address) {
-                                let value = account_gas_used.get_mut(&address).unwrap();
+                            if account_quota_used.contains_key(&address) {
+                                let value = account_quota_used.get_mut(&address).unwrap();
                                 if *value < quota {
                                     continue;
                                 }
@@ -218,7 +218,7 @@ impl Pool {
                                 } else {
                                     _remainder = 0;
                                 }
-                                account_gas_used.insert(address, _remainder);
+                                account_quota_used.insert(address, _remainder);
                             }
                         }
                         n = n - quota;
