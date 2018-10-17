@@ -62,7 +62,7 @@ fn bench_enqueue(b: &mut Bencher) {
         tx.set_to("1234567".to_string());
         tx.set_nonce("0".to_string());
         tx.set_valid_until_block(99);
-        // 2000*10000 <= account_gas_limit <= block_gas_limit
+        // 2000*10000 <= account_quota_limit <= block_quota_limit
         tx.set_quota(2000);
         p.enqueue(tx.sign(*pv));
     }
@@ -92,20 +92,20 @@ fn bench_package(b: &mut Bencher) {
         tx.set_to("1234567".to_string());
         tx.set_nonce("0".to_string());
         tx.set_valid_until_block(99);
-        // 6000*10000 <= account_gas_limit <= block_gas_limit
+        // 6000*10000 <= account_quota_limit <= block_quota_limit
         tx.set_quota(6000);
         p.enqueue(tx.sign(*pv));
     }
-    let mut account_gas_limit = AccountGasLimit::new();
-    // set block_gas_limit default
-    let block_gas_limit = 61415926;
+    let mut account_quota_limit = AccountGasLimit::new();
+    // set block_quota_limit default
+    let block_quota_limit = 61415926;
     // height should less than valid_until_block
     let height = 0;
-    // set account_gas_limit be equal as block_gas_limit
-    account_gas_limit.set_common_gas_limit(block_gas_limit);
-    account_gas_limit.set_specific_gas_limit(HashMap::new());
+    // set account_quota_limit be equal as block_quota_limit
+    account_quota_limit.set_common_quota_limit(block_quota_limit);
+    account_quota_limit.set_specific_quota_limit(HashMap::new());
 
-    p.package(height, block_gas_limit, account_gas_limit.clone());
+    p.package(height, block_quota_limit, account_quota_limit.clone());
     let sys_time = SystemTime::now();
     let diff = sys_time
         .duration_since(start)
@@ -133,20 +133,20 @@ fn bench_update(b: &mut Bencher) {
         tx.set_to("1234567".to_string());
         tx.set_nonce("0".to_string());
         tx.set_valid_until_block(99);
-        // 6000*10000 <= account_gas_limit <= block_gas_limit
+        // 6000*10000 <= account_quota_limit <= block_quota_limit
         tx.set_quota(6000);
         p.enqueue(tx.sign(*pv));
     }
-    let mut account_gas_limit = AccountGasLimit::new();
-    // set block_gas_limit default
-    let block_gas_limit = 61415926;
+    let mut account_quota_limit = AccountGasLimit::new();
+    // set block_quota_limit default
+    let block_quota_limit = 61415926;
     // height should less than valid_until_block
     let height = 0;
-    // set account_gas_limit be equal as block_gas_limit
-    account_gas_limit.set_common_gas_limit(block_gas_limit);
-    account_gas_limit.set_specific_gas_limit(HashMap::new());
+    // set account_quota_limit be equal as block_quota_limit
+    account_quota_limit.set_common_quota_limit(block_quota_limit);
+    account_quota_limit.set_specific_quota_limit(HashMap::new());
 
-    let txs = p.package(height, block_gas_limit, account_gas_limit.clone());
+    let txs = p.package(height, block_quota_limit, account_quota_limit.clone());
     p.update(&txs);
     let sys_time = SystemTime::now();
     let diff = sys_time

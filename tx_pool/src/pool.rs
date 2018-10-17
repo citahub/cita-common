@@ -156,17 +156,17 @@ impl Pool {
     pub fn package(
         &mut self,
         height: u64,
-        block_gas_limit: u64,
-        account_gas_limit: AccountGasLimit,
+        block_quota_limit: u64,
+        account_quota_limit: AccountGasLimit,
         check_quota: bool,
         admin_address: Option<Address>,
         version: u32,
     ) -> Vec<SignedTransaction> {
         let mut tx_list = Vec::new();
         let mut invalid_tx_list = Vec::new();
-        let mut n = block_gas_limit;
-        let mut gas_limit = account_gas_limit.get_common_gas_limit();
-        let mut specific_gas_limit = account_gas_limit.get_specific_gas_limit().clone();
+        let mut n = block_quota_limit;
+        let mut quota_limit = account_quota_limit.get_common_quota_limit();
+        let mut specific_quota_limit = account_quota_limit.get_specific_quota_limit().clone();
         let mut account_quota_used: HashMap<Address, u64> = HashMap::new();
         {
             let mut iter = self.order_set.iter();
@@ -207,14 +207,14 @@ impl Pool {
                                 *value = *value - quota;
                             } else {
                                 if let Some(value) =
-                                    specific_gas_limit.get_mut(&address.lower_hex())
+                                    specific_quota_limit.get_mut(&address.lower_hex())
                                 {
-                                    gas_limit = *value;
+                                    quota_limit = *value;
                                 }
 
                                 let mut _remainder = 0;
-                                if quota < gas_limit {
-                                    _remainder = gas_limit - quota;
+                                if quota < quota_limit {
+                                    _remainder = quota_limit - quota;
                                 } else {
                                     _remainder = 0;
                                 }
@@ -319,9 +319,9 @@ mod tests {
         let tx3 = generate_tx(vec![2], 99, privkey, 0);
         let tx4 = generate_tx(vec![3], 5, privkey, 0);
 
-        let mut account_gas_limit = AccountGasLimit::new();
-        account_gas_limit.set_common_gas_limit(10000);
-        account_gas_limit.set_specific_gas_limit(HashMap::new());
+        let mut account_quota_limit = AccountGasLimit::new();
+        account_quota_limit.set_common_quota_limit(10000);
+        account_quota_limit.set_specific_quota_limit(HashMap::new());
 
         assert_eq!(p.enqueue(tx1.clone()), true);
         assert_eq!(p.enqueue(tx2.clone()), false);
@@ -331,17 +331,17 @@ mod tests {
         p.update(&vec![tx1.clone()]);
         assert_eq!(p.len(), 2);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), true, None, 0),
+            p.package(5, 30, account_quota_limit.clone(), true, None, 0),
             vec![tx3.clone()]
         );
         p.update(&vec![tx3.clone()]);
         assert_eq!(
-            p.package(4, 30, account_gas_limit.clone(), true, None, 0),
+            p.package(4, 30, account_quota_limit.clone(), true, None, 0),
             vec![tx4]
         );
         assert_eq!(p.len(), 1);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), true, None, 0),
+            p.package(5, 30, account_quota_limit.clone(), true, None, 0),
             vec![]
         );
         assert_eq!(p.len(), 0);
@@ -356,21 +356,21 @@ mod tests {
         let tx1 = generate_tx(vec![1], 99, privkey, 0);
         let tx2 = generate_tx(vec![2], 99, privkey, 1);
 
-        let mut account_gas_limit = AccountGasLimit::new();
-        account_gas_limit.set_common_gas_limit(10000);
-        account_gas_limit.set_specific_gas_limit(HashMap::new());
+        let mut account_quota_limit = AccountGasLimit::new();
+        account_quota_limit.set_common_quota_limit(10000);
+        account_quota_limit.set_specific_quota_limit(HashMap::new());
 
         assert_eq!(p.enqueue(tx1.clone()), true);
         assert_eq!(p.enqueue(tx2.clone()), true);
         assert_eq!(p.len(), 2);
 
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), false, None, 0),
+            p.package(5, 30, account_quota_limit.clone(), false, None, 0),
             vec![tx1.clone()]
         );
         p.update(&vec![tx1.clone()]);
         assert_eq!(
-            p.package(5, 30, account_gas_limit.clone(), false, None, 0),
+            p.package(5, 30, account_quota_limit.clone(), false, None, 0),
             vec![]
         );
         assert_eq!(p.len(), 0);
