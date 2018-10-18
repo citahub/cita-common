@@ -33,12 +33,12 @@ pub struct Receipt {
     /// Block
     #[serde(rename = "blockNumber")]
     pub block_number: Option<U256>,
-    /// Cumulative gas used
-    #[serde(rename = "cumulativeGasUsed")]
-    pub cumulative_gas_used: U256,
-    /// Gas used
-    #[serde(rename = "gasUsed")]
-    pub gas_used: Option<U256>,
+    /// Cumulative quota used
+    #[serde(rename = "cumulativeQuotaUsed")]
+    pub cumulative_quota_used: U256,
+    /// Quota used
+    #[serde(rename = "quotaUsed")]
+    pub quota_used: Option<U256>,
     /// Contract address
     #[serde(rename = "contractAddress")]
     pub contract_address: Option<H160>,
@@ -73,8 +73,8 @@ mod tests {
                     .unwrap(),
             ),
             block_number: Some(0x4510c.into()),
-            cumulative_gas_used: 0x20.into(),
-            gas_used: Some(0x10.into()),
+            cumulative_quota_used: 0x20.into(),
+            quota_used: Some(0x10.into()),
             contract_address: None,
             logs: vec![Log {
                 address: "33990122638b9132ca29c723bdf037f1a891a70c".parse().unwrap(),
@@ -119,8 +119,8 @@ mod tests {
                     .unwrap(),
             ),
             block_number: Some(0x4510c.into()),
-            cumulative_gas_used: 0x20.into(),
-            gas_used: Some(0x10.into()),
+            cumulative_quota_used: 0x20.into(),
+            quota_used: Some(0x10.into()),
             contract_address: None,
             logs: vec![Log {
                 address: "33990122638b9132ca29c723bdf037f1a891a70c".parse().unwrap(),
