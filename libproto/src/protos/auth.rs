@@ -986,8 +986,8 @@ pub struct BlockTxHashes {
     // message fields
     pub height: u64,
     pub tx_hashes: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
-    pub block_gas_limit: u64,
-    pub account_gas_limit: ::protobuf::SingularPtrField<super::blockchain::AccountGasLimit>,
+    pub block_quota_limit: u64,
+    pub account_quota_limit: ::protobuf::SingularPtrField<super::blockchain::AccountGasLimit>,
     pub check_quota: bool,
     pub admin_address: ::std::vec::Vec<u8>,
     pub version: u32,
@@ -1041,52 +1041,52 @@ impl BlockTxHashes {
         &self.tx_hashes
     }
 
-    // uint64 block_gas_limit = 3;
+    // uint64 block_quota_limit = 3;
 
-    pub fn clear_block_gas_limit(&mut self) {
-        self.block_gas_limit = 0;
+    pub fn clear_block_quota_limit(&mut self) {
+        self.block_quota_limit = 0;
     }
 
     // Param is passed by value, moved
-    pub fn set_block_gas_limit(&mut self, v: u64) {
-        self.block_gas_limit = v;
+    pub fn set_block_quota_limit(&mut self, v: u64) {
+        self.block_quota_limit = v;
     }
 
-    pub fn get_block_gas_limit(&self) -> u64 {
-        self.block_gas_limit
+    pub fn get_block_quota_limit(&self) -> u64 {
+        self.block_quota_limit
     }
 
-    // .AccountGasLimit account_gas_limit = 4;
+    // .AccountGasLimit account_quota_limit = 4;
 
-    pub fn clear_account_gas_limit(&mut self) {
-        self.account_gas_limit.clear();
+    pub fn clear_account_quota_limit(&mut self) {
+        self.account_quota_limit.clear();
     }
 
-    pub fn has_account_gas_limit(&self) -> bool {
-        self.account_gas_limit.is_some()
+    pub fn has_account_quota_limit(&self) -> bool {
+        self.account_quota_limit.is_some()
     }
 
     // Param is passed by value, moved
-    pub fn set_account_gas_limit(&mut self, v: super::blockchain::AccountGasLimit) {
-        self.account_gas_limit = ::protobuf::SingularPtrField::some(v);
+    pub fn set_account_quota_limit(&mut self, v: super::blockchain::AccountGasLimit) {
+        self.account_quota_limit = ::protobuf::SingularPtrField::some(v);
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_account_gas_limit(&mut self) -> &mut super::blockchain::AccountGasLimit {
-        if self.account_gas_limit.is_none() {
-            self.account_gas_limit.set_default();
+    pub fn mut_account_quota_limit(&mut self) -> &mut super::blockchain::AccountGasLimit {
+        if self.account_quota_limit.is_none() {
+            self.account_quota_limit.set_default();
         }
-        self.account_gas_limit.as_mut().unwrap()
+        self.account_quota_limit.as_mut().unwrap()
     }
 
     // Take field
-    pub fn take_account_gas_limit(&mut self) -> super::blockchain::AccountGasLimit {
-        self.account_gas_limit.take().unwrap_or_else(|| super::blockchain::AccountGasLimit::new())
+    pub fn take_account_quota_limit(&mut self) -> super::blockchain::AccountGasLimit {
+        self.account_quota_limit.take().unwrap_or_else(|| super::blockchain::AccountGasLimit::new())
     }
 
-    pub fn get_account_gas_limit(&self) -> &super::blockchain::AccountGasLimit {
-        self.account_gas_limit.as_ref().unwrap_or_else(|| super::blockchain::AccountGasLimit::default_instance())
+    pub fn get_account_quota_limit(&self) -> &super::blockchain::AccountGasLimit {
+        self.account_quota_limit.as_ref().unwrap_or_else(|| super::blockchain::AccountGasLimit::default_instance())
     }
 
     // bool check_quota = 5;
@@ -1148,7 +1148,7 @@ impl BlockTxHashes {
 
 impl ::protobuf::Message for BlockTxHashes {
     fn is_initialized(&self) -> bool {
-        for v in &self.account_gas_limit {
+        for v in &self.account_quota_limit {
             if !v.is_initialized() {
                 return false;
             }
@@ -1175,10 +1175,10 @@ impl ::protobuf::Message for BlockTxHashes {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_uint64()?;
-                    self.block_gas_limit = tmp;
+                    self.block_quota_limit = tmp;
                 },
                 4 => {
-                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.account_gas_limit)?;
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.account_quota_limit)?;
                 },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
@@ -1215,10 +1215,10 @@ impl ::protobuf::Message for BlockTxHashes {
         for value in &self.tx_hashes {
             my_size += ::protobuf::rt::bytes_size(2, &value);
         };
-        if self.block_gas_limit != 0 {
-            my_size += ::protobuf::rt::value_size(3, self.block_gas_limit, ::protobuf::wire_format::WireTypeVarint);
+        if self.block_quota_limit != 0 {
+            my_size += ::protobuf::rt::value_size(3, self.block_quota_limit, ::protobuf::wire_format::WireTypeVarint);
         }
-        if let Some(ref v) = self.account_gas_limit.as_ref() {
+        if let Some(ref v) = self.account_quota_limit.as_ref() {
             let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         }
@@ -1243,10 +1243,10 @@ impl ::protobuf::Message for BlockTxHashes {
         for v in &self.tx_hashes {
             os.write_bytes(2, &v)?;
         };
-        if self.block_gas_limit != 0 {
-            os.write_uint64(3, self.block_gas_limit)?;
+        if self.block_quota_limit != 0 {
+            os.write_uint64(3, self.block_quota_limit)?;
         }
-        if let Some(ref v) = self.account_gas_limit.as_ref() {
+        if let Some(ref v) = self.account_quota_limit.as_ref() {
             os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             os.write_raw_varint32(v.get_cached_size())?;
             v.write_to_with_cached_sizes(os)?;
@@ -1313,14 +1313,14 @@ impl ::protobuf::Message for BlockTxHashes {
                     |m: &mut BlockTxHashes| { &mut m.tx_hashes },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
-                    "block_gas_limit",
-                    |m: &BlockTxHashes| { &m.block_gas_limit },
-                    |m: &mut BlockTxHashes| { &mut m.block_gas_limit },
+                    "block_quota_limit",
+                    |m: &BlockTxHashes| { &m.block_quota_limit },
+                    |m: &mut BlockTxHashes| { &mut m.block_quota_limit },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::blockchain::AccountGasLimit>>(
-                    "account_gas_limit",
-                    |m: &BlockTxHashes| { &m.account_gas_limit },
-                    |m: &mut BlockTxHashes| { &mut m.account_gas_limit },
+                    "account_quota_limit",
+                    |m: &BlockTxHashes| { &m.account_quota_limit },
+                    |m: &mut BlockTxHashes| { &mut m.account_quota_limit },
                 ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "check_quota",
@@ -1361,8 +1361,8 @@ impl ::protobuf::Clear for BlockTxHashes {
     fn clear(&mut self) {
         self.clear_height();
         self.clear_tx_hashes();
-        self.clear_block_gas_limit();
-        self.clear_account_gas_limit();
+        self.clear_block_quota_limit();
+        self.clear_account_quota_limit();
         self.clear_check_quota();
         self.clear_admin_address();
         self.clear_version();
@@ -1954,25 +1954,25 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0cR\tchainIdV1\"B\n\x0eVerifyBlockReq\x12\x0e\n\x02id\x18\x01\x20\x01(\
     \x04R\x02id\x12\x20\n\x04reqs\x18\x02\x20\x03(\x0b2\x0c.VerifyTxReqR\x04\
     reqs\"9\n\x0fVerifyBlockResp\x12\x0e\n\x02id\x18\x01\x20\x01(\x04R\x02id\
-    \x12\x16\n\x03ret\x18\x02\x20\x01(\x0e2\x04.RetR\x03ret\"\x8a\x02\n\rBlo\
+    \x12\x16\n\x03ret\x18\x02\x20\x01(\x0e2\x04.RetR\x03ret\"\x92\x02\n\rBlo\
     ckTxHashes\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\x06height\x12\x1b\n\
-    \ttx_hashes\x18\x02\x20\x03(\x0cR\x08txHashes\x12&\n\x0fblock_gas_limit\
-    \x18\x03\x20\x01(\x04R\rblockGasLimit\x12<\n\x11account_gas_limit\x18\
-    \x04\x20\x01(\x0b2\x10.AccountGasLimitR\x0faccountGasLimit\x12\x1f\n\x0b\
-    check_quota\x18\x05\x20\x01(\x08R\ncheckQuota\x12#\n\radmin_address\x18\
-    \x06\x20\x01(\x0cR\x0cadminAddress\x12\x18\n\x07version\x18\x07\x20\x01(\
-    \rR\x07version\"*\n\x10BlockTxHashesReq\x12\x16\n\x06height\x18\x01\x20\
-    \x01(\x04R\x06height\"J\n\rMiscellaneous\x12\x19\n\x08chain_id\x18\x01\
-    \x20\x01(\rR\x07chainId\x12\x1e\n\x0bchain_id_v1\x18\x02\x20\x01(\x0cR\t\
-    chainIdV1\"\x12\n\x10MiscellaneousReq*\xbc\x01\n\x03Ret\x12\x06\n\x02OK\
-    \x10\0\x12\x10\n\x0cInvalidNonce\x10\x01\x12\x07\n\x03Dup\x10\x02\x12\
-    \x15\n\x11InvalidUntilBlock\x10\x03\x12\n\n\x06BadSig\x10\x04\x12\x0c\n\
-    \x08NotReady\x10\x05\x12\x08\n\x04Busy\x10\x06\x12\x0e\n\nBadChainId\x10\
-    \x07\x12\x12\n\x0eQuotaNotEnough\x10\x08\x12\r\n\tForbidden\x10\t\x12\
-    \x10\n\x0cInvalidValue\x10\n\x12\x12\n\x0eInvalidVersion\x10\x0bJ\xc0\
-    \x13\n\x06\x12\x04\0\0?\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\
-    \x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\x11\x01\n\n\n\
-    \x03\x05\0\x01\x12\x03\x04\x05\x08\n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\
+    \ttx_hashes\x18\x02\x20\x03(\x0cR\x08txHashes\x12*\n\x11block_quota_limi\
+    t\x18\x03\x20\x01(\x04R\x0fblockQuotaLimit\x12@\n\x13account_quota_limit\
+    \x18\x04\x20\x01(\x0b2\x10.AccountGasLimitR\x11accountQuotaLimit\x12\x1f\
+    \n\x0bcheck_quota\x18\x05\x20\x01(\x08R\ncheckQuota\x12#\n\radmin_addres\
+    s\x18\x06\x20\x01(\x0cR\x0cadminAddress\x12\x18\n\x07version\x18\x07\x20\
+    \x01(\rR\x07version\"*\n\x10BlockTxHashesReq\x12\x16\n\x06height\x18\x01\
+    \x20\x01(\x04R\x06height\"J\n\rMiscellaneous\x12\x19\n\x08chain_id\x18\
+    \x01\x20\x01(\rR\x07chainId\x12\x1e\n\x0bchain_id_v1\x18\x02\x20\x01(\
+    \x0cR\tchainIdV1\"\x12\n\x10MiscellaneousReq*\xbc\x01\n\x03Ret\x12\x06\n\
+    \x02OK\x10\0\x12\x10\n\x0cInvalidNonce\x10\x01\x12\x07\n\x03Dup\x10\x02\
+    \x12\x15\n\x11InvalidUntilBlock\x10\x03\x12\n\n\x06BadSig\x10\x04\x12\
+    \x0c\n\x08NotReady\x10\x05\x12\x08\n\x04Busy\x10\x06\x12\x0e\n\nBadChain\
+    Id\x10\x07\x12\x12\n\x0eQuotaNotEnough\x10\x08\x12\r\n\tForbidden\x10\t\
+    \x12\x10\n\x0cInvalidValue\x10\n\x12\x12\n\x0eInvalidVersion\x10\x0bJ\
+    \xc0\x13\n\x06\x12\x04\0\0?\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\
+    \x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\x11\x01\n\n\
+    \n\x03\x05\0\x01\x12\x03\x04\x05\x08\n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\
     \x04\x0b\n\x0c\n\x05\x05\0\x02\0\x01\x12\x03\x05\x04\x06\n\x0c\n\x05\x05\
     \0\x02\0\x02\x12\x03\x05\t\n\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x06\x04\
     \x15\n\x0c\n\x05\x05\0\x02\x01\x01\x12\x03\x06\x04\x10\n\x0c\n\x05\x05\0\
@@ -2059,24 +2059,24 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x03\x02\x01\x04\x12\x03-\x04\x0c\n\x0c\n\x05\x04\x03\x02\x01\x05\
     \x12\x03-\r\x12\n\x0c\n\x05\x04\x03\x02\x01\x01\x12\x03-\x13\x1c\n\x0c\n\
     \x05\x04\x03\x02\x01\x03\x12\x03-\x1f\x20\n\x0b\n\x04\x04\x03\x02\x02\
-    \x12\x03.\x04\x1f\n\r\n\x05\x04\x03\x02\x02\x04\x12\x04.\x04-!\n\x0c\n\
-    \x05\x04\x03\x02\x02\x05\x12\x03.\x04\n\n\x0c\n\x05\x04\x03\x02\x02\x01\
-    \x12\x03.\x0b\x1a\n\x0c\n\x05\x04\x03\x02\x02\x03\x12\x03.\x1d\x1e\n\x0b\
-    \n\x04\x04\x03\x02\x03\x12\x03/\x04*\n\r\n\x05\x04\x03\x02\x03\x04\x12\
-    \x04/\x04.\x1f\n\x0c\n\x05\x04\x03\x02\x03\x06\x12\x03/\x04\x13\n\x0c\n\
-    \x05\x04\x03\x02\x03\x01\x12\x03/\x14%\n\x0c\n\x05\x04\x03\x02\x03\x03\
-    \x12\x03/()\n\x0b\n\x04\x04\x03\x02\x04\x12\x030\x04\x19\n\r\n\x05\x04\
-    \x03\x02\x04\x04\x12\x040\x04/*\n\x0c\n\x05\x04\x03\x02\x04\x05\x12\x030\
-    \x04\x08\n\x0c\n\x05\x04\x03\x02\x04\x01\x12\x030\t\x14\n\x0c\n\x05\x04\
-    \x03\x02\x04\x03\x12\x030\x17\x18\n\x0b\n\x04\x04\x03\x02\x05\x12\x031\
-    \x04\x1c\n\r\n\x05\x04\x03\x02\x05\x04\x12\x041\x040\x19\n\x0c\n\x05\x04\
-    \x03\x02\x05\x05\x12\x031\x04\t\n\x0c\n\x05\x04\x03\x02\x05\x01\x12\x031\
-    \n\x17\n\x0c\n\x05\x04\x03\x02\x05\x03\x12\x031\x1a\x1b\n\x0b\n\x04\x04\
-    \x03\x02\x06\x12\x032\x04\x17\n\r\n\x05\x04\x03\x02\x06\x04\x12\x042\x04\
-    1\x1c\n\x0c\n\x05\x04\x03\x02\x06\x05\x12\x032\x04\n\n\x0c\n\x05\x04\x03\
-    \x02\x06\x01\x12\x032\x0b\x12\n\x0c\n\x05\x04\x03\x02\x06\x03\x12\x032\
-    \x15\x16\n\n\n\x02\x04\x04\x12\x045\07\x01\n\n\n\x03\x04\x04\x01\x12\x03\
-    5\x08\x18\n\x0b\n\x04\x04\x04\x02\0\x12\x036\x04\x16\n\r\n\x05\x04\x04\
+    \x12\x03.\x04!\n\r\n\x05\x04\x03\x02\x02\x04\x12\x04.\x04-!\n\x0c\n\x05\
+    \x04\x03\x02\x02\x05\x12\x03.\x04\n\n\x0c\n\x05\x04\x03\x02\x02\x01\x12\
+    \x03.\x0b\x1c\n\x0c\n\x05\x04\x03\x02\x02\x03\x12\x03.\x1f\x20\n\x0b\n\
+    \x04\x04\x03\x02\x03\x12\x03/\x04,\n\r\n\x05\x04\x03\x02\x03\x04\x12\x04\
+    /\x04.!\n\x0c\n\x05\x04\x03\x02\x03\x06\x12\x03/\x04\x13\n\x0c\n\x05\x04\
+    \x03\x02\x03\x01\x12\x03/\x14'\n\x0c\n\x05\x04\x03\x02\x03\x03\x12\x03/*\
+    +\n\x0b\n\x04\x04\x03\x02\x04\x12\x030\x04\x19\n\r\n\x05\x04\x03\x02\x04\
+    \x04\x12\x040\x04/,\n\x0c\n\x05\x04\x03\x02\x04\x05\x12\x030\x04\x08\n\
+    \x0c\n\x05\x04\x03\x02\x04\x01\x12\x030\t\x14\n\x0c\n\x05\x04\x03\x02\
+    \x04\x03\x12\x030\x17\x18\n\x0b\n\x04\x04\x03\x02\x05\x12\x031\x04\x1c\n\
+    \r\n\x05\x04\x03\x02\x05\x04\x12\x041\x040\x19\n\x0c\n\x05\x04\x03\x02\
+    \x05\x05\x12\x031\x04\t\n\x0c\n\x05\x04\x03\x02\x05\x01\x12\x031\n\x17\n\
+    \x0c\n\x05\x04\x03\x02\x05\x03\x12\x031\x1a\x1b\n\x0b\n\x04\x04\x03\x02\
+    \x06\x12\x032\x04\x17\n\r\n\x05\x04\x03\x02\x06\x04\x12\x042\x041\x1c\n\
+    \x0c\n\x05\x04\x03\x02\x06\x05\x12\x032\x04\n\n\x0c\n\x05\x04\x03\x02\
+    \x06\x01\x12\x032\x0b\x12\n\x0c\n\x05\x04\x03\x02\x06\x03\x12\x032\x15\
+    \x16\n\n\n\x02\x04\x04\x12\x045\07\x01\n\n\n\x03\x04\x04\x01\x12\x035\
+    \x08\x18\n\x0b\n\x04\x04\x04\x02\0\x12\x036\x04\x16\n\r\n\x05\x04\x04\
     \x02\0\x04\x12\x046\x045\x1a\n\x0c\n\x05\x04\x04\x02\0\x05\x12\x036\x04\
     \n\n\x0c\n\x05\x04\x04\x02\0\x01\x12\x036\x0b\x11\n\x0c\n\x05\x04\x04\
     \x02\0\x03\x12\x036\x14\x15\n\n\n\x02\x04\x05\x12\x049\0<\x01\n\n\n\x03\
