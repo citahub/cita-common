@@ -35,7 +35,7 @@ extern crate rlp;
 extern crate rlp_derive;
 #[cfg(feature = "sm3hash")]
 extern crate libsm;
-extern crate rocksdb;
+extern crate parity_rocksdb;
 extern crate rustc_hex;
 extern crate rustc_version;
 extern crate target_info;
