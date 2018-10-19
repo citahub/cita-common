@@ -74,11 +74,11 @@ impl DataPath {
                 let filename = pathbuf.file_name();
                 let path = match filename {
                     Some(name) => String::from(name.to_str().unwrap()),
-                    None => Uuid::new_v4().simple().to_string(),
+                    None => Uuid::new_v4().to_simple().to_string(),
                 };
                 path
             }
-            Err(_) => Uuid::new_v4().simple().to_string(),
+            Err(_) => Uuid::new_v4().to_simple().to_string(),
         };
 
         let is_using_vagrant = DataPath::is_using_vagrant();

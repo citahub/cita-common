@@ -21,13 +21,13 @@ libc = "0.2.7"
 vergen = "0.1"
 target_info = "0.1"
 cita-types = { path = "../cita-types" }
-parking_lot = "0.5"
+parking_lot = "0.6"
 ansi_term = "0.9"
 tiny-keccak= "1.4"
 ethcore-bloom-journal = { path = "../ethcore-bloom-journal" }
-regex = "0.2"
+regex = "1.0.5"
 lru-cache = "0.1.0"
-uuid = { version = "0.4", features = ["v4"] }
+uuid = { version = "0.7", features = ["v4"] }
 panic_hook = {path = "../panic_hook"}
 serde = "1.0"
 serde_derive = "1.0"
