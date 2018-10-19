@@ -4,7 +4,7 @@ version = "0.6.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-dotenv = "0.10.0"
+dotenv = "0.13.0"
 pubsub_zeromq = { path = "../pubsub_zeromq", optional = true }
 pubsub_rabbitmq = { path = "../pubsub_rabbitmq", optional = true }
 pubsub_kafka = { path = "../pubsub_kafka", optional = true }
