@@ -10,7 +10,7 @@ logger = { path = "../logger" }
 rustc-hex = "1.0"
 rand = "0.3.12"
 time = "0.1.34"
-rocksdb = { git = "https://github.com/paritytech/rust-rocksdb", rev = "4364caec4dd5da1a1d78c39276774ee65bf55c7d" }
+parity-rocksdb = "0.5"
 elastic-array = "0.9"
 rlp = { path = "../rlp" }
 rlp_derive = { path = "../rlp_derive" }

@@ -27,7 +27,7 @@ use parking_lot::{Mutex, MutexGuard, RwLock};
 #[cfg(target_os = "linux")]
 use regex::Regex;
 use rlp::{UntrustedRlp, RlpType, Compressible};
-use rocksdb::{DB, Writable, WriteBatch, WriteOptions, IteratorMode, DBIterator, Options, DBCompactionStyle, BlockBasedOptions, Direction, Cache, Column, ReadOptions};
+use parity_rocksdb::{DB, Writable, WriteBatch, WriteOptions, IteratorMode, DBIterator, Options, DBCompactionStyle, BlockBasedOptions, Direction, Cache, Column, ReadOptions};
 use std::{mem, fs};
 use std::collections::{HashMap, BTreeMap};
 #[cfg(target_os = "linux")]
