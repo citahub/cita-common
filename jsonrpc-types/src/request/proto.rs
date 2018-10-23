@@ -130,7 +130,7 @@ impl SendRawTransactionParams {
                     un_tx.crypt_hash().lower_hex()
                 );
             } else if version == 1 {
-                let to = tx.get_to();
+                let to = tx.get_to_v1();
                 if to.len() != 20 && !to.is_empty() {
                     return Err(Error::invalid_params(
                         "param 'to' length too short, or are you create contract?",
