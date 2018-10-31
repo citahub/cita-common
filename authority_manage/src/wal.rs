@@ -19,18 +19,15 @@ use std::fs::{read_dir, DirBuilder, File, OpenOptions};
 use std::io;
 use std::io::{Read, Seek, Write};
 use std::mem::transmute;
-//use std::path::{PathBuf, Path};
 use std::path::Path;
 use std::str;
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct Wal {
     fs: File,
     dir: String,
 }
 
-#[allow(dead_code)]
 impl Wal {
     pub fn new(dir: &str) -> Result<Wal, io::Error> {
         let fss = read_dir(&dir);
