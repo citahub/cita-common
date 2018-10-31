@@ -83,7 +83,7 @@ impl AuthorityManage {
         authorities: Vec<Address>,
         validators: Vec<Address>,
     ) {
-        if self.authorities != authorities {
+        if self.authorities != authorities || self.validators != validators {
             self.authorities_old.clear();
             self.authorities_old.extend_from_slice(&self.authorities);
             self.validators_old.clear();
