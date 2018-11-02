@@ -16,7 +16,6 @@ rlp = { path = "../rlp" }
 rlp_derive = { path = "../rlp_derive" }
 heapsize = "0.4"
 itertools = "0.5"
-clippy = {version = "0.0.175", optional = true}
 libc = "0.2.7"
 vergen = "0.1"
 target_info = "0.1"
