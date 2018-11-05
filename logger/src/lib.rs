@@ -15,15 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate chan_signal;
 extern crate chrono;
+extern crate crossbeam_channel as channel;
+extern crate libc;
 extern crate log;
 extern crate log4rs;
+extern crate signal_hook;
 
 pub use log::{debug, error, info, log, log_enabled, trace, warn};
 
-use chan_signal::Signal;
 use chrono::Local;
+use libc::c_int;
 use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::append::file::FileAppender;
@@ -31,6 +33,7 @@ use log4rs::config::{Appender, Config, Logger, Root};
 use log4rs::encode::pattern::PatternEncoder;
 use std::env;
 use std::fs;
+use std::io::Error;
 use std::str::FromStr;
 use std::sync::{Once, ONCE_INIT};
 use std::thread;
@@ -45,6 +48,17 @@ struct Directive {
 }
 
 static INIT_LOG: Once = ONCE_INIT;
+
+fn notify(signals: &[c_int]) -> Result<channel::Receiver<c_int>, Error> {
+    let (s, r) = channel::bounded(100);
+    let signals = signal_hook::iterator::Signals::new(signals)?;
+    thread::spawn(move || {
+        for signal in signals.forever() {
+            s.send(signal);
+        }
+    });
+    Ok(r)
+}
 
 pub fn init_config(service_name: &str) {
     INIT_LOG.call_once(|| {
@@ -61,7 +75,7 @@ pub fn init_config(service_name: &str) {
         let handle = log4rs::init_config(config).unwrap();
 
         // log rotate via signal(USR1)
-        let signal = chan_signal::notify(&[Signal::USR1]);
+        let signal = notify(&[signal_hook::SIGUSR1]).unwrap();
 
         // Any and all threads spawned must come after the first call to notify (or notify_on).
         // This is so all spawned threads inherit the blocked status of signals.

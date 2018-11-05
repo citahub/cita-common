@@ -18,7 +18,7 @@
 //! `Cita` namespace
 
 use web3::api::Namespace;
-use web3::helpers::CallResult;
+use web3::helpers::CallFuture;
 use web3::Transport;
 
 use types::request;
@@ -43,11 +43,11 @@ impl<T: Transport> Namespace<T> for Cita<T> {
 }
 
 impl<T: Transport> Cita<T> {
-    pub fn call<P>(&self, param: P) -> CallResult<P::Response, T::Out>
+    pub fn call<P>(&self, param: P) -> CallFuture<P::Response, T::Out>
     where
         P: request::JsonRpcRequest,
     {
-        CallResult::new(
+        CallFuture::new(
             self.transport
                 .execute(param.method_name(), param.value_vec()),
         )
