@@ -80,7 +80,7 @@ mod tests {
             "blockInterval": 3000,
             "tokenName": "Nervos",
             "tokenSymbol": "NOS",
-            "tokenAvatar": "https://avatars1.githubusercontent.com/u/35361817",
+            "tokenAvatar": "https://cdn.cryptape.com/icon_appchain.png",
             "version":108,
             "economicalModel": 1
         });
@@ -103,7 +103,7 @@ mod tests {
             block_interval: 3000,
             token_name: "Nervos".to_owned(),
             token_symbol: "NOS".to_owned(),
-            token_avatar: "https://avatars1.githubusercontent.com/u/35361817".to_owned(),
+            token_avatar: "https://cdn.cryptape.com/icon_appchain.png".to_owned(),
             version: 108,
             economical_model: EconomicalModel::Charge,
         };
