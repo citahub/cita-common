@@ -112,7 +112,7 @@ impl SendRawTransactionParams {
                 let to = clean_0x(tx.get_to());
                 if to.len() != 40 && !to.is_empty() {
                     return Err(Error::invalid_params(
-                        "param 'to' length too short, or are you create contract?",
+                        "param 'to' has invalid length, expected 40, or are you creating contract?",
                     ));
                 } else {
                     let _ = to.from_hex().map_err(|err| {
@@ -133,7 +133,7 @@ impl SendRawTransactionParams {
                 let to = tx.get_to_v1();
                 if to.len() != 20 && !to.is_empty() {
                     return Err(Error::invalid_params(
-                        "param 'to' length too short, or are you create contract?",
+                        "param 'to' has invalid length, expected 40, or are you creating contract?",
                     ));
                 }
             } else {
