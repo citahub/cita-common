@@ -754,7 +754,7 @@ impl Database {
     }
 
     /// Close the database
-    fn close(&self) {
+    pub fn close(&self) {
         *self.db.write() = None;
         self.overlay.write().clear();
         self.flushing.write().clear();
