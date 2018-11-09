@@ -166,6 +166,8 @@ macro_rules! loop_macro_for_structs {
             KV,
             Log,
             InnerMessage,
+            BlockTxn,
+            GetBlockTxn,
             Proposal,
             SignedProposal,
             Vote,
@@ -226,6 +228,8 @@ macro_rules! loop_macro_for_structs_in_msg {
             MiscellaneousReq,
             BlackList,
             StateSignal,
+            GetBlockTxn,
+            BlockTxn,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -507,6 +511,18 @@ impl Message {
     pub fn take_state_signal(&mut self) -> Option<StateSignal> {
         match self.take_content() {
             Some(MsgClass::StateSignal(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_get_block_txn(&mut self) -> Option<GetBlockTxn> {
+        match self.take_content() {
+            Some(MsgClass::GetBlockTxn(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_block_txn(&mut self) -> Option<BlockTxn> {
+        match self.take_content() {
+            Some(MsgClass::BlockTxn(v)) => Some(v),
             _ => None,
         }
     }
