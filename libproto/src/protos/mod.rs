@@ -39,6 +39,7 @@ pub mod auth;
 pub mod blockchain;
 pub mod citacode;
 pub mod communication;
+pub mod compact_block;
 pub mod consensus;
 pub mod executor;
 pub mod request;
@@ -50,6 +51,7 @@ pub use self::auth::{Ret, BlockTxHashes, BlockTxHashesReq, Miscellaneous, Miscel
 pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
 pub use self::citacode::{ActionParams, EnvInfo, InvokeRequest, InvokeResponse, KV, Log};
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
+pub use self::compact_block::{BlockTxn, GetBlockTxn};
 pub use self::consensus::{Proposal, SignedProposal, Vote};
 pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LoadRequest, LoadResponse, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, RegisterRequest, RegisterResponse, StateRoot};
 pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request, StateProof, StorageKey};

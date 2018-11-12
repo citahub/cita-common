@@ -77,6 +77,8 @@ pub enum MsgType {
     MiscellaneousReq,
     BlackList,
     StateSignal,
+    GetBlockTxn,
+    BlockTxn,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -170,6 +172,8 @@ impl fmt::Display for MsgType {
                 &MsgType::MiscellaneousReq => "miscellaneous_req",
                 &MsgType::BlackList => "black_list",
                 &MsgType::StateSignal => "state_signal",
+                &MsgType::GetBlockTxn => "get_block_txn",
+                &MsgType::BlockTxn => "block_txn",
                 // Generate MSG-PROTOS display automatically end.
                 &MsgType::All => "*",
                 &MsgType::Unknown => UNKNOWN,
@@ -233,6 +237,8 @@ impl<'a> From<&'a str> for MsgType {
             "miscellaneous_req" => MsgType::MiscellaneousReq,
             "black_list" => MsgType::BlackList,
             "state_signal" => MsgType::StateSignal,
+            "get_block_txn" => MsgType::GetBlockTxn,
+            "block_txn" => MsgType::BlockTxn,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
