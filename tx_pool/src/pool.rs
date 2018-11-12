@@ -153,6 +153,10 @@ impl Pool {
         self.update_order_set(txs);
     }
 
+    pub fn get(&self, hash: &H256) -> Option<&SignedTransaction> {
+        self.txs.get(hash)
+    }
+
     pub fn package(
         &mut self,
         height: u64,
