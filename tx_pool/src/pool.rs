@@ -46,6 +46,7 @@ impl TxOrder {
 }
 
 impl Eq for TxOrder {}
+
 impl PartialEq for TxOrder {
     fn eq(&self, other: &TxOrder) -> bool {
         self.cmp(other) == Ordering::Equal
@@ -100,14 +101,12 @@ impl Pool {
         order
     }
 
-    #[allow(unused_variables)]
-    fn get_order_by_priority(&mut self, tx: &SignedTransaction) -> u64 {
-        return self.get_order();
+    fn get_order_by_priority(&mut self, _tx: &SignedTransaction) -> u64 {
+        self.get_order()
     }
 
-    #[allow(unused_variables)]
-    fn get_order_by_vip(&mut self, tx: &SignedTransaction) -> u64 {
-        return self.get_order();
+    fn get_order_by_vip(&mut self, _tx: &SignedTransaction) -> u64 {
+        self.get_order()
     }
 
     pub fn enqueue(&mut self, tx: SignedTransaction) -> bool {
@@ -239,6 +238,16 @@ impl Pool {
         tx_list
     }
 
+    pub fn cull(&self, txs: &[H256]) -> Vec<SignedTransaction> {
+        let mut acc = Vec::with_capacity(txs.len());
+        for tx in txs.iter() {
+            if let Some(tx) = self.txs.get(tx) {
+                acc.push(tx.clone())
+            }
+        }
+        acc
+    }
+
     pub fn package_backword_compatible(&mut self, height: u64) -> Vec<SignedTransaction> {
         let mut tx_list = Vec::new();
         let mut invalid_tx_list = Vec::new();
@@ -287,7 +296,6 @@ impl Pool {
     }
 }
 
-// TODO: FIXME
 #[cfg(test)]
 #[cfg(feature = "secp256k1")]
 mod tests {
@@ -378,5 +386,30 @@ mod tests {
             vec![]
         );
         assert_eq!(p.len(), 0);
+    }
+
+    #[test]
+    fn test_cull() {
+        let mut p = Pool::new(1);
+
+        let keypair = KeyPair::gen_keypair();
+        let privkey = keypair.privkey();
+
+        let tx1 = generate_tx(vec![1], 99, privkey, 0);
+        let tx2 = generate_tx(vec![2], 99, privkey, 1);
+        let tx3 = generate_tx(vec![3], 99, privkey, 2);
+        let tx4 = generate_tx(vec![4], 99, privkey, 3);
+
+        assert_eq!(p.enqueue(tx1.clone()), true);
+        assert_eq!(p.enqueue(tx2.clone()), true);
+        assert_eq!(p.enqueue(tx3.clone()), true);
+        assert_eq!(p.enqueue(tx4.clone()), true);
+        assert_eq!(p.len(), 4);
+
+        let tx_hashes = vec![tx1.crypt_hash(), tx3.crypt_hash(), tx4.crypt_hash()];
+
+        let txs = p.cull(tx_hashes.as_slice());
+
+        assert_eq!(txs, vec![tx1, tx3, tx4]);
     }
 }
