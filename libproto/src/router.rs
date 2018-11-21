@@ -88,6 +88,7 @@ pub enum MsgType {
     RequestNewTx,
     RequestNewTxBatch,
     RequestNet,
+    SignedProposalReAuth,
     LocalSync,
 }
 
@@ -180,6 +181,7 @@ impl fmt::Display for MsgType {
                 &MsgType::RequestNewTx => "request_new_tx",
                 &MsgType::RequestNewTxBatch => "request_new_tx_batch",
                 &MsgType::RequestNet => "request_net",
+                &MsgType::SignedProposalReAuth => "signed_proposal_re_auth",
                 &MsgType::LocalSync => "local_sync",
             }
         )
@@ -244,6 +246,7 @@ impl<'a> From<&'a str> for MsgType {
             "request_new_tx" => MsgType::RequestNewTx,
             "request_new_tx_batch" => MsgType::RequestNewTxBatch,
             "request_net" => MsgType::RequestNet,
+            "signed_proposal_re_auth" => MsgType::SignedProposalReAuth,
             "local_sync" => MsgType::LocalSync,
             _ => MsgType::Unknown,
         }
