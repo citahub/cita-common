@@ -47,12 +47,12 @@ pub mod response;
 pub mod snapshot;
 pub mod sync;
 
-pub use self::auth::{Ret, BlockTxHashes, BlockTxHashesReq, Miscellaneous, MiscellaneousReq, VerifyBlockReq, VerifyBlockResp, VerifyTxReq};
-pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
+pub use self::auth::{BlockTxHashes, BlockTxHashesReq, Miscellaneous, MiscellaneousReq, VerifyBlockReq, VerifyBlockResp, VerifyTxReq};
+pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, CompactBlock, CompactBlockBody, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
 pub use self::citacode::{ActionParams, EnvInfo, InvokeRequest, InvokeResponse, KV, Log};
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
 pub use self::compact_block::{BlockTxn, GetBlockTxn};
-pub use self::consensus::{Proposal, SignedProposal, Vote};
+pub use self::consensus::{CompactProposal, CompactSignedProposal, Proposal, SignedProposal, Vote};
 pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LoadRequest, LoadResponse, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, RegisterRequest, RegisterResponse, StateRoot};
 pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request, StateProof, StorageKey};
 pub use self::response::{Response_oneof_data, FullTransaction, Response};

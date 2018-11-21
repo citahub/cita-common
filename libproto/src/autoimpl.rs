@@ -152,6 +152,8 @@ macro_rules! loop_macro_for_structs {
             BlockHeader,
             BlockTxs,
             BlockWithProof,
+            CompactBlock,
+            CompactBlockBody,
             Proof,
             RichStatus,
             SignedTransaction,
@@ -168,6 +170,8 @@ macro_rules! loop_macro_for_structs {
             InnerMessage,
             BlockTxn,
             GetBlockTxn,
+            CompactProposal,
+            CompactSignedProposal,
             Proposal,
             SignedProposal,
             Vote,
@@ -218,7 +222,6 @@ macro_rules! loop_macro_for_structs_in_msg {
             BlockTxs,
             BlockTxHashes,
             BlockTxHashesReq,
-            VerifyTxReq,
             VerifyBlockReq,
             VerifyBlockResp,
             ExecutedResult,
@@ -230,6 +233,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             StateSignal,
             GetBlockTxn,
             BlockTxn,
+            CompactSignedProposal,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -454,12 +458,6 @@ impl Message {
             _ => None,
         }
     }
-    pub fn take_verify_tx_req(&mut self) -> Option<VerifyTxReq> {
-        match self.take_content() {
-            Some(MsgClass::VerifyTxReq(v)) => Some(v),
-            _ => None,
-        }
-    }
     pub fn take_verify_block_req(&mut self) -> Option<VerifyBlockReq> {
         match self.take_content() {
             Some(MsgClass::VerifyBlockReq(v)) => Some(v),
@@ -523,6 +521,12 @@ impl Message {
     pub fn take_block_txn(&mut self) -> Option<BlockTxn> {
         match self.take_content() {
             Some(MsgClass::BlockTxn(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_compact_signed_proposal(&mut self) -> Option<CompactSignedProposal> {
+        match self.take_content() {
+            Some(MsgClass::CompactSignedProposal(v)) => Some(v),
             _ => None,
         }
     }
