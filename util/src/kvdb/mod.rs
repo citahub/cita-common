@@ -17,11 +17,11 @@
 //! Key-Value store abstraction with `RocksDB` backend.
 #![rustfmt_skip]
 
-pub mod kvdb_memorydb;
-pub mod kvdb_rocksdb;
+pub mod in_memory;
+pub mod rocksdb;
 
-pub use kvdb_memorydb::*;
-pub use kvdb_rocksdb::*;
+pub use in_memory::*;
+pub use rocksdb::*;
 
 use {UtilError, Bytes};
 
