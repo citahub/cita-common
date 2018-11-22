@@ -17,19 +17,19 @@
 //! Key-Value store abstraction with `RocksDB` backend.
 #![rustfmt_skip]
 
-use {UtilError, Bytes};
+use UtilError;
 
 use elastic_array::*;
 use hashdb::DBValue;
 use parking_lot::{Mutex, MutexGuard, RwLock};
-
+use kvdb::{DBTransaction, KeyValueDB, DBOp};
 
 #[cfg(target_os = "linux")]
 use regex::Regex;
 use rlp::{UntrustedRlp, RlpType, Compressible};
 use parity_rocksdb::{DB, Writable, WriteBatch, WriteOptions, IteratorMode, DBIterator, Options, DBCompactionStyle, BlockBasedOptions, Direction, Cache, Column, ReadOptions};
 use std::{mem, fs};
-use std::collections::{HashMap, BTreeMap};
+use std::collections::HashMap;
 #[cfg(target_os = "linux")]
 use std::fs::File;
 use std::io::ErrorKind;
@@ -42,231 +42,10 @@ const DB_BACKGROUND_FLUSHES: i32 = 2;
 const DB_BACKGROUND_COMPACTIONS: i32 = 2;
 const DB_WRITE_BUFFER_SIZE: usize = 2048 * 1000;
 
-/// Required length of prefixes.
-pub const PREFIX_LEN: usize = 12;
-
-/// Write transaction. Batches a sequence of put/delete operations for efficiency.
-#[derive(Default, Clone, PartialEq)]
-pub struct DBTransaction {
-    ops: Vec<DBOp>,
-}
-
-#[derive(Clone, PartialEq)]
-enum DBOp {
-    Insert {
-        col: Option<u32>,
-        key: ElasticArray32<u8>,
-        value: DBValue,
-    },
-    InsertCompressed {
-        col: Option<u32>,
-        key: ElasticArray32<u8>,
-        value: DBValue,
-    },
-    Delete {
-        col: Option<u32>,
-        key: ElasticArray32<u8>,
-    },
-}
-
-impl DBTransaction {
-    /// Create new transaction.
-    pub fn new() -> DBTransaction {
-        DBTransaction::with_capacity(256)
-    }
-
-    /// Create new transaction with capacity.
-    pub fn with_capacity(cap: usize) -> DBTransaction {
-        DBTransaction { ops: Vec::with_capacity(cap) }
-    }
-
-    /// Insert a key-value pair in the transaction. Any existing value will be overwritten upon write.
-    pub fn put(&mut self, col: Option<u32>, key: &[u8], value: &[u8]) {
-        let mut ekey = ElasticArray32::new();
-        ekey.append_slice(key);
-        self.ops.push(DBOp::Insert {
-                          col: col,
-                          key: ekey,
-                          value: DBValue::from_slice(value),
-                      });
-    }
-
-    /// Insert a key-value pair in the transaction. Any existing value will be overwritten upon write.
-    pub fn put_vec(&mut self, col: Option<u32>, key: &[u8], value: Bytes) {
-        let mut ekey = ElasticArray32::new();
-        ekey.append_slice(key);
-        self.ops.push(DBOp::Insert {
-                          col: col,
-                          key: ekey,
-                          value: DBValue::from_vec(value),
-                      });
-    }
-
-    /// Insert a key-value pair in the transaction. Any existing value will be overwritten upon write.
-    /// Value will be RLP-compressed on flush
-    pub fn put_compressed(&mut self, col: Option<u32>, key: &[u8], value: Bytes) {
-        let mut ekey = ElasticArray32::new();
-        ekey.append_slice(key);
-        self.ops.push(DBOp::InsertCompressed {
-                          col: col,
-                          key: ekey,
-                          value: DBValue::from_vec(value),
-                      });
-    }
-
-    /// Delete value by key.
-    pub fn delete(&mut self, col: Option<u32>, key: &[u8]) {
-        let mut ekey = ElasticArray32::new();
-        ekey.append_slice(key);
-        self.ops.push(DBOp::Delete { col: col, key: ekey });
-    }
-}
-
 enum KeyState {
     Insert(DBValue),
     InsertCompressed(DBValue),
     Delete,
-}
-
-/// Generic key-value database.
-///
-/// This makes a distinction between "buffered" and "flushed" values. Values which have been
-/// written can always be read, but may be present in an in-memory buffer. Values which have
-/// been flushed have been moved to backing storage, like a RocksDB instance. There are certain
-/// operations which are only guaranteed to operate on flushed data and not buffered,
-/// although implementations may differ in this regard.
-///
-/// The contents of an interior buffer may be explicitly flushed using the `flush` method.
-///
-/// The `KeyValueDB` also deals in "column families", which can be thought of as distinct
-/// stores within a database. Keys written in one column family will not be accessible from
-/// any other. The number of column families must be specified at initialization, with a
-/// differing interface for each database. The `None` argument in place of a column index
-/// is always supported.
-///
-/// The API laid out here, along with the `Sync` bound implies interior synchronization for
-/// implementation.
-pub trait KeyValueDB: Sync + Send {
-    /// Helper to create a new transaction.
-    fn transaction(&self) -> DBTransaction {
-        DBTransaction::new()
-    }
-
-    /// Get a value by key.
-    fn get(&self, col: Option<u32>, key: &[u8]) -> Result<Option<DBValue>, String>;
-
-    /// Get a value by partial key. Only works for flushed data.
-    fn get_by_prefix(&self, col: Option<u32>, prefix: &[u8]) -> Option<Box<[u8]>>;
-
-    /// Write a transaction of changes to the buffer.
-    fn write_buffered(&self, transaction: DBTransaction);
-
-    /// Write a transaction of changes to the backing store.
-    fn write(&self, transaction: DBTransaction) -> Result<(), String> {
-        self.write_buffered(transaction);
-        self.flush()
-    }
-
-    /// Flush all buffered data.
-    fn flush(&self) -> Result<(), String>;
-
-    /// Iterate over flushed data for a given column.
-    fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
-
-    /// Iterate over flushed data for a given column, starting from a given prefix.
-    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
-
-    /// Attempt to replace this database with a new one located at the given path.
-    fn restore(&self, new_db: &str) -> Result<(), UtilError>;
-}
-
-/// A key-value database fulfilling the `KeyValueDB` trait, living in memory.
-/// This is generally intended for tests and is not particularly optimized.
-pub struct InMemory {
-    columns: RwLock<HashMap<Option<u32>, BTreeMap<Vec<u8>, DBValue>>>,
-}
-
-/// Create an in-memory database with the given number of columns.
-/// Columns will be indexable by 0..`num_cols`
-pub fn in_memory(num_cols: u32) -> InMemory {
-    let mut cols = HashMap::new();
-    cols.insert(None, BTreeMap::new());
-
-    for idx in 0..num_cols {
-        cols.insert(Some(idx), BTreeMap::new());
-    }
-
-    InMemory { columns: RwLock::new(cols) }
-}
-
-impl KeyValueDB for InMemory {
-    fn get(&self, col: Option<u32>, key: &[u8]) -> Result<Option<DBValue>, String> {
-        let columns = self.columns.read();
-        match columns.get(&col) {
-            None => Err(format!("No such column family: {:?}", col)),
-            Some(map) => Ok(map.get(key).cloned()),
-        }
-    }
-
-    fn get_by_prefix(&self, col: Option<u32>, prefix: &[u8]) -> Option<Box<[u8]>> {
-        let columns = self.columns.read();
-        match columns.get(&col) {
-            None => None,
-            Some(map) => map.iter().find(|&(ref k, _)| k.starts_with(prefix)).map(|(_, v)| v.to_vec().into_boxed_slice()),
-        }
-    }
-
-    fn write_buffered(&self, transaction: DBTransaction) {
-        let mut columns = self.columns.write();
-        let ops = transaction.ops;
-        for op in ops {
-            match op {
-                DBOp::Insert { col, key, value } => {
-                    if let Some(col) = columns.get_mut(&col) {
-                        col.insert(key.into_vec(), value);
-                    }
-                }
-                DBOp::InsertCompressed { col, key, value } => {
-                    if let Some(col) = columns.get_mut(&col) {
-                        let compressed = UntrustedRlp::new(&value).compress(RlpType::Blocks);
-                        let mut value = DBValue::new();
-                        value.append_slice(&compressed);
-                        col.insert(key.into_vec(), value);
-                    }
-                }
-                DBOp::Delete { col, key } => {
-                    if let Some(col) = columns.get_mut(&col) {
-                        col.remove(&*key);
-                    }
-                }
-            }
-        }
-    }
-
-    fn flush(&self) -> Result<(), String> {
-        Ok(())
-    }
-    fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
-        match self.columns.read().get(&col) {
-            Some(map) => Box::new(// TODO: worth optimizing at all?
-                                  map.clone().into_iter().map(|(k, v)| (k.into_boxed_slice(), v.into_vec().into_boxed_slice()))),
-            None => Box::new(None.into_iter()),
-        }
-    }
-
-    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
-        match self.columns.read().get(&col) {
-            Some(map) => Box::new(map.clone()
-                                     .into_iter()
-                                     .skip_while(move |&(ref k, _)| !k.starts_with(prefix))
-                                     .map(|(k, v)| (k.into_boxed_slice(), v.into_vec().into_boxed_slice()))),
-            None => Box::new(None.into_iter()),
-        }
-    }
-
-    fn restore(&self, _new_db: &str) -> Result<(), UtilError> {
-        Err(UtilError::SimpleString("Attempted to restore in-memory database".into()))
-    }
 }
 
 /// Compaction profile for the database settings
@@ -313,12 +92,12 @@ impl CompactionProfile {
     pub fn auto(db_path: &Path) -> CompactionProfile {
         use std::io::Read;
         let hdd_check_file = db_path.to_str()
-                                    .and_then(|path_str| Command::new("df").arg(path_str).output().ok())
-                                    .and_then(|df_res| match df_res.status.success() {
-                                                  true => Some(df_res.stdout),
-                                                  false => None,
-                                              })
-                                    .and_then(rotational_from_df_output);
+            .and_then(|path_str| Command::new("df").arg(path_str).output().ok())
+            .and_then(|df_res| match df_res.status.success() {
+                true => Some(df_res.stdout),
+                false => None,
+            })
+            .and_then(rotational_from_df_output);
         // Read out the file and match compaction profile.
         if let Some(hdd_check) = hdd_check_file {
             if let Ok(mut file) = File::open(hdd_check.as_path()) {
@@ -516,8 +295,8 @@ impl Database {
                 match DB::open_cf(&opts, path, &cfnames, &cf_options) {
                     Ok(db) => {
                         cfs = cfnames.iter()
-                                     .map(|n| db.cf_handle(n).expect("rocksdb opens a cf_handle for each cfname; qed"))
-                                     .collect();
+                            .map(|n| db.cf_handle(n).expect("rocksdb opens a cf_handle for each cfname; qed"))
+                            .collect();
                         assert!(cfs.len() == columns as usize);
                         Ok(db)
                     }
@@ -554,15 +333,15 @@ impl Database {
         };
         let num_cols = cfs.len();
         Ok(Database {
-               db: RwLock::new(Some(DBAndColumns { db: db, cfs: cfs })),
-               config: config.clone(),
-               write_opts: write_opts,
-               overlay: RwLock::new((0..(num_cols + 1)).map(|_| HashMap::new()).collect()),
-               flushing: RwLock::new((0..(num_cols + 1)).map(|_| HashMap::new()).collect()),
-               flushing_lock: Mutex::new(false),
-               path: path.to_owned(),
-               read_opts: read_opts,
-           })
+            db: RwLock::new(Some(DBAndColumns { db: db, cfs: cfs })),
+            config: config.clone(),
+            write_opts: write_opts,
+            overlay: RwLock::new((0..(num_cols + 1)).map(|_| HashMap::new()).collect()),
+            flushing: RwLock::new((0..(num_cols + 1)).map(|_| HashMap::new()).collect()),
+            flushing_lock: Mutex::new(false),
+            path: path.to_owned(),
+            read_opts: read_opts,
+        })
     }
 
     /// Helper to create new transaction for this database.
@@ -715,12 +494,12 @@ impl Database {
     // TODO: support prefix seek for unflushed data
     pub fn get_by_prefix(&self, col: Option<u32>, prefix: &[u8]) -> Option<Box<[u8]>> {
         self.iter_from_prefix(col, prefix).and_then(|mut iter| {
-                                                        match iter.next() {
-                                                            // TODO: use prefix_same_as_start read option (not availabele in C API currently)
-                                                            Some((k, v)) => if k[0..prefix.len()] == prefix[..] { Some(v) } else { None },
-                                                            _ => None,
-                                                        }
-                                                    })
+            match iter.next() {
+                // TODO: use prefix_same_as_start read option (not availabele in C API currently)
+                Some((k, v)) => if k[0..prefix.len()] == prefix[..] { Some(v) } else { None },
+                _ => None,
+            }
+        })
     }
 
     /// Get database iterator for flushed data.
@@ -730,7 +509,7 @@ impl Database {
             Some(DBAndColumns { ref db, ref cfs }) => {
                 let iter = col.map_or_else(|| db.iterator_opt(IteratorMode::Start, &self.read_opts), |c| {
                     db.iterator_cf_opt(cfs[c as usize], IteratorMode::Start, &self.read_opts)
-                      .expect("iterator params are valid; qed")
+                        .expect("iterator params are valid; qed")
                 });
 
                 Some(DatabaseIterator { iter: iter, _marker: PhantomData })
@@ -744,7 +523,7 @@ impl Database {
             Some(DBAndColumns { ref db, ref cfs }) => {
                 let iter = col.map_or_else(|| db.iterator_opt(IteratorMode::From(prefix, Direction::Forward), &self.read_opts), |c| {
                     db.iterator_cf_opt(cfs[c as usize], IteratorMode::From(prefix, Direction::Forward), &self.read_opts)
-                      .expect("iterator params are valid; qed")
+                        .expect("iterator params are valid; qed")
                 });
 
                 Some(DatabaseIterator { iter: iter, _marker: PhantomData })
