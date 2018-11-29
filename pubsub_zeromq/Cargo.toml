@@ -9,4 +9,5 @@ default-features = false
 features = []
 
 [dependencies]
+lazy_static = "1.2.0"
 logger = { path = "../logger" }
