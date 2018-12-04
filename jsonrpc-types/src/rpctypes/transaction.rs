@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::traits::LowerHex;
-use cita_types::{H256, U256};
+use cita_types::{Address, H256, U256};
 use libproto::{
     FullTransaction as ProtoFullTransaction, SignedTransaction as ProtoSignedTransaction,
 };
@@ -34,6 +34,7 @@ pub struct FullTransaction {
 pub struct RpcTransaction {
     pub hash: H256,
     pub content: Data,
+    pub from: Address,
     #[serde(rename = "blockNumber")]
     pub block_number: U256,
     #[serde(rename = "blockHash")]
@@ -76,6 +77,7 @@ impl From<ProtoFullTransaction> for RpcTransaction {
         RpcTransaction {
             hash: H256::from_slice(stx.get_tx_hash()),
             content: Data::new(unverified_tx.try_into().unwrap()),
+            from: stx.from(),
             block_number: U256::from(ptransaction.block_number),
             block_hash: bhash,
             index: U256::from(ptransaction.index),
@@ -89,5 +91,53 @@ impl From<ProtoSignedTransaction> for FullTransaction {
             hash: H256::from_slice(stx.get_tx_hash()),
             content: Data::new(stx.get_transaction_with_sig().try_into().unwrap()),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crypto::{CreateKey, KeyPair};
+    use libproto::Transaction;
+    use std::str::FromStr;
+
+    #[test]
+    fn test_from_proto_full_transaction() {
+        let keypair = KeyPair::gen_keypair();
+        let privkey = keypair.privkey();
+
+        let data = vec![1];
+        let mut tx = Transaction::new();
+        tx.set_data(data);
+        tx.set_nonce("0".to_string());
+        tx.set_to_v1(vec![1, 2, 3]);
+        tx.set_valid_until_block(66);
+        tx.set_quota(314159265);
+        tx.set_value(vec![1]);
+        tx.set_chain_id_v1(vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+        tx.set_version(1);
+
+        let signed_tx = tx.sign(*privkey);
+        let block_hash =
+            H256::from_str("ed76641c68a1c641aee09a94b3b471f4dc0316efe5ac19cf488e2674cf8d05b5")
+                .unwrap();
+
+        let mut full_tx = ProtoFullTransaction::new();
+        full_tx.set_transaction(signed_tx.clone());
+        full_tx.set_block_number(2077);
+        full_tx.set_block_hash(block_hash.to_vec());
+        full_tx.set_index(0);
+
+        let rpc_tx = RpcTransaction::from(full_tx);
+
+        assert_eq!(rpc_tx.hash, H256::from_slice(signed_tx.get_tx_hash()));
+        assert_eq!(
+            rpc_tx.content,
+            Data::new(signed_tx.get_transaction_with_sig().try_into().unwrap())
+        );
+        assert_eq!(rpc_tx.from, keypair.address());
+        assert_eq!(rpc_tx.block_number, U256::from(2077));
+        assert_eq!(rpc_tx.block_hash, block_hash);
+        assert_eq!(rpc_tx.index, U256::from(0));
     }
 }

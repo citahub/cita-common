@@ -45,7 +45,7 @@ use rustc_serialize::hex::ToHex;
 use std::convert::{From, TryFrom, TryInto};
 use std::ops::Deref;
 use std::result::Result::Err;
-use types::H256;
+use types::{Address, H256};
 use util::{merklehash, Hashable};
 
 pub use autoimpl::{
@@ -194,6 +194,12 @@ impl SignedTransaction {
 
     pub fn crypt_hash(&self) -> H256 {
         H256::from(self.tx_hash.as_slice())
+    }
+
+    pub fn from(&self) -> Address {
+        let signer_pubkey = self.get_signer();
+
+        Address::from(types::H160::from(signer_pubkey.crypt_hash()))
     }
 }
 
