@@ -8,6 +8,7 @@ authors = ["Cryptape Technologies <contact@cryptape.com>"]
 protobuf = { version = "2.0.4", features = ["with-bytes"]}
 cita-types = { path = "../cita-types" }
 cita-crypto = { path = "../cita-crypto" }
+hashable = { path = "../hashable" }
 util = { path = "../util" }
 rustc-serialize = "0.3"
 rlp = { path = "../rlp" }
@@ -23,6 +24,6 @@ default = []
 secp256k1 = ["cita-crypto/secp256k1"]
 ed25519 = ["cita-crypto/ed25519"]
 sm2 = ["cita-crypto/sm2"]
-sha3hash = ["util/sha3hash"]
-blake2bhash = ["util/blake2bhash"]
-sm3hash = ["util/sm3hash"]
+sha3hash = ["hashable/sha3hash", "util/sha3hash"]
+blake2bhash = ["hashable/blake2bhash", "util/blake2bhash"]
+sm3hash = ["hashable/sm3hash", "util/sm3hash"]

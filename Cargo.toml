@@ -16,6 +16,7 @@ members = [
     "pubsub",
 
     "ethcore-bloom-journal",
+    "hashable",
     "blake2b",
     "cita-sm2",
     "cita-secp256k1",

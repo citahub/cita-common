@@ -18,7 +18,6 @@ with following modifications:
 - add some modules in util:
     - build_info.rs
     - datapath.rs
-    - hashable.rs
     - init.rs
     - instrument.rs
     - merklehash.rs

@@ -17,12 +17,12 @@
 
 use super::{Address, PrivKey, PubKey};
 use error::Error;
+use hashable::Hashable;
 use rustc_serialize::hex::ToHex;
 use sodiumoxide::crypto::sign::gen_keypair;
 use std::fmt;
 use types::H160;
 use util::crypto::CreateKey;
-use util::Hashable;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     Address::from(H160::from(pubkey.crypt_hash()))

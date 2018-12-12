@@ -387,11 +387,11 @@ mod tests {
     use super::super::KeyPair;
     use super::{Message, PrivKey, Signature};
     use bincode::{deserialize, serialize, Infinite};
+    use hashable::Hashable;
     use std::str::FromStr;
     use test::Bencher;
     use types::H256;
     use util::crypto::{CreateKey, Sign};
-    use util::Hashable;
 
     #[test]
     fn test_sign_verify() {

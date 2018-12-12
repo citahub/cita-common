@@ -27,7 +27,7 @@ use hashdb::*;
 use nibbleslice::*;
 use rlp::*;
 use std::fmt;
-use Hashable;
+use hashable::Hashable;
 
 /// A `Trie` implementation using a generic `HashDB` backing database.
 ///

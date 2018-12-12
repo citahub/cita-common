@@ -19,11 +19,10 @@
 #![feature(custom_attribute)]
 #![allow(unused_attributes)]
 extern crate ansi_term;
-#[cfg(feature = "blake2bhash")]
-extern crate blake2b;
 extern crate cita_types as types;
 extern crate elastic_array;
 extern crate git2;
+extern crate hashable;
 extern crate heapsize;
 extern crate itertools;
 extern crate libc;
@@ -33,8 +32,6 @@ extern crate regex;
 extern crate rlp;
 #[macro_use]
 extern crate rlp_derive;
-#[cfg(feature = "sm3hash")]
-extern crate libsm;
 extern crate parity_rocksdb;
 extern crate rustc_hex;
 extern crate rustc_version;
@@ -56,7 +53,6 @@ pub mod common;
 pub mod crypto;
 pub mod datapath;
 pub mod error;
-pub mod hashable;
 pub mod hashdb;
 pub mod instrument;
 pub mod journaldb;
@@ -79,7 +75,6 @@ pub use bytes::*;
 pub use datapath::*;
 // pub use timer::*;
 pub use error::*;
-pub use hashable::*;
 pub use hashdb::*;
 pub use heapsize::HeapSizeOf;
 pub use init::*;

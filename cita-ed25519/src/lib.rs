@@ -18,6 +18,7 @@
 #[cfg(test)]
 extern crate bincode;
 extern crate cita_types as types;
+extern crate hashable;
 extern crate rlp;
 extern crate rustc_serialize;
 extern crate serde;

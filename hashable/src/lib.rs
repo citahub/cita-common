@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2018 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -15,13 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+extern crate cita_types;
+
 #[cfg(feature = "blake2bhash")]
-use blake2b::blake2b;
+extern crate blake2b;
 #[cfg(feature = "sm3hash")]
-use libsm::sm3;
+extern crate libsm;
 #[cfg(feature = "sha3hash")]
-use sha3;
-use types::H256;
+extern crate tiny_keccak as sha3;
+
+use cita_types::H256;
 
 /// The hash of the empty bytes string.
 #[cfg(feature = "sha3hash")]
@@ -96,7 +99,7 @@ where
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
         let input: &[u8] = self.as_ref();
-        sha3::Keccak::keccak256(input, dest);
+        tiny_keccak::Keccak::keccak256(input, dest);
     }
 }
 
@@ -109,7 +112,7 @@ where
         let input: &[u8] = self.as_ref();
 
         unsafe {
-            blake2b(
+            blake2b::blake2b(
                 dest.as_mut_ptr(),
                 dest.len(),
                 input.as_ptr(),
@@ -128,7 +131,7 @@ where
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
         let input: &[u8] = self.as_ref();
-        dest.copy_from_slice(sm3::hash::Sm3Hash::new(input).get_hash().as_ref());
+        dest.copy_from_slice(libsm::sm3::hash::Sm3Hash::new(input).get_hash().as_ref());
     }
 }
 

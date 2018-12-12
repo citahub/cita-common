@@ -4,8 +4,7 @@ version = "0.6.0"
 authors = ["Parity Technologies <admin@parity.io>", "Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-blake2b = { path = "../blake2b", optional = true }
-libsm = { git = "https://github.com/cryptape/libsm", rev = "ac323abd3512a9fdb8bfd6cd349a6fc46deb688f", optional = true }
+hashable = { path = "../hashable" }
 logger = { path = "../logger" }
 rustc-hex = "1.0"
 rand = "0.3.12"
@@ -36,9 +35,9 @@ rustc_version = "0.2.0"
 
 [features]
 default = []
-sha3hash = []
-blake2bhash = ["blake2b"]
-sm3hash = ["libsm"]
+sha3hash = ["hashable/sha3hash"]
+blake2bhash = ["hashable/blake2bhash"]
+sm3hash = ["hashable/sm3hash"]
 
 [dev-dependencies]
 mktemp = "0.3.1"

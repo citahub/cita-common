@@ -599,7 +599,7 @@ mod tests {
 
     use super::*;
     use super::super::traits::JournalDB;
-    use Hashable;
+    use hashable::Hashable;
     use types::H32;
     use hashdb::{HashDB, DBValue};
     use kvdb::DatabaseConfig;

@@ -22,6 +22,7 @@ extern crate bincode;
 extern crate cita_types as types;
 #[macro_use]
 extern crate lazy_static;
+extern crate hashable;
 extern crate rand;
 extern crate rlp;
 extern crate rustc_serialize;

@@ -17,6 +17,7 @@
 
 use bincode::{deserialize, serialize, Infinite};
 use crypto::{pubkey_to_address, Sign, Signature};
+use hashable::Hashable;
 use libproto::blockchain::{Proof, ProofType};
 use std::collections::HashMap;
 use std::fs::File;
@@ -24,7 +25,6 @@ use std::io::prelude::*;
 use std::usize::MAX;
 use types::{Address, H256};
 use util::datapath::DataPath;
-use util::Hashable;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum Step {

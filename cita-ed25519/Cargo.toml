@@ -7,6 +7,7 @@ authors = ["Cryptape Technologies <contact@cryptape.com>"]
 rustc-serialize = "0.3"
 sodiumoxide = "0.1.0"
 cita-types = { path = "../cita-types" }
+hashable = { path = "../hashable" }
 util = { path = "../util" }
 rlp = { path = "../rlp" }
 serde = "1.0"
@@ -14,6 +15,6 @@ bincode = "0.8.0"
 
 [features]
 default = []
-sha3hash = ["util/sha3hash"]
-blake2bhash = ["util/blake2bhash"]
-sm3hash = ["util/sm3hash"]
+sha3hash = ["util/sha3hash", "hashable/sha3hash"]
+blake2bhash = ["util/blake2bhash", "hashable/blake2bhash"]
+sm3hash = ["util/sm3hash", "hashable/sm3hash"]

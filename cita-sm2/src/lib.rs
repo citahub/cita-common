@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate cita_types as types;
+extern crate hashable;
 extern crate libsm;
 extern crate rlp;
 extern crate rustc_serialize;

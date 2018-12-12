@@ -211,7 +211,7 @@ mod tests {
     extern crate mktemp;
 
     use super::*;
-    use Hashable;
+    use hashable::Hashable;
     use types::H32;
     use hashdb::{HashDB, DBValue};
     use journaldb::traits::JournalDB;

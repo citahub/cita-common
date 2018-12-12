@@ -8,6 +8,7 @@ eth-secp256k1 = { git = "https://github.com/paritytech/rust-secp256k1", rev = "6
 lazy_static = "1.1"
 rustc-serialize = "0.3"
 cita-types = { path = "../cita-types" }
+hashable = { path = "../hashable" }
 util = { path = "../util" }
 rlp = { path = "../rlp" }
 rand = "0.3"
@@ -17,6 +18,6 @@ bincode = "0.8"
 
 [features]
 default = []
-sha3hash = ["util/sha3hash"]
-blake2bhash = ["util/blake2bhash"]
-sm3hash = ["util/sm3hash"]
+sha3hash = ["util/sha3hash", "hashable/sha3hash"]
+blake2bhash = ["util/blake2bhash", "hashable/blake2bhash"]
+sm3hash = ["util/sm3hash", "hashable/sm3hash"]
