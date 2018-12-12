@@ -14,10 +14,10 @@ elastic-array = "0.9"
 rlp = { path = "../rlp" }
 heapsize = "0.4"
 itertools = "0.5"
-libc = "0.2.7"
 vergen = "0.1"
 target_info = "0.1"
 cita-types = { path = "../cita-types" }
+snappy = { path = "../snappy" }
 parking_lot = "0.6"
 ansi_term = "0.9"
 tiny-keccak= "1.4"

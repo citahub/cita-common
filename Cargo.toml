@@ -8,6 +8,7 @@ members = [
     "panic_hook",
     "worker",
     "cita-types",
+    "snappy",
     "util",
 
     "pubsub_zeromq",

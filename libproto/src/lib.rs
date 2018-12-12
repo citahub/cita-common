@@ -29,8 +29,8 @@ extern crate rustc_serialize;
 #[macro_use]
 extern crate serde_derive;
 extern crate merklehash;
+extern crate snappy;
 extern crate tls_api;
-extern crate util;
 
 pub mod protos;
 pub use protos::*;
