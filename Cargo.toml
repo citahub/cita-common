@@ -9,6 +9,7 @@ members = [
     "worker",
     "cita-types",
     "snappy",
+    "cita-directories",
     "util",
 
     "pubsub_zeromq",

@@ -23,7 +23,7 @@ extern crate libproto;
 extern crate rustc_serialize;
 #[macro_use]
 extern crate serde_derive;
-extern crate util;
+extern crate cita_directories;
 
 mod bft_proof;
 

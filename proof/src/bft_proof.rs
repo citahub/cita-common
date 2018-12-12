@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use bincode::{deserialize, serialize, Infinite};
+use cita_directories::DataPath;
 use crypto::{pubkey_to_address, Sign, Signature};
 use hashable::Hashable;
 use libproto::blockchain::{Proof, ProofType};
@@ -24,7 +25,6 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::usize::MAX;
 use types::{Address, H256};
-use util::datapath::DataPath;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum Step {

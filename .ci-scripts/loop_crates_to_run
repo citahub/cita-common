@@ -91,6 +91,7 @@ function cargo_run_all () {
     cargo_run error
     cargo_run logger
     cargo_run snappy
+    cargo_run cita-directories
     cargo_run ethcore-bloom-journal
     cargo_run cita-crypto-trait
 

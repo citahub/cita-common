@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2018 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -15,9 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//! wrapper leveldb, rocketsdb data path.
+//! Wrapper all data paths for cita.
+//!
 //! Fix "Open Error: IO error Invalid argument" when using vagrant.
 //! More about above error. See <https://github.com/Level/levelup/issues/222>.
+
+extern crate uuid;
 
 use std::env;
 use uuid::Uuid;

@@ -41,14 +41,12 @@ extern crate logger;
 extern crate panic_hook;
 extern crate serde;
 extern crate toml;
-extern crate uuid;
 
 pub mod avl;
 pub mod build_info;
 pub mod bytes;
 pub mod cache;
 pub mod common;
-pub mod datapath;
 pub mod error;
 pub mod hashdb;
 pub mod instrument;
@@ -67,8 +65,6 @@ pub mod init;
 
 pub use ansi_term::{Colour, Style};
 pub use bytes::*;
-pub use datapath::*;
-// pub use timer::*;
 pub use error::*;
 pub use hashdb::*;
 pub use heapsize::HeapSizeOf;

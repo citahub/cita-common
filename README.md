@@ -17,7 +17,6 @@ with following modifications:
 - add UtilError::Snappy in util::error
 - add some modules in util:
     - build_info.rs
-    - datapath.rs
     - init.rs
     - instrument.rs
 - add util::avl.
