@@ -16,13 +16,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{Address, Error, PrivKey, PubKey, SECP256K1};
+use cita_crypto_trait::CreateKey;
 use hashable::Hashable;
 use rand::thread_rng;
 use rustc_serialize::hex::ToHex;
 use secp256k1::key;
 use std::fmt;
 use types::H160;
-use util::crypto::CreateKey;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     Address::from(H160::from(pubkey.crypt_hash()))
@@ -96,9 +96,9 @@ impl CreateKey for KeyPair {
 #[cfg(test)]
 mod tests {
     use super::{KeyPair, PrivKey};
+    use cita_crypto_trait::CreateKey;
     use std::str::FromStr;
     use types::H256;
-    use util::crypto::CreateKey;
 
     #[test]
     fn from_privkey() {

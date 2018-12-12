@@ -17,13 +17,13 @@
 
 #[cfg(test)]
 extern crate bincode;
+extern crate cita_crypto_trait;
 extern crate cita_types as types;
 extern crate hashable;
 extern crate rlp;
 extern crate rustc_serialize;
 extern crate serde;
 extern crate sodiumoxide;
-extern crate util;
 
 mod error;
 mod keypair;

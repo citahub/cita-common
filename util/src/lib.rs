@@ -48,7 +48,6 @@ pub mod build_info;
 pub mod bytes;
 pub mod cache;
 pub mod common;
-pub mod crypto;
 pub mod datapath;
 pub mod error;
 pub mod hashdb;

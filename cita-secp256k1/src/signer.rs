@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{Address, KeyPair, PrivKey};
-use util::crypto::CreateKey;
+use cita_crypto_trait::CreateKey;
 
 #[derive(Default)]
 pub struct Signer {

@@ -23,6 +23,7 @@ members = [
     "cita-sm2",
     "cita-secp256k1",
     "cita-ed25519",
+    "cita-crypto-trait",
     "cita-crypto",
 
     "rlp",

@@ -92,6 +92,7 @@ function cargo_run_all () {
     cargo_run logger
     cargo_run snappy
     cargo_run ethcore-bloom-journal
+    cargo_run cita-crypto-trait
 
     cargo_run rlp
     cargo_run rlp_derive
@@ -114,11 +115,11 @@ function cargo_run_all () {
         cargo_run ${crate} --features "${SELECT_HASH}"
     done
 
-    for crate in engine_json; do
+    for crate in cita-crypto engine_json; do
         cargo_run ${crate} --features "${SELECT_CRYPTO}"
     done
 
-    for crate in cita-crypto libproto proof tx_pool jsonrpc-types cita-web3; do
+    for crate in libproto proof tx_pool jsonrpc-types cita-web3; do
         cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
 

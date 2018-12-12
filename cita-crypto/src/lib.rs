@@ -15,21 +15,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+extern crate cita_crypto_trait;
 #[cfg(feature = "ed25519")]
 extern crate cita_ed25519;
 #[cfg(feature = "secp256k1")]
 extern crate cita_secp256k1;
 #[cfg(feature = "sm2")]
 extern crate cita_sm2;
-extern crate util;
 
+pub use cita_crypto_trait::{CreateKey, Sign};
 #[cfg(feature = "ed25519")]
 pub use cita_ed25519::*;
 #[cfg(feature = "secp256k1")]
 pub use cita_secp256k1::*;
 #[cfg(feature = "sm2")]
 pub use cita_sm2::*;
-pub use util::crypto::{CreateKey, Sign};
 
 #[cfg(feature = "ed25519")]
 pub const SIGNATURE_NAME: &str = "ed25519";

@@ -262,10 +262,17 @@ dependencies = [
 name = "cita-crypto"
 version = "0.1.0"
 dependencies = [
+ "cita-crypto-trait 0.1.0",
  "cita-ed25519 0.6.0",
  "cita-secp256k1 0.6.0",
  "cita-sm2 0.1.0",
- "util 0.6.0",
+]
+
+[[package]]
+name = "cita-crypto-trait"
+version = "0.1.0"
+dependencies = [
+ "cita-types 0.1.0",
 ]
 
 [[package]]
@@ -273,13 +280,13 @@ name = "cita-ed25519"
 version = "0.6.0"
 dependencies = [
  "bincode 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
  "hashable 0.1.0",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "sodiumoxide 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
@@ -287,6 +294,7 @@ name = "cita-secp256k1"
 version = "0.6.0"
 dependencies = [
  "bincode 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
  "eth-secp256k1 0.5.7 (git+https://github.com/paritytech/rust-secp256k1?rev=6370d63adf4e8c91e2eae9225eef4b4e0294c5d0)",
  "hashable 0.1.0",
@@ -296,20 +304,19 @@ dependencies = [
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
 name = "cita-sm2"
 version = "0.1.0"
 dependencies = [
+ "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
  "hashable 0.1.0",
  "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]

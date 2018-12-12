@@ -16,12 +16,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{Address, Error, PrivKey, PubKey};
+use cita_crypto_trait::CreateKey;
 use hashable::Hashable;
 use libsm::sm2::signature::SigCtx;
 use rustc_serialize::hex::ToHex;
 use std::fmt;
 use types::H160;
-use util::crypto::CreateKey;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     H160::from(pubkey.crypt_hash())
@@ -81,7 +81,7 @@ impl CreateKey for KeyPair {
 #[cfg(test)]
 mod tests {
     use super::KeyPair;
-    use util::crypto::CreateKey;
+    use cita_crypto_trait::CreateKey;
 
     #[test]
     fn test_gen_keypair() {
