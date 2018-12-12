@@ -17,6 +17,7 @@ members = [
 
     "ethcore-bloom-journal",
     "hashable",
+    "merklehash",
     "blake2b",
     "cita-sm2",
     "cita-secp256k1",

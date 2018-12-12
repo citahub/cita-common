@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2018 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -19,9 +19,15 @@
 //!
 //! This module should be used to generate complete merkle tree root hash.
 
+extern crate cita_types;
+extern crate hashable;
+extern crate rlp;
+#[macro_use]
+extern crate rlp_derive;
+
+use cita_types::H256;
 use hashable::{Hashable, HASH_NULL_RLP};
 use rlp::RlpStream;
-use types::H256;
 
 #[derive(Debug, Clone)]
 pub struct MerkleTree {
@@ -401,8 +407,8 @@ mod tests {
 #[cfg(feature = "sha3hash")]
 mod tests_for_sha3hash {
     use super::MerkleTree;
+    use cita_types::H256;
     use std::str::FromStr;
-    use types::H256;
 
     #[test]
     fn test_from_bytes() {

@@ -1,0 +1,16 @@
+[package]
+name = "merklehash"
+version = "0.1.0"
+authors = ["Cryptape Technologies <contact@cryptape.com>"]
+
+[dependencies]
+cita-types = { path = "../cita-types" }
+hashable = { path = "../hashable" }
+rlp = { path = "../rlp" }
+rlp_derive = { path = "../rlp_derive" }
+
+[features]
+default = []
+sha3hash = ["hashable/sha3hash"]
+blake2bhash = ["hashable/blake2bhash"]
+sm3hash = ["hashable/sm3hash"]

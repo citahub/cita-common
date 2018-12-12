@@ -28,6 +28,7 @@ extern crate rlp;
 extern crate rustc_serialize;
 #[macro_use]
 extern crate serde_derive;
+extern crate merklehash;
 extern crate tls_api;
 extern crate util;
 
@@ -48,7 +49,6 @@ use std::convert::{From, TryFrom, TryInto};
 use std::ops::Deref;
 use std::result::Result::Err;
 use types::{Address, H256};
-use util::merklehash;
 
 pub use autoimpl::{
     Message, MsgClass, OperateType, Origin, RawBytes, TryFromConvertError, TryIntoConvertError,

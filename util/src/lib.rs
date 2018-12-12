@@ -30,8 +30,6 @@ extern crate lru_cache;
 extern crate parking_lot;
 extern crate regex;
 extern crate rlp;
-#[macro_use]
-extern crate rlp_derive;
 extern crate parity_rocksdb;
 extern crate rustc_hex;
 extern crate rustc_version;
@@ -58,7 +56,6 @@ pub mod instrument;
 pub mod journaldb;
 pub mod kvdb;
 pub mod memorydb;
-pub mod merklehash;
 pub mod nibbleslice;
 pub mod nibblevec;
 pub mod overlaydb;

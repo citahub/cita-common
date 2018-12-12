@@ -12,7 +12,6 @@ time = "0.1.34"
 parity-rocksdb = "0.5"
 elastic-array = "0.9"
 rlp = { path = "../rlp" }
-rlp_derive = { path = "../rlp_derive" }
 heapsize = "0.4"
 itertools = "0.5"
 libc = "0.2.7"
