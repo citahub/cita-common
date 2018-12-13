@@ -1,17 +1,13 @@
 [package]
-name = "cita-ed25519"
-version = "0.6.0"
+name = "merklehash"
+version = "0.1.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-rustc-serialize = "0.3"
-sodiumoxide = "0.1.0"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
-cita-crypto-trait = { path = "../cita-crypto-trait" }
 rlp = { path = "../rlp" }
-serde = "1.0"
-bincode = "0.8.0"
+rlp_derive = { path = "../rlp_derive" }
 
 [features]
 default = []

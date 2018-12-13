@@ -8,6 +8,8 @@ members = [
     "panic_hook",
     "worker",
     "cita-types",
+    "snappy",
+    "cita-directories",
     "util",
 
     "pubsub_zeromq",
@@ -16,10 +18,13 @@ members = [
     "pubsub",
 
     "ethcore-bloom-journal",
+    "hashable",
+    "merklehash",
     "blake2b",
     "cita-sm2",
     "cita-secp256k1",
     "cita-ed25519",
+    "cita-crypto-trait",
     "cita-crypto",
 
     "rlp",

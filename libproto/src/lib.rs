@@ -22,13 +22,15 @@ extern crate cita_types as types;
 extern crate grpc;
 #[macro_use]
 extern crate logger;
+extern crate hashable;
 extern crate protobuf;
 extern crate rlp;
 extern crate rustc_serialize;
 #[macro_use]
 extern crate serde_derive;
+extern crate merklehash;
+extern crate snappy;
 extern crate tls_api;
-extern crate util;
 
 pub mod protos;
 pub use protos::*;
@@ -39,6 +41,7 @@ use crypto::{
     CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature,
     SIGNATURE_BYTES_LEN,
 };
+use hashable::Hashable;
 use protobuf::RepeatedField;
 use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use rustc_serialize::hex::ToHex;
@@ -46,7 +49,6 @@ use std::convert::{From, TryFrom, TryInto};
 use std::ops::Deref;
 use std::result::Result::Err;
 use types::{Address, H256};
-use util::{merklehash, Hashable};
 
 pub use autoimpl::{
     Message, MsgClass, OperateType, Origin, RawBytes, TryFromConvertError, TryIntoConvertError,

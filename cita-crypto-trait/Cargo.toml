@@ -1,0 +1,7 @@
+[package]
+name = "cita-crypto-trait"
+version = "0.1.0"
+authors = ["Cryptape Technologies <contact@cryptape.com>"]
+
+[dependencies]
+cita-types = { path = "../cita-types" }

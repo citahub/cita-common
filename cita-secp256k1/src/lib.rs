@@ -22,13 +22,14 @@ extern crate bincode;
 extern crate cita_types as types;
 #[macro_use]
 extern crate lazy_static;
+extern crate cita_crypto_trait;
+extern crate hashable;
 extern crate rand;
 extern crate rlp;
 extern crate rustc_serialize;
 extern crate secp256k1;
 extern crate serde;
 extern crate test;
-extern crate util;
 
 pub type PrivKey = H256;
 pub type PubKey = H512;

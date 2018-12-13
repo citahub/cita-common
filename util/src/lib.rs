@@ -19,25 +19,20 @@
 #![feature(custom_attribute)]
 #![allow(unused_attributes)]
 extern crate ansi_term;
-#[cfg(feature = "blake2bhash")]
-extern crate blake2b;
 extern crate cita_types as types;
 extern crate elastic_array;
 extern crate git2;
+extern crate hashable;
 extern crate heapsize;
 extern crate itertools;
-extern crate libc;
 extern crate lru_cache;
+extern crate parity_rocksdb;
 extern crate parking_lot;
 extern crate regex;
 extern crate rlp;
-#[macro_use]
-extern crate rlp_derive;
-#[cfg(feature = "sm3hash")]
-extern crate libsm;
-extern crate parity_rocksdb;
 extern crate rustc_hex;
 extern crate rustc_version;
+extern crate snappy;
 extern crate target_info;
 pub extern crate tiny_keccak as sha3;
 
@@ -46,28 +41,22 @@ extern crate logger;
 extern crate panic_hook;
 extern crate serde;
 extern crate toml;
-extern crate uuid;
 
 pub mod avl;
 pub mod build_info;
 pub mod bytes;
 pub mod cache;
 pub mod common;
-pub mod crypto;
-pub mod datapath;
 pub mod error;
-pub mod hashable;
 pub mod hashdb;
 pub mod instrument;
 pub mod journaldb;
 pub mod kvdb;
 pub mod memorydb;
-pub mod merklehash;
 pub mod nibbleslice;
 pub mod nibblevec;
 pub mod overlaydb;
 pub mod semantic_version;
-pub mod snappy;
 pub mod trie;
 pub mod triehash;
 pub mod vector;
@@ -76,10 +65,7 @@ pub mod init;
 
 pub use ansi_term::{Colour, Style};
 pub use bytes::*;
-pub use datapath::*;
-// pub use timer::*;
 pub use error::*;
-pub use hashable::*;
 pub use hashdb::*;
 pub use heapsize::HeapSizeOf;
 pub use init::*;

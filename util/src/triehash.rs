@@ -18,13 +18,13 @@
 //!
 //! This module should be used to generate trie root hash.
 
+use hashable::Hashable;
 use rlp;
 use rlp::RlpStream;
 use std::cmp;
 use std::collections::BTreeMap;
 use types::H256;
 use vector::SharedPrefix;
-use Hashable;
 
 /// Generates a trie root hash for a vector of values
 ///

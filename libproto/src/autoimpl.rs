@@ -18,8 +18,8 @@
 use protobuf::{parse_from_bytes, Message as MessageTrait};
 pub use protos::InnerMessage_oneof_content as MsgClass;
 use protos::*;
+use snappy;
 use std::convert::{From, Into, TryFrom, TryInto};
-use util::snappy;
 
 pub use std::u32::MAX as ZERO_ORIGIN;
 
@@ -719,8 +719,8 @@ mod tests {
     #[test]
     fn compress_and_decompress() {
         use super::Message;
+        use snappy::CITA_SKIP_COMPRESS_SIZE;
         use std::convert::Into;
-        use util::snappy::CITA_SKIP_COMPRESS_SIZE;
 
         let raw_bytes: Vec<u8> = vec![1, 2, 3, 4];
         let mut msg: Message = raw_bytes.clone().into();

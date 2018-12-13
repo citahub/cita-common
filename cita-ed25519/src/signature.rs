@@ -18,6 +18,7 @@
 use super::{
     pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
 };
+use cita_crypto_trait::{CreateKey, Sign};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
@@ -28,7 +29,6 @@ use sodiumoxide::crypto::sign::{
 };
 use std::fmt;
 use std::ops::{Deref, DerefMut};
-use util::crypto::{CreateKey, Sign};
 
 pub struct Signature(pub [u8; 96]);
 
@@ -266,7 +266,7 @@ impl Sign for Signature {
 mod tests {
     use super::*;
     use bincode::{deserialize, serialize, Infinite};
-    use util::crypto::CreateKey;
+    use cita_crypto_trait::CreateKey;
 
     const MESSAGE: [u8; 32] = [
         0x01, 0x02, 0x03, 0x04, 0x19, 0xab, 0xfe, 0x39, 0x6f, 0x28, 0x79, 0x00, 0x08, 0xdf, 0x9a,

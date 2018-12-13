@@ -1,0 +1,7 @@
+[package]
+name = "cita-directories"
+version = "0.1.0"
+authors = ["Cryptape Technologies <contact@cryptape.com>"]
+
+[dependencies]
+uuid = { version = "0.7", features = ["v4"] }

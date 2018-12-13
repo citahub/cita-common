@@ -262,10 +262,24 @@ dependencies = [
 name = "cita-crypto"
 version = "0.1.0"
 dependencies = [
+ "cita-crypto-trait 0.1.0",
  "cita-ed25519 0.6.0",
  "cita-secp256k1 0.6.0",
  "cita-sm2 0.1.0",
- "util 0.6.0",
+]
+
+[[package]]
+name = "cita-crypto-trait"
+version = "0.1.0"
+dependencies = [
+ "cita-types 0.1.0",
+]
+
+[[package]]
+name = "cita-directories"
+version = "0.1.0"
+dependencies = [
+ "uuid 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -273,12 +287,13 @@ name = "cita-ed25519"
 version = "0.6.0"
 dependencies = [
  "bincode 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
+ "hashable 0.1.0",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "sodiumoxide 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
@@ -286,27 +301,29 @@ name = "cita-secp256k1"
 version = "0.6.0"
 dependencies = [
  "bincode 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
  "eth-secp256k1 0.5.7 (git+https://github.com/paritytech/rust-secp256k1?rev=6370d63adf4e8c91e2eae9225eef4b4e0294c5d0)",
+ "hashable 0.1.0",
  "lazy_static 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
 name = "cita-sm2"
 version = "0.1.0"
 dependencies = [
+ "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
+ "hashable 0.1.0",
  "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
@@ -868,6 +885,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "hashable"
+version = "0.1.0"
+dependencies = [
+ "blake2b 0.1.0",
+ "cita-types 0.1.0",
+ "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
+ "tiny-keccak 1.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "heapsize"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1122,15 +1149,17 @@ dependencies = [
  "cita-crypto 0.1.0",
  "cita-types 0.1.0",
  "grpc 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hashable 0.1.0",
  "logger 0.1.0",
+ "merklehash 0.1.0",
  "protobuf 2.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
+ "snappy 0.1.0",
  "tls-api 0.1.19 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
@@ -1319,6 +1348,16 @@ dependencies = [
 name = "memoffset"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "merklehash"
+version = "0.1.0"
+dependencies = [
+ "cita-types 0.1.0",
+ "hashable 0.1.0",
+ "rlp 0.2.0",
+ "rlp_derive 0.1.0",
+]
 
 [[package]]
 name = "metadeps"
@@ -1713,13 +1752,14 @@ version = "0.6.0"
 dependencies = [
  "bincode 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cita-crypto 0.1.0",
+ "cita-directories 0.1.0",
  "cita-types 0.1.0",
+ "hashable 0.1.0",
  "libproto 0.6.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
- "util 0.6.0",
 ]
 
 [[package]]
@@ -2151,6 +2191,13 @@ version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "snappy"
+version = "0.1.0"
+dependencies = [
+ "libc 0.2.42 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -2713,15 +2760,13 @@ name = "util"
 version = "0.6.0"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "blake2b 0.1.0",
  "cita-types 0.1.0",
  "elastic-array 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "ethcore-bloom-journal 0.1.0",
  "git2 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hashable 0.1.0",
  "heapsize 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.42 (registry+https://github.com/rust-lang/crates.io-index)",
- "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
  "logger 0.1.0",
  "lru-cache 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "mktemp 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2731,16 +2776,15 @@ dependencies = [
  "rand 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "rlp 0.2.0",
- "rlp_derive 0.1.0",
  "rustc-hex 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc_version 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
+ "snappy 0.1.0",
  "target_info 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.40 (registry+https://github.com/rust-lang/crates.io-index)",
  "tiny-keccak 1.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "toml 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "uuid 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "vergen 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

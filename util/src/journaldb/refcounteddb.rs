@@ -239,7 +239,7 @@ mod tests {
 
     use super::*;
     use super::super::traits::JournalDB;
-    use Hashable;
+    use hashable::Hashable;
     use hashdb::{HashDB, DBValue};
 
     #[test]
