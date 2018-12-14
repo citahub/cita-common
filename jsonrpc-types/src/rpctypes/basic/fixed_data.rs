@@ -47,8 +47,7 @@ macro_rules! impl_for_fixed_type {
             where
                 S: Serializer,
             {
-                // TODO: https://github.com/paritytech/primitives/pull/37
-                serializer.serialize_str(format!("0x{}", self.0.lower_hex()).as_ref())
+                serializer.serialize_str(self.0.lower_hex_with_0x().as_ref())
             }
         }
 
