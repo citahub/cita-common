@@ -93,7 +93,8 @@ macro_rules! add_cita_funcs {
 
             #[inline]
             fn lower_hex_with_0x(&self) -> String {
-                format!("{:#x}", self)
+                // TODO: https://github.com/paritytech/primitives/pull/37
+                format!("0x{:x}", self)
             }
         }
 

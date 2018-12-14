@@ -15,8 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use cita_types::Address;
-use rpctypes::EconomicalModel;
+use rpctypes::{Data20, EconomicalModel, Quantity};
 
 /// Metadata of current chain.
 ///
@@ -28,7 +27,7 @@ pub struct MetaData {
     pub chain_id: u32,
     /// The id v1 of current chain
     #[serde(rename = "chainIdV1")]
-    pub chain_id_v1: String,
+    pub chain_id_v1: Quantity,
     /// The name of current chain
     #[serde(rename = "chainName")]
     pub chain_name: String,
@@ -40,7 +39,7 @@ pub struct MetaData {
     #[serde(rename = "genesisTimestamp")]
     pub genesis_timestamp: u64,
     /// Node address list which validate blocks
-    pub validators: Vec<Address>,
+    pub validators: Vec<Data20>,
     /// The interval time for creating a block (milliseconds)
     #[serde(rename = "blockInterval")]
     pub block_interval: u64,
@@ -58,7 +57,8 @@ pub struct MetaData {
 
 #[cfg(test)]
 mod tests {
-    use super::{Address, EconomicalModel, MetaData};
+    use super::{EconomicalModel, MetaData};
+    use cita_types::{Address, U256};
     use serde_json;
     use std::str::FromStr;
 
@@ -66,7 +66,7 @@ mod tests {
     fn metadata_serialization() {
         let value = json!({
             "chainId": 123,
-            "chainIdV1": "123",
+            "chainIdV1": "0x7b",
             "chainName": "test-chain-name",
             "operator": "test-operator",
             "website": "https://www.google.com",
@@ -86,7 +86,7 @@ mod tests {
         });
         let metadata = MetaData {
             chain_id: 123,
-            chain_id_v1: "123".to_owned(),
+            chain_id_v1: U256::from(123).into(),
             chain_name: "test-chain-name".to_owned(),
             operator: "test-operator".to_owned(),
             website: "https://www.google.com".to_owned(),
@@ -99,6 +99,7 @@ mod tests {
             ]
             .into_iter()
             .map(|s| Address::from_str(s).unwrap())
+            .map(|s| s.into())
             .collect::<Vec<_>>(),
             block_interval: 3000,
             token_name: "Nervos".to_owned(),
