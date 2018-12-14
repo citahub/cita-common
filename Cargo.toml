@@ -42,3 +42,6 @@ members = [
 
     "engine",
 ]
+
+[patch.crates-io]
+log4rs = { git = "https://github.com/cryptape/log4rs", branch = "crossbeam-vul-fix" }
