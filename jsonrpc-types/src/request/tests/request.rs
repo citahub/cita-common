@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::H256;
-use error::Error;
 use request::{BlockNumberParams, GetTransactionReceiptParams, PartialRequest, Request};
 use serde_json;
 use std::convert::Into;
