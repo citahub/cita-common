@@ -17,7 +17,6 @@
 
 extern crate bincode;
 extern crate cita_types;
-extern crate proof;
 extern crate rustc_serialize;
 extern crate serde;
 #[macro_use]
