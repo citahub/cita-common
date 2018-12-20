@@ -36,10 +36,10 @@ impl FromProto<libproto::Proof> for Proof {
 
 impl FromProto<ProtoProof> for BftProof {
     fn from_proto(p: ProtoProof) -> Self {
-        use common_proof::BftProof as CommonBftProof;
+        use proof_srv::BftProof as SrvBftProof;
 
         // FIXME: remove unwrap!!!!
-        let decoded: CommonBftProof = deserialize(&p.get_content()[..]).unwrap();
+        let decoded: SrvBftProof = deserialize(&p.get_content()[..]).unwrap();
         let mut commits: HashMap<Address, String> = HashMap::new();
         let str_0x = "0x".to_string();
 

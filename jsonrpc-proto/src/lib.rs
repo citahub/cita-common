@@ -29,7 +29,7 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate logger;
-extern crate proof as common_proof;
+extern crate proof as proof_srv;
 extern crate uuid;
 
 pub mod block;
