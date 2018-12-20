@@ -30,8 +30,7 @@ pub trait OutputExt {
 impl OutputExt for Output {
     /// Creates new output given `Result`, `Id` and `Version`.
     fn from(resp: Response, info: RequestInfo) -> Self {
-        use crate::block::BlockExt;
-        use crate::from_into::FromProto;
+        use crate::{block::BlockExt, error::ErrorExt, from_into::FromProto};
 
         let code = resp.get_code();
         if let Some(response) = resp.data {
@@ -54,12 +53,12 @@ impl OutputExt for Output {
                     Response_oneof_data::none(_) => success.output(),
                     Response_oneof_data::block(rpc_block) => {
                         serde_json::from_str::<RpcBlock>(&rpc_block)
-                            .map(|rpc_block| {
+                            .map_err(Error::rpc_block_decode_error)
+                            .and_then(Block::try_from_rpc_block)
+                            .map(|block| {
                                 // GetBlockByHash, GetBlockByNumber
                                 success
-                                    .set_result(ResponseResult::GetBlockByHash(
-                                        Block::from_rpc_block(rpc_block),
-                                    ))
+                                    .set_result(ResponseResult::GetBlockByHash(block))
                                     .output()
                             })
                             .unwrap_or_else(|_| Output::system_error(0))

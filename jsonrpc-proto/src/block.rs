@@ -19,11 +19,14 @@ use cita_types::{Address, H256, U256};
 use jsonrpc_types::rpctypes::{
     Block, BlockBody, BlockHeader, BlockTransaction, FullTransaction, Proof, RpcBlock,
 };
+use jsonrpc_types::Error;
 
 use crate::from_into::FromProto;
 
 pub trait BlockExt {
-    fn from_rpc_block(rpc_block: RpcBlock) -> Block;
+    type Error;
+
+    fn try_from_rpc_block(rpc_block: RpcBlock) -> Result<Block, Self::Error>;
 }
 
 impl FromProto<libproto::BlockHeader> for BlockHeader {
@@ -53,14 +56,17 @@ impl FromProto<libproto::BlockHeader> for BlockHeader {
 }
 
 impl BlockExt for Block {
-    fn from_rpc_block(rpc_block: RpcBlock) -> Self {
+    type Error = Error;
+
+    fn try_from_rpc_block(rpc_block: RpcBlock) -> Result<Self, Self::Error> {
+        use crate::error::ErrorExt;
         use std::convert::TryFrom;
 
-        // FIXME: should not use unwrap!!!! block is Vec<u8>.
-        let mut blk = libproto::Block::try_from(&rpc_block.block).unwrap();
+        let mut blk = libproto::Block::try_from(&rpc_block.block) // from chain
+            .map_err(Error::rpc_block_decode_error)?;
+
         let proto_header = blk.take_header();
-        let mut proto_body = blk.take_body();
-        let block_transactions = proto_body.take_transactions();
+        let block_transactions = blk.take_body().take_transactions();
         let transactions = if rpc_block.include_txs {
             block_transactions
                 .into_iter()
@@ -73,11 +79,11 @@ impl BlockExt for Block {
                 .collect()
         };
 
-        Block {
+        Ok(Block {
             version: blk.version,
             header: BlockHeader::from_proto(proto_header),
             body: BlockBody { transactions },
             hash: H256::from_slice(&rpc_block.hash),
-        }
+        })
     }
 }

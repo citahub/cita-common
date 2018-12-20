@@ -15,28 +15,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// FIXME: should remove this
-#![feature(try_from)]
+use std::fmt::Debug;
 
-extern crate bincode;
-extern crate cita_crypto;
-extern crate cita_crypto_trait;
-extern crate cita_types;
-extern crate jsonrpc_types;
-extern crate libproto;
-extern crate rustc_serialize;
-extern crate serde;
-extern crate serde_json;
-#[macro_use]
-extern crate logger;
-extern crate proof as common_proof;
-extern crate uuid;
+use jsonrpc_types::Error;
 
-pub mod block;
-pub mod complete;
-pub mod error;
-pub mod from_into;
-pub mod proof;
-pub mod request;
-pub mod response;
-pub mod transaction;
+const BLOCK_DECODE_ERROR_CODE: i64 = 500;
+const BLOCK_DECODE_ERROR_MSG: &str = "chain block decode error";
+
+pub trait ErrorExt<E: Debug> {
+    fn rpc_block_decode_error(inner: E) -> Error {
+        error!("jsonrpc_proto: fail to decode block from chain {:?}", inner);
+        Error::server_error(BLOCK_DECODE_ERROR_CODE, BLOCK_DECODE_ERROR_MSG)
+    }
+}
+
+impl<E: Debug> ErrorExt<E> for Error {}
