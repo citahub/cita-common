@@ -19,14 +19,15 @@ use std::fmt::Debug;
 
 use jsonrpc_types::Error;
 
-const ERR_CODE_DECODE_ERROR: i64 = 500;
+const ERR_CODE_INTERNAL_ERROR: i64 = 500;
 
 const ERR_MSG_BLOCK_DECODE_ERROR: &str = "chain block decode error";
+const ERR_MSG_TX_CONTENT_ENCODE_ERROR: &str = "transaction content encode error";
 
 pub trait ErrorExt {
     fn rpc_block_decode_error(err: Box<Debug>) -> Error {
         error!("jsonrpc_proto: fail to decode block from chain {:?}", err);
-        Error::server_error(ERR_CODE_DECODE_ERROR, ERR_MSG_BLOCK_DECODE_ERROR)
+        Error::server_error(ERR_CODE_INTERNAL_ERROR, ERR_MSG_BLOCK_DECODE_ERROR)
     }
 
     fn bft_proof_decode_error(err: Box<bincode::ErrorKind>) -> Error {

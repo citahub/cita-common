@@ -18,12 +18,17 @@
 use std::convert::TryInto;
 
 use cita_types::{traits::LowerHex, H256, U256};
-use jsonrpc_types::rpctypes::{Data, FullTransaction, RpcTransaction};
+use jsonrpc_types::{
+    rpctypes::{Data, FullTransaction, RpcTransaction},
+    Error,
+};
 
-use crate::from_into::FromProto;
+use crate::{error::ErrorExt, from_into::TryFromProto};
 
-impl FromProto<libproto::FullTransaction> for RpcTransaction {
-    fn from_proto(mut ptransaction: libproto::FullTransaction) -> Self {
+impl TryFromProto<libproto::FullTransaction> for RpcTransaction {
+    type Error = Error;
+
+    fn try_from_proto(mut ptransaction: libproto::FullTransaction) -> Result<Self, Self::Error> {
         let stx = ptransaction.take_transaction();
         let mut bhash: H256 = H256::default();
         bhash.0.clone_from_slice(ptransaction.block_hash.as_slice());
@@ -46,24 +51,34 @@ impl FromProto<libproto::FullTransaction> for RpcTransaction {
                 "unknown".to_owned()
             }
         );
+        let content = unverified_tx
+            .try_into()
+            .map_err(Error::transaction_data_encode_error)?;
 
-        RpcTransaction {
+        Ok(RpcTransaction {
             hash: H256::from_slice(stx.get_tx_hash()),
-            content: Data::new(unverified_tx.try_into().unwrap()),
+            content: Data::new(content),
             from: stx.from(),
             block_number: U256::from(ptransaction.block_number),
             block_hash: bhash,
             index: U256::from(ptransaction.index),
-        }
+        })
     }
 }
 
-impl FromProto<libproto::SignedTransaction> for FullTransaction {
-    fn from_proto(stx: libproto::SignedTransaction) -> Self {
-        FullTransaction {
+impl TryFromProto<libproto::SignedTransaction> for FullTransaction {
+    type Error = Error;
+
+    fn try_from_proto(stx: libproto::SignedTransaction) -> Result<Self, Self::Error> {
+        let content = stx
+            .get_transaction_with_sig()
+            .try_into()
+            .map_err(Error::transaction_data_encode_error)?;
+
+        Ok(FullTransaction {
             hash: H256::from_slice(stx.get_tx_hash()),
-            content: Data::new(stx.get_transaction_with_sig().try_into().unwrap()),
-        }
+            content: Data::new(content),
+        })
     }
 }
 
@@ -103,7 +118,7 @@ mod tests {
         full_tx.set_block_hash(block_hash.to_vec());
         full_tx.set_index(0);
 
-        let rpc_tx = RpcTransaction::from_proto(full_tx);
+        let rpc_tx = RpcTransaction::try_from_proto(full_tx).unwrap();
 
         assert_eq!(rpc_tx.hash, H256::from_slice(signed_tx.get_tx_hash()));
         assert_eq!(

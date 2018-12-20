@@ -21,7 +21,7 @@ use jsonrpc_types::rpctypes::{
 };
 use jsonrpc_types::Error;
 
-use crate::from_into::{FromProto, TryFromProto};
+use crate::from_into::TryFromProto;
 
 pub trait BlockExt {
     type Error;
@@ -71,8 +71,8 @@ impl BlockExt for Block {
         let transactions = if rpc_block.include_txs {
             block_transactions
                 .into_iter()
-                .map(|x| BlockTransaction::Full(FullTransaction::from_proto(x)))
-                .collect()
+                .map(|x| FullTransaction::try_from_proto(x).map(BlockTransaction::Full))
+                .collect::<Result<Vec<BlockTransaction>, Error>>()?
         } else {
             block_transactions
                 .into_iter()

@@ -30,7 +30,7 @@ pub trait OutputExt {
 impl OutputExt for Output {
     /// Creates new output given `Result`, `Id` and `Version`.
     fn from(resp: Response, info: RequestInfo) -> Self {
-        use crate::{block::BlockExt, error::ErrorExt, from_into::FromProto};
+        use crate::{block::BlockExt, error::ErrorExt, from_into::TryFromProto};
 
         let code = resp.get_code();
         if let Some(response) = resp.data {
@@ -63,11 +63,13 @@ impl OutputExt for Output {
                             })
                             .unwrap_or_else(|_| Output::system_error(0))
                     }
-                    Response_oneof_data::ts(x) => success
-                        .set_result(ResponseResult::GetTransaction(RpcTransaction::from_proto(
-                            x,
-                        )))
-                        .output(),
+                    Response_oneof_data::ts(x) => RpcTransaction::try_from_proto(x)
+                        .map(|tx| {
+                            success
+                                .set_result(ResponseResult::GetTransaction(tx))
+                                .output()
+                        })
+                        .unwrap_or_else(|_| Output::system_error(0)),
                     Response_oneof_data::peercount(x) => success
                         .set_result(ResponseResult::PeerCount(x.into()))
                         .output(),
