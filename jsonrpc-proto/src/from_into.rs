@@ -19,6 +19,12 @@ pub trait FromProto<T>: Sized {
     fn from_proto(p_val: T) -> Self;
 }
 
+pub trait TryFromProto<T>: Sized {
+    type Error;
+
+    fn try_from_proto(p_val: T) -> Result<Self, Self::Error>;
+}
+
 pub trait TryIntoProto<T>: Sized {
     type Error;
 

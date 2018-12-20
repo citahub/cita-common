@@ -19,14 +19,25 @@ use std::fmt::Debug;
 
 use jsonrpc_types::Error;
 
-const BLOCK_DECODE_ERROR_CODE: i64 = 500;
-const BLOCK_DECODE_ERROR_MSG: &str = "chain block decode error";
+const ERR_CODE_DECODE_ERROR: i64 = 500;
 
-pub trait ErrorExt<E: Debug> {
-    fn rpc_block_decode_error(inner: E) -> Error {
-        error!("jsonrpc_proto: fail to decode block from chain {:?}", inner);
-        Error::server_error(BLOCK_DECODE_ERROR_CODE, BLOCK_DECODE_ERROR_MSG)
+const ERR_MSG_BLOCK_DECODE_ERROR: &str = "chain block decode error";
+
+pub trait ErrorExt {
+    fn rpc_block_decode_error(err: Box<Debug>) -> Error {
+        error!("jsonrpc_proto: fail to decode block from chain {:?}", err);
+        Error::server_error(ERR_CODE_DECODE_ERROR, ERR_MSG_BLOCK_DECODE_ERROR)
+    }
+
+    fn bft_proof_decode_error(err: Box<bincode::ErrorKind>) -> Error {
+        error!("jsonrpc_proto: fail to decode service bft proof {}", err);
+        Error::server_error(ERR_CODE_INTERNAL_ERROR, err.to_string())
+    }
+
+    fn transaction_data_encode_error(err: libproto::TryIntoConvertError) -> Error {
+        error!("jsonrpc_proto: fail to encode content {:?}", err);
+        Error::server_error(ERR_CODE_INTERNAL_ERROR, ERR_MSG_TX_CONTENT_ENCODE_ERROR)
     }
 }
 
-impl<E: Debug> ErrorExt<E> for Error {}
+impl ErrorExt for Error {}

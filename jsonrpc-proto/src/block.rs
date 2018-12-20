@@ -21,7 +21,7 @@ use jsonrpc_types::rpctypes::{
 };
 use jsonrpc_types::Error;
 
-use crate::from_into::FromProto;
+use crate::from_into::{FromProto, TryFromProto};
 
 pub trait BlockExt {
     type Error;
@@ -29,11 +29,13 @@ pub trait BlockExt {
     fn try_from_rpc_block(rpc_block: RpcBlock) -> Result<Block, Self::Error>;
 }
 
-impl FromProto<libproto::BlockHeader> for BlockHeader {
-    fn from_proto(proto_header: libproto::BlockHeader) -> Self {
+impl TryFromProto<libproto::BlockHeader> for BlockHeader {
+    type Error = Error;
+
+    fn try_from_proto(proto_header: libproto::BlockHeader) -> Result<Self, Self::Error> {
         let proof: Option<Proof> = match proto_header.get_height() {
             0 | 1 => None,
-            _ => Some(FromProto::from_proto(proto_header.clone().take_proof())),
+            _ => Some(Proof::try_from_proto(proto_header.clone().take_proof())?),
         };
         trace!(
             "number = {}, proof = {:?}",
@@ -41,7 +43,7 @@ impl FromProto<libproto::BlockHeader> for BlockHeader {
             proof
         );
 
-        BlockHeader {
+        Ok(BlockHeader {
             timestamp: proto_header.timestamp,
             prev_hash: H256::from(proto_header.get_prevhash()),
             number: U256::from(proto_header.get_height()),
@@ -51,7 +53,7 @@ impl FromProto<libproto::BlockHeader> for BlockHeader {
             quota_used: U256::from(proto_header.get_quota_used()),
             proof,
             proposer: Address::from(proto_header.get_proposer()),
-        }
+        })
     }
 }
 
@@ -63,9 +65,8 @@ impl BlockExt for Block {
         use std::convert::TryFrom;
 
         let mut blk = libproto::Block::try_from(&rpc_block.block) // from chain
-            .map_err(Error::rpc_block_decode_error)?;
+            .map_err(|err| Error::rpc_block_decode_error(Box::new(err)))?;
 
-        let proto_header = blk.take_header();
         let block_transactions = blk.take_body().take_transactions();
         let transactions = if rpc_block.include_txs {
             block_transactions
@@ -78,10 +79,11 @@ impl BlockExt for Block {
                 .map(|x| BlockTransaction::Hash(H256::from_slice(x.get_tx_hash())))
                 .collect()
         };
+        let header = BlockHeader::try_from_proto(blk.take_header())?;
 
         Ok(Block {
             version: blk.version,
-            header: BlockHeader::from_proto(proto_header),
+            header,
             body: BlockBody { transactions },
             hash: H256::from_slice(&rpc_block.hash),
         })

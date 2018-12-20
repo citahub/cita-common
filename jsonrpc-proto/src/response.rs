@@ -53,7 +53,7 @@ impl OutputExt for Output {
                     Response_oneof_data::none(_) => success.output(),
                     Response_oneof_data::block(rpc_block) => {
                         serde_json::from_str::<RpcBlock>(&rpc_block)
-                            .map_err(Error::rpc_block_decode_error)
+                            .map_err(|err| Error::rpc_block_decode_error(Box::new(err)))
                             .and_then(Block::try_from_rpc_block)
                             .map(|block| {
                                 // GetBlockByHash, GetBlockByNumber

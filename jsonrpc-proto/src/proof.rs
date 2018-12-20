@@ -19,27 +19,37 @@ use std::collections::HashMap;
 
 use bincode::deserialize;
 use cita_types::Address;
-use jsonrpc_types::rpctypes::{BftProof, Proof};
+use jsonrpc_types::{
+    rpctypes::{BftProof, Proof},
+    Error,
+};
 use libproto::blockchain::{Proof as ProtoProof, ProofType as ProtoProofType};
 
-use crate::from_into::FromProto;
+use crate::{error::ErrorExt, from_into::TryFromProto};
 
-impl FromProto<libproto::Proof> for Proof {
-    fn from_proto(p: ProtoProof) -> Self {
-        match p.get_field_type() {
-            ProtoProofType::AuthorityRound => Proof::Bft(BftProof::from_proto(p)),
+impl TryFromProto<libproto::Proof> for Proof {
+    type Error = Error;
+
+    fn try_from_proto(p: ProtoProof) -> Result<Self, Self::Error> {
+        let proof = match p.get_field_type() {
+            ProtoProofType::AuthorityRound | ProtoProofType::Bft => {
+                Proof::Bft(BftProof::try_from_proto(p)?)
+            }
             ProtoProofType::Raft => Proof::Raft,
-            ProtoProofType::Bft => Proof::Bft(BftProof::from_proto(p)),
-        }
+        };
+
+        Ok(proof)
     }
 }
 
-impl FromProto<ProtoProof> for BftProof {
-    fn from_proto(p: ProtoProof) -> Self {
+impl TryFromProto<ProtoProof> for BftProof {
+    type Error = Error;
+
+    fn try_from_proto(p: ProtoProof) -> Result<Self, Self::Error> {
         use proof_srv::BftProof as SrvBftProof;
 
-        // FIXME: remove unwrap!!!!
-        let decoded: SrvBftProof = deserialize(&p.get_content()[..]).unwrap();
+        let decoded: SrvBftProof = deserialize(&p.get_content()[..]) //
+            .map_err(Error::bft_proof_decode_error)?;
         let mut commits: HashMap<Address, String> = HashMap::new();
         let str_0x = "0x".to_string();
 
@@ -47,11 +57,11 @@ impl FromProto<ProtoProof> for BftProof {
             commits.insert(addr, str_0x.clone() + &String::from(sign));
         }
 
-        BftProof {
+        Ok(BftProof {
             proposal: decoded.proposal,
             height: decoded.height,
             round: decoded.round,
             commits,
-        }
+        })
     }
 }
