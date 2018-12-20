@@ -143,8 +143,12 @@ impl TryIntoProto<ProtoRequest> for GetLogsParams {
     fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
 
-        request.set_filter(serde_json::to_string(&self.0).unwrap());
-        Ok(request)
+        serde_json::to_string(&self.0)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|filter| {
+                request.set_filter(filter);
+                request
+            })
     }
 }
 
