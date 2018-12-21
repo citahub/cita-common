@@ -19,7 +19,8 @@
 
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::traits::JournalDB;
-use {UtilError, Bytes};
+
+use util::{UtilError, Bytes};
 use types::H256;
 use hashdb::*;
 use heapsize::HeapSizeOf;
@@ -27,6 +28,7 @@ use kvdb::{KeyValueDB, DBTransaction};
 use memorydb::MemoryDB;
 use overlaydb::OverlayDB;
 use rlp::*;
+
 use std::collections::HashMap;
 use std::sync::Arc;
 

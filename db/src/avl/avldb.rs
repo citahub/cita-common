@@ -20,11 +20,12 @@
 use super::lookup::Lookup;
 use super::node::{Node, NodeKey, OwnedNode};
 use super::{AVLError, AVLItem, AVLIterator, Query, AVL};
-use bytes::*;
+
 use hashdb::*;
 use rlp::*;
 use std::fmt;
 use types::H256;
+use util::ToPretty;
 
 /// A `AVL` implementation using a generic `HashDB` backing database.
 ///

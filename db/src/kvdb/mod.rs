@@ -23,7 +23,7 @@ pub mod rocksdb;
 pub use in_memory::*;
 pub use rocksdb::*;
 
-use {UtilError, Bytes};
+use util::{UtilError, Bytes};
 
 use elastic_array::*;
 use hashdb::DBValue;

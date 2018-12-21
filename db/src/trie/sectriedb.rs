@@ -17,10 +17,11 @@
 
 use super::{Trie, TrieItem, TrieIterator, Query};
 use super::triedb::TrieDB;
+
 use types::H256;
 use hashable::Hashable;
 use hashdb::HashDB;
-use Bytes;
+use util::Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 ///

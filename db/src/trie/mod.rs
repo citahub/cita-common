@@ -20,7 +20,7 @@
 use types::H256;
 use hashdb::{HashDB, DBValue};
 use std::fmt;
-use Bytes;
+use util::Bytes;
 
 /// Export the standardmap module.
 pub mod standardmap;

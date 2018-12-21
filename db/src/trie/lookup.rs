@@ -20,9 +20,10 @@
 
 use super::{TrieError, Query};
 use super::node::Node;
+
 use types::H256;
 use hashdb::HashDB;
-use nibbleslice::NibbleSlice;
+use util::nibbleslice::NibbleSlice;
 use rlp::Rlp;
 
 /// Trie lookup helper object.

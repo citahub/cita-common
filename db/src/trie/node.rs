@@ -16,11 +16,9 @@
 
 #![rustfmt_skip]
 
-use bytes::*;
 use elastic_array::ElasticArray36;
 use hashdb::DBValue;
-use nibbleslice::*;
-use nibblevec::NibbleVec;
+use util::{nibblevec::NibbleVec, nibbleslice::NibbleSlice, Bytes};
 use rlp::*;
 
 /// Partial node key type.

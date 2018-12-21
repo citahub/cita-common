@@ -21,10 +21,11 @@
 use hashable::Hashable;
 use rlp;
 use rlp::RlpStream;
+use types::H256;
+use util::SharedPrefix;
+
 use std::cmp;
 use std::collections::BTreeMap;
-use types::H256;
-use vector::SharedPrefix;
 
 /// Generates a trie root hash for a vector of values
 ///

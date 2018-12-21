@@ -21,7 +21,7 @@
 
 use hashable::Hashable;
 use types::H256;
-use Bytes;
+use util::Bytes;
 
 /// A record of a visited node.
 #[derive(PartialEq, Eq, Debug, Clone)]
