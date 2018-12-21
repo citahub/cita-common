@@ -36,6 +36,3 @@ default = []
 sha3hash = ["hashable/sha3hash"]
 blake2bhash = ["hashable/blake2bhash"]
 sm3hash = ["hashable/sm3hash"]
-
-[dev-dependencies]
-mktemp = "0.3.1"
