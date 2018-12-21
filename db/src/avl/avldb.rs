@@ -34,12 +34,13 @@ use util::ToPretty;
 ///
 /// # Example
 /// ```
-/// extern crate util;
+/// extern crate db;
+/// extern crate cita_types;
 ///
-/// use util::avl::*;
-/// use util::hashdb::*;
-/// use util::memorydb::*;
-/// use util::*;
+/// use db::avl::*;
+/// use db::hashdb::*;
+/// use db::memorydb::*;
+/// use cita_types::H256;
 ///
 /// fn main() {
 ///   let mut memdb = MemoryDB::new();

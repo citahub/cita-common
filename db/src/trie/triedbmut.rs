@@ -263,19 +263,22 @@ impl<'a> Index<&'a StorageHandle> for NodeStorage {
 ///
 /// # Example
 /// ```
-/// extern crate util;
+/// extern crate db;
+/// extern crate cita_types;
+/// extern crate hashable;
 ///
-/// use util::trie::*;
-/// use util::hashdb::*;
-/// use util::memorydb::*;
-/// use util::*;
+/// use db::trie::*;
+/// use db::hashdb::*;
+/// use db::memorydb::*;
+/// use cita_types::H256;
+/// use hashable::HASH_NULL_RLP;
 ///
 /// fn main() {
 ///   let mut memdb = MemoryDB::new();
 ///   let mut root = H256::new();
 ///   let mut t = TrieDBMut::new(&mut memdb, &mut root);
 ///   assert!(t.is_empty());
-///   assert_eq!(*t.root(), ::util::HASH_NULL_RLP);
+///   assert_eq!(*t.root(), HASH_NULL_RLP);
 ///   t.insert(b"foo", b"bar").unwrap();
 ///   assert!(t.contains(b"foo").unwrap());
 ///   assert_eq!(t.get(b"foo").unwrap().unwrap(), DBValue::from_slice(b"bar"));
@@ -946,7 +949,8 @@ mod tests {
     use super::*;
     use super::super::TrieMut;
     use super::super::standardmap::*;
-    use bytes::ToPretty;
+
+    use util::ToPretty;
     use hashable::HASH_NULL_RLP;
     use memorydb::*;
     use triehash::trie_root;

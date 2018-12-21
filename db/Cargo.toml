@@ -16,6 +16,9 @@ rand = "0.3.12"
 util = { path = "../util" }
 rlp = { path = "../rlp" }
 
+[dev-dependencies]
+mktemp = "0.3.1"
+
 [features]
 default = []
 sha3hash = ["hashable/sha3hash"]
