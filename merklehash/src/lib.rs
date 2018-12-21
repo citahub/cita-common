@@ -30,42 +30,113 @@ use hashable::{Hashable, HASH_NULL_RLP};
 use rlp::RlpStream;
 
 #[derive(Debug, Clone)]
-pub struct MerkleTree {
+pub struct Tree {
     nodes: Vec<H256>,
     input_size: usize,
 }
 
 #[derive(Debug, Clone, RlpEncodable, RlpDecodable)]
-pub struct MerkleProofNode {
+pub struct ProofNode {
     is_right: bool,
     hash: H256,
 }
 
 #[derive(Debug, Clone, RlpEncodableWrapper, RlpDecodableWrapper)]
-pub struct MerkleProof(Vec<MerkleProofNode>);
+pub struct Proof(Vec<ProofNode>);
 
-impl MerkleTree {
+impl Tree {
+    // For example, there is 11 hashes [A..K] are used to generate a merkle tree:
+    //
+    //      A_B C_D E_F
+    //       |   |   |
+    //       7___8   9___G   H___I   J___K
+    //         |       |       |       |
+    //         3_______4       5_______6
+    //             |               |
+    //             1_______________2
+    //                     |
+    //                     0
+    //
+    // The algorithm is:
+    //
+    //      1. Create a vec:    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]
+    //      2. Insert A..F:     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, A, B, C, D, E, F]
+    //      3. Insert G..K:     [_, _, _, _, _, _, _, _, _, _, G, H, I, J, K, A, B, C, D, E, F]
+    //      4. Update for 7..8: [_, _, _, _, _, _, _, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
+    //      5. Update for 3..6: [_, _, _, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
+    //      6. Update for 1..2: [_, 1, 2, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
+    //      7. Update for 0:    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
     pub fn from_hashes(input: Vec<H256>) -> Self {
-        generate_merkle_tree_from_hash(input)
+        let input_size = input.len();
+
+        let nodes = match input_size {
+            // in case of empty slice, just return HASH_NULL_RLP
+            0 => vec![HASH_NULL_RLP],
+
+            // If only one input.
+            1 => input,
+
+            _ => {
+                let nodes_size = get_size_of_nodes(input_size);
+                let mut nodes = vec![H256::default(); nodes_size];
+
+                let rows_size = get_size_of_rows(input_size);
+                let lowest_row_index = rows_size - 1;
+
+                let first_input_node_index = nodes_size - input_size;
+                let first_index_in_lowest_row = (1 << lowest_row_index) - 1;
+                let nodes_size_of_lowest_row = nodes_size - first_index_in_lowest_row;
+
+                // Insert the input into the merkle tree.
+                for i in 0..nodes_size_of_lowest_row {
+                    nodes[first_index_in_lowest_row + i] = input[i]
+                }
+                for i in 0..input_size - nodes_size_of_lowest_row {
+                    nodes[first_input_node_index + i] = input[nodes_size_of_lowest_row + i];
+                }
+
+                let max_nodes_size_of_lowest_row = 1 << lowest_row_index;
+                // Calc hash for the lowest row
+                if max_nodes_size_of_lowest_row == input_size {
+                    // The lowest row is full.
+                    calc_tree_at_row(&mut nodes, lowest_row_index, 0)
+                } else {
+                    calc_tree_at_row(&mut nodes, lowest_row_index, nodes_size_of_lowest_row >> 1);
+                }
+
+                // From the second row from the bottom to the second row from the top.
+                for i in 1..lowest_row_index {
+                    let row_index = lowest_row_index - i;
+                    calc_tree_at_row(&mut nodes, row_index, 0);
+                }
+
+                nodes
+            }
+        };
+
+        Self {
+            nodes: nodes,
+            input_size: input_size,
+        }
     }
 
     pub fn from_bytes<I>(input: I) -> Self
     where
         I: IntoIterator<Item = Vec<u8>>,
     {
-        MerkleTree::from_hashes(input.into_iter().map(|v| v.crypt_hash()).collect())
+        Self::from_hashes(input.into_iter().map(|v| v.crypt_hash()).collect())
     }
 
     pub fn get_root_hash(&self) -> H256 {
         self.nodes[0]
     }
 
-    pub fn get_proof_by_input_index(&self, input_index: usize) -> Option<MerkleProof> {
+    pub fn get_proof_by_input_index(&self, input_index: usize) -> Option<Proof> {
         get_proof_indexes(input_index, self.input_size).map(|indexes| {
-            MerkleProof(
+            Proof(
                 indexes
                     .into_iter()
-                    .map(|i| MerkleProofNode {
+                    .map(|i| ProofNode {
                         is_right: (i & 1) == 0,
                         hash: self.nodes[i],
                     })
@@ -75,99 +146,21 @@ impl MerkleTree {
     }
 }
 
-pub fn verify_proof(root_hash: H256, proof: &MerkleProof, data_hash: H256) -> bool {
-    proof.0.iter().fold(data_hash, |h, ref x| {
-        if x.is_right {
-            merge(&h, &x.hash)
-        } else {
-            merge(&x.hash, &h)
-        }
-    }) == root_hash
-}
-
-// For example, there is 11 hashes [A..K] are used to generate a merkle tree:
-//
-//      A_B C_D E_F
-//       |   |   |
-//       7___8   9___G   H___I   J___K
-//         |       |       |       |
-//         3_______4       5_______6
-//             |               |
-//             1_______________2
-//                     |
-//                     0
-//
-// The algorithm is:
-//
-//      1. Create a vec:    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]
-//      2. Insert A..F:     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, A, B, C, D, E, F]
-//      3. Insert G..K:     [_, _, _, _, _, _, _, _, _, _, G, H, I, J, K, A, B, C, D, E, F]
-//      4. Update for 7..8: [_, _, _, _, _, _, _, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
-//      5. Update for 3..6: [_, _, _, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
-//      6. Update for 1..2: [_, 1, 2, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
-//      7. Update for 0:    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
-#[inline]
-fn generate_merkle_tree_from_hash(input: Vec<H256>) -> MerkleTree {
-    let input_size = input.len();
-
-    let nodes = match input_size {
-        // in case of empty slice, just return HASH_NULL_RLP
-        0 => vec![HASH_NULL_RLP],
-
-        // If only one input.
-        1 => input,
-
-        _ => {
-            let nodes_size = get_size_of_nodes(input_size);
-            let mut nodes = vec![H256::default(); nodes_size];
-
-            let rows_size = get_size_of_rows(input_size);
-            let lowest_row_index = rows_size - 1;
-
-            let first_input_node_index = nodes_size - input_size;
-            let first_index_in_lowest_row = (1 << lowest_row_index) - 1;
-            let nodes_size_of_lowest_row = nodes_size - first_index_in_lowest_row;
-
-            // Insert the input into the merkle tree.
-            for i in 0..nodes_size_of_lowest_row {
-                nodes[first_index_in_lowest_row + i] = input[i]
-            }
-            for i in 0..input_size - nodes_size_of_lowest_row {
-                nodes[first_input_node_index + i] = input[nodes_size_of_lowest_row + i];
-            }
-
-            let max_nodes_size_of_lowest_row = 1 << lowest_row_index;
-            // Calc hash for the lowest row
-            if max_nodes_size_of_lowest_row == input_size {
-                // The lowest row is full.
-                calc_merkle_tree_at_row(&mut nodes, lowest_row_index, 0)
+impl Proof {
+    pub fn verify(&self, root_hash: H256, data_hash: H256) -> bool {
+        self.0.iter().fold(data_hash, |h, ref x| {
+            if x.is_right {
+                merge(&h, &x.hash)
             } else {
-                calc_merkle_tree_at_row(
-                    &mut nodes,
-                    lowest_row_index,
-                    nodes_size_of_lowest_row >> 1,
-                );
+                merge(&x.hash, &h)
             }
-
-            // From the second row from the bottom to the second row from the top.
-            for i in 1..lowest_row_index {
-                let row_index = lowest_row_index - i;
-                calc_merkle_tree_at_row(&mut nodes, row_index, 0);
-            }
-
-            nodes
-        }
-    };
-
-    MerkleTree {
-        nodes: nodes,
-        input_size: input_size,
+        }) == root_hash
     }
 }
 
 // Calc hash for one row in merkle tree.
 // If break_cnt > 0, just calc break_cnt hash for that row.
-fn calc_merkle_tree_at_row(nodes: &mut Vec<H256>, row_index: usize, break_cnt: usize) {
+fn calc_tree_at_row(nodes: &mut Vec<H256>, row_index: usize, break_cnt: usize) {
     // The first index in the row which above the row_index row.
     let index_update = (1 << (row_index - 1)) - 1;
     let size_max = 1 << (row_index - 1);
@@ -264,7 +257,7 @@ fn get_proof_indexes(input_index: usize, input_size: usize) -> Option<Vec<usize>
 
 #[cfg(test)]
 mod tests {
-    use super::MerkleProof;
+    use super::Proof;
     use hashable::{Hashable, HASH_NULL_RLP};
     use rlp;
     use rlp::Encodable;
@@ -380,7 +373,7 @@ mod tests {
             ],
         ];
         for input in inputs {
-            let tree = super::MerkleTree::from_bytes(input.clone());
+            let tree = super::Tree::from_bytes(input.clone());
             let root_hash = tree.get_root_hash();
             let input_size = input.len();
             let loop_size = if input_size == 0 { 1 } else { input_size };
@@ -393,11 +386,11 @@ mod tests {
                 let proof = tree
                     .get_proof_by_input_index(index)
                     .expect("proof is not none");
-                assert!(super::verify_proof(root_hash, &proof, data_hash));
+                assert!(proof.verify(root_hash, data_hash));
                 // encode and decode
                 let proof_bytes = proof.rlp_bytes().to_vec();
-                let proof_decode: MerkleProof = rlp::decode(&proof_bytes);
-                assert!(super::verify_proof(root_hash, &proof_decode, data_hash));
+                let proof_decode: Proof = rlp::decode(&proof_bytes);
+                assert!(proof_decode.verify(root_hash, data_hash));
             }
         }
     }
@@ -406,7 +399,7 @@ mod tests {
 #[cfg(test)]
 #[cfg(feature = "sha3hash")]
 mod tests_for_sha3hash {
-    use super::MerkleTree;
+    use super::Tree;
     use cita_types::H256;
     use std::str::FromStr;
 
@@ -457,7 +450,7 @@ mod tests_for_sha3hash {
         ];
         for (x, y) in check {
             assert_eq!(
-                MerkleTree::from_bytes(x).get_root_hash(),
+                Tree::from_bytes(x).get_root_hash(),
                 H256::from_str(y).unwrap()
             );
         }
@@ -507,10 +500,8 @@ mod tests_for_sha3hash {
         ];
         for (x, y) in check {
             assert_eq!(
-                MerkleTree::from_hashes(
-                    x.into_iter().map(|x| H256::from_str(x).unwrap()).collect()
-                )
-                .get_root_hash(),
+                Tree::from_hashes(x.into_iter().map(|x| H256::from_str(x).unwrap()).collect())
+                    .get_root_hash(),
                 H256::from_str(y).unwrap()
             );
         }
