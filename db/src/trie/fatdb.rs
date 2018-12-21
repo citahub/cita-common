@@ -16,10 +16,11 @@
 #![rustfmt_skip]
 
 use super::{TrieDB, Trie, TrieDBIterator, TrieItem, TrieIterator, Query};
+
 use types::H256;
 use hashable::Hashable;
 use hashdb::HashDB;
-use Bytes;
+use util::Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 /// Additionaly it stores inserted hash-key mappings for later retrieval.

@@ -18,10 +18,10 @@
 #![rustfmt_skip]
 extern crate rand;
 
-use bytes::*;
 use types::H256;
 use hashable::Hashable;
 use rlp::encode;
+use util::Bytes;
 
 /// Alphabet to use when creating words for insertion into tries.
 pub enum Alphabet {

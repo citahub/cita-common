@@ -17,16 +17,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 #![rustfmt_skip]
+use std::fmt;
 
 use super::{Trie, TrieItem, TrieError, TrieIterator, Query};
 use super::lookup::Lookup;
 use super::node::{Node, OwnedNode};
-use {ToPretty, Bytes};
+
+use util::{ToPretty, Bytes, nibbleslice::NibbleSlice};
 use types::H256;
 use hashdb::*;
-use nibbleslice::*;
 use rlp::*;
-use std::fmt;
 use hashable::Hashable;
 
 /// A `Trie` implementation using a generic `HashDB` backing database.

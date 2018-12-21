@@ -17,14 +17,13 @@
 //! Key-Value store abstraction with `RocksDB` backend.
 #![rustfmt_skip]
 
-use UtilError;
+use std::collections::{HashMap, BTreeMap};
 
 use hashdb::DBValue;
-use parking_lot::RwLock;
 use kvdb::{DBTransaction, KeyValueDB, DBOp};
+use util::{RwLock, UtilError};
 
 use rlp::{UntrustedRlp, RlpType, Compressible};
-use std::collections::{HashMap, BTreeMap};
 
 /// A key-value database fulfilling the `KeyValueDB` trait, living in memory.
 /// This is generally intended for tests and is not particularly optimized.

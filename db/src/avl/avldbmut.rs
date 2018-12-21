@@ -24,13 +24,14 @@ use super::node::Node as RlpNode;
 use super::node::NodeKey;
 use super::{AVLError, AVLMut};
 
-use bytes::ToPretty;
 use types::H256;
+use util::ToPretty;
 
 use elastic_array::ElasticArray1024;
 use hashable::HASH_NULL_RLP;
 use hashdb::{DBValue, HashDB};
 use rlp::*;
+
 use std::cmp;
 use std::collections::{HashSet, VecDeque};
 use std::mem;

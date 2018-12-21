@@ -19,14 +19,15 @@
 
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::JournalDB;
-use {BaseDataError, UtilError, Bytes};
+
+use util::{BaseDataError, UtilError, Bytes, RwLock};
 use types::{H256, H256FastMap};
 use hashdb::*;
 use heapsize::HeapSizeOf;
 use kvdb::{KeyValueDB, DBTransaction};
 use memorydb::*;
-use parking_lot::RwLock;
 use rlp::*;
+
 use std::collections::HashMap;
 use std::sync::Arc;
 

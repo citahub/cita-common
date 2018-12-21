@@ -24,12 +24,11 @@ use super::node::NodeKey;
 
 use HashDB;
 use types::H256;
-use bytes::ToPretty;
+use util::{ToPretty, nibbleslice::NibbleSlice};
 
 use elastic_array::ElasticArray1024;
 use hashable::HASH_NULL_RLP;
 use hashdb::DBValue;
-use nibbleslice::NibbleSlice;
 use rlp::{Rlp, RlpStream};
 
 use std::collections::{HashSet, VecDeque};

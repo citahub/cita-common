@@ -17,12 +17,13 @@
 //! Disk-backed `HashDB` implementation.
 #![rustfmt_skip]
 
-use error::*;
+use util::{UtilError, BaseDataError};
 use types::H256;
 use hashdb::*;
 use kvdb::{KeyValueDB, DBTransaction};
 use memorydb::*;
 use rlp::*;
+
 use std::collections::HashMap;
 use std::sync::*;
 

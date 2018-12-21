@@ -17,17 +17,16 @@
 //! Key-Value store abstraction with `RocksDB` backend.
 #![rustfmt_skip]
 
-use UtilError;
-
 use elastic_array::*;
 use hashdb::DBValue;
-use parking_lot::{Mutex, MutexGuard, RwLock};
+use util::{Mutex, MutexGuard, RwLock, UtilError};
 use kvdb::{DBTransaction, KeyValueDB, DBOp};
 
 #[cfg(target_os = "linux")]
 use regex::Regex;
 use rlp::{UntrustedRlp, RlpType, Compressible};
 use parity_rocksdb::{DB, Writable, WriteBatch, WriteOptions, IteratorMode, DBIterator, Options, DBCompactionStyle, BlockBasedOptions, Direction, Cache, Column, ReadOptions};
+
 use std::{mem, fs};
 use std::collections::HashMap;
 #[cfg(target_os = "linux")]
