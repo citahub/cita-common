@@ -24,11 +24,9 @@ extern crate elastic_array;
 extern crate git2;
 extern crate hashable;
 extern crate heapsize;
-extern crate itertools;
 extern crate lru_cache;
-extern crate parity_rocksdb;
+// TODO: remove rlp
 extern crate parking_lot;
-extern crate regex;
 extern crate rlp;
 extern crate rustc_hex;
 extern crate rustc_version;
@@ -36,29 +34,19 @@ extern crate snappy;
 extern crate target_info;
 pub extern crate tiny_keccak as sha3;
 
-#[macro_use]
-extern crate logger;
 extern crate panic_hook;
 extern crate serde;
 extern crate toml;
 
-pub mod avl;
 pub mod build_info;
 pub mod bytes;
 pub mod cache;
 pub mod common;
 pub mod error;
-pub mod hashdb;
 pub mod instrument;
-pub mod journaldb;
-pub mod kvdb;
-pub mod memorydb;
 pub mod nibbleslice;
 pub mod nibblevec;
-pub mod overlaydb;
 pub mod semantic_version;
-pub mod trie;
-pub mod triehash;
 pub mod vector;
 #[macro_use]
 pub mod init;
@@ -66,20 +54,12 @@ pub mod init;
 pub use ansi_term::{Colour, Style};
 pub use bytes::*;
 pub use error::*;
-pub use hashdb::*;
 pub use heapsize::HeapSizeOf;
 pub use init::*;
 pub use instrument::*;
-pub use itertools::Itertools;
-pub use journaldb::JournalDB;
-pub use kvdb::*;
-pub use memorydb::MemoryDB;
-pub use overlaydb::*;
 pub use panic_hook::set_panic_handler;
 pub use parking_lot::{Condvar, Mutex, MutexGuard, RwLock, RwLockReadGuard, RwLockWriteGuard};
 pub use semantic_version::*;
-pub use trie::{SecTrieDB, SecTrieDBMut, Trie, TrieDB, TrieDBMut, TrieError, TrieFactory, TrieMut};
-pub use triehash::*;
 pub use vector::*;
 
 pub const BLOCKLIMIT: u64 = 100;
