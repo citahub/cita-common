@@ -22,7 +22,6 @@ extern crate ansi_term;
 extern crate cita_types as types;
 extern crate elastic_array;
 extern crate git2;
-extern crate hashable;
 extern crate heapsize;
 extern crate lru_cache;
 // TODO: remove rlp
