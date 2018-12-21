@@ -175,13 +175,6 @@ fn calc_tree_at_row(nodes: &mut Vec<H256>, row_index: usize, break_cnt: usize) {
     }
 }
 
-fn merge(left: &H256, right: &H256) -> H256 {
-    let mut stream = RlpStream::new();
-    stream.append(left);
-    stream.append(right);
-    stream.out().crypt_hash()
-}
-
 #[inline]
 fn get_size_of_rows(m: usize) -> usize {
     let mut x: usize = 1;
@@ -257,10 +250,35 @@ fn get_proof_indexes(input_index: usize, input_size: usize) -> Option<Vec<usize>
 
 #[cfg(test)]
 mod tests {
-    use super::Proof;
-    use hashable::{Hashable, HASH_NULL_RLP};
-    use rlp;
-    use rlp::Encodable;
+    extern crate rlp;
+    extern crate cita_types;
+    extern crate hashable;
+
+    use super::Merge;
+    use self::hashable::{Hashable, HASH_NULL_RLP};
+    use self::rlp::RlpStream;
+    use self::cita_types::H256;
+
+    struct RlpMerge;
+
+    impl Merge<H256> for RlpMerge {
+        fn merge(&self, left: &H256, right: &H256) -> H256 {
+            let mut stream = RlpStream::new();
+            stream.append(left);
+            stream.append(right);
+            stream.out().crypt_hash()
+        }
+
+        fn null(&self) -> H256 {
+            HASH_NULL_RLP
+        }
+    }
+
+    impl RlpMerge {
+        fn new() -> Self {
+            RlpMerge{}
+        }
+    }
 
     #[test]
     fn test_size_of_rows() {
@@ -373,7 +391,7 @@ mod tests {
             ],
         ];
         for input in inputs {
-            let tree = super::Tree::from_bytes(input.clone());
+            let tree = super::Tree::from_hashes(input.clone().into_iter().map(|v| v.crypt_hash()).collect(), RlpMerge::new());
             let root_hash = tree.get_root_hash();
             let input_size = input.len();
             let loop_size = if input_size == 0 { 1 } else { input_size };
@@ -386,124 +404,121 @@ mod tests {
                 let proof = tree
                     .get_proof_by_input_index(index)
                     .expect("proof is not none");
-                assert!(proof.verify(root_hash, data_hash));
-                // encode and decode
-                let proof_bytes = proof.rlp_bytes().to_vec();
-                let proof_decode: Proof = rlp::decode(&proof_bytes);
-                assert!(proof_decode.verify(root_hash, data_hash));
+                assert!(proof.verify(*root_hash, data_hash, RlpMerge::new()));
             }
         }
     }
-}
 
-#[cfg(test)]
-#[cfg(feature = "sha3hash")]
-mod tests_for_sha3hash {
-    use super::Tree;
-    use cita_types::H256;
-    use std::str::FromStr;
+    #[cfg(feature = "sha3hash")]
+    mod tests_for_sha3hash {
+        use super::super::Tree;
+        use super::cita_types::H256;
+        use std::str::FromStr;
+        use super::hashable::Hashable;
+        use super::RlpMerge;
 
-    #[test]
-    fn test_from_bytes() {
-        let check = vec![
-            (
-                vec![],
-                "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-            ),
-            (
-                vec![b"".to_vec()],
-                "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
-            ),
-            (
-                vec![b"A".to_vec()],
-                "03783fac2efed8fbc9ad443e592ee30e61d65f471140c10ca155e937b435b760",
-            ),
-            (
-                vec![
-                    b"A".to_vec(),
-                    b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".to_vec(),
-                ],
-                "9bd41e0d43f4ec7a703edc2eb9fbb4106e1bc2a845e9ee1d4f3f4cf99b8549e6",
-            ),
-            (
-                vec![
-                    b"A".to_vec(),
-                    b"aaaa".to_vec(),
-                    b"abaa".to_vec(),
-                    b"aaba".to_vec(),
-                    b"aaab".to_vec(),
-                ],
-                "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
-            ),
-            (
-                vec![
-                    b"a".to_vec(),
-                    b"b".to_vec(),
-                    b"c".to_vec(),
-                    b"d".to_vec(),
-                    b"e".to_vec(),
-                    b"f".to_vec(),
-                    b"g".to_vec(),
-                ],
-                "768dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-            ),
-        ];
-        for (x, y) in check {
-            assert_eq!(
-                Tree::from_bytes(x).get_root_hash(),
-                H256::from_str(y).unwrap()
-            );
+        #[test]
+        fn test_from_bytes() {
+            let check = vec![
+                (
+                    vec![],
+                    "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                ),
+                (
+                    vec![b"".to_vec()],
+                    "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+                ),
+                (
+                    vec![b"A".to_vec()],
+                    "03783fac2efed8fbc9ad443e592ee30e61d65f471140c10ca155e937b435b760",
+                ),
+                (
+                    vec![
+                        b"A".to_vec(),
+                        b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".to_vec(),
+                    ],
+                    "9bd41e0d43f4ec7a703edc2eb9fbb4106e1bc2a845e9ee1d4f3f4cf99b8549e6",
+                ),
+                (
+                    vec![
+                        b"A".to_vec(),
+                        b"aaaa".to_vec(),
+                        b"abaa".to_vec(),
+                        b"aaba".to_vec(),
+                        b"aaab".to_vec(),
+                    ],
+                    "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
+                ),
+                (
+                    vec![
+                        b"a".to_vec(),
+                        b"b".to_vec(),
+                        b"c".to_vec(),
+                        b"d".to_vec(),
+                        b"e".to_vec(),
+                        b"f".to_vec(),
+                        b"g".to_vec(),
+                    ],
+                    "768dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                ),
+            ];
+            for (x, y) in check {
+                assert_eq!(
+                    Tree::from_hashes(x.into_iter().map(|v| v.crypt_hash()).collect(), RlpMerge::new()).get_root_hash(),
+                    &H256::from_str(y).unwrap()
+                );
+            }
         }
-    }
 
-    #[test]
-    fn test_from_hashes() {
-        let check = vec![
-            (
-                vec![
-                    "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
-                    "768dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                ],
-                "42d89ed38fbef98df15d80913bd54e5964dee662e41936b9e061e3cb3211a6be",
-            ),
-            (
-                vec![
+        #[test]
+        fn test_from_hashes() {
+            let check = vec![
+                (
+                    vec![
+                        "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
+                        "768dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                    ],
                     "42d89ed38fbef98df15d80913bd54e5964dee662e41936b9e061e3cb3211a6be",
-                    "e68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                ],
-                "e73b5eff121d65174af0517361b1ecc01efeb869f9f79c27dd02f5d0dec42d11",
-            ),
-            (
-                vec![
-                    "f68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                    "968dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                ],
-                "9c436eab724269a0e75d2d2feeda33b7c0e5febec118f9bdf52383ada0911cf3",
-            ),
-            (
-                vec![
+                ),
+                (
+                    vec![
+                        "42d89ed38fbef98df15d80913bd54e5964dee662e41936b9e061e3cb3211a6be",
+                        "e68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                    ],
                     "e73b5eff121d65174af0517361b1ecc01efeb869f9f79c27dd02f5d0dec42d11",
+                ),
+                (
+                    vec![
+                        "f68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                        "968dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                    ],
                     "9c436eab724269a0e75d2d2feeda33b7c0e5febec118f9bdf52383ada0911cf3",
-                ],
-                "e30a149e738cfaf89fb3a2267d7109a1bda978320426c2ff8b3a2d77aa103a6a",
-            ),
-            (
-                vec![
-                    "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
-                    "768dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                    "e68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                    "f68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                    "968dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
-                ],
-                "e30a149e738cfaf89fb3a2267d7109a1bda978320426c2ff8b3a2d77aa103a6a",
-            ),
-        ];
-        for (x, y) in check {
-            assert_eq!(
-                Tree::from_hashes(x.into_iter().map(|x| H256::from_str(x).unwrap()).collect())
-                    .get_root_hash(),
-                H256::from_str(y).unwrap()
-            );
+                ),
+                (
+                    vec![
+                        "e73b5eff121d65174af0517361b1ecc01efeb869f9f79c27dd02f5d0dec42d11",
+                        "9c436eab724269a0e75d2d2feeda33b7c0e5febec118f9bdf52383ada0911cf3",
+                    ],
+                    "e30a149e738cfaf89fb3a2267d7109a1bda978320426c2ff8b3a2d77aa103a6a",
+                ),
+                (
+                    vec![
+                        "8e827ab731f2416f6057b9c7f241b1841e345ffeabb4274e35995a45f4d42a1a",
+                        "768dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                        "e68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                        "f68dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                        "968dfb4ca3311fa3bf4d696dde334e30edf3542e8ea114a4f9d18fb34365f1d1",
+                    ],
+                    "e30a149e738cfaf89fb3a2267d7109a1bda978320426c2ff8b3a2d77aa103a6a",
+                ),
+            ];
+            for (x, y) in check {
+                assert_eq!(
+                    Tree::from_hashes(x.into_iter().map(|x| H256::from_str(x).unwrap()).collect(), RlpMerge::new())
+                        .get_root_hash(),
+                    &H256::from_str(y).unwrap()
+                );
+            }
         }
     }
 }
