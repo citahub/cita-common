@@ -35,9 +35,11 @@ use types::{H256FastMap, H256};
 ///
 /// # Example
 /// ```rust
-/// extern crate util;
-/// use util::hashdb::*;
-/// use util::memorydb::*;
+/// extern crate db;
+///
+/// use db::hashdb::*;
+/// use db::memorydb::*;
+///
 /// fn main() {
 ///   let mut m = MemoryDB::new();
 ///   let d = "Hello world!".as_bytes();
@@ -84,9 +86,11 @@ impl MemoryDB {
     ///
     /// # Examples
     /// ```rust
-    /// extern crate util;
-    /// use util::hashdb::*;
-    /// use util::memorydb::*;
+    /// extern crate db;
+    ///
+    /// use db::hashdb::*;
+    /// use db::memorydb::*;
+    ///
     /// fn main() {
     ///   let mut m = MemoryDB::new();
     ///   let hello_bytes = "Hello world!".as_bytes();

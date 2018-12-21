@@ -242,13 +242,15 @@ impl<'a> Index<&'a StorageHandle> for NodeStorage {
 ///
 /// # Example
 /// ```
-/// extern crate util;
+/// extern crate db;
+/// extern crate hashable;
+/// extern crate cita_types;
 ///
-/// use util::avl::*;
-/// use util::hashdb::*;
-/// use util::memorydb::*;
-/// use util::*;
-/// use util::hashable::HASH_NULL_RLP;
+/// use db::avl::*;
+/// use db::hashdb::*;
+/// use db::memorydb::*;
+/// use hashable::HASH_NULL_RLP;
+/// use cita_types::H256;
 ///
 /// fn main() {
 ///   let mut memdb = MemoryDB::new();

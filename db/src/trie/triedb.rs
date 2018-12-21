@@ -36,12 +36,13 @@ use hashable::Hashable;
 ///
 /// # Example
 /// ```
-/// extern crate util;
+/// extern crate db;
+/// extern crate cita_types;
 ///
-/// use util::trie::*;
-/// use util::hashdb::*;
-/// use util::memorydb::*;
-/// use util::*;
+/// use db::trie::*;
+/// use db::hashdb::*;
+/// use db::memorydb::*;
+/// use cita_types::H256;
 ///
 /// fn main() {
 ///   let mut memdb = MemoryDB::new();

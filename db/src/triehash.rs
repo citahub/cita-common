@@ -30,10 +30,12 @@ use std::collections::BTreeMap;
 /// Generates a trie root hash for a vector of values
 ///
 /// ```rust
-/// extern crate util;
+/// extern crate db;
+/// extern crate cita_types;
+///
 /// use std::str::FromStr;
-/// use util::triehash::*;
-/// use util::*;
+/// use db::triehash::*;
+/// use cita_types::H256;
 ///
 /// fn main() {
 ///     let v = vec![From::from("doe"), From::from("reindeer")];
@@ -68,10 +70,12 @@ where
 /// Generates a trie root hash for a vector of key-values
 ///
 /// ```rust
-/// extern crate util;
+/// extern crate db;
+/// extern crate cita_types;
+///
 /// use std::str::FromStr;
-/// use util::triehash::*;
-/// use util::*;
+/// use db::triehash::*;
+/// use cita_types::H256;
 ///
 /// fn main() {
 ///     let v = vec![
@@ -107,10 +111,12 @@ where
 /// Generates a key-hashed (secure) trie root hash for a vector of key-values.
 ///
 /// ```rust
-/// extern crate util;
+/// extern crate db;
+/// extern crate cita_types;
+///
 /// use std::str::FromStr;
-/// use util::triehash::*;
-/// use util::*;
+/// use db::triehash::*;
+/// use cita_types::H256;
 ///
 /// fn main() {
 ///     let v = vec![

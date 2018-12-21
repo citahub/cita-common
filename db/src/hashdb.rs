@@ -34,9 +34,9 @@ pub trait HashDB: AsHashDB + Send + Sync {
     ///
     /// # Examples
     /// ```rust
-    /// extern crate util;
-    /// use util::hashdb::*;
-    /// use util::memorydb::*;
+    /// extern crate db;
+    /// use db::hashdb::*;
+    /// use db::memorydb::*;
     /// fn main() {
     ///   let mut m = MemoryDB::new();
     ///   let hello_bytes = "Hello world!".as_bytes();
@@ -50,11 +50,13 @@ pub trait HashDB: AsHashDB + Send + Sync {
     ///
     /// # Examples
     /// ```rust
-    /// extern crate util;
-    /// use util::hashdb::*;
-    /// use util::memorydb::*;
-    /// use util::*;
-    /// use util::Hashable;
+    /// extern crate db;
+    /// extern crate hashable;
+    ///
+    /// use db::hashdb::*;
+    /// use db::memorydb::*;
+    /// use hashable::Hashable;
+    ///
     /// fn main() {
     ///   let mut m = MemoryDB::new();
     ///   let hello_bytes = "Hello world!".as_bytes();
@@ -73,10 +75,11 @@ pub trait HashDB: AsHashDB + Send + Sync {
     ///
     /// # Examples
     /// ```rust
-    /// extern crate util;
-    /// use util::hashdb::*;
-    /// use util::memorydb::*;
-    /// use util::*;
+    /// extern crate db;
+    ///
+    /// use db::hashdb::*;
+    /// use db::memorydb::*;
+    ///
     /// fn main() {
     ///   let mut m = MemoryDB::new();
     ///   let key = m.insert("Hello world!".as_bytes());
@@ -93,11 +96,13 @@ pub trait HashDB: AsHashDB + Send + Sync {
     ///
     /// # Examples
     /// ```rust
-    /// extern crate util;
-    /// use util::hashdb::*;
-    /// use util::memorydb::*;
-    /// use util::*;
-    /// use util::Hashable;
+    /// extern crate db;
+    /// extern crate hashable;
+    ///
+    /// use db::hashdb::*;
+    /// use db::memorydb::*;
+    /// use hashable::Hashable;
+    ///
     /// fn main() {
     ///   let mut m = MemoryDB::new();
     ///   let d = "Hello world!".as_bytes();
