@@ -28,7 +28,7 @@ extern crate rlp;
 extern crate rustc_serialize;
 #[macro_use]
 extern crate serde_derive;
-extern crate merklehash;
+extern crate cita_merklehash;
 extern crate snappy;
 extern crate tls_api;
 
@@ -37,6 +37,7 @@ pub use protos::*;
 mod autoimpl;
 pub mod router;
 
+use cita_merklehash::{merge, Tree, HASH_NULL};
 use crypto::{
     CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature,
     SIGNATURE_BYTES_LEN,
@@ -359,7 +360,7 @@ impl BlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        merklehash::Tree::from_hashes(self.transaction_hashes().clone()).get_root_hash()
+        *Tree::from_hashes(self.transaction_hashes().clone(), merge, HASH_NULL).get_root_hash()
     }
 
     pub fn from_transactions(stxs: Vec<SignedTransaction>) -> BlockBody {
@@ -389,7 +390,7 @@ impl CompactBlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        merklehash::Tree::from_hashes(self.transaction_hashes().clone()).get_root_hash()
+        *Tree::from_hashes(self.transaction_hashes().clone(), merge, HASH_NULL).get_root_hash()
     }
 }
 
