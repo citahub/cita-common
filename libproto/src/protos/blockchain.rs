@@ -2698,6 +2698,168 @@ impl ::protobuf::reflect::ProtobufValue for BlockBody {
 }
 
 #[derive(PartialEq,Clone,Default)]
+pub struct CompactBlockBody {
+    // message fields
+    pub tx_hashes: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+impl CompactBlockBody {
+    pub fn new() -> CompactBlockBody {
+        ::std::default::Default::default()
+    }
+
+    // repeated bytes tx_hashes = 1;
+
+    pub fn clear_tx_hashes(&mut self) {
+        self.tx_hashes.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_tx_hashes(&mut self, v: ::protobuf::RepeatedField<::std::vec::Vec<u8>>) {
+        self.tx_hashes = v;
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_tx_hashes(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &mut self.tx_hashes
+    }
+
+    // Take field
+    pub fn take_tx_hashes(&mut self) -> ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        ::std::mem::replace(&mut self.tx_hashes, ::protobuf::RepeatedField::new())
+    }
+
+    pub fn get_tx_hashes(&self) -> &[::std::vec::Vec<u8>] {
+        &self.tx_hashes
+    }
+}
+
+impl ::protobuf::Message for CompactBlockBody {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.tx_hashes)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        for value in &self.tx_hashes {
+            my_size += ::protobuf::rt::bytes_size(1, &value);
+        };
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        for v in &self.tx_hashes {
+            os.write_bytes(1, &v)?;
+        };
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> CompactBlockBody {
+        CompactBlockBody::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                    "tx_hashes",
+                    |m: &CompactBlockBody| { &m.tx_hashes },
+                    |m: &mut CompactBlockBody| { &mut m.tx_hashes },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<CompactBlockBody>(
+                    "CompactBlockBody",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static CompactBlockBody {
+        static mut instance: ::protobuf::lazy::Lazy<CompactBlockBody> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const CompactBlockBody,
+        };
+        unsafe {
+            instance.get(CompactBlockBody::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for CompactBlockBody {
+    fn clear(&mut self) {
+        self.clear_tx_hashes();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for CompactBlockBody {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for CompactBlockBody {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Block {
     // message fields
     pub version: u32,
@@ -2962,6 +3124,276 @@ impl ::std::fmt::Debug for Block {
 }
 
 impl ::protobuf::reflect::ProtobufValue for Block {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct CompactBlock {
+    // message fields
+    pub version: u32,
+    pub header: ::protobuf::SingularPtrField<BlockHeader>,
+    pub body: ::protobuf::SingularPtrField<CompactBlockBody>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+impl CompactBlock {
+    pub fn new() -> CompactBlock {
+        ::std::default::Default::default()
+    }
+
+    // uint32 version = 1;
+
+    pub fn clear_version(&mut self) {
+        self.version = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_version(&mut self, v: u32) {
+        self.version = v;
+    }
+
+    pub fn get_version(&self) -> u32 {
+        self.version
+    }
+
+    // .BlockHeader header = 2;
+
+    pub fn clear_header(&mut self) {
+        self.header.clear();
+    }
+
+    pub fn has_header(&self) -> bool {
+        self.header.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_header(&mut self, v: BlockHeader) {
+        self.header = ::protobuf::SingularPtrField::some(v);
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_header(&mut self) -> &mut BlockHeader {
+        if self.header.is_none() {
+            self.header.set_default();
+        }
+        self.header.as_mut().unwrap()
+    }
+
+    // Take field
+    pub fn take_header(&mut self) -> BlockHeader {
+        self.header.take().unwrap_or_else(|| BlockHeader::new())
+    }
+
+    pub fn get_header(&self) -> &BlockHeader {
+        self.header.as_ref().unwrap_or_else(|| BlockHeader::default_instance())
+    }
+
+    // .CompactBlockBody body = 3;
+
+    pub fn clear_body(&mut self) {
+        self.body.clear();
+    }
+
+    pub fn has_body(&self) -> bool {
+        self.body.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_body(&mut self, v: CompactBlockBody) {
+        self.body = ::protobuf::SingularPtrField::some(v);
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_body(&mut self) -> &mut CompactBlockBody {
+        if self.body.is_none() {
+            self.body.set_default();
+        }
+        self.body.as_mut().unwrap()
+    }
+
+    // Take field
+    pub fn take_body(&mut self) -> CompactBlockBody {
+        self.body.take().unwrap_or_else(|| CompactBlockBody::new())
+    }
+
+    pub fn get_body(&self) -> &CompactBlockBody {
+        self.body.as_ref().unwrap_or_else(|| CompactBlockBody::default_instance())
+    }
+}
+
+impl ::protobuf::Message for CompactBlock {
+    fn is_initialized(&self) -> bool {
+        for v in &self.header {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
+        for v in &self.body {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.version = tmp;
+                },
+                2 => {
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.header)?;
+                },
+                3 => {
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.body)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if self.version != 0 {
+            my_size += ::protobuf::rt::value_size(1, self.version, ::protobuf::wire_format::WireTypeVarint);
+        }
+        if let Some(ref v) = self.header.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        }
+        if let Some(ref v) = self.body.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if self.version != 0 {
+            os.write_uint32(1, self.version)?;
+        }
+        if let Some(ref v) = self.header.as_ref() {
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
+        }
+        if let Some(ref v) = self.body.as_ref() {
+            os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> CompactBlock {
+        CompactBlock::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "version",
+                    |m: &CompactBlock| { &m.version },
+                    |m: &mut CompactBlock| { &mut m.version },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<BlockHeader>>(
+                    "header",
+                    |m: &CompactBlock| { &m.header },
+                    |m: &mut CompactBlock| { &mut m.header },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<CompactBlockBody>>(
+                    "body",
+                    |m: &CompactBlock| { &m.body },
+                    |m: &mut CompactBlock| { &mut m.body },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<CompactBlock>(
+                    "CompactBlock",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static CompactBlock {
+        static mut instance: ::protobuf::lazy::Lazy<CompactBlock> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const CompactBlock,
+        };
+        unsafe {
+            instance.get(CompactBlock::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for CompactBlock {
+    fn clear(&mut self) {
+        self.clear_version();
+        self.clear_header();
+        self.clear_body();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for CompactBlock {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for CompactBlock {
     fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
         ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
@@ -3925,9 +4357,13 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     .UnverifiedTransactionR\x12transactionWithSig\x12\x17\n\x07tx_hash\x18\
     \x02\x20\x01(\x0cR\x06txHash\x12\x16\n\x06signer\x18\x03\x20\x01(\x0cR\
     \x06signer\"C\n\tBlockBody\x126\n\x0ctransactions\x18\x01\x20\x03(\x0b2\
-    \x12.SignedTransactionR\x0ctransactions\"g\n\x05Block\x12\x18\n\x07versi\
-    on\x18\x01\x20\x01(\rR\x07version\x12$\n\x06header\x18\x02\x20\x01(\x0b2\
-    \x0c.BlockHeaderR\x06header\x12\x1e\n\x04body\x18\x03\x20\x01(\x0b2\n.Bl\
+    \x12.SignedTransactionR\x0ctransactions\"/\n\x10CompactBlockBody\x12\x1b\
+    \n\ttx_hashes\x18\x01\x20\x03(\x0cR\x08txHashes\"g\n\x05Block\x12\x18\n\
+    \x07version\x18\x01\x20\x01(\rR\x07version\x12$\n\x06header\x18\x02\x20\
+    \x01(\x0b2\x0c.BlockHeaderR\x06header\x12\x1e\n\x04body\x18\x03\x20\x01(\
+    \x0b2\n.BlockBodyR\x04body\"u\n\x0cCompactBlock\x12\x18\n\x07version\x18\
+    \x01\x20\x01(\rR\x07version\x12$\n\x06header\x18\x02\x20\x01(\x0b2\x0c.B\
+    lockHeaderR\x06header\x12%\n\x04body\x18\x03\x20\x01(\x0b2\x11.CompactBl\
     ockBodyR\x04body\"H\n\x0eBlockWithProof\x12\x18\n\x03blk\x18\x01\x20\x01\
     (\x0b2\x06.BlockR\x03blk\x12\x1c\n\x05proof\x18\x02\x20\x01(\x0b2\x06.Pr\
     oofR\x05proof\"B\n\x08BlockTxs\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\
@@ -3937,7 +4373,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     nal\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\x06height*2\n\tProofType\
     \x12\x12\n\x0eAuthorityRound\x10\0\x12\x08\n\x04Raft\x10\x01\x12\x07\n\
     \x03Bft\x10\x02*\x1b\n\x06Crypto\x12\x08\n\x04SECP\x10\0\x12\x07\n\x03SM\
-    2\x10\x01J\x8d!\n\x06\x12\x04\0\0m\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\
+    2\x10\x01J\xd4#\n\x06\x12\x04\0\0w\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\
     \n\n\x02\x05\0\x12\x04\x02\0\x06\x01\n\n\n\x03\x05\0\x01\x12\x03\x02\x05\
     \x0e\n\x0b\n\x04\x05\0\x02\0\x12\x03\x03\x04\x17\n\x0c\n\x05\x05\0\x02\0\
     \x01\x12\x03\x03\x04\x12\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x03\x15\x16\
@@ -4092,47 +4528,62 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \n\n\x03\x04\x08\x01\x12\x03O\x08\x11\n\x0b\n\x04\x04\x08\x02\0\x12\x03P\
     \x040\n\x0c\n\x05\x04\x08\x02\0\x04\x12\x03P\x04\x0c\n\x0c\n\x05\x04\x08\
     \x02\0\x06\x12\x03P\r\x1e\n\x0c\n\x05\x04\x08\x02\0\x01\x12\x03P\x1f+\n\
-    \x0c\n\x05\x04\x08\x02\0\x03\x12\x03P./\n\n\n\x02\x04\t\x12\x04S\0W\x01\
-    \n\n\n\x03\x04\t\x01\x12\x03S\x08\r\n\x0b\n\x04\x04\t\x02\0\x12\x03T\x04\
-    \x17\n\r\n\x05\x04\t\x02\0\x04\x12\x04T\x04S\x0f\n\x0c\n\x05\x04\t\x02\0\
-    \x05\x12\x03T\x04\n\n\x0c\n\x05\x04\t\x02\0\x01\x12\x03T\x0b\x12\n\x0c\n\
-    \x05\x04\t\x02\0\x03\x12\x03T\x15\x16\n\x0b\n\x04\x04\t\x02\x01\x12\x03U\
-    \x04\x1b\n\r\n\x05\x04\t\x02\x01\x04\x12\x04U\x04T\x17\n\x0c\n\x05\x04\t\
-    \x02\x01\x06\x12\x03U\x04\x0f\n\x0c\n\x05\x04\t\x02\x01\x01\x12\x03U\x10\
-    \x16\n\x0c\n\x05\x04\t\x02\x01\x03\x12\x03U\x19\x1a\n\x0b\n\x04\x04\t\
-    \x02\x02\x12\x03V\x04\x17\n\r\n\x05\x04\t\x02\x02\x04\x12\x04V\x04U\x1b\
-    \n\x0c\n\x05\x04\t\x02\x02\x06\x12\x03V\x04\r\n\x0c\n\x05\x04\t\x02\x02\
-    \x01\x12\x03V\x0e\x12\n\x0c\n\x05\x04\t\x02\x02\x03\x12\x03V\x15\x16\n\n\
-    \n\x02\x04\n\x12\x04Y\0\\\x01\n\n\n\x03\x04\n\x01\x12\x03Y\x08\x16\n\x0b\
-    \n\x04\x04\n\x02\0\x12\x03Z\x04\x12\n\r\n\x05\x04\n\x02\0\x04\x12\x04Z\
-    \x04Y\x18\n\x0c\n\x05\x04\n\x02\0\x06\x12\x03Z\x04\t\n\x0c\n\x05\x04\n\
-    \x02\0\x01\x12\x03Z\n\r\n\x0c\n\x05\x04\n\x02\0\x03\x12\x03Z\x10\x11\n\
-    \x0b\n\x04\x04\n\x02\x01\x12\x03[\x04\x14\n\r\n\x05\x04\n\x02\x01\x04\
-    \x12\x04[\x04Z\x12\n\x0c\n\x05\x04\n\x02\x01\x06\x12\x03[\x04\t\n\x0c\n\
-    \x05\x04\n\x02\x01\x01\x12\x03[\n\x0f\n\x0c\n\x05\x04\n\x02\x01\x03\x12\
-    \x03[\x12\x13\n\n\n\x02\x04\x0b\x12\x04^\0a\x01\n\n\n\x03\x04\x0b\x01\
-    \x12\x03^\x08\x10\n\x0b\n\x04\x04\x0b\x02\0\x12\x03_\x04\x16\n\r\n\x05\
-    \x04\x0b\x02\0\x04\x12\x04_\x04^\x12\n\x0c\n\x05\x04\x0b\x02\0\x05\x12\
-    \x03_\x04\n\n\x0c\n\x05\x04\x0b\x02\0\x01\x12\x03_\x0b\x11\n\x0c\n\x05\
-    \x04\x0b\x02\0\x03\x12\x03_\x14\x15\n\x0b\n\x04\x04\x0b\x02\x01\x12\x03`\
-    \x04\x17\n\r\n\x05\x04\x0b\x02\x01\x04\x12\x04`\x04_\x16\n\x0c\n\x05\x04\
-    \x0b\x02\x01\x06\x12\x03`\x04\r\n\x0c\n\x05\x04\x0b\x02\x01\x01\x12\x03`\
-    \x0e\x12\n\x0c\n\x05\x04\x0b\x02\x01\x03\x12\x03`\x15\x16\n\n\n\x02\x04\
-    \x0c\x12\x04c\0h\x01\n\n\n\x03\x04\x0c\x01\x12\x03c\x08\x11\nd\n\x04\x04\
-    \x0c\x02\0\x12\x03e\x04\"\x1aW\x20black\x20list\x20of\x20address,\x20the\
-    \x20account\x20that\x20sent\x20the\x20transaction\x20does\x20not\x20have\
-    \x20enough\x20gas\n\n\x0c\n\x05\x04\x0c\x02\0\x04\x12\x03e\x04\x0c\n\x0c\
-    \n\x05\x04\x0c\x02\0\x05\x12\x03e\r\x12\n\x0c\n\x05\x04\x0c\x02\0\x01\
-    \x12\x03e\x13\x1d\n\x0c\n\x05\x04\x0c\x02\0\x03\x12\x03e\x20!\n$\n\x04\
-    \x04\x0c\x02\x01\x12\x03g\x04\"\x1a\x17\x20clear\x20list\x20of\x20addres\
-    s\n\n\x0c\n\x05\x04\x0c\x02\x01\x04\x12\x03g\x04\x0c\n\x0c\n\x05\x04\x0c\
-    \x02\x01\x05\x12\x03g\r\x12\n\x0c\n\x05\x04\x0c\x02\x01\x01\x12\x03g\x13\
-    \x1d\n\x0c\n\x05\x04\x0c\x02\x01\x03\x12\x03g\x20!\n&\n\x02\x04\r\x12\
-    \x04k\0m\x01\x1a\x1a\x20State\x20positioning\x20signal\n\n\n\n\x03\x04\r\
-    \x01\x12\x03k\x08\x13\n\x0b\n\x04\x04\r\x02\0\x12\x03l\x04\x16\n\r\n\x05\
-    \x04\r\x02\0\x04\x12\x04l\x04k\x15\n\x0c\n\x05\x04\r\x02\0\x05\x12\x03l\
-    \x04\n\n\x0c\n\x05\x04\r\x02\0\x01\x12\x03l\x0b\x11\n\x0c\n\x05\x04\r\
-    \x02\0\x03\x12\x03l\x14\x15b\x06proto3\
+    \x0c\n\x05\x04\x08\x02\0\x03\x12\x03P./\n\n\n\x02\x04\t\x12\x04S\0U\x01\
+    \n\n\n\x03\x04\t\x01\x12\x03S\x08\x18\n\x0b\n\x04\x04\t\x02\0\x12\x03T\
+    \x04!\n\x0c\n\x05\x04\t\x02\0\x04\x12\x03T\x04\x0c\n\x0c\n\x05\x04\t\x02\
+    \0\x05\x12\x03T\r\x12\n\x0c\n\x05\x04\t\x02\0\x01\x12\x03T\x13\x1c\n\x0c\
+    \n\x05\x04\t\x02\0\x03\x12\x03T\x1f\x20\n\n\n\x02\x04\n\x12\x04W\0[\x01\
+    \n\n\n\x03\x04\n\x01\x12\x03W\x08\r\n\x0b\n\x04\x04\n\x02\0\x12\x03X\x04\
+    \x17\n\r\n\x05\x04\n\x02\0\x04\x12\x04X\x04W\x0f\n\x0c\n\x05\x04\n\x02\0\
+    \x05\x12\x03X\x04\n\n\x0c\n\x05\x04\n\x02\0\x01\x12\x03X\x0b\x12\n\x0c\n\
+    \x05\x04\n\x02\0\x03\x12\x03X\x15\x16\n\x0b\n\x04\x04\n\x02\x01\x12\x03Y\
+    \x04\x1b\n\r\n\x05\x04\n\x02\x01\x04\x12\x04Y\x04X\x17\n\x0c\n\x05\x04\n\
+    \x02\x01\x06\x12\x03Y\x04\x0f\n\x0c\n\x05\x04\n\x02\x01\x01\x12\x03Y\x10\
+    \x16\n\x0c\n\x05\x04\n\x02\x01\x03\x12\x03Y\x19\x1a\n\x0b\n\x04\x04\n\
+    \x02\x02\x12\x03Z\x04\x17\n\r\n\x05\x04\n\x02\x02\x04\x12\x04Z\x04Y\x1b\
+    \n\x0c\n\x05\x04\n\x02\x02\x06\x12\x03Z\x04\r\n\x0c\n\x05\x04\n\x02\x02\
+    \x01\x12\x03Z\x0e\x12\n\x0c\n\x05\x04\n\x02\x02\x03\x12\x03Z\x15\x16\n\n\
+    \n\x02\x04\x0b\x12\x04]\0a\x01\n\n\n\x03\x04\x0b\x01\x12\x03]\x08\x14\n\
+    \x0b\n\x04\x04\x0b\x02\0\x12\x03^\x04\x17\n\r\n\x05\x04\x0b\x02\0\x04\
+    \x12\x04^\x04]\x16\n\x0c\n\x05\x04\x0b\x02\0\x05\x12\x03^\x04\n\n\x0c\n\
+    \x05\x04\x0b\x02\0\x01\x12\x03^\x0b\x12\n\x0c\n\x05\x04\x0b\x02\0\x03\
+    \x12\x03^\x15\x16\n\x0b\n\x04\x04\x0b\x02\x01\x12\x03_\x04\x1b\n\r\n\x05\
+    \x04\x0b\x02\x01\x04\x12\x04_\x04^\x17\n\x0c\n\x05\x04\x0b\x02\x01\x06\
+    \x12\x03_\x04\x0f\n\x0c\n\x05\x04\x0b\x02\x01\x01\x12\x03_\x10\x16\n\x0c\
+    \n\x05\x04\x0b\x02\x01\x03\x12\x03_\x19\x1a\n\x0b\n\x04\x04\x0b\x02\x02\
+    \x12\x03`\x04\x1e\n\r\n\x05\x04\x0b\x02\x02\x04\x12\x04`\x04_\x1b\n\x0c\
+    \n\x05\x04\x0b\x02\x02\x06\x12\x03`\x04\x14\n\x0c\n\x05\x04\x0b\x02\x02\
+    \x01\x12\x03`\x15\x19\n\x0c\n\x05\x04\x0b\x02\x02\x03\x12\x03`\x1c\x1d\n\
+    \n\n\x02\x04\x0c\x12\x04c\0f\x01\n\n\n\x03\x04\x0c\x01\x12\x03c\x08\x16\
+    \n\x0b\n\x04\x04\x0c\x02\0\x12\x03d\x04\x12\n\r\n\x05\x04\x0c\x02\0\x04\
+    \x12\x04d\x04c\x18\n\x0c\n\x05\x04\x0c\x02\0\x06\x12\x03d\x04\t\n\x0c\n\
+    \x05\x04\x0c\x02\0\x01\x12\x03d\n\r\n\x0c\n\x05\x04\x0c\x02\0\x03\x12\
+    \x03d\x10\x11\n\x0b\n\x04\x04\x0c\x02\x01\x12\x03e\x04\x14\n\r\n\x05\x04\
+    \x0c\x02\x01\x04\x12\x04e\x04d\x12\n\x0c\n\x05\x04\x0c\x02\x01\x06\x12\
+    \x03e\x04\t\n\x0c\n\x05\x04\x0c\x02\x01\x01\x12\x03e\n\x0f\n\x0c\n\x05\
+    \x04\x0c\x02\x01\x03\x12\x03e\x12\x13\n\n\n\x02\x04\r\x12\x04h\0k\x01\n\
+    \n\n\x03\x04\r\x01\x12\x03h\x08\x10\n\x0b\n\x04\x04\r\x02\0\x12\x03i\x04\
+    \x16\n\r\n\x05\x04\r\x02\0\x04\x12\x04i\x04h\x12\n\x0c\n\x05\x04\r\x02\0\
+    \x05\x12\x03i\x04\n\n\x0c\n\x05\x04\r\x02\0\x01\x12\x03i\x0b\x11\n\x0c\n\
+    \x05\x04\r\x02\0\x03\x12\x03i\x14\x15\n\x0b\n\x04\x04\r\x02\x01\x12\x03j\
+    \x04\x17\n\r\n\x05\x04\r\x02\x01\x04\x12\x04j\x04i\x16\n\x0c\n\x05\x04\r\
+    \x02\x01\x06\x12\x03j\x04\r\n\x0c\n\x05\x04\r\x02\x01\x01\x12\x03j\x0e\
+    \x12\n\x0c\n\x05\x04\r\x02\x01\x03\x12\x03j\x15\x16\n\n\n\x02\x04\x0e\
+    \x12\x04m\0r\x01\n\n\n\x03\x04\x0e\x01\x12\x03m\x08\x11\nd\n\x04\x04\x0e\
+    \x02\0\x12\x03o\x04\"\x1aW\x20black\x20list\x20of\x20address,\x20the\x20\
+    account\x20that\x20sent\x20the\x20transaction\x20does\x20not\x20have\x20\
+    enough\x20gas\n\n\x0c\n\x05\x04\x0e\x02\0\x04\x12\x03o\x04\x0c\n\x0c\n\
+    \x05\x04\x0e\x02\0\x05\x12\x03o\r\x12\n\x0c\n\x05\x04\x0e\x02\0\x01\x12\
+    \x03o\x13\x1d\n\x0c\n\x05\x04\x0e\x02\0\x03\x12\x03o\x20!\n$\n\x04\x04\
+    \x0e\x02\x01\x12\x03q\x04\"\x1a\x17\x20clear\x20list\x20of\x20address\n\
+    \n\x0c\n\x05\x04\x0e\x02\x01\x04\x12\x03q\x04\x0c\n\x0c\n\x05\x04\x0e\
+    \x02\x01\x05\x12\x03q\r\x12\n\x0c\n\x05\x04\x0e\x02\x01\x01\x12\x03q\x13\
+    \x1d\n\x0c\n\x05\x04\x0e\x02\x01\x03\x12\x03q\x20!\n&\n\x02\x04\x0f\x12\
+    \x04u\0w\x01\x1a\x1a\x20State\x20positioning\x20signal\n\n\n\n\x03\x04\
+    \x0f\x01\x12\x03u\x08\x13\n\x0b\n\x04\x04\x0f\x02\0\x12\x03v\x04\x16\n\r\
+    \n\x05\x04\x0f\x02\0\x04\x12\x04v\x04u\x15\n\x0c\n\x05\x04\x0f\x02\0\x05\
+    \x12\x03v\x04\n\n\x0c\n\x05\x04\x0f\x02\0\x01\x12\x03v\x0b\x11\n\x0c\n\
+    \x05\x04\x0f\x02\0\x03\x12\x03v\x14\x15b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

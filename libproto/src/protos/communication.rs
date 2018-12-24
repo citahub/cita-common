@@ -63,7 +63,6 @@ pub enum InnerMessage_oneof_content {
     BlockTxs(super::blockchain::BlockTxs),
     BlockTxHashes(super::auth::BlockTxHashes),
     BlockTxHashesReq(super::auth::BlockTxHashesReq),
-    VerifyTxReq(super::auth::VerifyTxReq),
     VerifyBlockReq(super::auth::VerifyBlockReq),
     VerifyBlockResp(super::auth::VerifyBlockResp),
     ExecutedResult(super::executor::ExecutedResult),
@@ -75,6 +74,7 @@ pub enum InnerMessage_oneof_content {
     StateSignal(super::blockchain::StateSignal),
     GetBlockTxn(super::compact_block::GetBlockTxn),
     BlockTxn(super::compact_block::BlockTxn),
+    CompactSignedProposal(super::consensus::CompactSignedProposal),
 }
 
 impl InnerMessage {
@@ -768,55 +768,6 @@ impl InnerMessage {
         }
     }
 
-    // .VerifyTxReq VerifyTxReq = 15;
-
-    pub fn clear_VerifyTxReq(&mut self) {
-        self.content = ::std::option::Option::None;
-    }
-
-    pub fn has_VerifyTxReq(&self) -> bool {
-        match self.content {
-            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(..)) => true,
-            _ => false,
-        }
-    }
-
-    // Param is passed by value, moved
-    pub fn set_VerifyTxReq(&mut self, v: super::auth::VerifyTxReq) {
-        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(v))
-    }
-
-    // Mutable pointer to the field.
-    pub fn mut_VerifyTxReq(&mut self) -> &mut super::auth::VerifyTxReq {
-        if let ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(_)) = self.content {
-        } else {
-            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(super::auth::VerifyTxReq::new()));
-        }
-        match self.content {
-            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(ref mut v)) => v,
-            _ => panic!(),
-        }
-    }
-
-    // Take field
-    pub fn take_VerifyTxReq(&mut self) -> super::auth::VerifyTxReq {
-        if self.has_VerifyTxReq() {
-            match self.content.take() {
-                ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(v)) => v,
-                _ => panic!(),
-            }
-        } else {
-            super::auth::VerifyTxReq::new()
-        }
-    }
-
-    pub fn get_VerifyTxReq(&self) -> &super::auth::VerifyTxReq {
-        match self.content {
-            ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(ref v)) => v,
-            _ => super::auth::VerifyTxReq::default_instance(),
-        }
-    }
-
     // .VerifyBlockReq VerifyBlockReq = 17;
 
     pub fn clear_VerifyBlockReq(&mut self) {
@@ -1355,6 +1306,55 @@ impl InnerMessage {
             _ => super::compact_block::BlockTxn::default_instance(),
         }
     }
+
+    // .CompactSignedProposal CompactSignedProposal = 28;
+
+    pub fn clear_CompactSignedProposal(&mut self) {
+        self.content = ::std::option::Option::None;
+    }
+
+    pub fn has_CompactSignedProposal(&self) -> bool {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_CompactSignedProposal(&mut self, v: super::consensus::CompactSignedProposal) {
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_CompactSignedProposal(&mut self) -> &mut super::consensus::CompactSignedProposal {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(_)) = self.content {
+        } else {
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(super::consensus::CompactSignedProposal::new()));
+        }
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_CompactSignedProposal(&mut self) -> super::consensus::CompactSignedProposal {
+        if self.has_CompactSignedProposal() {
+            match self.content.take() {
+                ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            super::consensus::CompactSignedProposal::new()
+        }
+    }
+
+    pub fn get_CompactSignedProposal(&self) -> &super::consensus::CompactSignedProposal {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(ref v)) => v,
+            _ => super::consensus::CompactSignedProposal::default_instance(),
+        }
+    }
 }
 
 impl ::protobuf::Message for InnerMessage {
@@ -1424,11 +1424,6 @@ impl ::protobuf::Message for InnerMessage {
                 return false;
             }
         }
-        if let Some(InnerMessage_oneof_content::VerifyTxReq(ref v)) = self.content {
-            if !v.is_initialized() {
-                return false;
-            }
-        }
         if let Some(InnerMessage_oneof_content::VerifyBlockReq(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
@@ -1480,6 +1475,11 @@ impl ::protobuf::Message for InnerMessage {
             }
         }
         if let Some(InnerMessage_oneof_content::BlockTxn(ref v)) = self.content {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(InnerMessage_oneof_content::CompactSignedProposal(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
@@ -1575,12 +1575,6 @@ impl ::protobuf::Message for InnerMessage {
                     }
                     self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxHashesReq(is.read_message()?));
                 },
-                15 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::VerifyTxReq(is.read_message()?));
-                },
                 17 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
@@ -1646,6 +1640,12 @@ impl ::protobuf::Message for InnerMessage {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.content = ::std::option::Option::Some(InnerMessage_oneof_content::BlockTxn(is.read_message()?));
+                },
+                28 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(is.read_message()?));
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -1716,10 +1716,6 @@ impl ::protobuf::Message for InnerMessage {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &InnerMessage_oneof_content::VerifyTxReq(ref v) => {
-                    let len = v.compute_size();
-                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-                },
                 &InnerMessage_oneof_content::VerifyBlockReq(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
@@ -1761,6 +1757,10 @@ impl ::protobuf::Message for InnerMessage {
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
                 &InnerMessage_oneof_content::BlockTxn(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::CompactSignedProposal(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -1842,11 +1842,6 @@ impl ::protobuf::Message for InnerMessage {
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
-                &InnerMessage_oneof_content::VerifyTxReq(ref v) => {
-                    os.write_tag(15, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-                    os.write_raw_varint32(v.get_cached_size())?;
-                    v.write_to_with_cached_sizes(os)?;
-                },
                 &InnerMessage_oneof_content::VerifyBlockReq(ref v) => {
                     os.write_tag(17, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
@@ -1899,6 +1894,11 @@ impl ::protobuf::Message for InnerMessage {
                 },
                 &InnerMessage_oneof_content::BlockTxn(ref v) => {
                     os.write_tag(27, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::CompactSignedProposal(ref v) => {
+                    os.write_tag(28, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -2016,11 +2016,6 @@ impl ::protobuf::Message for InnerMessage {
                     InnerMessage::has_BlockTxHashesReq,
                     InnerMessage::get_BlockTxHashesReq,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyTxReq>(
-                    "VerifyTxReq",
-                    InnerMessage::has_VerifyTxReq,
-                    InnerMessage::get_VerifyTxReq,
-                ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::VerifyBlockReq>(
                     "VerifyBlockReq",
                     InnerMessage::has_VerifyBlockReq,
@@ -2076,6 +2071,11 @@ impl ::protobuf::Message for InnerMessage {
                     InnerMessage::has_BlockTxn,
                     InnerMessage::get_BlockTxn,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::consensus::CompactSignedProposal>(
+                    "CompactSignedProposal",
+                    InnerMessage::has_CompactSignedProposal,
+                    InnerMessage::get_CompactSignedProposal,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<InnerMessage>(
                     "InnerMessage",
                     fields,
@@ -2112,7 +2112,6 @@ impl ::protobuf::Clear for InnerMessage {
         self.clear_BlockTxs();
         self.clear_BlockTxHashes();
         self.clear_BlockTxHashesReq();
-        self.clear_VerifyTxReq();
         self.clear_VerifyBlockReq();
         self.clear_VerifyBlockResp();
         self.clear_ExecutedResult();
@@ -2124,6 +2123,7 @@ impl ::protobuf::Clear for InnerMessage {
         self.clear_StateSignal();
         self.clear_GetBlockTxn();
         self.clear_BlockTxn();
+        self.clear_CompactSignedProposal();
         self.unknown_fields.clear();
     }
 }
@@ -2144,7 +2144,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
     o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\x1a\x13compact_block.proto\
-    \"\xa8\n\n\x0cInnerMessage\x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0\
+    \"\xc6\n\n\x0cInnerMessage\x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0\
     R\x08RawBytes\x12$\n\x07Request\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\
     \x07Request\x12'\n\x08Response\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08R\
     esponse\x120\n\x0bSyncRequest\x18\x04\x20\x01(\x0b2\x0c.SyncRequestH\0R\
@@ -2159,95 +2159,95 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x0b2\t.BlockTxsH\0R\x08BlockTxs\x126\n\rBlockTxHashes\x18\r\
     \x20\x01(\x0b2\x0e.BlockTxHashesH\0R\rBlockTxHashes\x12?\n\x10BlockTxHas\
     hesReq\x18\x0e\x20\x01(\x0b2\x11.BlockTxHashesReqH\0R\x10BlockTxHashesRe\
-    q\x120\n\x0bVerifyTxReq\x18\x0f\x20\x01(\x0b2\x0c.VerifyTxReqH\0R\x0bVer\
-    ifyTxReq\x129\n\x0eVerifyBlockReq\x18\x11\x20\x01(\x0b2\x0f.VerifyBlockR\
-    eqH\0R\x0eVerifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\
-    \x10.VerifyBlockRespH\0R\x0fVerifyBlockResp\x129\n\x0eExecutedResult\x18\
-    \x13\x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eExecutedResult\x120\n\x0bSn\
-    apshotReq\x18\x14\x20\x01(\x0b2\x0c.SnapshotReqH\0R\x0bSnapshotReq\x123\
-    \n\x0cSnapshotResp\x18\x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotR\
-    esp\x126\n\rMiscellaneous\x18\x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rM\
-    iscellaneous\x12?\n\x10MiscellaneousReq\x18\x17\x20\x01(\x0b2\x11.Miscel\
-    laneousReqH\0R\x10MiscellaneousReq\x12*\n\tBlackList\x18\x18\x20\x01(\
-    \x0b2\n.BlackListH\0R\tBlackList\x120\n\x0bStateSignal\x18\x19\x20\x01(\
-    \x0b2\x0c.StateSignalH\0R\x0bStateSignal\x120\n\x0bGetBlockTxn\x18\x1a\
-    \x20\x01(\x0b2\x0c.GetBlockTxnH\0R\x0bGetBlockTxn\x12'\n\x08BlockTxn\x18\
-    \x1b\x20\x01(\x0b2\t.BlockTxnH\0R\x08BlockTxnB\t\n\x07contentJ\xbf\x0c\n\
-    \x06\x12\x04\0\08\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\
-    \x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\x12\x03\x03\x07\x17\n\t\n\x02\x03\
-    \x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\x03\x12\x03\x05\x07\x19\n\t\n\x02\
-    \x03\x04\x12\x03\x06\x07\x18\n\t\n\x02\x03\x05\x12\x03\x07\x07\x13\n\t\n\
-    \x02\x03\x06\x12\x03\x08\x07\x17\n\t\n\x02\x03\x07\x12\x03\t\x07\x17\n\t\
-    \n\x02\x03\x08\x12\x03\n\x07\x1c\n\n\n\x02\x04\0\x12\x04\x0c\08\x01\n\n\
-    \n\x03\x04\0\x01\x12\x03\x0c\x08\x14\n\x0c\n\x04\x04\0\x08\0\x12\x04\x0e\
-    \x047\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\x03\x0e\n\x11\n\x0b\n\x04\x04\
-    \0\x02\0\x12\x03\x10\x08\x1b\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x10\x08\
-    \r\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x10\x0e\x16\n\x0c\n\x05\x04\0\x02\
-    \0\x03\x12\x03\x10\x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x12\x08\x1c\
-    \n\x0c\n\x05\x04\0\x02\x01\x06\x12\x03\x12\x08\x0f\n\x0c\n\x05\x04\0\x02\
-    \x01\x01\x12\x03\x12\x10\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x12\
-    \x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x13\x08\x1e\n\x0c\n\x05\x04\0\
-    \x02\x02\x06\x12\x03\x13\x08\x10\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\
-    \x13\x11\x19\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x13\x1c\x1d\n\x0b\n\
-    \x04\x04\0\x02\x03\x12\x03\x15\x08$\n\x0c\n\x05\x04\0\x02\x03\x06\x12\
-    \x03\x15\x08\x13\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x15\x14\x1f\n\x0c\
-    \n\x05\x04\0\x02\x03\x03\x12\x03\x15\"#\n\x0b\n\x04\x04\0\x02\x04\x12\
-    \x03\x16\x08&\n\x0c\n\x05\x04\0\x02\x04\x06\x12\x03\x16\x08\x14\n\x0c\n\
-    \x05\x04\0\x02\x04\x01\x12\x03\x16\x15!\n\x0c\n\x05\x04\0\x02\x04\x03\
-    \x12\x03\x16$%\n\x0b\n\x04\x04\0\x02\x05\x12\x03\x18\x08\x1a\n\x0c\n\x05\
-    \x04\0\x02\x05\x06\x12\x03\x18\x08\x0e\n\x0c\n\x05\x04\0\x02\x05\x01\x12\
-    \x03\x18\x0f\x15\n\x0c\n\x05\x04\0\x02\x05\x03\x12\x03\x18\x18\x19\n\x0b\
-    \n\x04\x04\0\x02\x06\x12\x03\x19\x08\"\n\x0c\n\x05\x04\0\x02\x06\x06\x12\
-    \x03\x19\x08\x12\n\x0c\n\x05\x04\0\x02\x06\x01\x12\x03\x19\x13\x1d\n\x0c\
-    \n\x05\x04\0\x02\x06\x03\x12\x03\x19\x20!\n\x0b\n\x04\x04\0\x02\x07\x12\
-    \x03\x1b\x08*\n\x0c\n\x05\x04\0\x02\x07\x06\x12\x03\x1b\x08\x16\n\x0c\n\
-    \x05\x04\0\x02\x07\x01\x12\x03\x1b\x17%\n\x0c\n\x05\x04\0\x02\x07\x03\
-    \x12\x03\x1b()\n\x0b\n\x04\x04\0\x02\x08\x12\x03\x1d\x08\x18\n\x0c\n\x05\
-    \x04\0\x02\x08\x06\x12\x03\x1d\x08\r\n\x0c\n\x05\x04\0\x02\x08\x01\x12\
-    \x03\x1d\x0e\x13\n\x0c\n\x05\x04\0\x02\x08\x03\x12\x03\x1d\x16\x17\n\x0b\
-    \n\x04\x04\0\x02\t\x12\x03\x1e\x08+\n\x0c\n\x05\x04\0\x02\t\x06\x12\x03\
-    \x1e\x08\x16\n\x0c\n\x05\x04\0\x02\t\x01\x12\x03\x1e\x17%\n\x0c\n\x05\
-    \x04\0\x02\t\x03\x12\x03\x1e(*\n\x0b\n\x04\x04\0\x02\n\x12\x03\x1f\x08%\
-    \n\x0c\n\x05\x04\0\x02\n\x06\x12\x03\x1f\x08\x13\n\x0c\n\x05\x04\0\x02\n\
-    \x01\x12\x03\x1f\x14\x1f\n\x0c\n\x05\x04\0\x02\n\x03\x12\x03\x1f\"$\n\
-    \x0b\n\x04\x04\0\x02\x0b\x12\x03\x20\x08\x1f\n\x0c\n\x05\x04\0\x02\x0b\
-    \x06\x12\x03\x20\x08\x10\n\x0c\n\x05\x04\0\x02\x0b\x01\x12\x03\x20\x11\
-    \x19\n\x0c\n\x05\x04\0\x02\x0b\x03\x12\x03\x20\x1c\x1e\n\x0b\n\x04\x04\0\
-    \x02\x0c\x12\x03\"\x08)\n\x0c\n\x05\x04\0\x02\x0c\x06\x12\x03\"\x08\x15\
-    \n\x0c\n\x05\x04\0\x02\x0c\x01\x12\x03\"\x16#\n\x0c\n\x05\x04\0\x02\x0c\
-    \x03\x12\x03\"&(\n\x0b\n\x04\x04\0\x02\r\x12\x03#\x08/\n\x0c\n\x05\x04\0\
-    \x02\r\x06\x12\x03#\x08\x18\n\x0c\n\x05\x04\0\x02\r\x01\x12\x03#\x19)\n\
-    \x0c\n\x05\x04\0\x02\r\x03\x12\x03#,.\n\x0b\n\x04\x04\0\x02\x0e\x12\x03%\
-    \x08%\n\x0c\n\x05\x04\0\x02\x0e\x06\x12\x03%\x08\x13\n\x0c\n\x05\x04\0\
-    \x02\x0e\x01\x12\x03%\x14\x1f\n\x0c\n\x05\x04\0\x02\x0e\x03\x12\x03%\"$\
-    \n\x0b\n\x04\x04\0\x02\x0f\x12\x03'\x08+\n\x0c\n\x05\x04\0\x02\x0f\x06\
-    \x12\x03'\x08\x16\n\x0c\n\x05\x04\0\x02\x0f\x01\x12\x03'\x17%\n\x0c\n\
-    \x05\x04\0\x02\x0f\x03\x12\x03'(*\n\x0b\n\x04\x04\0\x02\x10\x12\x03(\x08\
-    -\n\x0c\n\x05\x04\0\x02\x10\x06\x12\x03(\x08\x17\n\x0c\n\x05\x04\0\x02\
-    \x10\x01\x12\x03(\x18'\n\x0c\n\x05\x04\0\x02\x10\x03\x12\x03(*,\n\x0b\n\
-    \x04\x04\0\x02\x11\x12\x03*\x08+\n\x0c\n\x05\x04\0\x02\x11\x06\x12\x03*\
-    \x08\x16\n\x0c\n\x05\x04\0\x02\x11\x01\x12\x03*\x17%\n\x0c\n\x05\x04\0\
-    \x02\x11\x03\x12\x03*(*\n\x0b\n\x04\x04\0\x02\x12\x12\x03,\x08%\n\x0c\n\
-    \x05\x04\0\x02\x12\x06\x12\x03,\x08\x13\n\x0c\n\x05\x04\0\x02\x12\x01\
-    \x12\x03,\x14\x1f\n\x0c\n\x05\x04\0\x02\x12\x03\x12\x03,\"$\n\x0b\n\x04\
-    \x04\0\x02\x13\x12\x03-\x08'\n\x0c\n\x05\x04\0\x02\x13\x06\x12\x03-\x08\
-    \x14\n\x0c\n\x05\x04\0\x02\x13\x01\x12\x03-\x15!\n\x0c\n\x05\x04\0\x02\
-    \x13\x03\x12\x03-$&\n\x0b\n\x04\x04\0\x02\x14\x12\x03/\x08)\n\x0c\n\x05\
-    \x04\0\x02\x14\x06\x12\x03/\x08\x15\n\x0c\n\x05\x04\0\x02\x14\x01\x12\
-    \x03/\x16#\n\x0c\n\x05\x04\0\x02\x14\x03\x12\x03/&(\n\x0b\n\x04\x04\0\
-    \x02\x15\x12\x030\x08/\n\x0c\n\x05\x04\0\x02\x15\x06\x12\x030\x08\x18\n\
-    \x0c\n\x05\x04\0\x02\x15\x01\x12\x030\x19)\n\x0c\n\x05\x04\0\x02\x15\x03\
-    \x12\x030,.\n\x0b\n\x04\x04\0\x02\x16\x12\x032\x08!\n\x0c\n\x05\x04\0\
-    \x02\x16\x06\x12\x032\x08\x11\n\x0c\n\x05\x04\0\x02\x16\x01\x12\x032\x12\
-    \x1b\n\x0c\n\x05\x04\0\x02\x16\x03\x12\x032\x1e\x20\n\x0b\n\x04\x04\0\
-    \x02\x17\x12\x033\x08%\n\x0c\n\x05\x04\0\x02\x17\x06\x12\x033\x08\x13\n\
-    \x0c\n\x05\x04\0\x02\x17\x01\x12\x033\x14\x1f\n\x0c\n\x05\x04\0\x02\x17\
-    \x03\x12\x033\"$\n\x0b\n\x04\x04\0\x02\x18\x12\x035\x08%\n\x0c\n\x05\x04\
-    \0\x02\x18\x06\x12\x035\x08\x13\n\x0c\n\x05\x04\0\x02\x18\x01\x12\x035\
-    \x14\x1f\n\x0c\n\x05\x04\0\x02\x18\x03\x12\x035\"$\n\x0b\n\x04\x04\0\x02\
-    \x19\x12\x036\x08\x1f\n\x0c\n\x05\x04\0\x02\x19\x06\x12\x036\x08\x10\n\
-    \x0c\n\x05\x04\0\x02\x19\x01\x12\x036\x11\x19\n\x0c\n\x05\x04\0\x02\x19\
-    \x03\x12\x036\x1c\x1eb\x06proto3\
+    q\x129\n\x0eVerifyBlockReq\x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\
+    \x0eVerifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.V\
+    erifyBlockRespH\0R\x0fVerifyBlockResp\x129\n\x0eExecutedResult\x18\x13\
+    \x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eExecutedResult\x120\n\x0bSnapsh\
+    otReq\x18\x14\x20\x01(\x0b2\x0c.SnapshotReqH\0R\x0bSnapshotReq\x123\n\
+    \x0cSnapshotResp\x18\x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotRes\
+    p\x126\n\rMiscellaneous\x18\x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rMis\
+    cellaneous\x12?\n\x10MiscellaneousReq\x18\x17\x20\x01(\x0b2\x11.Miscella\
+    neousReqH\0R\x10MiscellaneousReq\x12*\n\tBlackList\x18\x18\x20\x01(\x0b2\
+    \n.BlackListH\0R\tBlackList\x120\n\x0bStateSignal\x18\x19\x20\x01(\x0b2\
+    \x0c.StateSignalH\0R\x0bStateSignal\x120\n\x0bGetBlockTxn\x18\x1a\x20\
+    \x01(\x0b2\x0c.GetBlockTxnH\0R\x0bGetBlockTxn\x12'\n\x08BlockTxn\x18\x1b\
+    \x20\x01(\x0b2\t.BlockTxnH\0R\x08BlockTxn\x12N\n\x15CompactSignedProposa\
+    l\x18\x1c\x20\x01(\x0b2\x16.CompactSignedProposalH\0R\x15CompactSignedPr\
+    oposalB\t\n\x07contentJ\xbf\x0c\n\x06\x12\x04\0\08\x01\n\x08\n\x01\x0c\
+    \x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\
+    \x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\
+    \x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\t\n\x02\
+    \x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\x17\n\t\n\
+    \x02\x03\x07\x12\x03\t\x07\x17\n\t\n\x02\x03\x08\x12\x03\n\x07\x1c\n\n\n\
+    \x02\x04\0\x12\x04\x0c\08\x01\n\n\n\x03\x04\0\x01\x12\x03\x0c\x08\x14\n\
+    \x0c\n\x04\x04\0\x08\0\x12\x04\x0e\x047\x05\n\x0c\n\x05\x04\0\x08\0\x01\
+    \x12\x03\x0e\n\x11\n\x0b\n\x04\x04\0\x02\0\x12\x03\x10\x08\x1b\n\x0c\n\
+    \x05\x04\0\x02\0\x05\x12\x03\x10\x08\r\n\x0c\n\x05\x04\0\x02\0\x01\x12\
+    \x03\x10\x0e\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x10\x19\x1a\n\x0b\n\
+    \x04\x04\0\x02\x01\x12\x03\x12\x08\x1c\n\x0c\n\x05\x04\0\x02\x01\x06\x12\
+    \x03\x12\x08\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x12\x10\x17\n\x0c\
+    \n\x05\x04\0\x02\x01\x03\x12\x03\x12\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\
+    \x12\x03\x13\x08\x1e\n\x0c\n\x05\x04\0\x02\x02\x06\x12\x03\x13\x08\x10\n\
+    \x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x13\x11\x19\n\x0c\n\x05\x04\0\x02\
+    \x02\x03\x12\x03\x13\x1c\x1d\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x15\x08$\
+    \n\x0c\n\x05\x04\0\x02\x03\x06\x12\x03\x15\x08\x13\n\x0c\n\x05\x04\0\x02\
+    \x03\x01\x12\x03\x15\x14\x1f\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\x15\"\
+    #\n\x0b\n\x04\x04\0\x02\x04\x12\x03\x16\x08&\n\x0c\n\x05\x04\0\x02\x04\
+    \x06\x12\x03\x16\x08\x14\n\x0c\n\x05\x04\0\x02\x04\x01\x12\x03\x16\x15!\
+    \n\x0c\n\x05\x04\0\x02\x04\x03\x12\x03\x16$%\n\x0b\n\x04\x04\0\x02\x05\
+    \x12\x03\x18\x08\x1a\n\x0c\n\x05\x04\0\x02\x05\x06\x12\x03\x18\x08\x0e\n\
+    \x0c\n\x05\x04\0\x02\x05\x01\x12\x03\x18\x0f\x15\n\x0c\n\x05\x04\0\x02\
+    \x05\x03\x12\x03\x18\x18\x19\n\x0b\n\x04\x04\0\x02\x06\x12\x03\x19\x08\"\
+    \n\x0c\n\x05\x04\0\x02\x06\x06\x12\x03\x19\x08\x12\n\x0c\n\x05\x04\0\x02\
+    \x06\x01\x12\x03\x19\x13\x1d\n\x0c\n\x05\x04\0\x02\x06\x03\x12\x03\x19\
+    \x20!\n\x0b\n\x04\x04\0\x02\x07\x12\x03\x1b\x08*\n\x0c\n\x05\x04\0\x02\
+    \x07\x06\x12\x03\x1b\x08\x16\n\x0c\n\x05\x04\0\x02\x07\x01\x12\x03\x1b\
+    \x17%\n\x0c\n\x05\x04\0\x02\x07\x03\x12\x03\x1b()\n\x0b\n\x04\x04\0\x02\
+    \x08\x12\x03\x1d\x08\x18\n\x0c\n\x05\x04\0\x02\x08\x06\x12\x03\x1d\x08\r\
+    \n\x0c\n\x05\x04\0\x02\x08\x01\x12\x03\x1d\x0e\x13\n\x0c\n\x05\x04\0\x02\
+    \x08\x03\x12\x03\x1d\x16\x17\n\x0b\n\x04\x04\0\x02\t\x12\x03\x1e\x08+\n\
+    \x0c\n\x05\x04\0\x02\t\x06\x12\x03\x1e\x08\x16\n\x0c\n\x05\x04\0\x02\t\
+    \x01\x12\x03\x1e\x17%\n\x0c\n\x05\x04\0\x02\t\x03\x12\x03\x1e(*\n\x0b\n\
+    \x04\x04\0\x02\n\x12\x03\x1f\x08%\n\x0c\n\x05\x04\0\x02\n\x06\x12\x03\
+    \x1f\x08\x13\n\x0c\n\x05\x04\0\x02\n\x01\x12\x03\x1f\x14\x1f\n\x0c\n\x05\
+    \x04\0\x02\n\x03\x12\x03\x1f\"$\n\x0b\n\x04\x04\0\x02\x0b\x12\x03\x20\
+    \x08\x1f\n\x0c\n\x05\x04\0\x02\x0b\x06\x12\x03\x20\x08\x10\n\x0c\n\x05\
+    \x04\0\x02\x0b\x01\x12\x03\x20\x11\x19\n\x0c\n\x05\x04\0\x02\x0b\x03\x12\
+    \x03\x20\x1c\x1e\n\x0b\n\x04\x04\0\x02\x0c\x12\x03\"\x08)\n\x0c\n\x05\
+    \x04\0\x02\x0c\x06\x12\x03\"\x08\x15\n\x0c\n\x05\x04\0\x02\x0c\x01\x12\
+    \x03\"\x16#\n\x0c\n\x05\x04\0\x02\x0c\x03\x12\x03\"&(\n\x0b\n\x04\x04\0\
+    \x02\r\x12\x03#\x08/\n\x0c\n\x05\x04\0\x02\r\x06\x12\x03#\x08\x18\n\x0c\
+    \n\x05\x04\0\x02\r\x01\x12\x03#\x19)\n\x0c\n\x05\x04\0\x02\r\x03\x12\x03\
+    #,.\n\x0b\n\x04\x04\0\x02\x0e\x12\x03%\x08+\n\x0c\n\x05\x04\0\x02\x0e\
+    \x06\x12\x03%\x08\x16\n\x0c\n\x05\x04\0\x02\x0e\x01\x12\x03%\x17%\n\x0c\
+    \n\x05\x04\0\x02\x0e\x03\x12\x03%(*\n\x0b\n\x04\x04\0\x02\x0f\x12\x03&\
+    \x08-\n\x0c\n\x05\x04\0\x02\x0f\x06\x12\x03&\x08\x17\n\x0c\n\x05\x04\0\
+    \x02\x0f\x01\x12\x03&\x18'\n\x0c\n\x05\x04\0\x02\x0f\x03\x12\x03&*,\n\
+    \x0b\n\x04\x04\0\x02\x10\x12\x03(\x08+\n\x0c\n\x05\x04\0\x02\x10\x06\x12\
+    \x03(\x08\x16\n\x0c\n\x05\x04\0\x02\x10\x01\x12\x03(\x17%\n\x0c\n\x05\
+    \x04\0\x02\x10\x03\x12\x03((*\n\x0b\n\x04\x04\0\x02\x11\x12\x03*\x08%\n\
+    \x0c\n\x05\x04\0\x02\x11\x06\x12\x03*\x08\x13\n\x0c\n\x05\x04\0\x02\x11\
+    \x01\x12\x03*\x14\x1f\n\x0c\n\x05\x04\0\x02\x11\x03\x12\x03*\"$\n\x0b\n\
+    \x04\x04\0\x02\x12\x12\x03+\x08'\n\x0c\n\x05\x04\0\x02\x12\x06\x12\x03+\
+    \x08\x14\n\x0c\n\x05\x04\0\x02\x12\x01\x12\x03+\x15!\n\x0c\n\x05\x04\0\
+    \x02\x12\x03\x12\x03+$&\n\x0b\n\x04\x04\0\x02\x13\x12\x03-\x08)\n\x0c\n\
+    \x05\x04\0\x02\x13\x06\x12\x03-\x08\x15\n\x0c\n\x05\x04\0\x02\x13\x01\
+    \x12\x03-\x16#\n\x0c\n\x05\x04\0\x02\x13\x03\x12\x03-&(\n\x0b\n\x04\x04\
+    \0\x02\x14\x12\x03.\x08/\n\x0c\n\x05\x04\0\x02\x14\x06\x12\x03.\x08\x18\
+    \n\x0c\n\x05\x04\0\x02\x14\x01\x12\x03.\x19)\n\x0c\n\x05\x04\0\x02\x14\
+    \x03\x12\x03.,.\n\x0b\n\x04\x04\0\x02\x15\x12\x030\x08!\n\x0c\n\x05\x04\
+    \0\x02\x15\x06\x12\x030\x08\x11\n\x0c\n\x05\x04\0\x02\x15\x01\x12\x030\
+    \x12\x1b\n\x0c\n\x05\x04\0\x02\x15\x03\x12\x030\x1e\x20\n\x0b\n\x04\x04\
+    \0\x02\x16\x12\x031\x08%\n\x0c\n\x05\x04\0\x02\x16\x06\x12\x031\x08\x13\
+    \n\x0c\n\x05\x04\0\x02\x16\x01\x12\x031\x14\x1f\n\x0c\n\x05\x04\0\x02\
+    \x16\x03\x12\x031\"$\n\x0b\n\x04\x04\0\x02\x17\x12\x033\x08%\n\x0c\n\x05\
+    \x04\0\x02\x17\x06\x12\x033\x08\x13\n\x0c\n\x05\x04\0\x02\x17\x01\x12\
+    \x033\x14\x1f\n\x0c\n\x05\x04\0\x02\x17\x03\x12\x033\"$\n\x0b\n\x04\x04\
+    \0\x02\x18\x12\x034\x08\x1f\n\x0c\n\x05\x04\0\x02\x18\x06\x12\x034\x08\
+    \x10\n\x0c\n\x05\x04\0\x02\x18\x01\x12\x034\x11\x19\n\x0c\n\x05\x04\0\
+    \x02\x18\x03\x12\x034\x1c\x1e\n\x0b\n\x04\x04\0\x02\x19\x12\x036\x089\n\
+    \x0c\n\x05\x04\0\x02\x19\x06\x12\x036\x08\x1d\n\x0c\n\x05\x04\0\x02\x19\
+    \x01\x12\x036\x1e3\n\x0c\n\x05\x04\0\x02\x19\x03\x12\x03668b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

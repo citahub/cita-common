@@ -67,7 +67,6 @@ pub enum MsgType {
     BlockTxs,
     BlockTxHashes,
     BlockTxHashesReq,
-    VerifyTxReq,
     VerifyBlockReq,
     VerifyBlockResp,
     ExecutedResult,
@@ -79,6 +78,7 @@ pub enum MsgType {
     StateSignal,
     GetBlockTxn,
     BlockTxn,
+    CompactSignedProposal,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -162,7 +162,6 @@ impl fmt::Display for MsgType {
                 &MsgType::BlockTxs => "block_txs",
                 &MsgType::BlockTxHashes => "block_tx_hashes",
                 &MsgType::BlockTxHashesReq => "block_tx_hashes_req",
-                &MsgType::VerifyTxReq => "verify_tx_req",
                 &MsgType::VerifyBlockReq => "verify_block_req",
                 &MsgType::VerifyBlockResp => "verify_block_resp",
                 &MsgType::ExecutedResult => "executed_result",
@@ -174,6 +173,7 @@ impl fmt::Display for MsgType {
                 &MsgType::StateSignal => "state_signal",
                 &MsgType::GetBlockTxn => "get_block_txn",
                 &MsgType::BlockTxn => "block_txn",
+                &MsgType::CompactSignedProposal => "compact_signed_proposal",
                 // Generate MSG-PROTOS display automatically end.
                 &MsgType::All => "*",
                 &MsgType::Unknown => UNKNOWN,
@@ -227,7 +227,6 @@ impl<'a> From<&'a str> for MsgType {
             "block_txs" => MsgType::BlockTxs,
             "block_tx_hashes" => MsgType::BlockTxHashes,
             "block_tx_hashes_req" => MsgType::BlockTxHashesReq,
-            "verify_tx_req" => MsgType::VerifyTxReq,
             "verify_block_req" => MsgType::VerifyBlockReq,
             "verify_block_resp" => MsgType::VerifyBlockResp,
             "executed_result" => MsgType::ExecutedResult,
@@ -239,6 +238,7 @@ impl<'a> From<&'a str> for MsgType {
             "state_signal" => MsgType::StateSignal,
             "get_block_txn" => MsgType::GetBlockTxn,
             "block_txn" => MsgType::BlockTxn,
+            "compact_signed_proposal" => MsgType::CompactSignedProposal,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
