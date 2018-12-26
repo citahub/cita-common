@@ -234,20 +234,107 @@ impl Block {
         self.get_body().transactions_root().0 == *self.get_header().get_transactions_root()
     }
 
-    pub fn block_verify_req(&self, request_id: u64) -> VerifyBlockReq {
-        let mut reqs: Vec<VerifyTxReq> = Vec::new();
-        let signed_txs = self.get_body().get_transactions();
-        for signed_tx in signed_txs {
-            let signer = signed_tx.get_signer();
-            let unverified_tx = signed_tx.get_transaction_with_sig();
-            let mut verify_tx_req = unverified_tx.tx_verify_req_msg();
-            verify_tx_req.set_signer(signer.to_vec());
-            reqs.push(verify_tx_req);
+    pub fn compact(mut self) -> CompactBlock {
+        let mut ret = CompactBlock::new();
+        ret.set_version(self.get_version());
+        ret.set_header(self.take_header());
+        ret.set_body(self.take_body().compact());
+        ret
+    }
+}
+
+impl CompactBlock {
+    pub fn crypt_hash(&self) -> H256 {
+        self.get_header().crypt_hash()
+    }
+
+    pub fn crypt_hash_hex(&self) -> String {
+        self.get_header().crypt_hash_hex()
+    }
+
+    pub fn check_hash(&self) -> bool {
+        self.get_body().transactions_root().0 == *self.get_header().get_transactions_root()
+    }
+
+    pub fn check_txs(&self, stxs: &[SignedTransaction]) -> Result<(), Option<usize>> {
+        let hashes = self.get_body().get_tx_hashes();
+        if stxs.len() == hashes.len() {
+            stxs.iter()
+                .zip(hashes.iter())
+                .into_iter()
+                .enumerate()
+                .try_for_each(|(idx, (stx, hash))| {
+                    if &stx.tx_hash == hash {
+                        Ok(())
+                    } else {
+                        Err(Some(idx))
+                    }
+                })
+        } else {
+            Err(None)
         }
-        let mut verify_blk_req = VerifyBlockReq::new();
-        verify_blk_req.set_id(request_id);
-        verify_blk_req.set_reqs(RepeatedField::from_vec(reqs));
-        verify_blk_req
+    }
+
+    pub fn complete(mut self, stxs: Vec<SignedTransaction>) -> Block {
+        let body = BlockBody::from_transactions(stxs);
+        let mut ret = Block::new();
+        ret.set_version(self.get_version());
+        ret.set_header(self.take_header());
+        ret.set_body(body);
+        ret
+    }
+}
+
+impl Proposal {
+    pub fn compact(mut self) -> CompactProposal {
+        let mut ret = CompactProposal::new();
+        ret.set_block(self.take_block().compact());
+        ret.set_islock(self.get_islock());
+        ret.set_lock_round(self.get_lock_round());
+        ret.set_lock_votes(self.take_lock_votes());
+        ret.set_round(self.get_round());
+        ret.set_height(self.get_height());
+        ret
+    }
+}
+
+impl CompactProposal {
+    pub fn complete(mut self, stxs: Vec<SignedTransaction>) -> Proposal {
+        let mut ret = Proposal::new();
+        ret.set_block(self.take_block().complete(stxs));
+        ret.set_islock(self.get_islock());
+        ret.set_lock_round(self.get_lock_round());
+        ret.set_lock_votes(self.take_lock_votes());
+        ret.set_round(self.get_round());
+        ret.set_height(self.get_height());
+        ret
+    }
+}
+
+impl SignedProposal {
+    pub fn compact(mut self) -> CompactSignedProposal {
+        let mut ret = CompactSignedProposal::new();
+        ret.set_proposal(self.take_proposal().compact());
+        ret.set_signature(self.take_signature());
+        ret
+    }
+}
+
+impl CompactSignedProposal {
+    pub fn complete(mut self, stxs: Vec<SignedTransaction>) -> SignedProposal {
+        let mut ret = SignedProposal::new();
+        ret.set_proposal(self.take_proposal().complete(stxs));
+        ret.set_signature(self.take_signature());
+        ret
+    }
+    pub fn create_verify_block_req(mut self) -> VerifyBlockReq {
+        let mut proposal = self.take_proposal();
+        let compact_block = proposal.take_block();
+        let mut verify_req = VerifyBlockReq::new();
+        verify_req.set_height(proposal.get_height());
+        verify_req.set_round(proposal.get_round());
+        verify_req.set_block(compact_block);
+        verify_req
     }
 }
 
@@ -272,7 +359,59 @@ impl BlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        merklehash::MerkleTree::from_hashes(self.transaction_hashes().clone()).get_root_hash()
+        merklehash::Tree::from_hashes(self.transaction_hashes().clone()).get_root_hash()
+    }
+
+    pub fn from_transactions(stxs: Vec<SignedTransaction>) -> BlockBody {
+        let mut ret = BlockBody::new();
+        ret.set_transactions(RepeatedField::from_vec(stxs));
+        ret
+    }
+
+    pub fn compact(mut self) -> CompactBlockBody {
+        let mut ret = CompactBlockBody::new();
+        let tx_hashes = self
+            .take_transactions()
+            .into_iter()
+            .map(|stx| stx.tx_hash)
+            .collect::<Vec<_>>();
+        ret.set_tx_hashes(RepeatedField::from_vec(tx_hashes));
+        ret
+    }
+}
+
+impl CompactBlockBody {
+    pub fn transaction_hashes(&self) -> Vec<H256> {
+        self.get_tx_hashes()
+            .iter()
+            .map(|h| H256::from_slice(h))
+            .collect()
+    }
+
+    pub fn transactions_root(&self) -> H256 {
+        merklehash::Tree::from_hashes(self.transaction_hashes().clone()).get_root_hash()
+    }
+}
+
+impl VerifyBlockReq {
+    pub fn check_txs(&self, stxs: &[SignedTransaction]) -> Result<(), Option<usize>> {
+        self.get_block().check_txs(stxs)
+    }
+
+    pub fn reply(mut self, result: Result<Vec<SignedTransaction>, ()>) -> VerifyBlockResp {
+        let mut ret = VerifyBlockResp::new();
+        ret.set_height(self.get_height());
+        ret.set_round(self.get_round());
+        match result {
+            Ok(stxs) => {
+                ret.set_block(self.take_block().complete(stxs));
+                ret.set_pass(true);
+            }
+            Err(()) => {
+                ret.set_pass(false);
+            }
+        }
+        ret
     }
 }
 
