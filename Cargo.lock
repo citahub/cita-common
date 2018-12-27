@@ -545,6 +545,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "db"
+version = "0.1.0"
+dependencies = [
+ "cita-types 0.1.0",
+ "elastic-array 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hashable 0.1.0",
+ "heapsize 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "logger 0.1.0",
+ "mktemp 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "parity-rocksdb 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rlp 0.2.0",
+ "util 0.6.0",
+]
+
+[[package]]
 name = "dotenv"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -579,6 +597,7 @@ dependencies = [
  "cita-crypto 0.1.0",
  "cita-types 0.1.0",
  "engine_json 0.6.0",
+ "hashable 0.1.0",
  "libproto 0.6.0",
  "proof 0.6.0",
  "pubsub 0.6.0",
@@ -2764,14 +2783,11 @@ dependencies = [
  "elastic-array 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "ethcore-bloom-journal 0.1.0",
  "git2 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "hashable 0.1.0",
  "heapsize 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "logger 0.1.0",
  "lru-cache 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "mktemp 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "panic_hook 0.0.1",
- "parity-rocksdb 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "parking_lot 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
