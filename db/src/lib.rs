@@ -23,6 +23,7 @@ pub mod trie;
 pub mod triehash;
 
 pub use hashdb::*;
+pub use itertools::Itertools;
 pub use journaldb::JournalDB;
 pub use kvdb::*;
 pub use memorydb::MemoryDB;
