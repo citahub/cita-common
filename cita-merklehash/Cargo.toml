@@ -1,13 +1,14 @@
 [package]
-name = "merklehash"
+name = "cita-merklehash"
 version = "0.1.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
-[dev-dependencies]
+[dependencies]
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 rlp = { path = "../rlp" }
 rlp_derive = { path = "../rlp_derive" }
+merklehash = { path = "../merklehash" }
 
 [features]
 default = []

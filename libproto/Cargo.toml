@@ -7,7 +7,7 @@ authors = ["Cryptape Technologies <contact@cryptape.com>"]
 [dependencies]
 protobuf = { version = "2.0.4", features = ["with-bytes"]}
 cita-types = { path = "../cita-types" }
-merklehash = { path = "../merklehash" }
+cita-merklehash = { path = "../cita-merklehash" }
 cita-crypto = { path = "../cita-crypto" }
 hashable = { path = "../hashable" }
 snappy = { path = "../snappy" }
@@ -25,6 +25,6 @@ default = []
 secp256k1 = ["cita-crypto/secp256k1"]
 ed25519 = ["cita-crypto/ed25519"]
 sm2 = ["cita-crypto/sm2"]
-sha3hash = ["hashable/sha3hash", "merklehash/sha3hash"]
-blake2bhash = ["hashable/blake2bhash", "merklehash/blake2bhash"]
-sm3hash = ["hashable/sm3hash", "merklehash/sm3hash"]
+sha3hash = ["hashable/sha3hash", "cita-merklehash/sha3hash"]
+blake2bhash = ["hashable/blake2bhash", "cita-merklehash/blake2bhash"]
+sm3hash = ["hashable/sm3hash", "cita-merklehash/sm3hash"]

@@ -297,6 +297,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "cita-merklehash"
+version = "0.1.0"
+dependencies = [
+ "cita-types 0.1.0",
+ "hashable 0.1.0",
+ "merklehash 0.1.0",
+ "rlp 0.2.0",
+ "rlp_derive 0.1.0",
+]
+
+[[package]]
 name = "cita-secp256k1"
 version = "0.6.0"
 dependencies = [
@@ -1166,11 +1177,11 @@ name = "libproto"
 version = "0.6.0"
 dependencies = [
  "cita-crypto 0.1.0",
+ "cita-merklehash 0.1.0",
  "cita-types 0.1.0",
  "grpc 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hashable 0.1.0",
  "logger 0.1.0",
- "merklehash 0.1.0",
  "protobuf 2.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
