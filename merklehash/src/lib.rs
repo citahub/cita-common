@@ -64,12 +64,12 @@ where
     //      5. Update for 3..6: [_, _, _, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
     //      6. Update for 1..2: [_, 1, 2, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
     //      7. Update for 0:    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, G, H, I, J, K, A, B, C, D, E, F]
-    pub fn from_hashes(input: Vec<T>, merge: M, null: T) -> Self {
+    pub fn from_hashes(input: Vec<T>, merge: M) -> Self {
         let input_size = input.len();
 
         let nodes = match input_size {
             // in case of empty slice, just return HASH_NULL_RLP
-            0 => vec![null],
+            0 => vec![],
 
             // If only one input.
             1 => input,
@@ -124,8 +124,8 @@ where
         }
     }
 
-    pub fn get_root_hash(&self) -> &T {
-        &self.nodes[0]
+    pub fn get_root_hash(&self) -> Option<&T> {
+        self.nodes.get(0)
     }
 
     pub fn get_proof_by_input_index(&self, input_index: usize) -> Option<Proof<T>> {
@@ -261,7 +261,7 @@ mod tests {
     extern crate rlp;
 
     use self::cita_types::H256;
-    use self::hashable::{Hashable, HASH_NULL_RLP};
+    use self::hashable::Hashable;
     use self::rlp::RlpStream;
 
     fn merge(left: &H256, right: &H256) -> H256 {
@@ -350,7 +350,6 @@ mod tests {
     #[test]
     fn test_proof() {
         let inputs = vec![
-            vec![],
             vec![b"".to_vec()],
             vec![
                 b"a".to_vec(),
@@ -385,21 +384,16 @@ mod tests {
             let tree = super::Tree::from_hashes(
                 input.clone().into_iter().map(|v| v.crypt_hash()).collect(),
                 merge,
-                HASH_NULL_RLP,
             );
-            let root_hash = tree.get_root_hash();
+            let root_hash = tree.get_root_hash().unwrap().clone();
             let input_size = input.len();
             let loop_size = if input_size == 0 { 1 } else { input_size };
             for index in 0..loop_size {
-                let data_hash = if input_size == 0 {
-                    HASH_NULL_RLP
-                } else {
-                    input[index].crypt_hash()
-                };
+                let data_hash = input[index].crypt_hash();
                 let proof = tree
                     .get_proof_by_input_index(index)
                     .expect("proof is not none");
-                assert!(proof.verify(*root_hash, data_hash, merge));
+                assert!(proof.verify(root_hash, data_hash, merge));
             }
         }
     }
@@ -408,17 +402,13 @@ mod tests {
     mod tests_for_sha3hash {
         use super::super::Tree;
         use super::cita_types::H256;
-        use super::hashable::{Hashable, HASH_NULL_RLP};
+        use super::hashable::Hashable;
         use super::merge;
         use std::str::FromStr;
 
         #[test]
         fn test_from_bytes() {
             let check = vec![
-                (
-                    vec![],
-                    "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                ),
                 (
                     vec![b"".to_vec()],
                     "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
@@ -459,12 +449,9 @@ mod tests {
             ];
             for (x, y) in check {
                 assert_eq!(
-                    Tree::from_hashes(
-                        x.into_iter().map(|v| v.crypt_hash()).collect(),
-                        merge,
-                        HASH_NULL_RLP
-                    )
-                    .get_root_hash(),
+                    Tree::from_hashes(x.into_iter().map(|v| v.crypt_hash()).collect(), merge)
+                        .get_root_hash()
+                        .unwrap(),
                     &H256::from_str(y).unwrap()
                 );
             }
@@ -516,10 +503,10 @@ mod tests {
                 assert_eq!(
                     Tree::from_hashes(
                         x.into_iter().map(|x| H256::from_str(x).unwrap()).collect(),
-                        merge,
-                        HASH_NULL_RLP
+                        merge
                     )
-                    .get_root_hash(),
+                    .get_root_hash()
+                    .unwrap(),
                     &H256::from_str(y).unwrap()
                 );
             }

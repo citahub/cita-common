@@ -360,7 +360,9 @@ impl BlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        *Tree::from_hashes(self.transaction_hashes().clone(), merge, HASH_NULL).get_root_hash()
+        *Tree::from_hashes(self.transaction_hashes().clone(), merge)
+            .get_root_hash()
+            .unwrap_or(&HASH_NULL)
     }
 
     pub fn from_transactions(stxs: Vec<SignedTransaction>) -> BlockBody {
@@ -390,7 +392,9 @@ impl CompactBlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        *Tree::from_hashes(self.transaction_hashes().clone(), merge, HASH_NULL).get_root_hash()
+        *Tree::from_hashes(self.transaction_hashes().clone(), merge)
+            .get_root_hash()
+            .unwrap_or(&HASH_NULL)
     }
 }
 
