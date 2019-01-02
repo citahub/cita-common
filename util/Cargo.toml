@@ -12,7 +12,7 @@ elastic-array = "0.9"
 rlp = { path = "../rlp" }
 heapsize = "0.4"
 itertools = "0.5"
-vergen = "0.1"
+vergen = "3.0"
 target_info = "0.1"
 cita-types = { path = "../cita-types" }
 snappy = { path = "../snappy" }
