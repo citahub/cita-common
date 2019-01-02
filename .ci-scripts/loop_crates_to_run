@@ -114,7 +114,9 @@ function cargo_run_all () {
 
     cargo_run util
 
-    for crate in hashable merklehash cita-merklehash db cita-secp256k1 cita-ed25519 cita-sm2; do
+    cargo_run merklehash
+
+    for crate in hashable cita-merklehash db cita-secp256k1 cita-ed25519 cita-sm2; do
         cargo_run ${crate} --features "${SELECT_HASH}"
     done
 

@@ -1382,12 +1382,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "merklehash"
 version = "0.1.0"
-dependencies = [
- "cita-types 0.1.0",
- "hashable 0.1.0",
- "rlp 0.2.0",
- "rlp_derive 0.1.0",
-]
 
 [[package]]
 name = "metadeps"
