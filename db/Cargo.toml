@@ -5,7 +5,7 @@ authors = ["Parity Technologies <admin@parity.io>", "Cryptape Technologies <cont
 
 [dependencies]
 parity-rocksdb = "0.5"
-elastic-array = "0.9"
+elastic-array = "0.10"
 cita-types = { path = "../cita-types" }
 logger = { path = "../logger" }
 hashable = { path = "../hashable" }
