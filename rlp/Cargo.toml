@@ -9,6 +9,6 @@ authors = ["Parity Technologies <admin@parity.io>"]
 [dependencies]
 elastic-array = "0.9"
 cita-types = { path = "../cita-types" }
-lazy_static = "1.1"
+lazy_static = "1.2"
 rustc-hex = "1.0"
 byteorder = "1.0"
