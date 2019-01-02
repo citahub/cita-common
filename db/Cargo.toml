@@ -9,7 +9,7 @@ elastic-array = "0.9"
 cita-types = { path = "../cita-types" }
 logger = { path = "../logger" }
 hashable = { path = "../hashable" }
-itertools = "0.5"
+itertools = "0.7"
 heapsize = "0.4"
 regex = "1.0.5"
 rand = "0.3.12"
