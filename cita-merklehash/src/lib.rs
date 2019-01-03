@@ -20,15 +20,15 @@ extern crate hashable;
 extern crate rlp;
 #[macro_use]
 extern crate rlp_derive;
-extern crate merklehash;
+extern crate static_merkel_tree;
 
 use self::hashable::Hashable;
 use cita_types::H256;
-use merklehash::{Proof as MerkelProof, ProofNode as MerkelProofNode};
 use rlp::RlpStream;
+use static_merkel_tree::{Proof as MerkelProof, ProofNode as MerkelProofNode};
 
 pub use self::hashable::HASH_NULL_RLP as HASH_NULL;
-pub use merklehash::Tree;
+pub use static_merkel_tree::Tree;
 
 #[derive(Debug, Clone, RlpEncodable, RlpDecodable)]
 pub struct ProofNode {

@@ -19,7 +19,6 @@ members = [
 
     "ethcore-bloom-journal",
     "hashable",
-    "merklehash",
     "cita-merklehash",
     "blake2b",
     "cita-sm2",
