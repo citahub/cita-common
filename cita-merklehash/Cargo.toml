@@ -8,7 +8,7 @@ cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 rlp = { path = "../rlp" }
 rlp_derive = { path = "../rlp_derive" }
-merklehash = { path = "../merklehash" }
+static_merkel_tree = "~0.1.1"
 
 [features]
 default = []
