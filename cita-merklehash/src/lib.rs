@@ -20,15 +20,15 @@ extern crate hashable;
 extern crate rlp;
 #[macro_use]
 extern crate rlp_derive;
-extern crate static_merkel_tree;
+extern crate static_merkle_tree;
 
 use self::hashable::Hashable;
 use cita_types::H256;
 use rlp::RlpStream;
-use static_merkel_tree::{Proof as MerkelProof, ProofNode as MerkelProofNode};
+use static_merkle_tree::{Proof as MerkleProof, ProofNode as MerkleProofNode};
 
 pub use self::hashable::HASH_NULL_RLP as HASH_NULL;
-pub use static_merkel_tree::Tree;
+pub use static_merkle_tree::Tree;
 
 #[derive(Debug, Clone, RlpEncodable, RlpDecodable)]
 pub struct ProofNode {
@@ -46,8 +46,8 @@ pub fn merge(left: &H256, right: &H256) -> H256 {
     stream.out().crypt_hash()
 }
 
-impl From<MerkelProofNode<H256>> for ProofNode {
-    fn from(node: MerkelProofNode<H256>) -> Self {
+impl From<MerkleProofNode<H256>> for ProofNode {
+    fn from(node: MerkleProofNode<H256>) -> Self {
         ProofNode {
             is_right: node.is_right,
             hash: node.hash,
@@ -55,8 +55,8 @@ impl From<MerkelProofNode<H256>> for ProofNode {
     }
 }
 
-impl From<MerkelProof<H256>> for Proof {
-    fn from(proof: MerkelProof<H256>) -> Self {
+impl From<MerkleProof<H256>> for Proof {
+    fn from(proof: MerkleProof<H256>) -> Self {
         Proof(proof.0.into_iter().map(|n| ProofNode::from(n)).collect())
     }
 }
