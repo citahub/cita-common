@@ -35,7 +35,7 @@ struct Data32Visitor;
 struct Data20Visitor;
 
 macro_rules! impl_for_fixed_type {
-    ($outer:ident, $inner:ident, $outer_size:expr) => {
+    ($outer:ident, $inner:ident, $outer_size:expr, $visitor:ident) => {
         impl $outer {
             pub fn new(data: $inner) -> $outer {
                 $outer(data)
@@ -56,11 +56,11 @@ macro_rules! impl_for_fixed_type {
             where
                 D: Deserializer<'de>,
             {
-                deserializer.deserialize_str(concat_idents!($outer, Visitor))
+                deserializer.deserialize_str($visitor)
             }
         }
 
-        impl<'de> Visitor<'de> for concat_idents!($outer, Visitor) {
+        impl<'de> Visitor<'de> for $visitor {
             type Value = $outer;
 
             fn expecting(&self, formatter: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
@@ -129,8 +129,8 @@ macro_rules! impl_for_fixed_type {
     };
 }
 
-impl_for_fixed_type!(Data32, H256, 32usize);
-impl_for_fixed_type!(Data20, H160, 20usize);
+impl_for_fixed_type!(Data32, H256, 32usize, Data32Visitor);
+impl_for_fixed_type!(Data20, H160, 20usize, Data20Visitor);
 
 macro_rules! test_for_fixed_type {
     ($test_name:ident, $outer:ident, $inner:ident, $outer_size:expr) => {

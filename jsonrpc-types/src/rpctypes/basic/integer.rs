@@ -15,8 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use std::convert::{TryFrom, TryInto};
-use std::num::TryFromIntError;
+use libproto::{TryFromConvertError, TryInto};
 
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -79,16 +78,20 @@ impl Into<u64> for Integer {
 }
 
 macro_rules! impl_convert_with_uint {
-    ($uint:ty) => {
+    ($uint:ident) => {
         impl From<$uint> for Integer {
             fn from(data: $uint) -> Integer {
                 Integer::new(data as u64)
             }
         }
         impl TryInto<$uint> for Integer {
-            type Error = TryFromIntError;
-            fn try_into(self) -> Result<$uint, Self::Error> {
-                TryFrom::try_from(self.0)
+            type Error = TryFromConvertError;
+            fn try_into(self) -> Result<$uint, TryFromConvertError> {
+                if self.0 > u64::from($uint::max_value()) {
+                    Err(TryFromConvertError::default())
+                } else {
+                    Ok(self.0 as $uint)
+                }
             }
         }
     };
@@ -101,8 +104,9 @@ impl_convert_with_uint!(u8);
 #[cfg(test)]
 mod tests {
     use super::Integer;
+    use libproto::TryInto;
     use serde_json;
-    use std::convert::{Into, TryInto};
+    use std::convert::Into;
 
     #[test]
     fn serialize() {
