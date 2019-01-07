@@ -5,7 +5,6 @@
 // <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
-#![rustfmt_skip]
 
 use {Decodable, DecoderError};
 use impls::decode_usize;

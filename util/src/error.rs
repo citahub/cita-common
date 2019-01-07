@@ -18,7 +18,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! General error types for use in ethcore.
-#![rustfmt_skip]
 
 use types::H256;
 use rlp::DecoderError;
@@ -150,17 +149,3 @@ impl From<::snappy::SnappyError> for UtilError {
         UtilError::Snappy(err)
     }
 }
-
-// TODO: uncomment below once https://github.com/rust-lang/rust/issues/27336 sorted.
-/*#![feature(concat_idents)]
-macro_rules! assimilate {
-    ($name:ident) => (
-        impl From<concat_idents!($name, Error)> for Error {
-            fn from(err: concat_idents!($name, Error)) -> Error {
-                Error:: $name (err)
-            }
-        }
-    )
-}
-assimilate!(FromHex);
-assimilate!(BaseData);*/

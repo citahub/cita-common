@@ -15,7 +15,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! Utils common types and macros global reexport.
-#![rustfmt_skip]
 
 use std::io;
 

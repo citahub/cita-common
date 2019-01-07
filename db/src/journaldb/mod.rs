@@ -15,7 +15,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! `JournalDB` interface and implementation.
-#![rustfmt_skip]
 
 use std::{fmt, str};
 use std::sync::Arc;
