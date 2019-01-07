@@ -16,15 +16,15 @@
 
 //! Disk-backed `HashDB` implementation.
 
-use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::traits::JournalDB;
+use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 
-use util::{Bytes, BaseDataError, UtilError};
-use types::H256;
 use hashdb::*;
-use kvdb::{KeyValueDB, DBTransaction};
+use kvdb::{DBTransaction, KeyValueDB};
 use memorydb::*;
 use rlp::*;
+use types::H256;
+use util::{BaseDataError, Bytes, UtilError};
 
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -46,7 +46,10 @@ pub struct ArchiveDB {
 impl ArchiveDB {
     /// Create a new instance from a key-value db.
     pub fn new(backing: Arc<KeyValueDB>, col: Option<u32>) -> ArchiveDB {
-        let latest_era = backing.get(col, &LATEST_ERA_KEY).expect("Low-level database error.").map(|val| decode::<u64>(&val));
+        let latest_era = backing
+            .get(col, &LATEST_ERA_KEY)
+            .expect("Low-level database error.")
+            .map(|val| decode::<u64>(&val));
         ArchiveDB {
             overlay: MemoryDB::new(),
             backing: backing,
@@ -114,11 +117,11 @@ impl HashDB for ArchiveDB {
 impl JournalDB for ArchiveDB {
     fn boxed_clone(&self) -> Box<JournalDB> {
         Box::new(ArchiveDB {
-                     overlay: self.overlay.clone(),
-                     backing: self.backing.clone(),
-                     latest_era: self.latest_era,
-                     column: self.column.clone(),
-                 })
+            overlay: self.overlay.clone(),
+            backing: self.backing.clone(),
+            latest_era: self.latest_era,
+            column: self.column.clone(),
+        })
     }
 
     fn mem_used(&self) -> usize {
@@ -129,7 +132,12 @@ impl JournalDB for ArchiveDB {
         self.latest_era.is_none()
     }
 
-    fn journal_under(&mut self, batch: &mut DBTransaction, now: u64, _id: &H256) -> Result<u32, UtilError> {
+    fn journal_under(
+        &mut self,
+        batch: &mut DBTransaction,
+        now: u64,
+        _id: &H256,
+    ) -> Result<u32, UtilError> {
         let mut inserts = 0usize;
         let mut deletes = 0usize;
 
@@ -152,7 +160,12 @@ impl JournalDB for ArchiveDB {
         Ok((inserts + deletes) as u32)
     }
 
-    fn mark_canonical(&mut self, _batch: &mut DBTransaction, _end_era: u64, _canon_id: &H256) -> Result<u32, UtilError> {
+    fn mark_canonical(
+        &mut self,
+        _batch: &mut DBTransaction,
+        _end_era: u64,
+        _canon_id: &H256,
+    ) -> Result<u32, UtilError> {
         // keep everything! it's an archive, after all.
         Ok(0)
     }
@@ -189,7 +202,9 @@ impl JournalDB for ArchiveDB {
     }
 
     fn state(&self, id: &H256) -> Option<Bytes> {
-        self.backing.get_by_prefix(self.column, &id[0..DB_PREFIX_LEN]).map(|b| b.into_vec())
+        self.backing
+            .get_by_prefix(self.column, &id[0..DB_PREFIX_LEN])
+            .map(|b| b.into_vec())
     }
 
     fn is_pruned(&self) -> bool {
@@ -207,18 +222,18 @@ impl JournalDB for ArchiveDB {
 
 #[cfg(test)]
 mod tests {
-    #![cfg_attr(feature="dev", allow(blacklisted_name))]
-    #![cfg_attr(feature="dev", allow(similar_names))]
+    #![cfg_attr(feature = "dev", allow(blacklisted_name))]
+    #![cfg_attr(feature = "dev", allow(similar_names))]
     extern crate mktemp;
 
     use super::*;
     use hashable::Hashable;
-    use types::H32;
-    use hashdb::{HashDB, DBValue};
+    use hashdb::{DBValue, HashDB};
     use journaldb::traits::JournalDB;
     use kvdb::Database;
     use std::path::Path;
     use types::traits::LowerHex;
+    use types::H32;
 
     #[test]
     fn insert_same_in_fork() {
@@ -228,16 +243,22 @@ mod tests {
         let x = jdb.insert(b"X");
         jdb.commit_batch(1, &b"1".crypt_hash(), None).unwrap();
         jdb.commit_batch(2, &b"2".crypt_hash(), None).unwrap();
-        jdb.commit_batch(3, &b"1002a".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
-        jdb.commit_batch(4, &b"1003a".crypt_hash(), Some((2, b"2".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"1002a".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
+        jdb.commit_batch(4, &b"1003a".crypt_hash(), Some((2, b"2".crypt_hash())))
+            .unwrap();
 
         jdb.remove(&x);
-        jdb.commit_batch(3, &b"1002b".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"1002b".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         let x = jdb.insert(b"X");
-        jdb.commit_batch(4, &b"1003b".crypt_hash(), Some((2, b"2".crypt_hash()))).unwrap();
+        jdb.commit_batch(4, &b"1003b".crypt_hash(), Some((2, b"2".crypt_hash())))
+            .unwrap();
 
-        jdb.commit_batch(5, &b"1004a".crypt_hash(), Some((3, b"1002a".crypt_hash()))).unwrap();
-        jdb.commit_batch(6, &b"1005a".crypt_hash(), Some((4, b"1003a".crypt_hash()))).unwrap();
+        jdb.commit_batch(5, &b"1004a".crypt_hash(), Some((3, b"1002a".crypt_hash())))
+            .unwrap();
+        jdb.commit_batch(6, &b"1005a".crypt_hash(), Some((4, b"1003a".crypt_hash())))
+            .unwrap();
 
         assert!(jdb.contains(&x));
     }
@@ -254,9 +275,11 @@ mod tests {
         assert!(jdb.contains(&h));
         jdb.commit_batch(2, &b"2".crypt_hash(), None).unwrap();
         assert!(jdb.contains(&h));
-        jdb.commit_batch(3, &b"3".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"3".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&h));
-        jdb.commit_batch(4, &b"4".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(4, &b"4".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&h));
     }
 
@@ -288,22 +311,26 @@ mod tests {
         jdb.remove(&foo);
         jdb.remove(&bar);
         let baz = jdb.insert(b"baz");
-        jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
         assert!(jdb.contains(&bar));
         assert!(jdb.contains(&baz));
 
         let foo = jdb.insert(b"foo");
         jdb.remove(&baz);
-        jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
         assert!(jdb.contains(&baz));
 
         jdb.remove(&foo);
-        jdb.commit_batch(3, &b"3".crypt_hash(), Some((2, b"2".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"3".crypt_hash(), Some((2, b"2".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
 
-        jdb.commit_batch(4, &b"4".crypt_hash(), Some((3, b"3".crypt_hash()))).unwrap();
+        jdb.commit_batch(4, &b"4".crypt_hash(), Some((3, b"3".crypt_hash())))
+            .unwrap();
     }
 
     #[test]
@@ -319,16 +346,19 @@ mod tests {
 
         jdb.remove(&foo);
         let baz = jdb.insert(b"baz");
-        jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
 
         jdb.remove(&bar);
-        jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
 
         assert!(jdb.contains(&foo));
         assert!(jdb.contains(&bar));
         assert!(jdb.contains(&baz));
 
-        jdb.commit_batch(2, &b"2b".crypt_hash(), Some((1, b"1b".crypt_hash()))).unwrap();
+        jdb.commit_batch(2, &b"2b".crypt_hash(), Some((1, b"1b".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
     }
 
@@ -342,12 +372,15 @@ mod tests {
         assert!(jdb.contains(&foo));
 
         jdb.remove(&foo);
-        jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         jdb.insert(b"foo");
         assert!(jdb.contains(&foo));
-        jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
-        jdb.commit_batch(3, &b"2".crypt_hash(), Some((0, b"2".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"2".crypt_hash(), Some((0, b"2".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
     }
 
@@ -358,13 +391,16 @@ mod tests {
         jdb.commit_batch(0, &b"0".crypt_hash(), None).unwrap();
 
         let foo = jdb.insert(b"foo");
-        jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
 
         jdb.insert(b"foo");
-        jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
 
-        jdb.commit_batch(2, &b"2a".crypt_hash(), Some((1, b"1a".crypt_hash()))).unwrap();
+        jdb.commit_batch(2, &b"2a".crypt_hash(), Some((1, b"1a".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
     }
 
@@ -391,14 +427,16 @@ mod tests {
         {
             let mut jdb = new_db(&dir);
             jdb.remove(&foo);
-            jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+            jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash())))
+                .unwrap();
         }
 
         {
             let mut jdb = new_db(&dir);
             assert!(jdb.contains(&foo));
             assert!(jdb.contains(&bar));
-            jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+            jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash())))
+                .unwrap();
         }
     }
 
@@ -412,23 +450,28 @@ mod tests {
             // history is 1
             let foo = jdb.insert(b"foo");
             jdb.commit_batch(0, &b"0".crypt_hash(), None).unwrap();
-            jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+            jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash())))
+                .unwrap();
 
             // foo is ancient history.
 
             jdb.insert(b"foo");
-            jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+            jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash())))
+                .unwrap();
             foo
         };
 
         {
             let mut jdb = new_db(&dir);
             jdb.remove(&foo);
-            jdb.commit_batch(3, &b"3".crypt_hash(), Some((2, b"2".crypt_hash()))).unwrap();
+            jdb.commit_batch(3, &b"3".crypt_hash(), Some((2, b"2".crypt_hash())))
+                .unwrap();
             assert!(jdb.contains(&foo));
             jdb.remove(&foo);
-            jdb.commit_batch(4, &b"4".crypt_hash(), Some((3, b"3".crypt_hash()))).unwrap();
-            jdb.commit_batch(5, &b"5".crypt_hash(), Some((4, b"4".crypt_hash()))).unwrap();
+            jdb.commit_batch(4, &b"4".crypt_hash(), Some((3, b"3".crypt_hash())))
+                .unwrap();
+            jdb.commit_batch(5, &b"5".crypt_hash(), Some((4, b"4".crypt_hash())))
+                .unwrap();
         }
     }
 
@@ -444,16 +487,19 @@ mod tests {
             jdb.commit_batch(0, &b"0".crypt_hash(), None).unwrap();
             jdb.remove(&foo);
             let baz = jdb.insert(b"baz");
-            jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+            jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash())))
+                .unwrap();
 
             jdb.remove(&bar);
-            jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+            jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash())))
+                .unwrap();
             (foo, bar, baz)
         };
 
         {
             let mut jdb = new_db(&dir);
-            jdb.commit_batch(2, &b"2b".crypt_hash(), Some((1, b"1b".crypt_hash()))).unwrap();
+            jdb.commit_batch(2, &b"2b".crypt_hash(), Some((1, b"1b".crypt_hash())))
+                .unwrap();
             assert!(jdb.contains(&foo));
         }
     }

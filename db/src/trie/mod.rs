@@ -16,26 +16,25 @@
 
 //! Trie interface and implementation.
 
-use types::H256;
-use hashdb::{HashDB, DBValue};
+use hashdb::{DBValue, HashDB};
 use std::fmt;
+use types::H256;
 use util::Bytes;
 
-/// Export the standardmap module.
-pub mod standardmap;
 /// Export the node module.
 pub mod node;
-/// Export the triedb module.
-pub mod triedb;
-/// Export the triedbmut module.
-pub mod triedbmut;
+/// Trie query recording.
+pub mod recorder;
 /// Export the sectriedb module.
 pub mod sectriedb;
 /// Export the sectriedbmut module.
 pub mod sectriedbmut;
-/// Trie query recording.
-pub mod recorder;
-
+/// Export the standardmap module.
+pub mod standardmap;
+/// Export the triedb module.
+pub mod triedb;
+/// Export the triedbmut module.
+pub mod triedbmut;
 
 mod fatdb;
 mod fatdbmut;
@@ -66,7 +65,9 @@ impl fmt::Display for TrieError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             TrieError::InvalidStateRoot(ref root) => write!(f, "Invalid state root: {}", root),
-            TrieError::IncompleteDatabase(ref missing) => write!(f, "Database missing expected key: {}", missing),
+            TrieError::IncompleteDatabase(ref missing) => {
+                write!(f, "Database missing expected key: {}", missing)
+            }
         }
     }
 }
@@ -303,7 +304,11 @@ impl TrieFactory {
     }
 
     /// Create new mutable instance of trie and check for errors.
-    pub fn from_existing<'db>(&self, db: &'db mut HashDB, root: &'db mut H256) -> Result<Box<TrieMut + 'db>> {
+    pub fn from_existing<'db>(
+        &self,
+        db: &'db mut HashDB,
+        root: &'db mut H256,
+    ) -> Result<Box<TrieMut + 'db>> {
         match self.spec {
             TrieSpec::Generic => Ok(Box::new(TrieDBMut::from_existing(db, root)?)),
             TrieSpec::Secure => Ok(Box::new(SecTrieDBMut::from_existing(db, root)?)),

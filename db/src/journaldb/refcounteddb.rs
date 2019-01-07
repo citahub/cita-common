@@ -16,17 +16,17 @@
 
 //! Disk-backed, ref-counted `JournalDB` implementation.
 
-use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::traits::JournalDB;
+use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 
-use util::{UtilError, Bytes};
-use types::H256;
 use hashdb::*;
 use heapsize::HeapSizeOf;
-use kvdb::{KeyValueDB, DBTransaction};
+use kvdb::{DBTransaction, KeyValueDB};
 use memorydb::MemoryDB;
 use overlaydb::OverlayDB;
 use rlp::*;
+use types::H256;
+use util::{Bytes, UtilError};
 
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -65,7 +65,10 @@ const PADDING: [u8; 10] = [0u8; 10];
 impl RefCountedDB {
     /// Create a new instance given a `backing` database.
     pub fn new(backing: Arc<KeyValueDB>, col: Option<u32>) -> RefCountedDB {
-        let latest_era = backing.get(col, &LATEST_ERA_KEY).expect("Low-level database error.").map(|val| decode::<u64>(&val));
+        let latest_era = backing
+            .get(col, &LATEST_ERA_KEY)
+            .expect("Low-level database error.")
+            .map(|val| decode::<u64>(&val));
 
         RefCountedDB {
             forward: OverlayDB::new(backing.clone(), col),
@@ -112,13 +115,13 @@ impl HashDB for RefCountedDB {
 impl JournalDB for RefCountedDB {
     fn boxed_clone(&self) -> Box<JournalDB> {
         Box::new(RefCountedDB {
-                     forward: self.forward.clone(),
-                     backing: self.backing.clone(),
-                     latest_era: self.latest_era,
-                     inserts: self.inserts.clone(),
-                     removes: self.removes.clone(),
-                     column: self.column.clone(),
-                 })
+            forward: self.forward.clone(),
+            backing: self.backing.clone(),
+            latest_era: self.latest_era,
+            inserts: self.inserts.clone(),
+            removes: self.removes.clone(),
+            column: self.column.clone(),
+        })
     }
 
     fn mem_used(&self) -> usize {
@@ -138,24 +141,32 @@ impl JournalDB for RefCountedDB {
     }
 
     fn state(&self, id: &H256) -> Option<Bytes> {
-        self.backing.get_by_prefix(self.column, &id[0..DB_PREFIX_LEN]).map(|b| b.into_vec())
+        self.backing
+            .get_by_prefix(self.column, &id[0..DB_PREFIX_LEN])
+            .map(|b| b.into_vec())
     }
 
-    fn journal_under(&mut self, batch: &mut DBTransaction, now: u64, id: &H256) -> Result<u32, UtilError> {
+    fn journal_under(
+        &mut self,
+        batch: &mut DBTransaction,
+        now: u64,
+        id: &H256,
+    ) -> Result<u32, UtilError> {
         // record new commit's details.
         let mut index = 0usize;
         let mut last;
 
-        while self.backing
-                  .get(self.column, {
-            let mut r = RlpStream::new_list(3);
-            r.append(&now);
-            r.append(&index);
-            r.append(&&PADDING[..]);
-            last = r.drain();
-            &last
-        })?
-                  .is_some()
+        while self
+            .backing
+            .get(self.column, {
+                let mut r = RlpStream::new_list(3);
+                r.append(&now);
+                r.append(&index);
+                r.append(&&PADDING[..]);
+                last = r.drain();
+                &last
+            })?
+            .is_some()
         {
             index += 1;
         }
@@ -181,13 +192,17 @@ impl JournalDB for RefCountedDB {
         Ok(ops as u32)
     }
 
-    fn mark_canonical(&mut self, batch: &mut DBTransaction, end_era: u64, canon_id: &H256) -> Result<u32, UtilError> {
+    fn mark_canonical(
+        &mut self,
+        batch: &mut DBTransaction,
+        end_era: u64,
+        canon_id: &H256,
+    ) -> Result<u32, UtilError> {
         // apply old commits' details
         let mut index = 0usize;
         let mut last;
         while let Some(rlp_data) = {
-            self.backing
-                .get(self.column, {
+            self.backing.get(self.column, {
                 let mut r = RlpStream::new_list(3);
                 r.append(&end_era);
                 r.append(&index);
@@ -195,8 +210,7 @@ impl JournalDB for RefCountedDB {
                 last = r.drain();
                 &last
             })?
-        }
-        {
+        } {
             let rlp = Rlp::new(&rlp_data);
             let our_id: H256 = rlp.val_at(0);
             let to_remove: Vec<H256> = rlp.list_at(if *canon_id == our_id { 2 } else { 1 });
@@ -235,13 +249,13 @@ impl JournalDB for RefCountedDB {
 
 #[cfg(test)]
 mod tests {
-    #![cfg_attr(feature="dev", allow(blacklisted_name))]
-    #![cfg_attr(feature="dev", allow(similar_names))]
+    #![cfg_attr(feature = "dev", allow(blacklisted_name))]
+    #![cfg_attr(feature = "dev", allow(similar_names))]
 
-    use super::*;
     use super::super::traits::JournalDB;
+    use super::*;
     use hashable::Hashable;
-    use hashdb::{HashDB, DBValue};
+    use hashdb::{DBValue, HashDB};
 
     #[test]
     fn long_history() {
@@ -255,9 +269,11 @@ mod tests {
         assert!(jdb.contains(&h));
         jdb.commit_batch(2, &b"2".crypt_hash(), None).unwrap();
         assert!(jdb.contains(&h));
-        jdb.commit_batch(3, &b"3".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"3".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&h));
-        jdb.commit_batch(4, &b"4".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(4, &b"4".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         assert!(!jdb.contains(&h));
     }
 
@@ -274,9 +290,11 @@ mod tests {
         assert_eq!(jdb.latest_era(), Some(1));
         jdb.commit_batch(2, &b"2".crypt_hash(), None).unwrap();
         assert_eq!(jdb.latest_era(), Some(2));
-        jdb.commit_batch(3, &b"3".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"3".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         assert_eq!(jdb.latest_era(), Some(3));
-        jdb.commit_batch(4, &b"4".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(4, &b"4".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         assert_eq!(jdb.latest_era(), Some(4));
     }
 
@@ -294,25 +312,29 @@ mod tests {
         jdb.remove(&foo);
         jdb.remove(&bar);
         let baz = jdb.insert(b"baz");
-        jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
         assert!(jdb.contains(&bar));
         assert!(jdb.contains(&baz));
 
         let foo = jdb.insert(b"foo");
         jdb.remove(&baz);
-        jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash()))).unwrap();
+        jdb.commit_batch(2, &b"2".crypt_hash(), Some((1, b"1".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
         assert!(!jdb.contains(&bar));
         assert!(jdb.contains(&baz));
 
         jdb.remove(&foo);
-        jdb.commit_batch(3, &b"3".crypt_hash(), Some((2, b"2".crypt_hash()))).unwrap();
+        jdb.commit_batch(3, &b"3".crypt_hash(), Some((2, b"2".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
         assert!(!jdb.contains(&bar));
         assert!(!jdb.contains(&baz));
 
-        jdb.commit_batch(4, &b"4".crypt_hash(), Some((3, b"3".crypt_hash()))).unwrap();
+        jdb.commit_batch(4, &b"4".crypt_hash(), Some((3, b"3".crypt_hash())))
+            .unwrap();
         assert!(!jdb.contains(&foo));
         assert!(!jdb.contains(&bar));
         assert!(!jdb.contains(&baz));
@@ -331,16 +353,19 @@ mod tests {
 
         jdb.remove(&foo);
         let baz = jdb.insert(b"baz");
-        jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1a".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
 
         jdb.remove(&bar);
-        jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash()))).unwrap();
+        jdb.commit_batch(1, &b"1b".crypt_hash(), Some((0, b"0".crypt_hash())))
+            .unwrap();
 
         assert!(jdb.contains(&foo));
         assert!(jdb.contains(&bar));
         assert!(jdb.contains(&baz));
 
-        jdb.commit_batch(2, &b"2b".crypt_hash(), Some((1, b"1b".crypt_hash()))).unwrap();
+        jdb.commit_batch(2, &b"2b".crypt_hash(), Some((1, b"1b".crypt_hash())))
+            .unwrap();
         assert!(jdb.contains(&foo));
         assert!(!jdb.contains(&baz));
         assert!(!jdb.contains(&bar));

@@ -16,15 +16,15 @@
 
 //! `JournalDB` interface and implementation.
 
-use std::{fmt, str};
 use std::sync::Arc;
+use std::{fmt, str};
 
-/// Export the journaldb module.
-pub mod traits;
 mod archivedb;
 mod earlymergedb;
 mod overlayrecentdb;
 mod refcounteddb;
+/// Export the journaldb module.
+pub mod traits;
 
 /// Export the `JournalDB` trait.
 pub use self::traits::JournalDB;
@@ -107,7 +107,12 @@ impl Algorithm {
 
     /// Returns all algorithm types.
     pub fn all_types() -> Vec<Algorithm> {
-        vec![Algorithm::Archive, Algorithm::EarlyMerge, Algorithm::OverlayRecent, Algorithm::RefCounted]
+        vec![
+            Algorithm::Archive,
+            Algorithm::EarlyMerge,
+            Algorithm::OverlayRecent,
+            Algorithm::RefCounted,
+        ]
     }
 }
 
@@ -118,7 +123,11 @@ impl fmt::Display for Algorithm {
 }
 
 /// Create a new `JournalDB` trait object over a generic key-value database.
-pub fn new(backing: Arc<::kvdb::KeyValueDB>, algorithm: Algorithm, col: Option<u32>) -> Box<JournalDB> {
+pub fn new(
+    backing: Arc<::kvdb::KeyValueDB>,
+    algorithm: Algorithm,
+    col: Option<u32>,
+) -> Box<JournalDB> {
     match algorithm {
         Algorithm::Archive => Box::new(archivedb::ArchiveDB::new(backing, col)),
         Algorithm::EarlyMerge => Box::new(earlymergedb::EarlyMergeDB::new(backing, col)),

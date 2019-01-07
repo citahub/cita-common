@@ -16,13 +16,13 @@
 
 //! Key-Value store abstraction with `RocksDB` backend.
 
-use std::collections::{HashMap, BTreeMap};
+use std::collections::{BTreeMap, HashMap};
 
 use hashdb::DBValue;
-use kvdb::{DBTransaction, KeyValueDB, DBOp};
+use kvdb::{DBOp, DBTransaction, KeyValueDB};
 use util::{RwLock, UtilError};
 
-use rlp::{UntrustedRlp, RlpType, Compressible};
+use rlp::{Compressible, RlpType, UntrustedRlp};
 
 /// A key-value database fulfilling the `KeyValueDB` trait, living in memory.
 /// This is generally intended for tests and is not particularly optimized.
@@ -40,7 +40,9 @@ pub fn in_memory(num_cols: u32) -> InMemory {
         cols.insert(Some(idx), BTreeMap::new());
     }
 
-    InMemory { columns: RwLock::new(cols) }
+    InMemory {
+        columns: RwLock::new(cols),
+    }
 }
 
 impl KeyValueDB for InMemory {
@@ -56,7 +58,10 @@ impl KeyValueDB for InMemory {
         let columns = self.columns.read();
         match columns.get(&col) {
             None => None,
-            Some(map) => map.iter().find(|&(ref k, _)| k.starts_with(prefix)).map(|(_, v)| v.to_vec().into_boxed_slice()),
+            Some(map) => map
+                .iter()
+                .find(|&(ref k, _)| k.starts_with(prefix))
+                .map(|(_, v)| v.to_vec().into_boxed_slice()),
         }
     }
 
@@ -92,23 +97,35 @@ impl KeyValueDB for InMemory {
     }
     fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
         match self.columns.read().get(&col) {
-            Some(map) => Box::new(// TODO: worth optimizing at all?
-                                  map.clone().into_iter().map(|(k, v)| (k.into_boxed_slice(), v.into_vec().into_boxed_slice()))),
+            Some(map) => Box::new(
+                // TODO: worth optimizing at all?
+                map.clone()
+                    .into_iter()
+                    .map(|(k, v)| (k.into_boxed_slice(), v.into_vec().into_boxed_slice())),
+            ),
             None => Box::new(None.into_iter()),
         }
     }
 
-    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
+    fn iter_from_prefix<'a>(
+        &'a self,
+        col: Option<u32>,
+        prefix: &'a [u8],
+    ) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
         match self.columns.read().get(&col) {
-            Some(map) => Box::new(map.clone()
-                .into_iter()
-                .skip_while(move |&(ref k, _)| !k.starts_with(prefix))
-                .map(|(k, v)| (k.into_boxed_slice(), v.into_vec().into_boxed_slice()))),
+            Some(map) => Box::new(
+                map.clone()
+                    .into_iter()
+                    .skip_while(move |&(ref k, _)| !k.starts_with(prefix))
+                    .map(|(k, v)| (k.into_boxed_slice(), v.into_vec().into_boxed_slice())),
+            ),
             None => Box::new(None.into_iter()),
         }
     }
 
     fn restore(&self, _new_db: &str) -> Result<(), UtilError> {
-        Err(UtilError::SimpleString("Attempted to restore in-memory database".into()))
+        Err(UtilError::SimpleString(
+            "Attempted to restore in-memory database".into(),
+        ))
     }
 }

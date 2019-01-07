@@ -19,10 +19,10 @@
 
 //! General error types for use in ethcore.
 
-use types::H256;
 use rlp::DecoderError;
 use rustc_hex::FromHexError;
 use std::fmt;
+use types::H256;
 
 #[derive(Debug)]
 /// Error in database subsystem.
@@ -36,8 +36,14 @@ pub enum BaseDataError {
 impl fmt::Display for BaseDataError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            BaseDataError::NegativelyReferencedHash(hash) => write!(f, "Entry {} removed from database more times than it was added.", hash),
-            BaseDataError::AlreadyExists(hash) => write!(f, "Committed key already exists in database: {}", hash),
+            BaseDataError::NegativelyReferencedHash(hash) => write!(
+                f,
+                "Entry {} removed from database more times than it was added.",
+                hash
+            ),
+            BaseDataError::AlreadyExists(hash) => {
+                write!(f, "Committed key already exists in database: {}", hash)
+            }
         }
     }
 }
@@ -86,7 +92,10 @@ pub struct Mismatch<T: fmt::Debug> {
 
 impl<T: fmt::Debug + fmt::Display> fmt::Display for Mismatch<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_fmt(format_args!("Expected {}, found {}", self.expected, self.found))
+        f.write_fmt(format_args!(
+            "Expected {}, found {}",
+            self.expected, self.found
+        ))
     }
 }
 

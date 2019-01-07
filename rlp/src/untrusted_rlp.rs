@@ -6,11 +6,11 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use {Decodable, DecoderError};
 use impls::decode_usize;
 use rustc_hex::ToHex;
 use std::cell::Cell;
 use std::fmt;
+use {Decodable, DecoderError};
 
 /// rlp offset
 #[derive(Copy, Clone, Debug)]
@@ -21,7 +21,10 @@ struct OffsetCache {
 
 impl OffsetCache {
     fn new(index: usize, offset: usize) -> OffsetCache {
-        OffsetCache { index: index, offset: offset }
+        OffsetCache {
+            index: index,
+            offset: offset,
+        }
     }
 }
 
@@ -44,7 +47,10 @@ pub struct PayloadInfo {
     pub value_len: usize,
 }
 
-fn calculate_payload_info(header_bytes: &[u8], len_of_len: usize) -> Result<PayloadInfo, DecoderError> {
+fn calculate_payload_info(
+    header_bytes: &[u8],
+    len_of_len: usize,
+) -> Result<PayloadInfo, DecoderError> {
     let header_len = 1 + len_of_len;
     match header_bytes.get(1) {
         Some(&0) => return Err(DecoderError::RlpDataLenWithZeroPrefix),
@@ -188,7 +194,9 @@ where
     pub fn size(&self) -> usize {
         match self.is_data() {
             // TODO: No panic on malformed data, but ideally would Err on no PayloadInfo.
-            true => BasicDecoder::payload_info(self.bytes).map(|b| b.value_len).unwrap_or(0),
+            true => BasicDecoder::payload_info(self.bytes)
+                .map(|b| b.value_len)
+                .unwrap_or(0),
             false => 0,
         }
     }
@@ -202,7 +210,10 @@ where
         // current search index, otherwise move to beginning of list
         let c = self.offset_cache.get();
         let (mut bytes, to_skip) = match c.index <= index {
-            true => (UntrustedRlp::consume(self.bytes, c.offset)?, index - c.index),
+            true => (
+                UntrustedRlp::consume(self.bytes, c.offset)?,
+                index - c.index,
+            ),
             false => (self.consume_list_payload()?, index),
         };
 
@@ -210,11 +221,14 @@ where
         bytes = UntrustedRlp::consume_items(bytes, to_skip)?;
 
         // update the cache
-        self.offset_cache.set(OffsetCache::new(index, self.bytes.len() - bytes.len()));
+        self.offset_cache
+            .set(OffsetCache::new(index, self.bytes.len() - bytes.len()));
 
         // construct new rlp
         let found = BasicDecoder::payload_info(bytes)?;
-        Ok(UntrustedRlp::new(&bytes[0..found.header_len + found.value_len]))
+        Ok(UntrustedRlp::new(
+            &bytes[0..found.header_len + found.value_len],
+        ))
     }
 
     pub fn is_null(&self) -> bool {
@@ -299,7 +313,6 @@ where
         Ok(result)
     }
 
-
     /// consumes slice prefix of length `len`
     fn consume(bytes: &'a [u8], len: usize) -> Result<&'a [u8], DecoderError> {
         match bytes.len() >= len {
@@ -326,7 +339,10 @@ where
     type IntoIter = UntrustedRlpIterator<'a, 'view>;
 
     fn into_iter(self) -> Self::IntoIter {
-        UntrustedRlpIterator { rlp: self, index: 0 }
+        UntrustedRlpIterator {
+            rlp: self,
+            index: 0,
+        }
     }
 }
 
@@ -363,7 +379,6 @@ impl<'a> BasicDecoder<'a> {
     where
         F: Fn(&[u8]) -> Result<T, DecoderError>,
     {
-
         let bytes = self.rlp.as_raw();
 
         match bytes.first().cloned() {
@@ -392,7 +407,9 @@ impl<'a> BasicDecoder<'a> {
                 }
                 let len = decode_usize(&bytes[1..begin_of_value])?;
 
-                let last_index_of_value = begin_of_value.checked_add(len).ok_or(DecoderError::RlpInvalidLength)?;
+                let last_index_of_value = begin_of_value
+                    .checked_add(len)
+                    .ok_or(DecoderError::RlpInvalidLength)?;
                 if bytes.len() < last_index_of_value {
                     return Err(DecoderError::RlpInconsistentLengthAndData);
                 }
@@ -406,7 +423,7 @@ impl<'a> BasicDecoder<'a> {
 
 #[cfg(test)]
 mod tests {
-    use {UntrustedRlp, DecoderError};
+    use {DecoderError, UntrustedRlp};
 
     #[test]
     fn test_rlp_display() {
@@ -420,7 +437,9 @@ mod tests {
 
     #[test]
     fn length_overflow() {
-        let bs = [0xbf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe5];
+        let bs = [
+            0xbf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe5,
+        ];
         let rlp = UntrustedRlp::new(&bs);
         let res: Result<u8, DecoderError> = rlp.as_val();
         assert_eq!(Err(DecoderError::RlpInvalidLength), res);

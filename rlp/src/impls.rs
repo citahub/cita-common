@@ -6,12 +6,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use {UntrustedRlp, DecoderError};
-use types::{U128, U256, Bloom, H64, H128, H160, H256, H512, H520};
-use byteorder::{ByteOrder, BigEndian};
+use byteorder::{BigEndian, ByteOrder};
 use std::{cmp, mem, str};
 use stream::RlpStream;
-use traits::{Encodable, Decodable};
+use traits::{Decodable, Encodable};
+use types::{Bloom, H128, H160, H256, H512, H520, H64, U128, U256};
+use {DecoderError, UntrustedRlp};
 
 pub fn decode_usize(bytes: &[u8]) -> Result<usize, DecoderError> {
     match bytes.len() {
@@ -43,10 +43,10 @@ impl Encodable for bool {
 impl Decodable for bool {
     fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| match bytes.len() {
-                                       0 => Ok(false),
-                                       1 => Ok(bytes[0] != 0),
-                                       _ => Err(DecoderError::RlpIsTooBig),
-                                   })
+            0 => Ok(false),
+            1 => Ok(bytes[0] != 0),
+            _ => Err(DecoderError::RlpIsTooBig),
+        })
     }
 }
 
@@ -112,11 +112,11 @@ impl Encodable for u8 {
 impl Decodable for u8 {
     fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| match bytes.len() {
-                                       1 if bytes[0] != 0 => Ok(bytes[0]),
-                                       0 => Ok(0),
-                                       1 => Err(DecoderError::RlpInvalidIndirection),
-                                       _ => Err(DecoderError::RlpIsTooBig),
-                                   })
+            1 if bytes[0] != 0 => Ok(bytes[0]),
+            0 => Ok(0),
+            1 => Err(DecoderError::RlpInvalidIndirection),
+            _ => Err(DecoderError::RlpIsTooBig),
+        })
     }
 }
 
@@ -130,33 +130,31 @@ macro_rules! impl_encodable_for_u {
                 s.encoder().encode_value(&buffer[leading_empty_bytes..]);
             }
         }
-    }
+    };
 }
 
 macro_rules! impl_decodable_for_u {
     ($name: ident) => {
         impl Decodable for $name {
             fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
-                rlp.decoder().decode_value(|bytes| {
-                    match bytes.len() {
-                        0 | 1 => u8::decode(rlp).map(|v| v as $name),
-                        l if l <= mem::size_of::<$name>() => {
-                            if bytes[0] == 0 {
-                                return Err(DecoderError::RlpInvalidIndirection);
-                            }
-                            let mut res = 0 as $name;
-                            for i in 0..l {
-                                let shift = (l - 1 - i) * 8;
-                                res = res + ((bytes[i] as $name) << shift);
-                            }
-                            Ok(res)
+                rlp.decoder().decode_value(|bytes| match bytes.len() {
+                    0 | 1 => u8::decode(rlp).map(|v| v as $name),
+                    l if l <= mem::size_of::<$name>() => {
+                        if bytes[0] == 0 {
+                            return Err(DecoderError::RlpInvalidIndirection);
                         }
-                        _ => Err(DecoderError::RlpIsTooBig),
+                        let mut res = 0 as $name;
+                        for i in 0..l {
+                            let shift = (l - 1 - i) * 8;
+                            res = res + ((bytes[i] as $name) << shift);
+                        }
+                        Ok(res)
                     }
+                    _ => Err(DecoderError::RlpIsTooBig),
                 })
             }
         }
-    }
+    };
 }
 
 impl_encodable_for_u!(u16, write_u16, 2);
@@ -186,25 +184,26 @@ macro_rules! impl_encodable_for_hash {
                 s.encoder().encode_value(self);
             }
         }
-    }
+    };
 }
 
 macro_rules! impl_decodable_for_hash {
     ($name: ident, $size: expr) => {
         impl Decodable for $name {
             fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
-                rlp.decoder().decode_value(|bytes| match bytes.len().cmp(&$size) {
-                    cmp::Ordering::Less => Err(DecoderError::RlpIsTooShort),
-                    cmp::Ordering::Greater => Err(DecoderError::RlpIsTooBig),
-                    cmp::Ordering::Equal => {
-                        let mut t = [0u8; $size];
-                        t.copy_from_slice(bytes);
-                        Ok($name(t))
-                    }
-                })
+                rlp.decoder()
+                    .decode_value(|bytes| match bytes.len().cmp(&$size) {
+                        cmp::Ordering::Less => Err(DecoderError::RlpIsTooShort),
+                        cmp::Ordering::Greater => Err(DecoderError::RlpIsTooBig),
+                        cmp::Ordering::Equal => {
+                            let mut t = [0u8; $size];
+                            t.copy_from_slice(bytes);
+                            Ok($name(t))
+                        }
+                    })
             }
         }
-    }
+    };
 }
 
 impl_encodable_for_hash!(H64);
@@ -233,7 +232,7 @@ macro_rules! impl_encodable_for_uint {
                 s.encoder().encode_value(&buffer[leading_empty_bytes..]);
             }
         }
-    }
+    };
 }
 
 macro_rules! impl_decodable_for_uint {
@@ -251,7 +250,7 @@ macro_rules! impl_decodable_for_uint {
                 })
             }
         }
-    }
+    };
 }
 
 impl_encodable_for_uint!(U256, 32);
@@ -275,11 +274,11 @@ impl Encodable for String {
 impl Decodable for String {
     fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| {
-                                       match str::from_utf8(bytes) {
-                                           Ok(s) => Ok(s.to_owned()),
-                                           // consider better error type here
-                                           Err(_err) => Err(DecoderError::RlpExpectedToBeData),
-                                       }
-                                   })
+            match str::from_utf8(bytes) {
+                Ok(s) => Ok(s.to_owned()),
+                // consider better error type here
+                Err(_err) => Err(DecoderError::RlpExpectedToBeData),
+            }
+        })
     }
 }

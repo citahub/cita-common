@@ -16,10 +16,10 @@
 
 //! Disk-backed `HashDB` implementation.
 
-use util::{Bytes, UtilError};
-use types::H256;
 use hashdb::*;
 use kvdb::{self, DBTransaction};
+use types::H256;
+use util::{Bytes, UtilError};
 
 use std::sync::Arc;
 
@@ -52,10 +52,20 @@ pub trait JournalDB: HashDB {
 
     /// Journal recent database operations as being associated with a given era and id.
     // TODO: give the overlay to this function so journaldbs don't manage the overlays themeselves.
-    fn journal_under(&mut self, batch: &mut DBTransaction, now: u64, id: &H256) -> Result<u32, UtilError>;
+    fn journal_under(
+        &mut self,
+        batch: &mut DBTransaction,
+        now: u64,
+        id: &H256,
+    ) -> Result<u32, UtilError>;
 
     /// Mark a given block as canonical, indicating that competing blocks' states may be pruned out.
-    fn mark_canonical(&mut self, batch: &mut DBTransaction, era: u64, id: &H256) -> Result<u32, UtilError>;
+    fn mark_canonical(
+        &mut self,
+        batch: &mut DBTransaction,
+        era: u64,
+        id: &H256,
+    ) -> Result<u32, UtilError>;
 
     /// Commit all queued insert and delete operations without affecting any journalling -- this requires that all insertions
     /// and deletions are indeed canonical and will likely lead to an invalid database if that assumption is violated.
@@ -86,7 +96,12 @@ pub trait JournalDB: HashDB {
 
     /// Commit all changes in a single batch
     #[cfg(test)]
-    fn commit_batch(&mut self, now: u64, id: &H256, end: Option<(u64, H256)>) -> Result<u32, UtilError> {
+    fn commit_batch(
+        &mut self,
+        now: u64,
+        id: &H256,
+        end: Option<(u64, H256)>,
+    ) -> Result<u32, UtilError> {
         let mut batch = self.backing().transaction();
         let mut ops = self.journal_under(&mut batch, now, id)?;
 

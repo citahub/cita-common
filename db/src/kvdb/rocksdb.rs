@@ -18,23 +18,26 @@
 
 use elastic_array::*;
 use hashdb::DBValue;
+use kvdb::{DBOp, DBTransaction, KeyValueDB};
 use util::{Mutex, MutexGuard, RwLock, UtilError};
-use kvdb::{DBTransaction, KeyValueDB, DBOp};
 
+use parity_rocksdb::{
+    BlockBasedOptions, Cache, Column, DBCompactionStyle, DBIterator, Direction, IteratorMode,
+    Options, ReadOptions, Writable, WriteBatch, WriteOptions, DB,
+};
 #[cfg(target_os = "linux")]
 use regex::Regex;
-use rlp::{UntrustedRlp, RlpType, Compressible};
-use parity_rocksdb::{DB, Writable, WriteBatch, WriteOptions, IteratorMode, DBIterator, Options, DBCompactionStyle, BlockBasedOptions, Direction, Cache, Column, ReadOptions};
+use rlp::{Compressible, RlpType, UntrustedRlp};
 
-use std::{mem, fs};
 use std::collections::HashMap;
 #[cfg(target_os = "linux")]
 use std::fs::File;
 use std::io::ErrorKind;
 use std::marker::PhantomData;
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 #[cfg(target_os = "linux")]
 use std::process::Command;
+use std::{fs, mem};
 
 const DB_BACKGROUND_FLUSHES: i32 = 2;
 const DB_BACKGROUND_COMPACTIONS: i32 = 2;
@@ -71,10 +74,12 @@ pub fn rotational_from_df_output(df_out: Vec<u8>) -> Option<PathBuf> {
     str::from_utf8(df_out.as_slice())
         .ok()
         // Get the drive name.
-        .and_then(|df_str| Regex::new(r"/dev/(sd[:alpha:]{1,2})")
-            .ok()
-            .and_then(|re| re.captures(df_str))
-            .and_then(|captures| captures.get(1)))
+        .and_then(|df_str| {
+            Regex::new(r"/dev/(sd[:alpha:]{1,2})")
+                .ok()
+                .and_then(|re| re.captures(df_str))
+                .and_then(|captures| captures.get(1))
+        })
         // Generate path e.g. /sys/block/sda/queue/rotational
         .map(|drive_path| {
             let mut p = PathBuf::from("/sys/block");
@@ -89,7 +94,8 @@ impl CompactionProfile {
     #[cfg(target_os = "linux")]
     pub fn auto(db_path: &Path) -> CompactionProfile {
         use std::io::Read;
-        let hdd_check_file = db_path.to_str()
+        let hdd_check_file = db_path
+            .to_str()
             .and_then(|path_str| Command::new("df").arg(path_str).output().ok())
             .and_then(|df_res| match df_res.status.success() {
                 true => Some(df_res.stdout),
@@ -219,7 +225,11 @@ fn col_config(col: u32, config: &DatabaseConfig) -> Options {
     let col_opt = config.columns.map(|_| col);
 
     {
-        let cache_size = config.cache_sizes.get(&col_opt).cloned().unwrap_or(DEFAULT_CACHE);
+        let cache_size = config
+            .cache_sizes
+            .get(&col_opt)
+            .cloned()
+            .unwrap_or(DEFAULT_CACHE);
         let mut block_opts = BlockBasedOptions::new();
         // all goes to read cache.
         block_opts.set_cache(Cache::new(cache_size * 1024 * 1024));
@@ -273,7 +283,9 @@ impl Database {
         opts.set_target_file_size_multiplier(config.compaction.file_size_multiplier);
 
         let mut cf_options = Vec::with_capacity(config.columns.unwrap_or(0) as usize);
-        let cfnames: Vec<_> = (0..config.columns.unwrap_or(0)).map(|c| format!("col{}", c)).collect();
+        let cfnames: Vec<_> = (0..config.columns.unwrap_or(0))
+            .map(|c| format!("col{}", c))
+            .collect();
         let cfnames: Vec<&str> = cfnames.iter().map(|n| n as &str).collect();
 
         for col in 0..config.columns.unwrap_or(0) {
@@ -292,8 +304,12 @@ impl Database {
             Some(columns) => {
                 match DB::open_cf(&opts, path, &cfnames, &cf_options) {
                     Ok(db) => {
-                        cfs = cfnames.iter()
-                            .map(|n| db.cf_handle(n).expect("rocksdb opens a cf_handle for each cfname; qed"))
+                        cfs = cfnames
+                            .iter()
+                            .map(|n| {
+                                db.cf_handle(n)
+                                    .expect("rocksdb opens a cf_handle for each cfname; qed")
+                            })
                             .collect();
                         assert!(cfs.len() == columns as usize);
                         Ok(db)
@@ -302,7 +318,11 @@ impl Database {
                         // retry and create CFs
                         match DB::open_cf(&opts, path, &[], &[]) {
                             Ok(mut db) => {
-                                cfs = cfnames.iter().enumerate().map(|(i, n)| db.create_cf(n, &cf_options[i])).collect::<Result<_, _>>()?;
+                                cfs = cfnames
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(i, n)| db.create_cf(n, &cf_options[i]))
+                                    .collect::<Result<_, _>>()?;
                                 Ok(db)
                             }
                             err @ Err(_) => err,
@@ -346,7 +366,6 @@ impl Database {
     pub fn transaction(&self) -> DBTransaction {
         DBTransaction::new()
     }
-
 
     fn to_overlay_column(col: Option<u32>) -> usize {
         col.map_or(0, |c| (c + 1) as usize)
@@ -399,7 +418,8 @@ impl Database {
                                     }
                                 }
                                 KeyState::InsertCompressed(ref value) => {
-                                    let compressed = UntrustedRlp::new(&value).compress(RlpType::Blocks);
+                                    let compressed =
+                                        UntrustedRlp::new(&value).compress(RlpType::Blocks);
                                     if c > 0 {
                                         batch.put_cf(cfs[c - 1], &key, &compressed)?;
                                     } else {
@@ -444,16 +464,21 @@ impl Database {
                 let ops = tr.ops;
                 for op in ops {
                     match op {
-                        DBOp::Insert { col, key, value } => {
-                            col.map_or_else(|| batch.put(&key, &value), |c| batch.put_cf(cfs[c as usize], &key, &value))?
-                        }
+                        DBOp::Insert { col, key, value } => col.map_or_else(
+                            || batch.put(&key, &value),
+                            |c| batch.put_cf(cfs[c as usize], &key, &value),
+                        )?,
                         DBOp::InsertCompressed { col, key, value } => {
                             let compressed = UntrustedRlp::new(&value).compress(RlpType::Blocks);
-                            col.map_or_else(|| batch.put(&key, &compressed), |c| batch.put_cf(cfs[c as usize], &key, &compressed))?
+                            col.map_or_else(
+                                || batch.put(&key, &compressed),
+                                |c| batch.put_cf(cfs[c as usize], &key, &compressed),
+                            )?
                         }
-                        DBOp::Delete { col, key } => {
-                            col.map_or_else(|| batch.delete(&key), |c| batch.delete_cf(cfs[c as usize], &key))?
-                        }
+                        DBOp::Delete { col, key } => col.map_or_else(
+                            || batch.delete(&key),
+                            |c| batch.delete_cf(cfs[c as usize], &key),
+                        )?,
                     }
                 }
                 db.write_opt(batch, &self.write_opts)
@@ -468,18 +493,27 @@ impl Database {
             Some(DBAndColumns { ref db, ref cfs }) => {
                 let overlay = &self.overlay.read()[Self::to_overlay_column(col)];
                 match overlay.get(key) {
-                    Some(&KeyState::Insert(ref value)) |
-                    Some(&KeyState::InsertCompressed(ref value)) => Ok(Some(value.clone())),
+                    Some(&KeyState::Insert(ref value))
+                    | Some(&KeyState::InsertCompressed(ref value)) => Ok(Some(value.clone())),
                     Some(&KeyState::Delete) => Ok(None),
                     None => {
                         let flushing = &self.flushing.read()[Self::to_overlay_column(col)];
                         match flushing.get(key) {
-                            Some(&KeyState::Insert(ref value)) |
-                            Some(&KeyState::InsertCompressed(ref value)) => Ok(Some(value.clone())),
-                            Some(&KeyState::Delete) => Ok(None),
-                            None => {
-                                col.map_or_else(|| db.get_opt(key, &self.read_opts).map(|r| r.map(|v| DBValue::from_slice(&v))), |c| db.get_cf_opt(cfs[c as usize], key, &self.read_opts).map(|r| r.map(|v| DBValue::from_slice(&v))))
+                            Some(&KeyState::Insert(ref value))
+                            | Some(&KeyState::InsertCompressed(ref value)) => {
+                                Ok(Some(value.clone()))
                             }
+                            Some(&KeyState::Delete) => Ok(None),
+                            None => col.map_or_else(
+                                || {
+                                    db.get_opt(key, &self.read_opts)
+                                        .map(|r| r.map(|v| DBValue::from_slice(&v)))
+                                },
+                                |c| {
+                                    db.get_cf_opt(cfs[c as usize], key, &self.read_opts)
+                                        .map(|r| r.map(|v| DBValue::from_slice(&v)))
+                                },
+                            ),
                         }
                     }
                 }
@@ -494,7 +528,13 @@ impl Database {
         self.iter_from_prefix(col, prefix).and_then(|mut iter| {
             match iter.next() {
                 // TODO: use prefix_same_as_start read option (not availabele in C API currently)
-                Some((k, v)) => if k[0..prefix.len()] == prefix[..] { Some(v) } else { None },
+                Some((k, v)) => {
+                    if k[0..prefix.len()] == prefix[..] {
+                        Some(v)
+                    } else {
+                        None
+                    }
+                }
                 _ => None,
             }
         })
@@ -505,12 +545,18 @@ impl Database {
         //TODO: iterate over overlay
         match *self.db.read() {
             Some(DBAndColumns { ref db, ref cfs }) => {
-                let iter = col.map_or_else(|| db.iterator_opt(IteratorMode::Start, &self.read_opts), |c| {
-                    db.iterator_cf_opt(cfs[c as usize], IteratorMode::Start, &self.read_opts)
-                        .expect("iterator params are valid; qed")
-                });
+                let iter = col.map_or_else(
+                    || db.iterator_opt(IteratorMode::Start, &self.read_opts),
+                    |c| {
+                        db.iterator_cf_opt(cfs[c as usize], IteratorMode::Start, &self.read_opts)
+                            .expect("iterator params are valid; qed")
+                    },
+                );
 
-                Some(DatabaseIterator { iter: iter, _marker: PhantomData })
+                Some(DatabaseIterator {
+                    iter: iter,
+                    _marker: PhantomData,
+                })
             }
             None => None,
         }
@@ -519,12 +565,27 @@ impl Database {
     fn iter_from_prefix(&self, col: Option<u32>, prefix: &[u8]) -> Option<DatabaseIterator> {
         match *self.db.read() {
             Some(DBAndColumns { ref db, ref cfs }) => {
-                let iter = col.map_or_else(|| db.iterator_opt(IteratorMode::From(prefix, Direction::Forward), &self.read_opts), |c| {
-                    db.iterator_cf_opt(cfs[c as usize], IteratorMode::From(prefix, Direction::Forward), &self.read_opts)
+                let iter = col.map_or_else(
+                    || {
+                        db.iterator_opt(
+                            IteratorMode::From(prefix, Direction::Forward),
+                            &self.read_opts,
+                        )
+                    },
+                    |c| {
+                        db.iterator_cf_opt(
+                            cfs[c as usize],
+                            IteratorMode::From(prefix, Direction::Forward),
+                            &self.read_opts,
+                        )
                         .expect("iterator params are valid; qed")
-                });
+                    },
+                );
 
-                Some(DatabaseIterator { iter: iter, _marker: PhantomData })
+                Some(DatabaseIterator {
+                    iter: iter,
+                    _marker: PhantomData,
+                })
             }
             None => None,
         }
@@ -545,11 +606,13 @@ impl Database {
 
         let existed = match fs::rename(&self.path, &backup_db) {
             Ok(_) => true,
-            Err(e) => if let ErrorKind::NotFound = e.kind() {
-                false
-            } else {
-                return Err(e.into());
-            },
+            Err(e) => {
+                if let ErrorKind::NotFound = e.kind() {
+                    false
+                } else {
+                    return Err(e.into());
+                }
+            }
         };
 
         match fs::rename(&new_db, &self.path) {
@@ -581,7 +644,13 @@ impl Database {
         self.db
             .read()
             .as_ref()
-            .and_then(|db| if db.cfs.is_empty() { None } else { Some(db.cfs.len()) })
+            .and_then(|db| {
+                if db.cfs.is_empty() {
+                    None
+                } else {
+                    Some(db.cfs.len())
+                }
+            })
             .map(|n| n as u32)
             .unwrap_or(0)
     }
@@ -589,7 +658,10 @@ impl Database {
     /// Drop a column family.
     pub fn drop_column(&self) -> Result<(), String> {
         match *self.db.write() {
-            Some(DBAndColumns { ref mut db, ref mut cfs }) => {
+            Some(DBAndColumns {
+                ref mut db,
+                ref mut cfs,
+            }) => {
                 if let Some(col) = cfs.pop() {
                     let name = format!("col{}", cfs.len());
                     drop(col);
@@ -604,7 +676,10 @@ impl Database {
     /// Add a column family.
     pub fn add_column(&self) -> Result<(), String> {
         match *self.db.write() {
-            Some(DBAndColumns { ref mut db, ref mut cfs }) => {
+            Some(DBAndColumns {
+                ref mut db,
+                ref mut cfs,
+            }) => {
                 let col = cfs.len() as u32;
                 let name = format!("col{}", col);
                 cfs.push(db.create_cf(&name, &col_config(col, &self.config))?);
@@ -643,7 +718,11 @@ impl KeyValueDB for Database {
         Box::new(unboxed.into_iter().flat_map(|inner| inner))
     }
 
-    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
+    fn iter_from_prefix<'a>(
+        &'a self,
+        col: Option<u32>,
+        prefix: &'a [u8],
+    ) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
         let unboxed = Database::iter_from_prefix(self, col, prefix);
         Box::new(unboxed.into_iter().flat_map(|inner| inner))
     }
@@ -664,15 +743,21 @@ impl Drop for Database {
 mod tests {
     extern crate mktemp;
     use super::*;
-    use types::H256;
     use std::str::FromStr;
+    use types::H256;
 
     fn test_db(config: &DatabaseConfig) {
         let path = mktemp::Temp::new_dir().unwrap();
         let db = Database::open(config, path.as_ref().to_str().unwrap()).unwrap();
-        let key1 = H256::from_str("02c69be41d0b7e40352fc85be1cd65eb03d40ef8427a0ca4596b1ead9a00e9fc").unwrap();
-        let key2 = H256::from_str("03c69be41d0b7e40352fc85be1cd65eb03d40ef8427a0ca4596b1ead9a00e9fc").unwrap();
-        let key3 = H256::from_str("01c69be41d0b7e40352fc85be1cd65eb03d40ef8427a0ca4596b1ead9a00e9fc").unwrap();
+        let key1 =
+            H256::from_str("02c69be41d0b7e40352fc85be1cd65eb03d40ef8427a0ca4596b1ead9a00e9fc")
+                .unwrap();
+        let key2 =
+            H256::from_str("03c69be41d0b7e40352fc85be1cd65eb03d40ef8427a0ca4596b1ead9a00e9fc")
+                .unwrap();
+        let key3 =
+            H256::from_str("01c69be41d0b7e40352fc85be1cd65eb03d40ef8427a0ca4596b1ead9a00e9fc")
+                .unwrap();
 
         let mut batch = db.transaction();
         batch.put(None, &key1, b"cat");
@@ -733,117 +818,12 @@ mod tests {
         use std::path::PathBuf;
         // Example df output.
         let example_df = vec![
-            70,
-            105,
-            108,
-            101,
-            115,
-            121,
-            115,
-            116,
-            101,
-            109,
-            32,
-            32,
-            32,
-            32,
-            32,
-            49,
-            75,
-            45,
-            98,
-            108,
-            111,
-            99,
-            107,
-            115,
-            32,
-            32,
-            32,
-            32,
-            32,
-            85,
-            115,
-            101,
-            100,
-            32,
-            65,
-            118,
-            97,
-            105,
-            108,
-            97,
-            98,
-            108,
-            101,
-            32,
-            85,
-            115,
-            101,
-            37,
-            32,
-            77,
-            111,
-            117,
-            110,
-            116,
-            101,
-            100,
-            32,
-            111,
-            110,
-            10,
-            47,
-            100,
-            101,
-            118,
-            47,
-            115,
-            100,
-            97,
-            49,
-            32,
-            32,
-            32,
-            32,
-            32,
-            32,
-            32,
-            54,
-            49,
-            52,
-            48,
-            57,
-            51,
-            48,
-            48,
-            32,
-            51,
-            56,
-            56,
-            50,
-            50,
-            50,
-            51,
-            54,
-            32,
-            32,
-            49,
-            57,
-            52,
-            52,
-            52,
-            54,
-            49,
-            54,
-            32,
-            32,
-            54,
-            55,
-            37,
-            32,
-            47,
-            10,
+            70, 105, 108, 101, 115, 121, 115, 116, 101, 109, 32, 32, 32, 32, 32, 49, 75, 45, 98,
+            108, 111, 99, 107, 115, 32, 32, 32, 32, 32, 85, 115, 101, 100, 32, 65, 118, 97, 105,
+            108, 97, 98, 108, 101, 32, 85, 115, 101, 37, 32, 77, 111, 117, 110, 116, 101, 100, 32,
+            111, 110, 10, 47, 100, 101, 118, 47, 115, 100, 97, 49, 32, 32, 32, 32, 32, 32, 32, 54,
+            49, 52, 48, 57, 51, 48, 48, 32, 51, 56, 56, 50, 50, 50, 51, 54, 32, 32, 49, 57, 52, 52,
+            52, 54, 49, 54, 32, 32, 54, 55, 37, 32, 47, 10,
         ];
         let expected_output = Some(PathBuf::from("/sys/block/sda/queue/rotational"));
         assert_eq!(rotational_from_df_output(example_df), expected_output);

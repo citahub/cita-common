@@ -17,8 +17,8 @@
 //! Database of byte-slices keyed to their Keccak hash.
 
 use elastic_array::ElasticArray128;
-use types::H256;
 use std::collections::HashMap;
+use types::H256;
 
 /// `HashDB` value type.
 pub type DBValue = ElasticArray128<u8>;

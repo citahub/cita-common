@@ -47,20 +47,20 @@ fn serialize_and_deserialize() {
 
     let full_req = params.into_request(1);
     test_ser_and_de!(Request, full_req,  {
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "getTransactionReceipt",
-            "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
-        });
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "getTransactionReceipt",
+        "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
+    });
 
     let req_str: String = full_req.clone().into();
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "getTransactionReceipt",
-            "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
-        });
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "getTransactionReceipt",
+        "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
+    });
 
     let req_str = r#"{
             "jsonrpc": "2.0",
@@ -70,11 +70,11 @@ fn serialize_and_deserialize() {
         }"#;
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "getTransactionReceipt",
-            "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
-        });
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "getTransactionReceipt",
+        "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
+    });
     assert_eq!(part_req.complete().unwrap(), full_req);
 
     let req_str = r#"{
@@ -84,11 +84,11 @@ fn serialize_and_deserialize() {
         }"#;
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": null,
-            "method": "getTransactionReceipt",
-            "params": null,
-        });
+        "jsonrpc": "2.0",
+        "id": null,
+        "method": "getTransactionReceipt",
+        "params": null,
+    });
     assert_eq!(
         part_req.complete().err().unwrap(),
         Error::invalid_params("params is requeired")
@@ -102,11 +102,11 @@ fn serialize_and_deserialize() {
         }"#;
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": null,
-            "method": "getTransactionReceipt",
-            "params": [1, 2],
-        });
+        "jsonrpc": "2.0",
+        "id": null,
+        "method": "getTransactionReceipt",
+        "params": [1, 2],
+    });
     assert_eq!(
         part_req.complete().err().unwrap(),
         Error::invalid_params_len()
@@ -117,20 +117,20 @@ fn serialize_and_deserialize() {
 
     let full_req = params.into_request(2);
     test_ser_and_de!(Request, full_req,  {
-            "jsonrpc": "2.0",
-            "id": 2,
-            "method": "blockNumber",
-            "params": [],
-        });
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "blockNumber",
+        "params": [],
+    });
 
     let req_str: String = full_req.clone().into();
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": 2,
-            "method": "blockNumber",
-            "params": [],
-        });
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "blockNumber",
+        "params": [],
+    });
 
     let req_str = r#"{
             "jsonrpc": "2.0",
@@ -139,11 +139,11 @@ fn serialize_and_deserialize() {
         }"#;
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": 2,
-            "method": "blockNumber",
-            "params": null,
-        });
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "blockNumber",
+        "params": null,
+    });
     assert_eq!(part_req.complete().unwrap(), full_req);
 
     let req_str = r#"{
@@ -153,9 +153,9 @@ fn serialize_and_deserialize() {
         }"#;
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": null,
-        });
+        "jsonrpc": "2.0",
+        "id": null,
+    });
     assert_eq!(
         part_req.complete().err().unwrap(),
         Error::method_not_found()
@@ -169,9 +169,9 @@ fn serialize_and_deserialize() {
         }"#;
     let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
     test_ser_and_de!(PartialRequest, part_req, {
-            "jsonrpc": "2.0",
-            "id": null,
-        });
+        "jsonrpc": "2.0",
+        "id": null,
+    });
     assert_eq!(
         part_req.complete().err().unwrap(),
         Error::method_not_found()

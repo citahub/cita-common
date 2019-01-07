@@ -82,52 +82,52 @@ fn serialize_and_deserialize() {
     );
 
     test_ser_and_de!(
-            value,
-            GetLogsParams,
-            [{
-                "fromBlock": "0xb",
-                "address": "0x0000000000000000000000000000000000000010",
-                "topics": [
-                    "0x0000000000000000000000000000000000000000000000000000000000000001",
-                    [
-                        "0x0000000000000000000000000000000000000000000000000000000000000002",
-                        "0x0000000000000000000000000000000000000000000000000000000000000003",
-                    ],
-                    null,
+        value,
+        GetLogsParams,
+        [{
+            "fromBlock": "0xb",
+            "address": "0x0000000000000000000000000000000000000010",
+            "topics": [
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                [
+                    "0x0000000000000000000000000000000000000000000000000000000000000002",
+                    "0x0000000000000000000000000000000000000000000000000000000000000003",
+                ],
+                null,
+            ]
+        }],
+        (Filter::new(
+            BlockNumber::new(11u64.into()),
+            BlockNumber::latest(),
+            Some(VariadicValue::single(H160::from(16).into())),
+            Some(
+                vec![
+                    VariadicValue::single(H256::from(1).into()),
+                    VariadicValue::multiple(
+                        vec![
+                            H256::from(2).into(),
+                            H256::from(3).into(),
+                        ]),
+                    VariadicValue::null(),
                 ]
-            }],
-            (Filter::new(
-                BlockNumber::new(11u64.into()),
-                BlockNumber::latest(),
-                Some(VariadicValue::single(H160::from(16).into())),
-                Some(
-                    vec![
-                        VariadicValue::single(H256::from(1).into()),
-                        VariadicValue::multiple(
-                            vec![
-                                H256::from(2).into(),
-                                H256::from(3).into(),
-                            ]),
-                        VariadicValue::null(),
-                    ]
-                ),
-            ))
-        );
+            ),
+        ))
+    );
 
     test_ser_and_de!(
-            CallParams,
-            [
-                {
-                    "from": "0x000000000000000000000000000000000000000b",
-                    "to": "0x000000000000000000000000000000000000000c",
-                },
-                "latest",
-            ],
-            (
-                CallRequest::new(Some(H160::from(11).into()),
-                H160::from(12).into(), None),
-                BlockNumber::latest()
-            ));
+    CallParams,
+    [
+        {
+            "from": "0x000000000000000000000000000000000000000b",
+            "to": "0x000000000000000000000000000000000000000c",
+        },
+        "latest",
+    ],
+    (
+        CallRequest::new(Some(H160::from(11).into()),
+        H160::from(12).into(), None),
+        BlockNumber::latest()
+    ));
 
     test_ser_and_de!(
         GetTransactionParams,
@@ -160,37 +160,37 @@ fn serialize_and_deserialize() {
     );
 
     test_ser_and_de!(
-            value,
-            NewFilterParams,
-            [{
-                "fromBlock": "0xc",
-                "address": "0x0000000000000000000000000000000000000010",
-                "topics": [
-                    "0x0000000000000000000000000000000000000000000000000000000000000001",
-                    [
-                        "0x0000000000000000000000000000000000000000000000000000000000000002",
-                        "0x0000000000000000000000000000000000000000000000000000000000000003",
-                    ],
-                    null,
+        value,
+        NewFilterParams,
+        [{
+            "fromBlock": "0xc",
+            "address": "0x0000000000000000000000000000000000000010",
+            "topics": [
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                [
+                    "0x0000000000000000000000000000000000000000000000000000000000000002",
+                    "0x0000000000000000000000000000000000000000000000000000000000000003",
+                ],
+                null,
+            ]
+        }],
+        (Filter::new(
+            BlockNumber::new(12u64.into()),
+            BlockNumber::latest(),
+            Some(VariadicValue::single(H160::from(16).into())),
+            Some(
+                vec![
+                    VariadicValue::single(H256::from(1).into()),
+                    VariadicValue::multiple(
+                        vec![
+                            H256::from(2).into(),
+                            H256::from(3).into(),
+                        ]),
+                    VariadicValue::null(),
                 ]
-            }],
-            (Filter::new(
-                BlockNumber::new(12u64.into()),
-                BlockNumber::latest(),
-                Some(VariadicValue::single(H160::from(16).into())),
-                Some(
-                    vec![
-                        VariadicValue::single(H256::from(1).into()),
-                        VariadicValue::multiple(
-                            vec![
-                                H256::from(2).into(),
-                                H256::from(3).into(),
-                            ]),
-                        VariadicValue::null(),
-                    ]
-                ),
-            ))
-        );
+            ),
+        ))
+    );
 
     test_ser_and_de!(NewBlockFilterParams, [], ());
 

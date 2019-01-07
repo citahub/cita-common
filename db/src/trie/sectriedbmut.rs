@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::TrieMut;
 use super::triedbmut::TrieDBMut;
-use types::H256;
+use super::TrieMut;
 use hashable::Hashable;
-use hashdb::{HashDB, DBValue};
+use hashdb::{DBValue, HashDB};
+use types::H256;
 
 /// A mutable `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 ///
@@ -32,14 +32,18 @@ impl<'db> SecTrieDBMut<'db> {
     /// Initialise to the state entailed by the genesis block.
     /// This guarantees the trie is built correctly.
     pub fn new(db: &'db mut HashDB, root: &'db mut H256) -> Self {
-        SecTrieDBMut { raw: TrieDBMut::new(db, root) }
+        SecTrieDBMut {
+            raw: TrieDBMut::new(db, root),
+        }
     }
 
     /// Create a new trie with the backing database `db` and `root`.
     ///
     /// Returns an error if root does not exist.
     pub fn from_existing(db: &'db mut HashDB, root: &'db mut H256) -> super::Result<Self> {
-        Ok(SecTrieDBMut { raw: TrieDBMut::from_existing(db, root)? })
+        Ok(SecTrieDBMut {
+            raw: TrieDBMut::from_existing(db, root)?,
+        })
     }
 
     /// Get the backing database.
@@ -84,9 +88,9 @@ impl<'db> TrieMut for SecTrieDBMut<'db> {
 
 #[test]
 fn sectrie_to_trie() {
-    use memorydb::*;
     use super::triedb::*;
     use super::Trie;
+    use memorydb::*;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
@@ -95,5 +99,8 @@ fn sectrie_to_trie() {
         t.insert(&[0x01u8, 0x23], &[0x01u8, 0x23]).unwrap();
     }
     let t = TrieDB::new(&memdb, &root).unwrap();
-    assert_eq!(t.get(&(&[0x01u8, 0x23]).crypt_hash()).unwrap().unwrap(), DBValue::from_slice(&[0x01u8, 0x23]));
+    assert_eq!(
+        t.get(&(&[0x01u8, 0x23]).crypt_hash()).unwrap().unwrap(),
+        DBValue::from_slice(&[0x01u8, 0x23])
+    );
 }

@@ -16,8 +16,8 @@
 
 use elastic_array::ElasticArray36;
 use hashdb::DBValue;
-use util::{nibblevec::NibbleVec, nibbleslice::NibbleSlice, Bytes};
 use rlp::*;
+use util::{nibbleslice::NibbleSlice, nibblevec::NibbleVec, Bytes};
 
 /// Partial node key type.
 pub type NodeKey = ElasticArray36<u8>;
@@ -55,7 +55,14 @@ impl<'a> Node<'a> {
                 for i in 0..16 {
                     nodes[i] = r.at(i).as_raw();
                 }
-                Node::Branch(nodes, if r.at(16).is_empty() { None } else { Some(r.at(16).data()) })
+                Node::Branch(
+                    nodes,
+                    if r.at(16).is_empty() {
+                        None
+                    } else {
+                        Some(r.at(16).data())
+                    },
+                )
             }
             // an empty branch index.
             Prototype::Data(0) => Node::Empty,
