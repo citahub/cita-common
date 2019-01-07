@@ -15,7 +15,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! Key-Value store abstraction with `RocksDB` backend.
-#![rustfmt_skip]
 
 use std::collections::{HashMap, BTreeMap};
 

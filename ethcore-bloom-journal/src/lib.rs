@@ -13,8 +13,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
-#![feature(custom_attribute)]
-#![allow(unused_attributes)]
+
 extern crate siphasher;
 
 use siphasher::sip::SipHasher;

@@ -16,7 +16,6 @@
 
 
 //! An owning, nibble-oriented byte vector.
-#![rustfmt_skip]
 
 use elastic_array::ElasticArray36;
 use nibbleslice::NibbleSlice;

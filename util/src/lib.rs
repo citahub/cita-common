@@ -15,9 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(unused_extern_crates)]
-#![feature(custom_attribute)]
-#![allow(unused_attributes)]
 extern crate ansi_term;
 extern crate cita_types as types;
 extern crate elastic_array;

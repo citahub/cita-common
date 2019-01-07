@@ -5,7 +5,6 @@
 // <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
-#![rustfmt_skip]
 
 use byteorder::{ByteOrder, BigEndian};
 use elastic_array::{ElasticArray16, ElasticArray1024};

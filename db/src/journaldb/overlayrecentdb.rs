@@ -15,7 +15,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! `JournalDB` over in-memory overlay
-#![rustfmt_skip]
 
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 use super::JournalDB;

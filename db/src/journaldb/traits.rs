@@ -15,7 +15,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! Disk-backed `HashDB` implementation.
-#![rustfmt_skip]
 
 use util::{Bytes, UtilError};
 use types::H256;

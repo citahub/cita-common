@@ -15,7 +15,6 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 //! Reference-counted memory-based `HashDB` implementation.
-#![rustfmt_skip]
 
 use hashable::{HASH_NULL_RLP, Hashable};
 use hashdb::*;

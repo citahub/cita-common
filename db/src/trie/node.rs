@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-#![rustfmt_skip]
-
 use elastic_array::ElasticArray36;
 use hashdb::DBValue;
 use util::{nibblevec::NibbleVec, nibbleslice::NibbleSlice, Bytes};
