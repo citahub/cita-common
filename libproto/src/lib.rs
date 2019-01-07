@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#![feature(try_from)]
-
 extern crate cita_crypto as crypto;
 extern crate cita_types as types;
 extern crate grpc;
@@ -46,15 +44,15 @@ use hashable::Hashable;
 use protobuf::RepeatedField;
 use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use rustc_serialize::hex::ToHex;
-use std::convert::{From, TryFrom, TryInto};
+use std::convert::From;
 use std::ops::Deref;
-use std::result::Result::Err;
 use types::{Address, H256};
 
 pub use autoimpl::{
     Message, MsgClass, OperateType, Origin, RawBytes, TryFromConvertError, TryIntoConvertError,
     ZERO_ORIGIN,
 };
+pub use autoimpl::{TryFrom, TryInto};
 
 //TODO respone contain error
 #[derive(Serialize, Deserialize, Debug, PartialEq)]

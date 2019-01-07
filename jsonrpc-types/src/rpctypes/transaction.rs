@@ -17,11 +17,11 @@
 
 use cita_types::traits::LowerHex;
 use cita_types::{Address, H256, U256};
+use libproto::TryInto;
 use libproto::{
     FullTransaction as ProtoFullTransaction, SignedTransaction as ProtoSignedTransaction,
 };
 use rpctypes::Data;
-use std::convert::TryInto;
 
 // TODO: No need Deserialize. Just because test in trans.rs
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]

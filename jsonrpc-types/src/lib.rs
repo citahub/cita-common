@@ -15,10 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#![feature(try_from)]
-#![feature(concat_idents)]
-#![allow(unused_attributes)]
-#![allow(unused_extern_crates)]
 extern crate bincode;
 extern crate cita_types;
 extern crate libproto;

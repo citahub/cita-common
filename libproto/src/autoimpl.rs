@@ -19,14 +19,14 @@ use protobuf::{parse_from_bytes, Message as MessageTrait};
 pub use protos::InnerMessage_oneof_content as MsgClass;
 use protos::*;
 use snappy;
-use std::convert::{From, Into, TryFrom, TryInto};
+use std::convert::{From, Into};
 
 pub use std::u32::MAX as ZERO_ORIGIN;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct TryFromConvertError(());
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct TryIntoConvertError(());
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -37,6 +37,19 @@ pub enum OperateType {
 }
 
 pub const DEFAULT_OPERATE_TYPE: OperateType = OperateType::Broadcast;
+
+pub trait TryFrom<T>
+where
+    Self: ::std::marker::Sized,
+{
+    type Error;
+    fn try_from(value: T) -> Result<Self, Self::Error>;
+}
+
+pub trait TryInto<T> {
+    type Error;
+    fn try_into(self) -> Result<T, Self::Error>;
+}
 
 impl TryFrom<u8> for OperateType {
     type Error = TryFromConvertError;
@@ -594,7 +607,7 @@ mod tests {
     #[test]
     fn convert_operate_type_works() {
         use super::OperateType;
-        use std::convert::TryFrom;
+        use super::TryFrom;
         let ot1 = OperateType::Broadcast;
         assert_eq!(ot1, OperateType::Broadcast);
         assert_eq!(ot1 as u8, OperateType::Broadcast as u8);
@@ -633,7 +646,7 @@ mod tests {
     #[test]
     fn traits_for_all_protos_works() {
         use super::blockchain;
-        use std::convert::{TryFrom, TryInto};
+        use super::{TryFrom, TryInto};
         let height: u64 = 13579;
         let mut status = blockchain::Status::new();
         status.set_height(height);
@@ -668,7 +681,8 @@ mod tests {
     #[test]
     fn class_funcs_for_message_works() {
         use super::{Message, MsgClass, OperateType, Request, Response};
-        use std::convert::{Into, TryFrom, TryInto};
+        use super::{TryFrom, TryInto};
+        use std::convert::Into;
 
         let req_origin = Request::new();
         let resp_origin = Response::new();

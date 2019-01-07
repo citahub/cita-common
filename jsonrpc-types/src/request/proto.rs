@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use libproto::{TryFrom, TryInto};
 /// Convert JSON-RPC request to proto request.
 use rustc_serialize::hex::FromHex;
 use serde_json;
-use std::convert::TryFrom;
-use std::convert::{Into, TryInto};
+use std::convert::Into;
 use uuid::Uuid;
 
 use cita_types::clean_0x;

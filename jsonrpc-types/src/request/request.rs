@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use libproto::TryInto;
 /// JSON-RPC Request.
 use serde_json;
-use std::convert::TryInto;
 
 use internals::construct_params;
 use libproto::request::Request as ProtoRequest;
