@@ -25,7 +25,7 @@ extern crate static_merkle_tree;
 use self::hashable::Hashable;
 use cita_types::H256;
 use rlp::RlpStream;
-use static_merkle_tree::{Proof as MerkleProof, ProofNode as MerkleProofNode};
+pub use static_merkle_tree::{Proof as MerkleProof, ProofNode as MerkleProofNode};
 
 pub use self::hashable::HASH_NULL_RLP as HASH_NULL;
 pub use static_merkle_tree::Tree;
@@ -58,5 +58,26 @@ impl From<MerkleProofNode<H256>> for ProofNode {
 impl From<MerkleProof<H256>> for Proof {
     fn from(proof: MerkleProof<H256>) -> Self {
         Proof(proof.0.into_iter().map(|n| ProofNode::from(n)).collect())
+    }
+}
+
+impl From<ProofNode> for MerkleProofNode<H256> {
+    fn from(node: ProofNode) -> Self {
+        MerkleProofNode {
+            is_right: node.is_right,
+            hash: node.hash,
+        }
+    }
+}
+
+impl From<Proof> for MerkleProof<H256> {
+    fn from(proof: Proof) -> Self {
+        MerkleProof(
+            proof
+                .0
+                .into_iter()
+                .map(|n| MerkleProofNode::<H256>::from(n))
+                .collect(),
+        )
     }
 }
