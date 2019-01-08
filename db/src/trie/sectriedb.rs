@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::{Trie, TrieItem, TrieIterator, Query};
 use super::triedb::TrieDB;
+use super::{Query, Trie, TrieItem, TrieIterator};
 
-use types::H256;
 use hashable::Hashable;
 use hashdb::HashDB;
+use types::H256;
 use util::Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
@@ -36,7 +36,9 @@ impl<'db> SecTrieDB<'db> {
     /// This guarantees the trie is built correctly.
     /// Returns an error if root does not exist.
     pub fn new(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
-        Ok(SecTrieDB { raw: TrieDB::new(db, root)? })
+        Ok(SecTrieDB {
+            raw: TrieDB::new(db, root)?,
+        })
     }
 
     /// Get a reference to the underlying raw `TrieDB` struct.
@@ -63,7 +65,11 @@ impl<'db> Trie for SecTrieDB<'db> {
         self.raw.contains(&key.crypt_hash())
     }
 
-    fn get_with<'a, 'key, Q: Query>(&'a self, key: &'key [u8], query: Q) -> super::Result<Option<Q::Item>>
+    fn get_with<'a, 'key, Q: Query>(
+        &'a self,
+        key: &'key [u8],
+        query: Q,
+    ) -> super::Result<Option<Q::Item>>
     where
         'a: 'key,
     {
@@ -71,23 +77,30 @@ impl<'db> Trie for SecTrieDB<'db> {
     }
 
     fn get_value_proof<'a, 'key>(&'a self, _key: &'key [u8]) -> Option<Vec<Bytes>>
-        where
-            'a: 'key, { None }
+    where
+        'a: 'key,
+    {
+        None
+    }
 }
 
 #[test]
 fn trie_to_sectrie() {
-    use memorydb::MemoryDB;
-    use hashdb::DBValue;
-    use super::triedbmut::TrieDBMut;
     use super::super::TrieMut;
+    use super::triedbmut::TrieDBMut;
+    use hashdb::DBValue;
+    use memorydb::MemoryDB;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();
     {
         let mut t = TrieDBMut::new(&mut memdb, &mut root);
-        t.insert(&(&[0x01u8, 0x23]).crypt_hash(), &[0x01u8, 0x23]).unwrap();
+        t.insert(&(&[0x01u8, 0x23]).crypt_hash(), &[0x01u8, 0x23])
+            .unwrap();
     }
     let t = SecTrieDB::new(&memdb, &root).unwrap();
-    assert_eq!(t.get(&[0x01u8, 0x23]).unwrap().unwrap(), DBValue::from_slice(&[0x01u8, 0x23]));
+    assert_eq!(
+        t.get(&[0x01u8, 0x23]).unwrap().unwrap(),
+        DBValue::from_slice(&[0x01u8, 0x23])
+    );
 }

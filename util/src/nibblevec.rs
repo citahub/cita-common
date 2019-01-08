@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-
 //! An owning, nibble-oriented byte vector.
 
 use elastic_array::ElasticArray36;
@@ -54,7 +53,11 @@ impl NibbleVec {
 
     /// Try to get the nibble at the given offset.
     pub fn at(&self, idx: usize) -> u8 {
-        if idx % 2 == 0 { self.inner[idx / 2] >> 4 } else { self.inner[idx / 2] & 0x0F }
+        if idx % 2 == 0 {
+            self.inner[idx / 2] >> 4
+        } else {
+            self.inner[idx / 2] & 0x0F
+        }
     }
 
     /// Push a nibble onto the `NibbleVec`. Ignores the high 4 bits.
@@ -64,7 +67,10 @@ impl NibbleVec {
         if self.len % 2 == 0 {
             self.inner.push(nibble << 4);
         } else {
-            *self.inner.last_mut().expect("len != 0 since len % 2 != 0; inner has a last element; qed") |= nibble;
+            *self
+                .inner
+                .last_mut()
+                .expect("len != 0 since len % 2 != 0; inner has a last element; qed") |= nibble;
         }
 
         self.len += 1;
@@ -76,7 +82,10 @@ impl NibbleVec {
             return None;
         }
 
-        let byte = self.inner.pop().expect("len != 0; inner has last elem; qed");
+        let byte = self
+            .inner
+            .pop()
+            .expect("len != 0; inner has last elem; qed");
         let nibble = if self.len % 2 == 0 {
             self.inner.push(byte & 0xF0);
             byte & 0x0F
@@ -90,7 +99,11 @@ impl NibbleVec {
 
     /// Try to treat this `NibbleVec` as a `NibbleSlice`. Works only if len is even.
     pub fn as_nibbleslice(&self) -> Option<NibbleSlice> {
-        if self.len % 2 == 0 { Some(NibbleSlice::new(self.inner())) } else { None }
+        if self.len % 2 == 0 {
+            Some(NibbleSlice::new(self.inner()))
+        } else {
+            None
+        }
     }
 
     /// Get the underlying byte slice.

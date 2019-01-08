@@ -6,8 +6,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use byteorder::{ByteOrder, BigEndian};
-use elastic_array::{ElasticArray16, ElasticArray1024};
+use byteorder::{BigEndian, ByteOrder};
+use elastic_array::{ElasticArray1024, ElasticArray16};
 use std::borrow::Borrow;
 use traits::Encodable;
 
@@ -135,14 +135,14 @@ impl RlpStream {
                 self.buffer.push(0);
 
                 let position = self.buffer.len();
-                self.unfinished_lists.push(ListInfo::new(position, Some(len)));
+                self.unfinished_lists
+                    .push(ListInfo::new(position, Some(len)));
             }
         }
 
         // return chainable self
         self
     }
-
 
     /// Declare appending the list of unknown size, chainable.
     pub fn begin_unbounded_list(&mut self) -> &mut RlpStream {
@@ -193,7 +193,12 @@ impl RlpStream {
     }
 
     /// Appends raw (pre-serialised) RLP data. Checks for size oveflow.
-    pub fn append_raw_checked<'a>(&'a mut self, bytes: &[u8], item_count: usize, max_size: usize) -> bool {
+    pub fn append_raw_checked<'a>(
+        &'a mut self,
+        bytes: &[u8],
+        item_count: usize,
+        max_size: usize,
+    ) -> bool {
         if self.estimate_size(bytes.len()) > max_size {
             return false;
         }
@@ -215,7 +220,6 @@ impl RlpStream {
         }
         base_size
     }
-
 
     /// Returns current RLP size in bytes for the data pushed into the list.
     pub fn len<'a>(&'a self) -> usize {
@@ -292,7 +296,9 @@ impl RlpStream {
             Some(ref mut x) => {
                 x.current += inserted_items;
                 match x.max {
-                    Some(ref max) if x.current > *max => panic!("You cannot append more items then you expect!"),
+                    Some(ref max) if x.current > *max => {
+                        panic!("You cannot append more items then you expect!")
+                    }
                     Some(ref max) => x.current == *max,
                     _ => false,
                 }
@@ -338,7 +344,9 @@ pub struct BasicEncoder<'a> {
 
 impl<'a> BasicEncoder<'a> {
     fn new(stream: &'a mut RlpStream) -> Self {
-        BasicEncoder { buffer: &mut stream.buffer }
+        BasicEncoder {
+            buffer: &mut stream.buffer,
+        }
     }
 
     fn insert_size(&mut self, size: usize, position: usize) -> u8 {
@@ -347,7 +355,8 @@ impl<'a> BasicEncoder<'a> {
         let size_bytes = 4 - leading_empty_bytes as u8;
         let mut buffer = [0u8; 4];
         BigEndian::write_u32(&mut buffer, size);
-        self.buffer.insert_slice(position, &buffer[leading_empty_bytes..]);
+        self.buffer
+            .insert_slice(position, &buffer[leading_empty_bytes..]);
         size_bytes as u8
     }
 

@@ -6,8 +6,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use {UntrustedRlp, PayloadInfo, Prototype, Decodable};
 use std::fmt;
+use {Decodable, PayloadInfo, Prototype, UntrustedRlp};
 
 impl<'a> From<UntrustedRlp<'a>> for Rlp<'a> {
     fn from(rlp: UntrustedRlp<'a>) -> Rlp<'a> {
@@ -36,7 +36,9 @@ where
 {
     /// Create a new instance of `Rlp`
     pub fn new(bytes: &'a [u8]) -> Rlp<'a> {
-        Rlp { rlp: UntrustedRlp::new(bytes) }
+        Rlp {
+            rlp: UntrustedRlp::new(bytes),
+        }
     }
 
     /// The raw data of the RLP as slice.
@@ -272,7 +274,10 @@ where
     type IntoIter = RlpIterator<'a, 'view>;
 
     fn into_iter(self) -> Self::IntoIter {
-        RlpIterator { rlp: self, index: 0 }
+        RlpIterator {
+            rlp: self,
+            index: 0,
+        }
     }
 }
 

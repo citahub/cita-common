@@ -22,7 +22,7 @@ pub mod rocksdb;
 pub use in_memory::*;
 pub use rocksdb::*;
 
-use util::{UtilError, Bytes};
+use util::{Bytes, UtilError};
 
 use elastic_array::*;
 use hashdb::DBValue;
@@ -62,7 +62,9 @@ impl DBTransaction {
 
     /// Create new transaction with capacity.
     pub fn with_capacity(cap: usize) -> DBTransaction {
-        DBTransaction { ops: Vec::with_capacity(cap) }
+        DBTransaction {
+            ops: Vec::with_capacity(cap),
+        }
     }
 
     /// Insert a key-value pair in the transaction. Any existing value will be overwritten upon write.
@@ -70,10 +72,10 @@ impl DBTransaction {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
         self.ops.push(DBOp::Insert {
-                          col: col,
-                          key: ekey,
-                          value: DBValue::from_slice(value),
-                      });
+            col: col,
+            key: ekey,
+            value: DBValue::from_slice(value),
+        });
     }
 
     /// Insert a key-value pair in the transaction. Any existing value will be overwritten upon write.
@@ -81,10 +83,10 @@ impl DBTransaction {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
         self.ops.push(DBOp::Insert {
-                          col: col,
-                          key: ekey,
-                          value: DBValue::from_vec(value),
-                      });
+            col: col,
+            key: ekey,
+            value: DBValue::from_vec(value),
+        });
     }
 
     /// Insert a key-value pair in the transaction. Any existing value will be overwritten upon write.
@@ -93,17 +95,20 @@ impl DBTransaction {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
         self.ops.push(DBOp::InsertCompressed {
-                          col: col,
-                          key: ekey,
-                          value: DBValue::from_vec(value),
-                      });
+            col: col,
+            key: ekey,
+            value: DBValue::from_vec(value),
+        });
     }
 
     /// Delete value by key.
     pub fn delete(&mut self, col: Option<u32>, key: &[u8]) {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
-        self.ops.push(DBOp::Delete { col: col, key: ekey });
+        self.ops.push(DBOp::Delete {
+            col: col,
+            key: ekey,
+        });
     }
 }
 
@@ -153,7 +158,11 @@ pub trait KeyValueDB: Sync + Send {
     fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
 
     /// Iterate over flushed data for a given column, starting from a given prefix.
-    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
+    fn iter_from_prefix<'a>(
+        &'a self,
+        col: Option<u32>,
+        prefix: &'a [u8],
+    ) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
 
     /// Attempt to replace this database with a new one located at the given path.
     fn restore(&self, new_db: &str) -> Result<(), UtilError>;

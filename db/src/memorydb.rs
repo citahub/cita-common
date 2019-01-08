@@ -16,12 +16,12 @@
 
 //! Reference-counted memory-based `HashDB` implementation.
 
-use hashable::{HASH_NULL_RLP, Hashable};
+use hashable::{Hashable, HASH_NULL_RLP};
 use hashdb::*;
 use heapsize::*;
 use rlp::*;
-use std::collections::HashMap;
 use std::collections::hash_map::Entry;
+use std::collections::HashMap;
 use std::mem;
 use types::{H256FastMap, H256};
 
@@ -78,7 +78,9 @@ pub struct MemoryDB {
 impl MemoryDB {
     /// Create a new instance of the memory DB.
     pub fn new() -> MemoryDB {
-        MemoryDB { data: H256FastMap::default() }
+        MemoryDB {
+            data: H256FastMap::default(),
+        }
     }
 
     /// Clear all data from the database.
@@ -137,12 +139,14 @@ impl MemoryDB {
             return None;
         }
         match self.data.entry(key.clone()) {
-            Entry::Occupied(mut entry) => if entry.get().1 == 1 {
-                Some(entry.remove().0)
-            } else {
-                entry.get_mut().1 -= 1;
-                None
-            },
+            Entry::Occupied(mut entry) => {
+                if entry.get().1 == 1 {
+                    Some(entry.remove().0)
+                } else {
+                    entry.get_mut().1 -= 1;
+                    None
+                }
+            }
             Entry::Vacant(entry) => {
                 entry.insert((DBValue::new(), -1));
                 None
@@ -182,7 +186,16 @@ impl HashDB for MemoryDB {
     }
 
     fn keys(&self) -> HashMap<H256, i32> {
-        self.data.iter().filter_map(|(k, v)| if v.1 != 0 { Some((k.clone(), v.1)) } else { None }).collect()
+        self.data
+            .iter()
+            .filter_map(|(k, v)| {
+                if v.1 != 0 {
+                    Some((k.clone(), v.1))
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     fn contains(&self, key: &H256) -> bool {
@@ -212,10 +225,10 @@ impl HashDB for MemoryDB {
                 false
             }
             None => true,
-        }
-        {
+        } {
             // ... None falls through into...
-            self.data.insert(key.clone(), (DBValue::from_slice(value), 1));
+            self.data
+                .insert(key.clone(), (DBValue::from_slice(value), 1));
         }
         key
     }
@@ -252,8 +265,7 @@ impl HashDB for MemoryDB {
                 false
             }
             None => true,
-        }
-        {
+        } {
             // ... None falls through into...
             self.data.insert(key.clone(), (DBValue::new(), -1));
         }
@@ -309,8 +321,17 @@ mod tests {
 
         let overlay = main.drain();
 
-        assert_eq!(overlay.get(&remove_key).unwrap(), &(DBValue::from_slice(b"doggo"), 0));
-        assert_eq!(overlay.get(&insert_key).unwrap(), &(DBValue::from_slice(b"arf"), 2));
-        assert_eq!(overlay.get(&negative_remove_key).unwrap(), &(DBValue::from_slice(b"negative"), -2));
+        assert_eq!(
+            overlay.get(&remove_key).unwrap(),
+            &(DBValue::from_slice(b"doggo"), 0)
+        );
+        assert_eq!(
+            overlay.get(&insert_key).unwrap(),
+            &(DBValue::from_slice(b"arf"), 2)
+        );
+        assert_eq!(
+            overlay.get(&negative_remove_key).unwrap(),
+            &(DBValue::from_slice(b"negative"), -2)
+        );
     }
 }

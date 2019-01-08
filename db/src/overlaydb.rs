@@ -16,12 +16,12 @@
 
 //! Disk-backed `HashDB` implementation.
 
-use util::{UtilError, BaseDataError};
-use types::H256;
 use hashdb::*;
-use kvdb::{KeyValueDB, DBTransaction};
+use kvdb::{DBTransaction, KeyValueDB};
 use memorydb::*;
 use rlp::*;
+use types::H256;
+use util::{BaseDataError, UtilError};
 
 use std::collections::HashMap;
 use std::sync::*;
@@ -80,7 +80,15 @@ impl OverlayDB {
                         if total_rc < 0 {
                             return Err(From::from(BaseDataError::NegativelyReferencedHash(key)));
                         }
-                        deletes += if self.put_payload_in_batch(batch, &key, (back_value, total_rc as u32)) { 1 } else { 0 };
+                        deletes += if self.put_payload_in_batch(
+                            batch,
+                            &key,
+                            (back_value, total_rc as u32),
+                        ) {
+                            1
+                        } else {
+                            0
+                        };
                     }
                     None => {
                         if rc < 0 {
@@ -113,13 +121,18 @@ impl OverlayDB {
             .get(self.column, key)
             .expect("Low-level database error. Some issue with your hard disk?")
             .map(|d| {
-                     let r = Rlp::new(&d);
-                     (DBValue::from_slice(r.at(1).data()), r.at(0).as_val())
-                 })
+                let r = Rlp::new(&d);
+                (DBValue::from_slice(r.at(1).data()), r.at(0).as_val())
+            })
     }
 
     /// Put the refs and value of the given key, possibly deleting it from the db.
-    fn put_payload_in_batch(&self, batch: &mut DBTransaction, key: &H256, payload: (DBValue, u32)) -> bool {
+    fn put_payload_in_batch(
+        &self,
+        batch: &mut DBTransaction,
+        key: &H256,
+        payload: (DBValue, u32),
+    ) -> bool {
         if payload.1 > 0 {
             let mut s = RlpStream::new_list(2);
             s.append(&payload.1);
@@ -165,7 +178,11 @@ impl HashDB for OverlayDB {
         match self.payload(key) {
             Some(x) => {
                 let (d, rc) = x;
-                if rc as i32 + memrc > 0 { Some(d) } else { None }
+                if rc as i32 + memrc > 0 {
+                    Some(d)
+                } else {
+                    None
+                }
             }
             // Replace above match arm with this once https://github.com/rust-lang/rust/issues/15287 is done.
             //Some((d, rc)) if rc + memrc > 0 => Some(d),

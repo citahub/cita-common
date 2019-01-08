@@ -120,7 +120,10 @@ where
 
     /// Create a new nibble slice from the given HPE encoded data (e.g. output of `encoded()`).
     pub fn from_encoded(data: &'a [u8]) -> (NibbleSlice, bool) {
-        (Self::new_offset(data, if data[0] & 16 == 16 { 1 } else { 2 }), data[0] & 32 == 32)
+        (
+            Self::new_offset(data, if data[0] & 16 == 16 { 1 } else { 2 }),
+            data[0] & 32 == 32,
+        )
     }
 
     /// Is this an empty slice?
@@ -130,7 +133,9 @@ where
 
     /// Get the length (in nibbles, naturally) of this slice.
     pub fn len(&self) -> usize {
-        (self.data.len() + self.data_encode_suffix.len()) * 2 - self.offset - self.offset_encode_suffix
+        (self.data.len() + self.data_encode_suffix.len()) * 2
+            - self.offset
+            - self.offset_encode_suffix
     }
 
     /// Get the nibble at position `i`.
@@ -287,19 +292,43 @@ mod tests {
     #[test]
     fn encoded() {
         let n = NibbleSlice::new(D);
-        assert_eq!(n.encoded(false), ElasticArray36::from_slice(&[0x00, 0x01, 0x23, 0x45]));
-        assert_eq!(n.encoded(true), ElasticArray36::from_slice(&[0x20, 0x01, 0x23, 0x45]));
-        assert_eq!(n.mid(1).encoded(false), ElasticArray36::from_slice(&[0x11, 0x23, 0x45]));
-        assert_eq!(n.mid(1).encoded(true), ElasticArray36::from_slice(&[0x31, 0x23, 0x45]));
+        assert_eq!(
+            n.encoded(false),
+            ElasticArray36::from_slice(&[0x00, 0x01, 0x23, 0x45])
+        );
+        assert_eq!(
+            n.encoded(true),
+            ElasticArray36::from_slice(&[0x20, 0x01, 0x23, 0x45])
+        );
+        assert_eq!(
+            n.mid(1).encoded(false),
+            ElasticArray36::from_slice(&[0x11, 0x23, 0x45])
+        );
+        assert_eq!(
+            n.mid(1).encoded(true),
+            ElasticArray36::from_slice(&[0x31, 0x23, 0x45])
+        );
     }
 
     #[test]
     fn from_encoded() {
         let n = NibbleSlice::new(D);
-        assert_eq!((n, false), NibbleSlice::from_encoded(&[0x00, 0x01, 0x23, 0x45]));
-        assert_eq!((n, true), NibbleSlice::from_encoded(&[0x20, 0x01, 0x23, 0x45]));
-        assert_eq!((n.mid(1), false), NibbleSlice::from_encoded(&[0x11, 0x23, 0x45]));
-        assert_eq!((n.mid(1), true), NibbleSlice::from_encoded(&[0x31, 0x23, 0x45]));
+        assert_eq!(
+            (n, false),
+            NibbleSlice::from_encoded(&[0x00, 0x01, 0x23, 0x45])
+        );
+        assert_eq!(
+            (n, true),
+            NibbleSlice::from_encoded(&[0x20, 0x01, 0x23, 0x45])
+        );
+        assert_eq!(
+            (n.mid(1), false),
+            NibbleSlice::from_encoded(&[0x11, 0x23, 0x45])
+        );
+        assert_eq!(
+            (n.mid(1), true),
+            NibbleSlice::from_encoded(&[0x31, 0x23, 0x45])
+        );
     }
 
     #[test]

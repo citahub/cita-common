@@ -19,15 +19,15 @@
 
 use std::fmt;
 
-use super::{Trie, TrieItem, TrieError, TrieIterator, Query};
 use super::lookup::Lookup;
 use super::node::{Node, OwnedNode};
+use super::{Query, Trie, TrieError, TrieItem, TrieIterator};
 
-use util::{ToPretty, Bytes, nibbleslice::NibbleSlice};
-use types::H256;
+use hashable::Hashable;
 use hashdb::*;
 use rlp::*;
-use hashable::Hashable;
+use types::H256;
+use util::{nibbleslice::NibbleSlice, Bytes, ToPretty};
 
 /// A `Trie` implementation using a generic `HashDB` backing database.
 ///
@@ -69,10 +69,10 @@ impl<'db> TrieDB<'db> {
             Err(Box::new(TrieError::InvalidStateRoot(*root)))
         } else {
             Ok(TrieDB {
-                   db: db,
-                   root: root,
-                   hash_count: 0,
-               })
+                db: db,
+                root: root,
+                hash_count: 0,
+            })
         }
     }
 
@@ -83,7 +83,9 @@ impl<'db> TrieDB<'db> {
 
     /// Get the data of the root node.
     fn root_data(&self) -> super::Result<DBValue> {
-        self.db.get(self.root).ok_or_else(|| Box::new(TrieError::InvalidStateRoot(*self.root)))
+        self.db
+            .get(self.root)
+            .ok_or_else(|| Box::new(TrieError::InvalidStateRoot(*self.root)))
     }
 
     /// Indentation helper for `format_all`.
@@ -142,16 +144,24 @@ impl<'db> TrieDB<'db> {
         match r.is_data() && r.size() == 32 {
             true => {
                 let key = r.as_val::<H256>();
-                self.db.get(&key).ok_or_else(|| Box::new(TrieError::IncompleteDatabase(key)))
+                self.db
+                    .get(&key)
+                    .ok_or_else(|| Box::new(TrieError::IncompleteDatabase(key)))
             }
             false => Ok(DBValue::from_slice(node)),
         }
     }
 }
 
-pub fn verify_value_proof<Q: Query>(key: &[u8], root_hash: H256, proof: &[Bytes], query: Q) -> Option<Q::Item>
-{
-    if proof.len() == 0 { return None; }
+pub fn verify_value_proof<Q: Query>(
+    key: &[u8],
+    root_hash: H256,
+    proof: &[Bytes],
+    query: Q,
+) -> Option<Q::Item> {
+    if proof.len() == 0 {
+        return None;
+    }
 
     let mut key = NibbleSlice::new(key);
     let mut next_node_data: &[u8];
@@ -159,7 +169,9 @@ pub fn verify_value_proof<Q: Query>(key: &[u8], root_hash: H256, proof: &[Bytes]
 
     for node in proof {
         let node_hash = node.crypt_hash();
-        if node_hash != next_node_hash { return None; }
+        if node_hash != next_node_hash {
+            return None;
+        }
 
         match Node::decoded(node) {
             Node::Leaf(slice, value) => {
@@ -206,7 +218,11 @@ impl<'db> Trie for TrieDB<'db> {
         self.root
     }
 
-    fn get_with<'a, 'key, Q: Query>(&'a self, key: &'key [u8], query: Q) -> super::Result<Option<Q::Item>>
+    fn get_with<'a, 'key, Q: Query>(
+        &'a self,
+        key: &'key [u8],
+        query: Q,
+    ) -> super::Result<Option<Q::Item>>
     where
         'a: 'key,
     {
@@ -219,8 +235,8 @@ impl<'db> Trie for TrieDB<'db> {
     }
 
     fn get_value_proof<'a, 'key>(&'a self, key: &'key [u8]) -> Option<Vec<Bytes>>
-        where
-            'a: 'key,
+    where
+        'a: 'key,
     {
         let mut path = Vec::new();
         let mut key = NibbleSlice::new(key);
@@ -328,7 +344,11 @@ impl<'a> TrieDBIterator<'a> {
         Ok(r)
     }
 
-    fn seek_descend<'key>(&mut self, mut node_data: DBValue, mut key: NibbleSlice<'key>) -> super::Result<()> {
+    fn seek_descend<'key>(
+        &mut self,
+        mut node_data: DBValue,
+        mut key: NibbleSlice<'key>,
+    ) -> super::Result<()> {
         loop {
             let (data, mid) = {
                 let node = Node::decoded(&node_data);
@@ -347,8 +367,8 @@ impl<'a> TrieDBIterator<'a> {
                         }
 
                         self.key_nibbles.extend(slice.iter());
-                        return Ok(())
-                    },
+                        return Ok(());
+                    }
                     Node::Extension(ref slice, ref item) => {
                         if key.starts_with(slice) {
                             self.trail.push(Crumb {
@@ -360,17 +380,17 @@ impl<'a> TrieDBIterator<'a> {
                             (data, slice.len())
                         } else {
                             self.descend(&node_data)?;
-                            return Ok(())
+                            return Ok(());
                         }
-                    },
+                    }
                     Node::Branch(ref nodes, _) => match key.is_empty() {
                         true => {
                             self.trail.push(Crumb {
                                 status: Status::At,
                                 node: node.clone().into(),
                             });
-                            return Ok(())
-                        },
+                            return Ok(());
+                        }
                         false => {
                             let i = key.at(0);
                             self.trail.push(Crumb {
@@ -400,13 +420,13 @@ impl<'a> TrieDBIterator<'a> {
     /// Descend into a payload.
     fn descend_into_node(&mut self, node: OwnedNode) {
         self.trail.push(Crumb {
-                            status: Status::Entering,
-                            node: node,
-                        });
+            status: Status::Entering,
+            node: node,
+        });
         match &self.trail.last().expect("just pushed item; qed").node {
             &OwnedNode::Leaf(ref n, _) | &OwnedNode::Extension(ref n, _) => {
                 self.key_nibbles.extend((0..n.len()).map(|i| n.at(i)));
-            },
+            }
             _ => {}
         }
     }
@@ -449,7 +469,9 @@ impl<'a> Iterator for TrieDBIterator<'a> {
         loop {
             let iter_step = {
                 match self.trail.last_mut() {
-                    Some(b) => { b.increment(); },
+                    Some(b) => {
+                        b.increment();
+                    }
                     None => return None,
                 }
 
@@ -461,31 +483,41 @@ impl<'a> Iterator for TrieDBIterator<'a> {
                             OwnedNode::Leaf(ref n, _) | OwnedNode::Extension(ref n, _) => {
                                 let l = self.key_nibbles.len();
                                 self.key_nibbles.truncate(l - n.len());
-                            },
-                            OwnedNode::Branch(_, _) => { self.key_nibbles.pop(); },
+                            }
+                            OwnedNode::Branch(_, _) => {
+                                self.key_nibbles.pop();
+                            }
                             _ => {}
                         }
                         IterStep::PopTrail
-                    },
-                    (Status::At, &OwnedNode::Leaf(_, ref v)) | (Status::At, &OwnedNode::Branch(_, Some(ref v))) => {
+                    }
+                    (Status::At, &OwnedNode::Leaf(_, ref v))
+                    | (Status::At, &OwnedNode::Branch(_, Some(ref v))) => {
                         return Some(Ok((self.key(), v.clone())));
-                    },
-                    (Status::At, &OwnedNode::Extension(_, ref d)) => IterStep::Descend(self.db.get_raw_or_lookup(&*d)),
+                    }
+                    (Status::At, &OwnedNode::Extension(_, ref d)) => {
+                        IterStep::Descend(self.db.get_raw_or_lookup(&*d))
+                    }
                     (Status::At, &OwnedNode::Branch(_, _)) => IterStep::Continue,
-                    (Status::AtChild(i), &OwnedNode::Branch(ref children, _)) if children[i].len() > 0 => {
+                    (Status::AtChild(i), &OwnedNode::Branch(ref children, _))
+                        if children[i].len() > 0 =>
+                    {
                         match i {
                             0 => self.key_nibbles.push(0),
-                            i => *self.key_nibbles.last_mut()
-                                .expect("pushed as 0; moves sequentially; removed afterwards; qed") = i as u8,
+                            i => {
+                                *self.key_nibbles.last_mut().expect(
+                                    "pushed as 0; moves sequentially; removed afterwards; qed",
+                                ) = i as u8
+                            }
                         }
                         IterStep::Descend(self.db.get_raw_or_lookup(&*children[i]))
-                    },
+                    }
                     (Status::AtChild(i), &OwnedNode::Branch(_, _)) => {
                         if i == 0 {
                             self.key_nibbles.push(0);
                         }
                         IterStep::Continue
-                    },
+                    }
                     _ => panic!(), // Should never see Entering or AtChild without a Branch here.
                 }
             };
@@ -493,14 +525,10 @@ impl<'a> Iterator for TrieDBIterator<'a> {
             match iter_step {
                 IterStep::PopTrail => {
                     self.trail.pop();
-                },
-                IterStep::Descend(Ok(d)) => {
-                    self.descend_into_node(Node::decoded(&d).into())
-                },
-                IterStep::Descend(Err(e)) => {
-                    return Some(Err(e))
                 }
-                IterStep::Continue => {},
+                IterStep::Descend(Ok(d)) => self.descend_into_node(Node::decoded(&d).into()),
+                IterStep::Descend(Err(e)) => return Some(Err(e)),
+                IterStep::Continue => {}
             }
         }
     }
@@ -508,9 +536,9 @@ impl<'a> Iterator for TrieDBIterator<'a> {
 
 #[test]
 fn iterator() {
-    use memorydb::*;
-    use super::TrieMut;
     use super::triedbmut::*;
+    use super::TrieMut;
+    use memorydb::*;
 
     let d = vec![
         DBValue::from_slice(b"A"),
@@ -529,15 +557,21 @@ fn iterator() {
     }
 
     let t = TrieDB::new(&memdb, &root).unwrap();
-    assert_eq!(d.iter().map(|i| i.clone().into_vec()).collect::<Vec<_>>(), t.iter().unwrap().map(|x| x.unwrap().0).collect::<Vec<_>>());
-    assert_eq!(d, t.iter().unwrap().map(|x| x.unwrap().1).collect::<Vec<_>>());
+    assert_eq!(
+        d.iter().map(|i| i.clone().into_vec()).collect::<Vec<_>>(),
+        t.iter().unwrap().map(|x| x.unwrap().0).collect::<Vec<_>>()
+    );
+    assert_eq!(
+        d,
+        t.iter().unwrap().map(|x| x.unwrap().1).collect::<Vec<_>>()
+    );
 }
 
 #[test]
 fn iterator_seek() {
-    use memorydb::*;
-    use super::TrieMut;
     use super::triedbmut::*;
+    use super::TrieMut;
+    use memorydb::*;
 
     let d = vec![
         DBValue::from_slice(b"A"),
@@ -557,7 +591,10 @@ fn iterator_seek() {
 
     let t = TrieDB::new(&memdb, &root).unwrap();
     let mut iter = t.iter().unwrap();
-    assert_eq!(iter.next(), Some(Ok((b"A".to_vec(), DBValue::from_slice(b"A")))));
+    assert_eq!(
+        iter.next(),
+        Some(Ok((b"A".to_vec(), DBValue::from_slice(b"A"))))
+    );
     iter.seek(b"!").unwrap();
     assert_eq!(d, iter.map(|x| x.unwrap().1).collect::<Vec<_>>());
     let mut iter = t.iter().unwrap();
@@ -585,9 +622,9 @@ fn iterator_seek() {
 
 #[test]
 fn get_len() {
-    use memorydb::*;
-    use super::TrieMut;
     use super::triedbmut::*;
+    use super::TrieMut;
+    use memorydb::*;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::new();
@@ -605,10 +642,10 @@ fn get_len() {
 
 #[test]
 fn value_proof() {
-    use memorydb::MemoryDB;
-    use trie::{TrieDB, TrieDBMut, TrieMut};
-    use trie::triedb::verify_value_proof;
     use hashdb::DBValue;
+    use memorydb::MemoryDB;
+    use trie::triedb::verify_value_proof;
+    use trie::{TrieDB, TrieDBMut, TrieMut};
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::new();
@@ -621,7 +658,8 @@ fn value_proof() {
         t.insert(&[0x64u8, 0x6f], b"verb").unwrap();
         t.insert(&[0x64u8, 0x6f, 0x67], b"puppy").unwrap();
         t.insert(&[0x64u8, 0x6f, 0x67, 0x65], b"coin").unwrap();
-        t.insert(&[0x68u8, 0x6f, 0x72, 0x73, 0x65], b"stallion").unwrap();
+        t.insert(&[0x68u8, 0x6f, 0x72, 0x73, 0x65], b"stallion")
+            .unwrap();
     }
 
     let trie = TrieDB::new(&memdb, &root).unwrap();
@@ -660,7 +698,13 @@ fn value_proof() {
     let proof = trie.get_value_proof(&[0x64u8, 0x6f, 0x67, 0x65]).unwrap();
 
     // verify proof and extract value
-    let val = verify_value_proof(&[0x64u8, 0x6f, 0x67, 0x65], root, &proof, DBValue::from_slice).unwrap();
+    let val = verify_value_proof(
+        &[0x64u8, 0x6f, 0x67, 0x65],
+        root,
+        &proof,
+        DBValue::from_slice,
+    )
+    .unwrap();
 
     assert_eq!(val, DBValue::from_slice(b"coin"));
 }

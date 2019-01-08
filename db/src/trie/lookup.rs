@@ -16,13 +16,13 @@
 
 //! Trie lookup via HashDB.
 
-use super::{TrieError, Query};
 use super::node::Node;
+use super::{Query, TrieError};
 
-use types::H256;
 use hashdb::HashDB;
-use util::nibbleslice::NibbleSlice;
 use rlp::Rlp;
+use types::H256;
+use util::nibbleslice::NibbleSlice;
 
 /// Trie lookup helper object.
 pub struct Lookup<'a, Q: Query> {
@@ -44,10 +44,12 @@ impl<'a, Q: Query> Lookup<'a, Q> {
         for depth in 0.. {
             let node_data = match self.db.get(&hash) {
                 Some(value) => value,
-                None => return Err(Box::new(match depth {
-                                                0 => TrieError::InvalidStateRoot(hash),
-                                                _ => TrieError::IncompleteDatabase(hash),
-                                            })),
+                None => {
+                    return Err(Box::new(match depth {
+                        0 => TrieError::InvalidStateRoot(hash),
+                        _ => TrieError::IncompleteDatabase(hash),
+                    }))
+                }
             };
 
             self.query.record(&hash, &node_data, depth);
@@ -59,9 +61,9 @@ impl<'a, Q: Query> Lookup<'a, Q> {
                 match Node::decoded(node_data) {
                     Node::Leaf(slice, value) => {
                         return Ok(match slice == key {
-                                      true => Some(self.query.decode(value)),
-                                      false => None,
-                                  });
+                            true => Some(self.query.decode(value)),
+                            false => None,
+                        });
                     }
                     Node::Extension(slice, item) => {
                         if key.starts_with(&slice) {
