@@ -62,7 +62,7 @@ impl BlockExt for Block {
 
     fn try_from_rpc_block(rpc_block: RpcBlock) -> Result<Self, Self::Error> {
         use crate::error::ErrorExt;
-        use std::convert::TryFrom;
+        use libproto::TryFrom;
 
         let mut blk = libproto::Block::try_from(&rpc_block.block) // from chain
             .map_err(|err| Error::rpc_block_decode_error(Box::new(err)))?;

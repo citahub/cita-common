@@ -16,8 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::{Address, H256, U256};
-use libproto::TryFrom;
-use libproto::{Block as ProtoBlock, BlockHeader as ProtoBlockHeader};
 
 use crate::rpctypes::{BlockTransaction, Proof};
 

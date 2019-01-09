@@ -16,11 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::{Address, H256, U256};
-use libproto::TryInto;
-use libproto::{
-    FullTransaction as ProtoFullTransaction, SignedTransaction as ProtoSignedTransaction,
-};
-use rpctypes::Data;
 
 use crate::rpctypes::Data;
 

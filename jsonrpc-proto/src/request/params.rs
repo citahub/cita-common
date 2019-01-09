@@ -384,8 +384,8 @@ impl TryIntoProto<ProtoRequest> for GetStorageKeyParams {
 
 impl SendRawTransactionParamsExt for SendRawTransactionParams {
     fn extract_unverified_tx(data: &[u8]) -> Result<UnverifiedTransaction, Error> {
+        use libproto::TryFrom;
         use rustc_serialize::hex::FromHex;
-        use std::convert::TryFrom;
 
         let un_tx = UnverifiedTransaction::try_from(data).map_err(|_err| {
             let err_msg = format!(

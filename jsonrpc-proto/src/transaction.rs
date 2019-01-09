@@ -15,13 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use std::convert::TryInto;
-
 use cita_types::{traits::LowerHex, H256, U256};
 use jsonrpc_types::{
     rpctypes::{Data, FullTransaction, RpcTransaction},
     Error,
 };
+use libproto::TryInto;
 
 use crate::{error::ErrorExt, from_into::TryFromProto};
 

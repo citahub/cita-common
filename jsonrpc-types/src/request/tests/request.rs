@@ -20,6 +20,8 @@ use request::{BlockNumberParams, GetTransactionReceiptParams, PartialRequest, Re
 use serde_json;
 use std::convert::Into;
 
+use crate::Error;
+
 macro_rules! test_ser_and_de {
     ($type:ty, $data:ident, $json_params:tt) => {
         let serialized = serde_json::to_value(&$data).unwrap();
