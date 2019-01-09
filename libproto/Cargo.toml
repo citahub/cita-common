@@ -15,7 +15,6 @@ rustc-serialize = "0.3"
 rlp = { path = "../rlp" }
 serde = "1.0"
 serde_derive = "1.0"
-serde_json = "1.0"
 logger = { path = "../logger" }
 grpc = "0.5.0"
 tls-api = "0.1.14"

@@ -16,8 +16,6 @@
 
 //! Key-value datastore with a modified Merkle tree.
 
-extern crate rand;
-
 use hashable::Hashable;
 use rlp::encode;
 use types::H256;

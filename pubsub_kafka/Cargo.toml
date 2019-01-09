@@ -8,9 +8,7 @@ git = "https://github.com/fede1024/rust-rdkafka.git"
 rev = "84d4062"
 
 [dependencies]
-errno = "^0.1.8"
 futures = "^0.1.13"
-libc = "^0.2.45"
 logger = { path = "../logger" }
 futures-cpupool = "0.1.6"
 

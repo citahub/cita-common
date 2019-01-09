@@ -34,7 +34,6 @@ members = [
     "tx_pool",
 
     "proof",
-    "engine_json",
     "authority_manage",
 
     "jsonrpc-types",
