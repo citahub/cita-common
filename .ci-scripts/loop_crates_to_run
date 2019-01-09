@@ -118,7 +118,7 @@ function cargo_run_all () {
         cargo_run ${crate} --features "${SELECT_HASH}"
     done
 
-    for crate in cita-crypto engine_json; do
+    for crate in cita-crypto; do
         cargo_run ${crate} --features "${SELECT_CRYPTO}"
     done
 
