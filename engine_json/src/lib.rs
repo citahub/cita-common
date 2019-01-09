@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(unused_extern_crates)]
 extern crate cita_crypto as crypto;
 extern crate cita_types as types;
 extern crate serde;
@@ -30,6 +29,3 @@ mod spec;
 pub use self::bft::*;
 pub use self::engine::*;
 pub use self::spec::*;
-
-#[test]
-fn it_works() {}

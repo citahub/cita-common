@@ -122,14 +122,8 @@ function cargo_run_all () {
         cargo_run ${crate} --features "${SELECT_CRYPTO}"
     done
 
-    for crate in libproto proof tx_pool jsonrpc-types cita-web3; do
+    for crate in libproto proof tx_pool jsonrpc-types cita-web3 engine; do
         cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
-    done
-
-    for crate in engine; do
-        for pubsub_feature in ${FEATURES_FOR_PUBSUB}; do
-            cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO} ${pubsub_feature}"
-        done
     done
 }
 

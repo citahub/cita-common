@@ -27,7 +27,6 @@ extern crate rlp;
 extern crate rustc_hex;
 extern crate rustc_version;
 extern crate snappy;
-extern crate target_info;
 pub extern crate tiny_keccak as sha3;
 
 extern crate panic_hook;
