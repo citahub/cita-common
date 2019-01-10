@@ -16,8 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate bincode;
+#[cfg(test)]
 extern crate cita_crypto;
-extern crate cita_crypto_trait;
 extern crate cita_types;
 extern crate jsonrpc_types;
 extern crate libproto;

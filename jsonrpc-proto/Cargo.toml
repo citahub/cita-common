@@ -8,14 +8,15 @@ libproto = { path = "../libproto" }
 jsonrpc-types = { path = "../jsonrpc-types" }
 proof = { path = "../proof" }
 cita-types = { path = "../cita-types" }
-cita-crypto-trait = { path = "../cita-crypto-trait" }
-cita-crypto = { path = "../cita-crypto" }
 logger = { path = "../logger" }
 serde = "1.0"
 serde_json = "1.0"
 uuid = { version = "0.7", features = ["v4"] }
 rustc-serialize = "0.3.24"
 bincode = "0.8"
+
+[dev-dependencies]
+cita-crypto = { path = "../cita-crypto" }
 
 [features]
 default = []
