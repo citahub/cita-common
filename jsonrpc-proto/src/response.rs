@@ -24,12 +24,12 @@ use jsonrpc_types::{
 use libproto::response::{Response, Response_oneof_data};
 
 pub trait OutputExt {
-    fn from(resp: Response, info: RequestInfo) -> Self;
+    fn from_res_info(resp: Response, info: RequestInfo) -> Self;
 }
 
 impl OutputExt for Output {
     /// Creates new output given `Result`, `Id` and `Version`.
-    fn from(resp: Response, info: RequestInfo) -> Self {
+    fn from_res_info(resp: Response, info: RequestInfo) -> Self {
         use crate::{block::BlockExt, error::ErrorExt, from_into::TryFromProto};
 
         let code = resp.get_code();
