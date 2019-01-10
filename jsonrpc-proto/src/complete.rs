@@ -15,7 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use jsonrpc_types::{request::*, rpctypes::Params as PartialParams, Error};
+use jsonrpc_types::request::{
+    BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
+    GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
+    GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
+    GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
+    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
+    PeerCountParams, SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
+};
+use jsonrpc_types::request::{Call, JsonRpcRequest, PartialCall, PartialRequest, Request};
+use jsonrpc_types::{rpctypes::Params as PartialParams, Error};
 use libproto::Request as ProtoRequest;
 use serde_json;
 
@@ -43,6 +52,9 @@ impl Complete for PartialRequest {
 }
 
 macro_rules! partial_call_complete {
+    ($( ($enum_name:ident, $params_name:ident: $params_list:expr, $result_type:ident) ),+ ,) => {
+        partial_call_complete!($( ($enum_name, $params_name) ),+);
+    };
     ($( ($enum_name:ident, $params_name:ident) ),+) => {
         impl Complete for PartialCall {
             type Output = Call;
@@ -76,32 +88,7 @@ macro_rules! partial_call_complete {
     }
 }
 
-partial_call_complete!(
-    (BlockNumber, BlockNumberParams),
-    (PeerCount, PeerCountParams),
-    (SendRawTransaction, SendRawTransactionParams),
-    (SendTransaction, SendTransactionParams),
-    (GetBlockByHash, GetBlockByHashParams),
-    (GetBlockByNumber, GetBlockByNumberParams),
-    (GetTransactionReceipt, GetTransactionReceiptParams),
-    (GetLogs, GetLogsParams),
-    (Call, CallParams),
-    (GetTransaction, GetTransactionParams),
-    (GetTransactionCount, GetTransactionCountParams),
-    (GetCode, GetCodeParams),
-    (GetAbi, GetAbiParams),
-    (GetBalance, GetBalanceParams),
-    (NewFilter, NewFilterParams),
-    (NewBlockFilter, NewBlockFilterParams),
-    (UninstallFilter, UninstallFilterParams),
-    (GetFilterChanges, GetFilterChangesParams),
-    (GetFilterLogs, GetFilterLogsParams),
-    (GetTransactionProof, GetTransactionProofParams),
-    (GetMetaData, GetMetaDataParams),
-    (GetStateProof, GetStateProofParams),
-    (GetBlockHeader, GetBlockHeaderParams),
-    (GetStorageAt, GetStorageKeyParams)
-);
+impl_for_each_jsonrpc_requests!(partial_call_complete);
 
 pub trait CompleteInto {
     fn complete_and_into_proto(self) -> Result<(Request, ProtoRequest), Error>;

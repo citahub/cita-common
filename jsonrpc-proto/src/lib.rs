@@ -19,6 +19,7 @@ extern crate bincode;
 #[cfg(test)]
 extern crate cita_crypto;
 extern crate cita_types;
+#[macro_use(impl_for_each_jsonrpc_requests)]
 extern crate jsonrpc_types;
 extern crate libproto;
 extern crate rustc_serialize;

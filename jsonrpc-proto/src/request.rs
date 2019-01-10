@@ -17,7 +17,7 @@
 
 /// Convert JSON-RPC request to proto request.
 use jsonrpc_types::{
-    request::*, // bring in varied Params
+    request::{Call, Request},
     Error,
 };
 use libproto::request::Request as ProtoRequest;
@@ -35,6 +35,9 @@ impl TryIntoProto<ProtoRequest> for Request {
 }
 
 macro_rules! call_into_proto {
+    ($( ($enum_name:ident, $params_name:ident: $params_list:expr, $result_type:ident) ),+ ,) => {
+        call_into_proto![$( $enum_name ),+];
+    };
     [$( $enum_name:ident ),+] => {
         impl TryIntoProto<ProtoRequest> for Call {
             type Error = Error;
@@ -50,29 +53,4 @@ macro_rules! call_into_proto {
     };
 }
 
-call_into_proto![
-    BlockNumber,
-    PeerCount,
-    SendRawTransaction,
-    SendTransaction,
-    GetBlockByHash,
-    GetBlockByNumber,
-    GetTransactionReceipt,
-    GetLogs,
-    Call,
-    GetTransaction,
-    GetTransactionCount,
-    GetCode,
-    GetAbi,
-    GetBalance,
-    NewFilter,
-    NewBlockFilter,
-    UninstallFilter,
-    GetFilterChanges,
-    GetFilterLogs,
-    GetTransactionProof,
-    GetMetaData,
-    GetStateProof,
-    GetBlockHeader,
-    GetStorageAt
-];
+impl_for_each_jsonrpc_requests!(call_into_proto);

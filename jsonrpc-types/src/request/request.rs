@@ -219,29 +219,36 @@ pub trait JsonRpcRequest {
 //  Second, implement `TryInto<ProtoRequest>` for the new params type.
 //
 //  DONE!
-define_call!(
-    (BlockNumber, BlockNumberParams: [], Quantity),
-    (PeerCount, PeerCountParams: [], Quantity),
-    (SendRawTransaction, SendRawTransactionParams: [Data], TxResponse),
-    (SendTransaction, SendTransactionParams: [Data], TxResponse),
-    (GetBlockByHash, GetBlockByHashParams: [Data32, Boolean], Block),
-    (GetBlockByNumber, GetBlockByNumberParams: [BlockNumber, Boolean], Block),
-    (GetTransactionReceipt, GetTransactionReceiptParams: [Data32], Receipt),
-    (GetLogs, GetLogsParams: [Filter], Logs),
-    (Call, CallParams: [CallRequest, BlockNumber], Data),
-    (GetTransaction, GetTransactionParams: [Data32], RpcTransaction),
-    (GetTransactionCount, GetTransactionCountParams: [Data20, BlockNumber], Quantity),
-    (GetCode, GetCodeParams: [Data20, BlockNumber], Data),
-    (GetAbi, GetAbiParams: [Data20, BlockNumber], Data),
-    (GetBalance, GetBalanceParams: [Data20, BlockNumber], Quantity),
-    (NewFilter, NewFilterParams: [Filter], Quantity),
-    (NewBlockFilter, NewBlockFilterParams: [], Quantity),
-    (UninstallFilter, UninstallFilterParams: [Quantity], Boolean),
-    (GetFilterChanges, GetFilterChangesParams: [Quantity], FilterChanges),
-    (GetFilterLogs, GetFilterLogsParams: [Quantity], Logs),
-    (GetTransactionProof, GetTransactionProofParams: [Data32], Data),
-    (GetMetaData, GetMetaDataParams: [BlockNumber], MetaData),
-    (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
-    (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
-    (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
-);
+#[macro_export]
+macro_rules! impl_for_each_jsonrpc_requests {
+    ($macro:ident) => {
+        $macro!(
+            (BlockNumber, BlockNumberParams: [], Quantity),
+            (PeerCount, PeerCountParams: [], Quantity),
+            (SendRawTransaction, SendRawTransactionParams: [Data], TxResponse),
+            (SendTransaction, SendTransactionParams: [Data], TxResponse),
+            (GetBlockByHash, GetBlockByHashParams: [Data32, Boolean], Block),
+            (GetBlockByNumber, GetBlockByNumberParams: [BlockNumber, Boolean], Block),
+            (GetTransactionReceipt, GetTransactionReceiptParams: [Data32], Receipt),
+            (GetLogs, GetLogsParams: [Filter], Logs),
+            (Call, CallParams: [CallRequest, BlockNumber], Data),
+            (GetTransaction, GetTransactionParams: [Data32], RpcTransaction),
+            (GetTransactionCount, GetTransactionCountParams: [Data20, BlockNumber], Quantity),
+            (GetCode, GetCodeParams: [Data20, BlockNumber], Data),
+            (GetAbi, GetAbiParams: [Data20, BlockNumber], Data),
+            (GetBalance, GetBalanceParams: [Data20, BlockNumber], Quantity),
+            (NewFilter, NewFilterParams: [Filter], Quantity),
+            (NewBlockFilter, NewBlockFilterParams: [], Quantity),
+            (UninstallFilter, UninstallFilterParams: [Quantity], Boolean),
+            (GetFilterChanges, GetFilterChangesParams: [Quantity], FilterChanges),
+            (GetFilterLogs, GetFilterLogsParams: [Quantity], Logs),
+            (GetTransactionProof, GetTransactionProofParams: [Data32], Data),
+            (GetMetaData, GetMetaDataParams: [BlockNumber], MetaData),
+            (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
+            (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
+            (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
+        );
+    };
+}
+
+impl_for_each_jsonrpc_requests!(define_call);
