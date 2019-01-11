@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::H256;
-use error::Error;
 use request::{BlockNumberParams, GetTransactionReceiptParams, PartialRequest, Request};
 use serde_json;
 use std::convert::Into;
@@ -75,7 +74,6 @@ fn serialize_and_deserialize() {
         "method": "getTransactionReceipt",
         "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"],
     });
-    assert_eq!(part_req.complete().unwrap(), full_req);
 
     let req_str = r#"{
             "jsonrpc": "2.0",
@@ -89,10 +87,6 @@ fn serialize_and_deserialize() {
         "method": "getTransactionReceipt",
         "params": null,
     });
-    assert_eq!(
-        part_req.complete().err().unwrap(),
-        Error::invalid_params("params is requeired")
-    );
 
     let req_str = r#"{
             "jsonrpc": "2.0",
@@ -107,10 +101,6 @@ fn serialize_and_deserialize() {
         "method": "getTransactionReceipt",
         "params": [1, 2],
     });
-    assert_eq!(
-        part_req.complete().err().unwrap(),
-        Error::invalid_params_len()
-    );
 
     let params = BlockNumberParams::new();
     test_ser_and_de!(BlockNumberParams, params, []);
@@ -144,7 +134,6 @@ fn serialize_and_deserialize() {
         "method": "blockNumber",
         "params": null,
     });
-    assert_eq!(part_req.complete().unwrap(), full_req);
 
     let req_str = r#"{
             "jsonrpc": "2.0",
@@ -156,10 +145,6 @@ fn serialize_and_deserialize() {
         "jsonrpc": "2.0",
         "id": null,
     });
-    assert_eq!(
-        part_req.complete().err().unwrap(),
-        Error::method_not_found()
-    );
 
     let req_str = r#"{
             "jsonrpc": "2.0",
@@ -172,8 +157,4 @@ fn serialize_and_deserialize() {
         "jsonrpc": "2.0",
         "id": null,
     });
-    assert_eq!(
-        part_req.complete().err().unwrap(),
-        Error::method_not_found()
-    );
 }

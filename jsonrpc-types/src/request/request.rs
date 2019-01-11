@@ -15,19 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use libproto::TryInto;
 /// JSON-RPC Request.
 use serde_json;
 
 use internals::construct_params;
-use libproto::request::Request as ProtoRequest;
 
-use error::Error;
-use rpctypes::{Block, FilterChanges, Log, MetaData, Receipt, RpcTransaction, TxResponse};
 use rpctypes::{
-    BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, OneItemTupleTrick, Quantity,
+    Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id, Log,
+    MetaData, OneItemTupleTrick, Quantity, Receipt, RpcTransaction, TxResponse, Version,
 };
-use rpctypes::{Id, Params as PartialParams, Version};
 
 pub type Logs = Vec<Log>;
 
@@ -80,9 +76,6 @@ impl Request {
     pub fn get_info(&self) -> RequestInfo {
         RequestInfo::new(self.jsonrpc.clone(), self.id.clone())
     }
-    pub fn into_proto(&self) -> Result<ProtoRequest, Error> {
-        self.call.into_proto()
-    }
 }
 
 impl Into<String> for Request {
@@ -103,21 +96,6 @@ pub struct PartialRequest {
 impl PartialRequest {
     pub fn get_info(&self) -> RequestInfo {
         RequestInfo::new(self.jsonrpc.clone(), self.id.clone())
-    }
-    pub fn complete(self) -> Result<Request, Error> {
-        let PartialRequest { jsonrpc, id, call } = self;
-        if let Some(part_call) = call {
-            part_call
-                .complete()
-                .map(|full_call| Request::new(jsonrpc, id, full_call))
-        } else {
-            Err(Error::method_not_found())
-        }
-    }
-
-    pub fn complete_and_into_proto(self) -> Result<(Request, ProtoRequest), Error> {
-        self.complete()
-            .and_then(|full_req| full_req.into_proto().map(|proto_req| (full_req, proto_req)))
     }
 }
 
@@ -174,46 +152,12 @@ macro_rules! define_call {
                     )+
                 }
             }
-            pub fn into_proto(&self) -> Result<ProtoRequest, Error> {
-                match self {
-                    $(
-                        &Call::$enum_name { ref params } => params.clone().try_into(),
-                    )+
-                }
-            }
             pub fn into_request(self, id: u64) -> Request {
                 Request::new(
                     Some(Version::default()),
                     Id::Num(id),
                     self,
                 )
-            }
-        }
-
-        impl PartialCall {
-            pub fn complete(self) -> Result<Call, Error> {
-                match self {
-                    $(
-                        PartialCall::$enum_name { params } => {
-                            if let Some(params) = params {
-                                let pparams: PartialParams = serde_json::from_value(params.clone())?;
-                                if pparams.len() != $params_name::required_len() {
-                                    Err(Error::invalid_params_len())
-                                } else {
-                                    Ok(Call::$enum_name{ params: serde_json::from_value(params)? })
-                                }
-                            } else {
-                                if $params_name::required_len() == 0 {
-                                    Ok(Call::$enum_name{
-                                        params: serde_json::from_value(
-                                                    serde_json::Value::Array(Vec::new()))?})
-                                } else {
-                                    Err(Error::invalid_params("params is requeired"))
-                                }
-                            }
-                        },
-                    )+
-                }
             }
         }
 
@@ -275,29 +219,36 @@ pub trait JsonRpcRequest {
 //  Second, implement `TryInto<ProtoRequest>` for the new params type.
 //
 //  DONE!
-define_call!(
-    (BlockNumber, BlockNumberParams: [], Quantity),
-    (PeerCount, PeerCountParams: [], Quantity),
-    (SendRawTransaction, SendRawTransactionParams: [Data], TxResponse),
-    (SendTransaction, SendTransactionParams: [Data], TxResponse),
-    (GetBlockByHash, GetBlockByHashParams: [Data32, Boolean], Block),
-    (GetBlockByNumber, GetBlockByNumberParams: [BlockNumber, Boolean], Block),
-    (GetTransactionReceipt, GetTransactionReceiptParams: [Data32], Receipt),
-    (GetLogs, GetLogsParams: [Filter], Logs),
-    (Call, CallParams: [CallRequest, BlockNumber], Data),
-    (GetTransaction, GetTransactionParams: [Data32], RpcTransaction),
-    (GetTransactionCount, GetTransactionCountParams: [Data20, BlockNumber], Quantity),
-    (GetCode, GetCodeParams: [Data20, BlockNumber], Data),
-    (GetAbi, GetAbiParams: [Data20, BlockNumber], Data),
-    (GetBalance, GetBalanceParams: [Data20, BlockNumber], Quantity),
-    (NewFilter, NewFilterParams: [Filter], Quantity),
-    (NewBlockFilter, NewBlockFilterParams: [], Quantity),
-    (UninstallFilter, UninstallFilterParams: [Quantity], Boolean),
-    (GetFilterChanges, GetFilterChangesParams: [Quantity], FilterChanges),
-    (GetFilterLogs, GetFilterLogsParams: [Quantity], Logs),
-    (GetTransactionProof, GetTransactionProofParams: [Data32], Data),
-    (GetMetaData, GetMetaDataParams: [BlockNumber], MetaData),
-    (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
-    (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
-    (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
-);
+#[macro_export]
+macro_rules! impl_for_each_jsonrpc_requests {
+    ($macro:ident) => {
+        $macro!(
+            (BlockNumber, BlockNumberParams: [], Quantity),
+            (PeerCount, PeerCountParams: [], Quantity),
+            (SendRawTransaction, SendRawTransactionParams: [Data], TxResponse),
+            (SendTransaction, SendTransactionParams: [Data], TxResponse),
+            (GetBlockByHash, GetBlockByHashParams: [Data32, Boolean], Block),
+            (GetBlockByNumber, GetBlockByNumberParams: [BlockNumber, Boolean], Block),
+            (GetTransactionReceipt, GetTransactionReceiptParams: [Data32], Receipt),
+            (GetLogs, GetLogsParams: [Filter], Logs),
+            (Call, CallParams: [CallRequest, BlockNumber], Data),
+            (GetTransaction, GetTransactionParams: [Data32], RpcTransaction),
+            (GetTransactionCount, GetTransactionCountParams: [Data20, BlockNumber], Quantity),
+            (GetCode, GetCodeParams: [Data20, BlockNumber], Data),
+            (GetAbi, GetAbiParams: [Data20, BlockNumber], Data),
+            (GetBalance, GetBalanceParams: [Data20, BlockNumber], Quantity),
+            (NewFilter, NewFilterParams: [Filter], Quantity),
+            (NewBlockFilter, NewBlockFilterParams: [], Quantity),
+            (UninstallFilter, UninstallFilterParams: [Quantity], Boolean),
+            (GetFilterChanges, GetFilterChangesParams: [Quantity], FilterChanges),
+            (GetFilterLogs, GetFilterLogsParams: [Quantity], Logs),
+            (GetTransactionProof, GetTransactionProofParams: [Data32], Data),
+            (GetMetaData, GetMetaDataParams: [BlockNumber], MetaData),
+            (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
+            (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
+            (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
+        );
+    };
+}
+
+impl_for_each_jsonrpc_requests!(define_call);

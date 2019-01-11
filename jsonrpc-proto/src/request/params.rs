@@ -15,62 +15,59 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use libproto::{TryFrom, TryInto};
-/// Convert JSON-RPC request to proto request.
-use rustc_serialize::hex::FromHex;
+use cita_types::{clean_0x, traits::LowerHex};
+use jsonrpc_types::{
+    request::*, // bring in varied Params
+    rpctypes::{BlockParamsByHash, BlockParamsByNumber, CountOrCode},
+    Error,
+};
+use libproto::{request::Request as ProtoRequest, UnverifiedTransaction};
 use serde_json;
-use std::convert::Into;
-use uuid::Uuid;
 
-use cita_types::clean_0x;
-use cita_types::traits::LowerHex;
-use libproto::request::{
-    Call as ProtoCall, Request as ProtoRequest, StateProof as ProtoStateProof,
-    StorageKey as ProtoStorageKey,
-};
-use libproto::UnverifiedTransaction;
+use crate::from_into::TryIntoProto;
 
-use super::request::{
-    BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
-    GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
-    GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
-    GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
-    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
-};
-use error::Error;
-use rpctypes::{BlockParamsByHash, BlockParamsByNumber, CountOrCode};
+pub trait SendRawTransactionParamsExt {
+    fn extract_unverified_tx(data: &[u8]) -> Result<UnverifiedTransaction, Error>;
+}
 
 fn create_request() -> ProtoRequest {
-    let request_id = Uuid::new_v4().as_bytes().to_vec();
+    let request_id = uuid::Uuid::new_v4().as_bytes().to_vec();
     let mut request = ProtoRequest::new();
+
     request.set_request_id(request_id);
     request
 }
 
-impl TryInto<ProtoRequest> for BlockNumberParams {
+impl TryIntoProto<ProtoRequest> for BlockNumberParams {
     type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
+
         request.set_block_number(true);
         Ok(request)
     }
 }
 
-impl TryInto<ProtoRequest> for PeerCountParams {
+impl TryIntoProto<ProtoRequest> for PeerCountParams {
     type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
+
         request.set_peercount(true);
         Ok(request)
     }
 }
 
-impl TryInto<ProtoRequest> for SendRawTransactionParams {
+impl TryIntoProto<ProtoRequest> for SendRawTransactionParams {
     type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
         let data: Vec<u8> = self.0.into();
+
+        // SendRawTransactionParamsExt
         match SendRawTransactionParams::extract_unverified_tx(&data[..]) {
             Ok(un_tx) => {
                 request.set_un_tx(un_tx);
@@ -81,11 +78,14 @@ impl TryInto<ProtoRequest> for SendRawTransactionParams {
     }
 }
 
-impl TryInto<ProtoRequest> for SendTransactionParams {
+impl TryIntoProto<ProtoRequest> for SendTransactionParams {
     type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
         let data: Vec<u8> = self.0.into();
+
+        // SendRawTransactionParamsExt
         match SendRawTransactionParams::extract_unverified_tx(&data[..]) {
             Ok(un_tx) => {
                 request.set_un_tx(un_tx);
@@ -96,8 +96,297 @@ impl TryInto<ProtoRequest> for SendTransactionParams {
     }
 }
 
-impl SendRawTransactionParams {
+impl TryIntoProto<ProtoRequest> for GetBlockByHashParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&BlockParamsByHash::new(self.0.into(), self.1.into()))
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|block_hash| {
+                request.set_block_by_hash(block_hash);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetBlockByNumberParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&BlockParamsByNumber::new(self.0, self.1.into()))
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|block_height| {
+                request.set_block_by_height(block_height);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetTransactionReceiptParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_transaction_receipt(self.0.into());
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetLogsParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&self.0)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|filter| {
+                request.set_filter(filter);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for CallParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut call = libproto::Call::new();
+
+        call.set_from(self.0.from.unwrap_or_default().into());
+        call.set_to(self.0.to.into());
+        call.set_data(self.0.data.unwrap_or_default().into());
+
+        serde_json::to_string(&self.1)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                call.set_height(height);
+                request.set_call(call);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetTransactionParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_transaction(self.0.into());
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetTransactionCountParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|jsonstr| {
+                request.set_transaction_count(jsonstr);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetCodeParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|jsonstr| {
+                request.set_code(jsonstr);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetAbiParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|jsonstr| {
+                request.set_abi(jsonstr);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetBalanceParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|jsonstr| {
+                request.set_balance(jsonstr);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for NewFilterParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let filter = serde_json::to_string(&self.0)
+            .map_err(|err| Error::invalid_params(format!("{:?}", err)))?;
+
+        request.set_new_filter(filter);
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for NewBlockFilterParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_new_block_filter(true);
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for UninstallFilterParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_uninstall_filter(self.0.into());
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetFilterChangesParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_filter_changes(self.0.into());
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetFilterLogsParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_filter_logs(self.0.into());
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetTransactionProofParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_transaction_proof(self.0.into());
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetMetaDataParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&self.0)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|data| {
+                request.set_meta_data(data);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetStateProofParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut state_proof = libproto::StateProof::new();
+
+        state_proof.set_address(self.0.into());
+        state_proof.set_position(self.1.into());
+
+        serde_json::to_string(&self.2)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                state_proof.set_height(height);
+                request.set_state_proof(state_proof);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetBlockHeaderParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        serde_json::to_string(&self.0)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                request.set_block_header_height(height);
+                request
+            })
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for GetStorageKeyParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut skey = libproto::StorageKey::new();
+
+        skey.set_address(self.0.into());
+        skey.set_position(self.1.into());
+
+        serde_json::to_string(&self.2)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                skey.set_height(height);
+                request.set_storage_key(skey);
+                request
+            })
+    }
+}
+
+impl SendRawTransactionParamsExt for SendRawTransactionParams {
     fn extract_unverified_tx(data: &[u8]) -> Result<UnverifiedTransaction, Error> {
+        use libproto::TryFrom;
+        use rustc_serialize::hex::FromHex;
+
         let un_tx = UnverifiedTransaction::try_from(data).map_err(|_err| {
             let err_msg = format!(
                 "parse protobuf UnverifiedTransaction data error : {:?}",
@@ -142,244 +431,5 @@ impl SendRawTransactionParams {
             }
         }
         Ok(un_tx)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetBlockByHashParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&BlockParamsByHash::new(self.0.into(), self.1.into()))
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|block_hash| {
-                request.set_block_by_hash(block_hash);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetBlockByNumberParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&BlockParamsByNumber::new(self.0, self.1.into()))
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|block_height| {
-                request.set_block_by_height(block_height);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetTransactionReceiptParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_transaction_receipt(self.0.into());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetLogsParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_filter(serde_json::to_string(&self.0).unwrap());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for CallParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        let mut call = ProtoCall::new();
-        call.set_from(self.0.from.unwrap_or_default().into());
-        call.set_to(self.0.to.into());
-        call.set_data(self.0.data.unwrap_or_default().into());
-        serde_json::to_string(&self.1)
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|height| {
-                call.set_height(height);
-                request.set_call(call);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetTransactionParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_transaction(self.0.into());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetTransactionCountParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|jsonstr| {
-                request.set_transaction_count(jsonstr);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetCodeParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|jsonstr| {
-                request.set_code(jsonstr);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetAbiParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|jsonstr| {
-                request.set_abi(jsonstr);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetBalanceParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&CountOrCode::new(self.0.into(), self.1))
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|jsonstr| {
-                request.set_balance(jsonstr);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for NewFilterParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        let filter = serde_json::to_string(&self.0)
-            .map_err(|err| Error::invalid_params(format!("{:?}", err)))?;
-        request.set_new_filter(filter);
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for NewBlockFilterParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_new_block_filter(true);
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for UninstallFilterParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_uninstall_filter(self.0.into());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetFilterChangesParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_filter_changes(self.0.into());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetFilterLogsParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_filter_logs(self.0.into());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetTransactionProofParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        request.set_transaction_proof(self.0.into());
-        Ok(request)
-    }
-}
-
-impl TryInto<ProtoRequest> for GetMetaDataParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&self.0)
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|data| {
-                request.set_meta_data(data);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetStateProofParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        let mut state_proof = ProtoStateProof::new();
-        state_proof.set_address(self.0.into());
-        state_proof.set_position(self.1.into());
-        serde_json::to_string(&self.2)
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|height| {
-                state_proof.set_height(height);
-                request.set_state_proof(state_proof);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetBlockHeaderParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        serde_json::to_string(&self.0)
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|height| {
-                request.set_block_header_height(height);
-                request
-            })
-    }
-}
-
-impl TryInto<ProtoRequest> for GetStorageKeyParams {
-    type Error = Error;
-    fn try_into(self) -> Result<ProtoRequest, Self::Error> {
-        let mut request = create_request();
-        let mut skey = ProtoStorageKey::new();
-        skey.set_address(self.0.into());
-        skey.set_position(self.1.into());
-        serde_json::to_string(&self.2)
-            .map_err(|err| Error::invalid_params(err.to_string()))
-            .map(|height| {
-                skey.set_height(height);
-                request.set_storage_key(skey);
-                request
-            })
     }
 }

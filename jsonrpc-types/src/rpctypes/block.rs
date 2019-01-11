@@ -15,12 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use super::Proof;
-use super::RpcBlock;
-use super::{BlockTransaction, FullTransaction};
 use cita_types::{Address, H256, U256};
-use libproto::TryFrom;
-use libproto::{Block as ProtoBlock, BlockHeader as ProtoBlockHeader};
+
+use crate::rpctypes::{BlockTransaction, Proof};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct BlockBody {
@@ -51,59 +48,4 @@ pub struct Block {
     pub hash: H256,
     pub header: BlockHeader,
     pub body: BlockBody,
-}
-
-impl From<ProtoBlockHeader> for BlockHeader {
-    fn from(proto_header: ProtoBlockHeader) -> Self {
-        let proof: Option<Proof> = match proto_header.get_height() {
-            0 | 1 => None,
-            _ => Some(proto_header.clone().take_proof().into()),
-        };
-        trace!(
-            "number = {}, proof = {:?}",
-            U256::from(proto_header.get_height()),
-            proof
-        );
-
-        BlockHeader {
-            timestamp: proto_header.timestamp,
-            prev_hash: H256::from(proto_header.get_prevhash()),
-            number: U256::from(proto_header.get_height()),
-            state_root: H256::from(proto_header.get_state_root()),
-            transactions_root: H256::from(proto_header.get_transactions_root()),
-            receipts_root: H256::from(proto_header.get_receipts_root()),
-            quota_used: U256::from(proto_header.get_quota_used()),
-            proof: proof,
-            proposer: Address::from(proto_header.get_proposer()),
-        }
-    }
-}
-
-impl From<RpcBlock> for Block {
-    fn from(block: RpcBlock) -> Self {
-        let mut blk = ProtoBlock::try_from(&block.block).unwrap();
-        let proto_header = blk.take_header();
-        let mut proto_body = blk.take_body();
-        let block_transactions = proto_body.take_transactions();
-        let transactions = if block.include_txs {
-            block_transactions
-                .into_iter()
-                .map(|x| BlockTransaction::Full(FullTransaction::from(x)))
-                .collect()
-        } else {
-            block_transactions
-                .into_iter()
-                .map(|x| BlockTransaction::Hash(H256::from_slice(x.get_tx_hash())))
-                .collect()
-        };
-
-        Block {
-            version: blk.version,
-            header: BlockHeader::from(proto_header),
-            body: BlockBody {
-                transactions: transactions,
-            },
-            hash: H256::from_slice(&block.hash),
-        }
-    }
 }

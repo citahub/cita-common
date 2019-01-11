@@ -15,10 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use libproto::{TryFromConvertError, TryInto};
-
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+use crate::Error;
 
 /// A unsigned integer (wrapper structure around u64).
 #[derive(Debug, PartialEq, Eq, Default, Hash, Clone)]
@@ -77,6 +77,11 @@ impl Into<u64> for Integer {
     }
 }
 
+pub trait LowerUint {
+    fn max_value() -> u64;
+    fn from(i: Integer) -> Self;
+}
+
 macro_rules! impl_convert_with_uint {
     ($uint:ident) => {
         impl From<$uint> for Integer {
@@ -84,17 +89,27 @@ macro_rules! impl_convert_with_uint {
                 Integer::new(data as u64)
             }
         }
-        impl TryInto<$uint> for Integer {
-            type Error = TryFromConvertError;
-            fn try_into(self) -> Result<$uint, TryFromConvertError> {
-                if self.0 > u64::from($uint::max_value()) {
-                    Err(TryFromConvertError::default())
-                } else {
-                    Ok(self.0 as $uint)
-                }
+
+        impl LowerUint for $uint {
+            fn max_value() -> u64 {
+                u64::from($uint::max_value())
+            }
+
+            fn from(i: Integer) -> Self {
+                i.0 as $uint
             }
         }
     };
+}
+
+impl Integer {
+    pub fn try_into_uint<T: LowerUint>(self) -> Result<T, Error> {
+        if self.0 > T::max_value() {
+            Err(Error::parse_error_with_message("Integer truncated"))
+        } else {
+            Ok(T::from(self))
+        }
+    }
 }
 
 impl_convert_with_uint!(u32);
@@ -104,7 +119,6 @@ impl_convert_with_uint!(u8);
 #[cfg(test)]
 mod tests {
     use super::Integer;
-    use libproto::TryInto;
     use serde_json;
     use std::convert::Into;
 
@@ -143,11 +157,11 @@ mod tests {
         assert_eq!(data, (auint as u32).into());
         assert_eq!(data, (auint as u16).into());
         assert_eq!(data, (auint as u8).into());
-        let expected: u32 = data.clone().try_into().unwrap();
+        let expected: u32 = data.clone().try_into_uint::<u32>().unwrap();
         assert_eq!(expected, 123);
-        let expected: u16 = data.clone().try_into().unwrap();
+        let expected: u16 = data.clone().try_into_uint::<u16>().unwrap();
         assert_eq!(expected, 123);
-        let expected: u8 = data.clone().try_into().unwrap();
+        let expected: u8 = data.clone().try_into_uint::<u8>().unwrap();
         assert_eq!(expected, 123);
     }
 }

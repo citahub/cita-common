@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2018 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -15,20 +15,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use std::collections::HashMap;
-
-use cita_types::{Address, H256};
-
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub enum Proof {
-    Raft,
-    Bft(BftProof),
+pub trait FromProto<T>: Sized {
+    fn from_proto(p_val: T) -> Self;
 }
 
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct BftProof {
-    pub proposal: H256,
-    pub height: usize,
-    pub round: usize,
-    pub commits: HashMap<Address, String>,
+pub trait TryFromProto<T>: Sized {
+    type Error;
+
+    fn try_from_proto(p_val: T) -> Result<Self, Self::Error>;
+}
+
+pub trait TryIntoProto<T>: Sized {
+    type Error;
+
+    fn try_into_proto(self) -> Result<T, Self::Error>;
 }

@@ -17,10 +17,6 @@
 
 extern crate bincode;
 extern crate cita_types;
-extern crate libproto;
-#[macro_use]
-extern crate logger;
-extern crate proof;
 extern crate rustc_serialize;
 extern crate serde;
 #[macro_use]
@@ -30,9 +26,6 @@ extern crate serde_json;
 #[cfg(test)]
 #[macro_use]
 extern crate serde_json;
-#[cfg(test)]
-extern crate cita_crypto as crypto;
-extern crate uuid;
 
 pub extern crate jsonrpc_types_internals as internals;
 
