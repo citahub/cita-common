@@ -132,7 +132,7 @@ impl VerifyTxReq {
     // .Crypto crypto = 4;
 
     pub fn clear_crypto(&mut self) {
-        self.crypto = super::blockchain::Crypto::SECP;
+        self.crypto = super::blockchain::Crypto::DEFAULT;
     }
 
     // Param is passed by value, moved
@@ -380,7 +380,7 @@ impl ::protobuf::Message for VerifyTxReq {
         if !self.signature.is_empty() {
             my_size += ::protobuf::rt::bytes_size(3, &self.signature);
         }
-        if self.crypto != super::blockchain::Crypto::SECP {
+        if self.crypto != super::blockchain::Crypto::DEFAULT {
             my_size += ::protobuf::rt::enum_size(4, self.crypto);
         }
         if !self.tx_hash.is_empty() {
@@ -419,7 +419,7 @@ impl ::protobuf::Message for VerifyTxReq {
         if !self.signature.is_empty() {
             os.write_bytes(3, &self.signature)?;
         }
-        if self.crypto != super::blockchain::Crypto::SECP {
+        if self.crypto != super::blockchain::Crypto::DEFAULT {
             os.write_enum(4, self.crypto.value())?;
         }
         if !self.tx_hash.is_empty() {
