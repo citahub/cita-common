@@ -106,7 +106,7 @@ impl Transaction {
         unverified_tx.set_transaction(self.clone());
         let signature = Signature::sign(&sk, &SignMessage::from(hash)).unwrap();
         unverified_tx.set_signature(signature.to_vec());
-        unverified_tx.set_crypto(Crypto::SECP);
+        unverified_tx.set_crypto(Crypto::DEFAULT);
         unverified_tx
     }
 }
@@ -122,7 +122,7 @@ impl UnverifiedTransaction {
             Err((tx_hash, String::from("Invalid signature length")))
         } else {
             match self.get_crypto() {
-                Crypto::SECP => {
+                Crypto::DEFAULT => {
                     let signature = Signature::from(self.get_signature());
                     match signature.recover(&hash) {
                         Ok(pubkey) => Ok((pubkey, tx_hash)),
