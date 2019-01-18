@@ -166,4 +166,7 @@ pub trait KeyValueDB: Sync + Send {
 
     /// Attempt to replace this database with a new one located at the given path.
     fn restore(&self, new_db: &str) -> Result<(), UtilError>;
+
+    /// Close database handler
+    fn close(&self) {}
 }

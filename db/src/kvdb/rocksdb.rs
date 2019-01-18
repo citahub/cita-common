@@ -730,6 +730,10 @@ impl KeyValueDB for Database {
     fn restore(&self, new_db: &str) -> Result<(), UtilError> {
         Database::restore(self, new_db)
     }
+
+    fn close(&self) {
+        Database::close(self)
+    }
 }
 
 impl Drop for Database {
