@@ -26,7 +26,6 @@ extern crate regex;
 extern crate rlp;
 extern crate util;
 
-pub mod avl;
 pub mod hashdb;
 pub mod journaldb;
 pub mod kvdb;

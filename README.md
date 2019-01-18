@@ -20,5 +20,4 @@ with following modifications:
     - build_info.rs
     - init.rs
     - instrument.rs
-- add util::avl.
 - add get_value_proof and verify_value_proof in db::trie::triedb
