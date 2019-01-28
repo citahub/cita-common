@@ -47,8 +47,9 @@ pub use self::error::*;
 pub use self::keypair::*;
 pub use self::signature::*;
 pub use self::signer::Signer;
+use secp256k1::All;
 use types::{Address, H256, H512};
 
 lazy_static! {
-    pub static ref SECP256K1: secp256k1::Secp256k1 = secp256k1::Secp256k1::new();
+    pub static ref SECP256K1: secp256k1::Secp256k1<All> = secp256k1::Secp256k1::new();
 }

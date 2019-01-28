@@ -10,7 +10,7 @@ rand = "0.4"
 criterion = "0.2"
 tiny-keccak= "1.4"
 blake2b = { path = "../blake2b" }
-eth-secp256k1 = { git = "https://github.com/paritytech/rust-secp256k1", rev = "6370d63adf4e8c91e2eae9225eef4b4e0294c5d0" }
+secp256k1 = {version = "0.12", features = ["rand"]}
 sodiumoxide = "0.1.0"
 libsm = { git = "https://github.com/cryptape/libsm", rev = "ac323abd3512a9fdb8bfd6cd349a6fc46deb688f" }
 

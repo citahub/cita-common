@@ -51,9 +51,9 @@ impl CreateKey for KeyPair {
     /// Create a pair from secret key
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
         let context = &SECP256K1;
-        let s: key::SecretKey = key::SecretKey::from_slice(context, &privkey.0[..])?;
-        let pubkey = key::PublicKey::from_secret_key(context, &s)?;
-        let serialized = pubkey.serialize_vec(context, false);
+        let s: key::SecretKey = key::SecretKey::from_slice(&privkey.0[..])?;
+        let pubkey = key::PublicKey::from_secret_key(context, &s);
+        let serialized = pubkey.serialize_uncompressed();
 
         let mut pubkey = PubKey::default();
         pubkey.0.copy_from_slice(&serialized[1..65]);
@@ -68,8 +68,8 @@ impl CreateKey for KeyPair {
 
     fn gen_keypair() -> Self {
         let context = &SECP256K1;
-        let (s, p) = context.generate_keypair(&mut thread_rng()).unwrap();
-        let serialized = p.serialize_vec(context, false);
+        let (s, p) = context.generate_keypair(&mut thread_rng());
+        let serialized = p.serialize_uncompressed();
         let mut privkey = PrivKey::default();
         privkey.0.copy_from_slice(&s[0..32]);
         let mut pubkey = PubKey::default();
