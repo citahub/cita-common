@@ -49,9 +49,7 @@ fn benchmark_verify(c: &mut Criterion) {
         let context = secp256k1::Secp256k1::new();
         let (sk, pk) = context.generate_keypair(&mut rand::thread_rng());
         let sig_msg = secp256k1::Message::from_slice(&data).unwrap();
-        let (rec_id, sig_data) = context
-            .sign_recoverable(&sig_msg, &sk)
-            .serialize_compact();
+        let (rec_id, sig_data) = context.sign_recoverable(&sig_msg, &sk).serialize_compact();
         let sig = secp256k1::RecoverableSignature::from_compact(&sig_data, rec_id)
             .unwrap()
             .to_standard();
