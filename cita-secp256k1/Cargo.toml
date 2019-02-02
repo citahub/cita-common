@@ -4,7 +4,7 @@ version = "0.6.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 
 [dependencies]
-eth-secp256k1 = { git = "https://github.com/paritytech/rust-secp256k1", rev = "6370d63adf4e8c91e2eae9225eef4b4e0294c5d0" }
+secp256k1 = {version = "0.12", features = ["rand"]}
 lazy_static = "1.1"
 rustc-serialize = "0.3"
 cita-types = { path = "../cita-types" }
