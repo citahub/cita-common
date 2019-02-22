@@ -1,0 +1,155 @@
+alias:
+
+  - &restore-source-codes-cache
+    key: codes-{{ .Environment.CIRCLE_SHA1 }}
+
+  - &save-source-codes-cache
+    <<: *restore-source-codes-cache
+    paths: ~/build
+
+  - &restore-dependencies-cache
+    key: deps-{{ checksum "Cargo.lock" }}
+
+  - &save-dependencies-cache
+    <<: *restore-dependencies-cache
+    paths:
+      - /opt/.cargo/git
+      - /opt/.cargo/registry
+
+  - &restore-clippy-cache
+    key: clippy-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "~/build-cache.key" }}
+    keys:
+      - clippy-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "~/build-cache.key" }}
+      - clippy-{{ .Environment.CIRCLE_BRANCH }}-
+      - clippy-
+      - build-
+
+  - &save-clippy-cache
+    <<: *restore-clippy-cache
+    paths: ~/build/target
+
+  - &restore-build-cache
+    key: build-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "~/build-cache.key" }}
+    keys:
+      - build-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "~/build-cache.key" }}
+      - build-{{ .Environment.CIRCLE_BRANCH }}-
+      - build-
+
+  - &save-build-cache
+    <<: *restore-build-cache
+    paths: ~/build/target
+
+  - &before-restore-build-cache
+    name: Before Restore Build Cache
+    command: date +"%Y-%U-${HASH_ALGO}-${CRYPTO_ALGO}" | tee ~/build-cache.key
+
+  - &clean-build-cache-if-too-large
+    name: Clean Cache If Too Large
+    command: |
+        target_mb=$(du -sm ~/build/target/ | awk '{ print $1 }')
+        if [ ${target_mb} -gt 2048 ]; then
+            echo "[Info ] The target has ${target_mb} MiBytes data, CLEAN them."
+            cargo clean
+        else
+            echo "[Info ] The target has ${target_mb} MiBytes data, SKIP them."
+        fi
+
+  - &job-default
+    docker:
+      - image: cita/cita-build:ubuntu-18.04-20190107
+    working_directory: ~/build
+    resource_class: xlarge
+
+  - &job-unit-test
+    <<: *job-default
+    steps:
+      - restore_cache: *restore-source-codes-cache
+      - restore_cache: *restore-dependencies-cache
+      - run: *before-restore-build-cache
+      - restore_cache: *restore-build-cache
+      - run:
+          name: Unit Test
+          command: |
+              ./.ci-scripts/loop_crates_to_run test "${HASH_ALGO}" "${CRYPTO_ALGO}" "${UPLOAD_COVERAGE}"
+      - save_cache: *save-dependencies-cache
+      - run: *clean-build-cache-if-too-large
+      - save_cache: *save-build-cache
+
+version: 2
+jobs:
+
+  "Check Basic":
+    <<: *job-default
+    steps:
+      - checkout
+      - run:
+          name: Checkout SubModules
+          command: git submodule update --init
+      - run:
+          name: Check Format
+          command: |
+              cargo fmt --all -- --check
+      - save_cache: *save-source-codes-cache
+
+  "Check Clippy":
+    <<: *job-default
+    steps:
+      - restore_cache: *restore-source-codes-cache
+      - restore_cache: *restore-dependencies-cache
+      - run: *before-restore-build-cache
+      - restore_cache: *restore-clippy-cache
+      - run:
+          name: Check Clippy
+          command: |
+              ./.ci-scripts/loop_crates_to_run clippy "${HASH_ALGO}" "${CRYPTO_ALGO}"
+      - run: *clean-build-cache-if-too-large
+      - run:
+          name: Check Cargo.lock
+          command: |
+              if [ $(git status --short Cargo.lock | wc -l) -ne 0 ]; then
+                  echo "[Error] Please update Cargo.lock BEFORE commit."
+                  git diff Cargo.lock
+                  exit 1
+              fi
+      - save_cache: *save-clippy-cache
+
+  "Unit Test (sha3 & secp256k1)":
+    <<: *job-unit-test
+    environment:
+      HASH_ALGO: sha3hash
+      CRYPTO_ALGO: secp256k1
+      UPLOAD_COVERAGE: true
+
+  "Unit Test (blake2b & ed25519)":
+    <<: *job-unit-test
+    environment:
+      HASH_ALGO: blake2bhash
+      CRYPTO_ALGO: ed25519
+
+  "Unit Test (sm3 & sm2)":
+    <<: *job-unit-test
+    environment:
+      HASH_ALGO: sm3hash
+      CRYPTO_ALGO: sm2
+
+workflows:
+  version: 2
+  "Build & Test":
+    jobs:
+      - "Check Basic"
+
+      - "Check Clippy":
+          requires:
+            - "Check Basic"
+
+      - "Unit Test (sha3 & secp256k1)":
+          requires:
+            - "Check Clippy"
+
+      - "Unit Test (blake2b & ed25519)":
+          requires:
+            - "Unit Test (sha3 & secp256k1)"
+
+      - "Unit Test (sm3 & sm2)":
+          requires:
+            - "Unit Test (sha3 & secp256k1)"
