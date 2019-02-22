@@ -158,8 +158,8 @@ function cargo_run_all_for_clippy () {
     cargo_run worker
     cargo_run error
     cargo_run snappy
-    cargo_run_skip cita-directories
-    cargo_run_skip cita-crypto-trait
+    cargo_run cita-directories
+    cargo_run cita-crypto-trait
     cargo_run_skip ethcore-bloom-journal
 
     cargo_run_skip rlp
