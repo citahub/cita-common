@@ -21,7 +21,7 @@ function check_crates_list () {
             | grep -v "^[.]" \
             | grep -v "^target$" \
             | while read crate; do
-        if [ $(grep -c "${crate}" "${CRATES_HAVE_RUN}") -eq 0 ]; then
+        if [ $(grep -c "^${crate}$" "${CRATES_HAVE_RUN}") -eq 0 ]; then
             echo "[Error] A new crate [${crate}] was added but did not added into this script [$0]."
             exit 1
         fi
@@ -58,14 +58,23 @@ function upload_coverage () {
 }
 
 function cargo_run_test () {
-    export RUSTFLAGS="-F warnings -C link-dead-code"
-    CARGO_COMMAND="cargo test --lib"
+    export RUSTFLAGS="-F warnings"
+    CARGO_COMMAND="cargo test"
     cargo_run_all
     CARGO_COMMAND=
     unset RUSTFLAGS
     if [ "${UPLOAD_COVERAGE}" = "true" ]; then
         upload_coverage
     fi
+}
+
+function cargo_run_clippy () {
+    export RUSTFLAGS="-F warnings"
+    CARGO_COMMAND="cargo clippy"
+    # TODO Should be replaced by cargo_run_all after no crate need to be skipped.
+    cargo_run_all_for_clippy
+    CARGO_COMMAND=
+    unset RUSTFLAGS
 }
 
 function cargo_run () {
@@ -75,6 +84,13 @@ function cargo_run () {
     cd "${crate}"
     ${CARGO_COMMAND} "$@"
     cd "${currdir}"
+    record_crate_for_check "${crate}"
+}
+
+# TODO Should be deleted after no crate need to be skipped.
+function cargo_run_skip () {
+    crate="${1}"
+    shift 1
     record_crate_for_check "${crate}"
 }
 
@@ -113,7 +129,7 @@ function cargo_run_all () {
     cargo_run blake2b
 
     cargo_run util
-    
+
     cargo_run jsonrpc-types
     cargo_run cita-web3
 
@@ -127,6 +143,59 @@ function cargo_run_all () {
 
     for crate in libproto proof tx_pool jsonrpc-proto engine; do
         cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
+    done
+}
+
+# TODO Should be deleted after no crate need to be skipped.
+function cargo_run_all_for_clippy () {
+
+    [ -z "${CARGO_COMMAND}" ] && exit 1
+
+    cargo_run cita-common-benches
+
+    cargo_run_skip cita-types
+    cargo_run_skip panic_hook
+
+    cargo_run_skip worker
+    cargo_run_skip error
+    cargo_run_skip logger
+    cargo_run_skip snappy
+    cargo_run_skip cita-directories
+    cargo_run_skip ethcore-bloom-journal
+    cargo_run_skip cita-crypto-trait
+
+    cargo_run_skip rlp
+    cargo_run_skip rlp_derive
+
+    cargo_run_skip authority_manage
+
+    cargo_run_skip pubsub_rabbitmq
+    cargo_run_skip pubsub_zeromq
+    cargo_run_skip pubsub_kafka
+
+    for crate in pubsub; do
+        for features in ${FEATURES_FOR_PUBSUB}; do
+            cargo_run_skip ${crate} --features "${features}"
+        done
+    done
+
+    cargo_run_skip blake2b
+
+    cargo_run_skip util
+
+    cargo_run_skip jsonrpc-types
+    cargo_run_skip cita-web3
+
+    for crate in hashable cita-merklehash db cita-secp256k1 cita-ed25519 cita-sm2; do
+        cargo_run_skip ${crate} --features "${SELECT_HASH}"
+    done
+
+    for crate in cita-crypto; do
+        cargo_run_skip ${crate} --features "${SELECT_CRYPTO}"
+    done
+
+    for crate in libproto proof tx_pool jsonrpc-proto engine; do
+        cargo_run_skip ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
 }
 
@@ -168,7 +237,7 @@ function main () {
     local action="$1"
     shift 1
     case ${action} in
-        build | test)
+        build | test | clippy)
             check_args "$@"
             : > "${CRATES_HAVE_RUN}"
             cargo_run_${action}

@@ -5,4 +5,4 @@ set -xe
 SCRIPT_PATH=`readlink -f $0`
 source "$(dirname "${SCRIPT_PATH}")/library"
 
-cargo_run_in_docker fmt --all -- --check
+loop_run_in_docker clippy "$@"
