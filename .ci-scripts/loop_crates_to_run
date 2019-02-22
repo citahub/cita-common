@@ -107,8 +107,8 @@ function cargo_run_all () {
     cargo_run error
     cargo_run snappy
     cargo_run cita-directories
-    cargo_run ethcore-bloom-journal
     cargo_run cita-crypto-trait
+    cargo_run ethcore-bloom-journal
 
     cargo_run rlp
     cargo_run rlp_derive
@@ -157,10 +157,10 @@ function cargo_run_all_for_clippy () {
     cargo_run panic_hook
     cargo_run worker
     cargo_run error
-    cargo_run_skip snappy
+    cargo_run snappy
     cargo_run_skip cita-directories
-    cargo_run_skip ethcore-bloom-journal
     cargo_run_skip cita-crypto-trait
+    cargo_run_skip ethcore-bloom-journal
 
     cargo_run_skip rlp
     cargo_run_skip rlp_derive
