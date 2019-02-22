@@ -123,7 +123,7 @@ pub fn compress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, SnappyEr
             unsafe { output.set_len(output_len + compressed_len) };
             Ok(compressed_len as usize)
         }
-        s @ _ => {
+        s => {
             unsafe { output.set_len(output_len) };
             Err(s.into())
         }
@@ -166,7 +166,7 @@ pub fn decompress_to(input: &[u8], output: &mut Vec<u8>) -> Result<usize, Snappy
             unsafe { output.set_len(output_len + uncompressed_len) };
             Ok(uncompressed_len as usize)
         }
-        s @ _ => {
+        s => {
             unsafe { output.set_len(output_len) };
             Err(s.into())
         }

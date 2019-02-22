@@ -37,7 +37,7 @@ pub type H256FastMap<T> = HashMap<H256, T, hash::BuildHasherDefault<PlainHasher>
 pub type H256FastSet = HashSet<H256, hash::BuildHasherDefault<PlainHasher>>;
 
 #[inline]
-pub fn pad_left0<'a>(hexstr: &'a str, width: usize) -> String {
+pub fn pad_left0(hexstr: &str, width: usize) -> String {
     format!("{:0>width$}", hexstr, width = width)
 }
 
