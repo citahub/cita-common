@@ -153,7 +153,7 @@ function cargo_run_all_for_clippy () {
 
     cargo_run cita-common-benches
 
-    cargo_run_skip cita-types
+    cargo_run cita-types
     cargo_run_skip panic_hook
 
     cargo_run_skip worker

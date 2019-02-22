@@ -36,8 +36,8 @@ where
 
 fn convert_u8_to_char(u: u8) -> char {
     match u {
-        u if u < 10 => ('0' as u8 + u) as char,
-        u if 10 <= u && u < 16 => ('a' as u8 + (u - 10)) as char,
+        u if u < 10 => (b'0' + u) as char,
+        u if 10 <= u && u < 16 => (b'a' + (u - 10)) as char,
         _ => panic!("{} not bwtween 0 and 15", u),
     }
 }
@@ -100,7 +100,7 @@ macro_rules! add_cita_funcs {
 
         impl ConvertType for $name {
             #[inline]
-            fn from_unaligned<'a>(s: &'a str) -> Option<Self> {
+            fn from_unaligned(s: &str) -> Option<Self> {
                 $name::from_str(
                     pad_left0(
                         delete_left0(clean_0x(s)), $bits/4usize).as_str())
@@ -129,21 +129,21 @@ add_cita_funcs!([
 ]);
 
 pub trait BloomTools {
-    fn from_raw<'a>(&'a [u8]) -> Self;
-    fn contains_raw<'a>(&self, &'a [u8]) -> bool;
-    fn accrue_raw<'a>(&mut self, &'a [u8]);
+    fn from_raw(&[u8]) -> Self;
+    fn contains_raw(&self, &[u8]) -> bool;
+    fn accrue_raw(&mut self, &[u8]);
 }
 
 impl BloomTools for Bloom {
-    fn from_raw<'a>(raw: &'a [u8]) -> Bloom {
+    fn from_raw(raw: &[u8]) -> Bloom {
         Bloom::from(BloomInput::Raw(raw))
     }
 
-    fn contains_raw<'a>(&self, raw: &'a [u8]) -> bool {
+    fn contains_raw(&self, raw: &[u8]) -> bool {
         self.contains_input(BloomInput::Raw(raw))
     }
 
-    fn accrue_raw<'a>(&mut self, raw: &'a [u8]) {
+    fn accrue_raw(&mut self, raw: &[u8]) {
         self.accrue(BloomInput::Raw(raw));
     }
 }
