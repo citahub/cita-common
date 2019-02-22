@@ -44,6 +44,8 @@ use std::collections::BTreeMap;
 ///     let root = "e766d5d51b89dc39d981b41bda63248d7abce4f0225eefd023792a540bcffee3";
 ///     #[cfg(feature = "blake2bhash")]
 ///     let root = "2e23216dd9a4b1bfa60a274b3420871d6560d55f45abb578aeaa547c79f7948b";
+///     #[cfg(feature = "sm3hash")]
+///     let root = "6eb00305e52ac9631000b13c27894bd34bd0dcd7d5e034a287f36d9429d7a7fd";
 ///
 ///     assert_eq!(ordered_trie_root(v), H256::from_str(root).unwrap());
 /// }
@@ -88,6 +90,8 @@ where
 ///     let root = "8aad789dff2f538bca5d8ea56e8abe10f4c7ba3a5dea95fea4cd6e7c3a1168d3";
 ///     #[cfg(feature = "blake2bhash")]
 ///     let root = "82df7576318e4ab41bbe9b4e5c664c1d5e6d2558d4872ebdcce824ea91e004cb";
+///     #[cfg(feature = "sm3hash")]
+///     let root = "ac0c2b00e9f978a86713cc6dddea3972925f0d29243a2b51a3b597afaf1c7451";
 ///
 ///     assert_eq!(trie_root(v), H256::from_str(root).unwrap());
 /// }
@@ -129,6 +133,8 @@ where
 ///     let root = "d4cd937e4a4368d7931a9cf51686b7e10abb3dce38a39000fd7902a092b64585";
 ///     #[cfg(feature = "blake2bhash")]
 ///     let root = "4fc4a4c6a187355054c79faace7e06619955ea670470c8d27a23ff59892c8ec6";
+///     #[cfg(feature = "sm3hash")]
+///     let root = "fc7b49b3492fec20bfd915c412a0c68c6d9110ddbf7c6606750f771f63f5f336";
 ///
 ///     assert_eq!(sec_trie_root(v), H256::from_str(root).unwrap());
 /// }

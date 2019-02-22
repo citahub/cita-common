@@ -22,12 +22,16 @@ script:
   - bash '.ci-scripts/test' $HASH_ALGO $CRYPTO_ALGO $UPLOAD_COVERAGE
 stages:
   - Format
+  - Clippy
   - Test
 jobs:
   include:
     - stage: Format
       env:
       script: bash '.ci-scripts/format'
+    - stage: Clippy
+      env:
+      script: bash '.ci-scripts/clippy'
     - stage: Test
       name: Run Benches
       env:
