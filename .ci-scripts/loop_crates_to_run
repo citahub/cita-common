@@ -101,11 +101,10 @@ function cargo_run_all () {
     cargo_run cita-common-benches
 
     cargo_run cita-types
+    cargo_run logger
     cargo_run panic_hook
-
     cargo_run worker
     cargo_run error
-    cargo_run logger
     cargo_run snappy
     cargo_run cita-directories
     cargo_run ethcore-bloom-journal
@@ -154,11 +153,10 @@ function cargo_run_all_for_clippy () {
     cargo_run cita-common-benches
 
     cargo_run cita-types
-    cargo_run_skip panic_hook
-
-    cargo_run_skip worker
-    cargo_run_skip error
-    cargo_run_skip logger
+    cargo_run logger
+    cargo_run panic_hook
+    cargo_run worker
+    cargo_run error
     cargo_run_skip snappy
     cargo_run_skip cita-directories
     cargo_run_skip ethcore-bloom-journal

@@ -132,7 +132,7 @@ fn parse_env(env: &str) -> Vec<Directive> {
     let mut directives = Vec::new();
 
     for s in env.split(',') {
-        if s.len() == 0 {
+        if s.is_empty() {
             continue;
         }
         let mut parts = s.split('=');
@@ -169,7 +169,7 @@ fn parse_env(env: &str) -> Vec<Directive> {
             }
         };
 
-        if name.len() != 0 {
+        if !name.is_empty() {
             directives.push(Directive {
                 name: name.to_string(),
                 level: log_level,
@@ -180,7 +180,7 @@ fn parse_env(env: &str) -> Vec<Directive> {
     directives
 }
 
-fn create_loggers(directives: Vec<Directive>, appender: String) -> Vec<Logger> {
+fn create_loggers(directives: Vec<Directive>, appender: &str) -> Vec<Logger> {
     let mut loggers = Vec::new();
 
     if directives.is_empty() {
@@ -189,7 +189,7 @@ fn create_loggers(directives: Vec<Directive>, appender: String) -> Vec<Logger> {
 
     //creat loggers via module/crate and log level
     for directive in directives {
-        let appender_clone = appender.clone();
+        let appender_clone = appender.to_string();
         let logger = Logger::builder()
             .appender(appender_clone)
             .additive(false)
@@ -210,23 +210,21 @@ fn config_file_appender(file_path: &str, directives: Vec<Directive>) -> Config {
     let mut config_builder =
         Config::builder().appender(Appender::builder().build("requests", Box::new(requests)));
 
-    let loggers = create_loggers(directives, "requests".to_string());
+    let loggers = create_loggers(directives, "requests");
 
     // config crate or module log level
-    if loggers.len() != 0 {
+    if !loggers.is_empty() {
         config_builder = config_builder.loggers(loggers.into_iter());
     }
 
     //config global log level
-    let config = config_builder
+    config_builder
         .build(
             Root::builder()
                 .appender("requests")
                 .build(LevelFilter::Info),
         )
-        .unwrap();
-
-    config
+        .unwrap()
 }
 
 // ConsoleAppender config
@@ -238,19 +236,17 @@ fn config_console_appender(directives: Vec<Directive>) -> Config {
     let mut config_builder =
         Config::builder().appender(Appender::builder().build("stdout", Box::new(stdout)));
 
-    let loggers = create_loggers(directives, "stdout".to_string());
+    let loggers = create_loggers(directives, "stdout");
 
     // config crate or module log level
-    if loggers.len() != 0 {
+    if !loggers.is_empty() {
         config_builder = config_builder.loggers(loggers.into_iter());
     }
 
     //config global log level
-    let config = config_builder
+    config_builder
         .build(Root::builder().appender("stdout").build(LevelFilter::Info))
-        .unwrap();
-
-    config
+        .unwrap()
 }
 
 #[cfg(test)]
