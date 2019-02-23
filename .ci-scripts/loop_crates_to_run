@@ -160,7 +160,7 @@ function cargo_run_all_for_clippy () {
     cargo_run snappy
     cargo_run cita-directories
     cargo_run cita-crypto-trait
-    cargo_run_skip ethcore-bloom-journal
+    cargo_run ethcore-bloom-journal
 
     cargo_run_skip rlp
     cargo_run_skip rlp_derive
