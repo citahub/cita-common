@@ -24,7 +24,7 @@ use bincode::{deserialize, serialize, Infinite};
 use types::Address;
 use wal::Wal;
 
-pub const DATA_PATH: &'static str = "DATA_PATH";
+pub const DATA_PATH: &str = "DATA_PATH";
 pub const LOG_TYPE_AUTHORITIES: u8 = 1;
 
 #[derive(Debug)]
@@ -37,16 +37,22 @@ pub struct AuthorityManage {
     pub authority_h_old: usize,
 }
 
+impl Default for AuthorityManage {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AuthorityManage {
     pub fn new() -> Self {
         let logpath = ::std::env::var(DATA_PATH)
-            .expect(format!("{} must be set", DATA_PATH).as_str())
+            .unwrap_or_else(|_| panic!("{} must be set", DATA_PATH))
             + "/authorities";
 
         let mut authority_manage = AuthorityManage {
             authorities: Vec::new(),
             validators: Vec::new(),
-            authorities_log: Wal::new(&*logpath).unwrap(),
+            authorities_log: Wal::create(&*logpath).unwrap(),
             authorities_old: Vec::new(),
             validators_old: Vec::new(),
             authority_h_old: 0,
@@ -80,8 +86,8 @@ impl AuthorityManage {
     pub fn receive_authorities_list(
         &mut self,
         height: usize,
-        authorities: Vec<Address>,
-        validators: Vec<Address>,
+        authorities: &[Address],
+        validators: &[Address],
     ) {
         if self.authorities != authorities || self.validators != validators {
             self.authorities_old.clear();
