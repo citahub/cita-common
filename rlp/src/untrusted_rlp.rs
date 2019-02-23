@@ -21,10 +21,7 @@ struct OffsetCache {
 
 impl OffsetCache {
     fn new(index: usize, offset: usize) -> OffsetCache {
-        OffsetCache {
-            index: index,
-            offset: offset,
-        }
+        OffsetCache { index, offset }
     }
 }
 
@@ -67,8 +64,8 @@ fn calculate_payload_info(
 impl PayloadInfo {
     fn new(header_len: usize, value_len: usize) -> PayloadInfo {
         PayloadInfo {
-            header_len: header_len,
-            value_len: value_len,
+            header_len,
+            value_len,
         }
     }
 
@@ -147,7 +144,7 @@ where
 {
     pub fn new(bytes: &'a [u8]) -> UntrustedRlp<'a> {
         UntrustedRlp {
-            bytes: bytes,
+            bytes,
             offset_cache: Cell::new(OffsetCache::new(usize::max_value(), 0)),
             count_cache: Cell::new(None),
         }
@@ -178,26 +175,28 @@ where
     }
 
     pub fn item_count(&self) -> Result<usize, DecoderError> {
-        match self.is_list() {
-            true => match self.count_cache.get() {
+        if self.is_list() {
+            match self.count_cache.get() {
                 Some(c) => Ok(c),
                 None => {
                     let c = self.iter().count();
                     self.count_cache.set(Some(c));
                     Ok(c)
                 }
-            },
-            false => Err(DecoderError::RlpExpectedToBeList),
+            }
+        } else {
+            Err(DecoderError::RlpExpectedToBeList)
         }
     }
 
     pub fn size(&self) -> usize {
-        match self.is_data() {
+        if self.is_data() {
             // TODO: No panic on malformed data, but ideally would Err on no PayloadInfo.
-            true => BasicDecoder::payload_info(self.bytes)
+            BasicDecoder::payload_info(self.bytes)
                 .map(|b| b.value_len)
-                .unwrap_or(0),
-            false => 0,
+                .unwrap_or(0)
+        } else {
+            0
         }
     }
 
@@ -209,12 +208,13 @@ where
         // move to cached position if its index is less or equal to
         // current search index, otherwise move to beginning of list
         let c = self.offset_cache.get();
-        let (mut bytes, to_skip) = match c.index <= index {
-            true => (
+        let (mut bytes, to_skip) = if c.index <= index {
+            (
                 UntrustedRlp::consume(self.bytes, c.offset)?,
                 index - c.index,
-            ),
-            false => (self.consume_list_payload()?, index),
+            )
+        } else {
+            (self.consume_list_payload()?, index)
         };
 
         // skip up to x items
@@ -232,7 +232,7 @@ where
     }
 
     pub fn is_null(&self) -> bool {
-        self.bytes.len() == 0
+        self.bytes.is_empty()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -315,9 +315,10 @@ where
 
     /// consumes slice prefix of length `len`
     fn consume(bytes: &'a [u8], len: usize) -> Result<&'a [u8], DecoderError> {
-        match bytes.len() >= len {
-            true => Ok(&bytes[len..]),
-            false => Err(DecoderError::RlpIsTooShort),
+        if bytes.len() >= len {
+            Ok(&bytes[len..])
+        } else {
+            Err(DecoderError::RlpIsTooShort)
         }
     }
 }
@@ -363,7 +364,7 @@ pub struct BasicDecoder<'a> {
 
 impl<'a> BasicDecoder<'a> {
     pub fn new(rlp: UntrustedRlp<'a>) -> BasicDecoder<'a> {
-        BasicDecoder { rlp: rlp }
+        BasicDecoder { rlp }
     }
 
     /// Return first item info.

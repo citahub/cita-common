@@ -162,7 +162,7 @@ function cargo_run_all_for_clippy () {
     cargo_run cita-crypto-trait
     cargo_run ethcore-bloom-journal
 
-    cargo_run_skip rlp
+    cargo_run rlp
     cargo_run_skip rlp_derive
 
     cargo_run_skip authority_manage
