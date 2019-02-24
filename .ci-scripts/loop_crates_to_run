@@ -173,7 +173,7 @@ function cargo_run_all_for_clippy () {
 
     for crate in pubsub; do
         for features in ${FEATURES_FOR_PUBSUB}; do
-            cargo_run_skip ${crate} --features "${features}"
+            cargo_run ${crate} --features "${features}"
         done
     done
 

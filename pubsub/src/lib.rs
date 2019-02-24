@@ -74,7 +74,7 @@ pub fn start_pubsub<K>(
 {
     dotenv().ok();
     let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
-    start_kafka(name, keys, tx, rx);
+    start_kafka(name, &keys, tx, rx);
 }
 
 /* TODO Fix this test.
