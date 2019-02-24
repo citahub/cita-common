@@ -30,8 +30,8 @@ impl<'a> InvalidRlpSwapper<'a> {
             valid_to_invalid.insert(rlp, invalid);
         }
         InvalidRlpSwapper {
-            invalid_to_valid: invalid_to_valid,
-            valid_to_invalid: valid_to_invalid,
+            invalid_to_valid,
+            valid_to_invalid,
         }
     }
     /// Get a valid RLP corresponding to an invalid one
@@ -122,7 +122,7 @@ fn deep_decompress(
         // Look for special compressed list, which contains nested data.
         2 if rlp
             .at(0)
-            .map(|r| r.as_raw() == &[0x81, 0x7f])
+            .map(|r| r.as_raw() == [0x81, 0x7f])
             .unwrap_or(false) =>
         {
             rlp.at(1).ok().map_or(simple_swap(), |r| {

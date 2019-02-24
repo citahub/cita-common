@@ -28,7 +28,7 @@ pub struct Handler {
 
 impl Handler {
     pub fn new(tx: Sender<(String, Vec<u8>)>) -> Self {
-        Handler { tx: tx }
+        Handler { tx }
     }
 }
 
@@ -45,7 +45,7 @@ impl Consumer for Handler {
     }
 }
 
-pub const AMQP_URL: &'static str = "AMQP_URL";
+pub const AMQP_URL: &str = "AMQP_URL";
 
 pub fn start_rabbitmq(
     name: &str,
@@ -53,13 +53,13 @@ pub fn start_rabbitmq(
     tx: Sender<(String, Vec<u8>)>,
     rx: Receiver<(String, Vec<u8>)>,
 ) {
-    let amqp_url = std::env::var(AMQP_URL).expect(format!("{} must be set", AMQP_URL).as_str());
+    let amqp_url = std::env::var(AMQP_URL).unwrap_or_else(|_| panic!("{} must be set", AMQP_URL));
     let mut session = match Session::open_url(&amqp_url) {
         Ok(session) => session,
         Err(error) => panic!("failed to open url {} : {:?}", amqp_url, error),
     };
 
-    let mut channel = session.open_channel(1).ok().expect("Can't open channel");
+    let mut channel = session.open_channel(1).expect("Can't open channel");
     let _ = channel.basic_prefetch(10);
     channel
         .exchange_declare(
@@ -76,27 +76,18 @@ pub fn start_rabbitmq(
 
     //queue: &str, passive: bool, durable: bool, exclusive: bool, auto_delete: bool, nowait: bool, arguments: Table
     channel
-        .queue_declare(name.clone(), false, true, false, false, false, Table::new())
+        .queue_declare(name, false, true, false, false, false, Table::new())
         .unwrap();
 
     for key in keys {
         channel
-            .queue_bind(name.clone(), "cita", &key, false, Table::new())
+            .queue_bind(name, "cita", &key, false, Table::new())
             .unwrap();
     }
     let callback = Handler::new(tx);
     //queue: &str, consumer_tag: &str, no_local: bool, no_ack: bool, exclusive: bool, nowait: bool, arguments: Table
     channel
-        .basic_consume(
-            callback,
-            name.clone(),
-            "",
-            false,
-            false,
-            false,
-            false,
-            Table::new(),
-        )
+        .basic_consume(callback, name, "", false, false, false, false, Table::new())
         .unwrap();
 
     // thread recv msg from mq
@@ -114,7 +105,7 @@ pub fn start_rabbitmq(
         Ok(session) => session,
         Err(error) => panic!("failed to open url {} : {:?}", amqp_url, error),
     };
-    let mut channel = session.open_channel(1).ok().expect("Can't open channel");
+    let mut channel = session.open_channel(1).expect("Can't open channel");
     let _ = channel.basic_prefetch(10);
     channel
         .exchange_declare(

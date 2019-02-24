@@ -160,20 +160,20 @@ function cargo_run_all_for_clippy () {
     cargo_run snappy
     cargo_run cita-directories
     cargo_run cita-crypto-trait
-    cargo_run_skip ethcore-bloom-journal
+    cargo_run ethcore-bloom-journal
 
-    cargo_run_skip rlp
-    cargo_run_skip rlp_derive
+    cargo_run rlp
+    cargo_run rlp_derive
 
-    cargo_run_skip authority_manage
+    cargo_run authority_manage
 
-    cargo_run_skip pubsub_rabbitmq
-    cargo_run_skip pubsub_zeromq
-    cargo_run_skip pubsub_kafka
+    cargo_run pubsub_rabbitmq
+    cargo_run pubsub_zeromq
+    cargo_run pubsub_kafka
 
     for crate in pubsub; do
         for features in ${FEATURES_FOR_PUBSUB}; do
-            cargo_run_skip ${crate} --features "${features}"
+            cargo_run ${crate} --features "${features}"
         done
     done
 

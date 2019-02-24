@@ -11,7 +11,7 @@ use {Decodable, PayloadInfo, Prototype, UntrustedRlp};
 
 impl<'a> From<UntrustedRlp<'a>> for Rlp<'a> {
     fn from(rlp: UntrustedRlp<'a>) -> Rlp<'a> {
-        Rlp { rlp: rlp }
+        Rlp { rlp }
     }
 }
 

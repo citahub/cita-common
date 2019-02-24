@@ -53,8 +53,7 @@ impl BitVecJournal {
     pub fn set(&mut self, index: usize) {
         let e_index = index / 64;
         let bit_index = index % 64;
-        let val = self.elems.get_mut(e_index).unwrap();
-        *val |= 1u64 << bit_index;
+        self.elems[e_index] |= 1u64 << bit_index;
         self.journal.insert(e_index);
     }
 
@@ -74,7 +73,7 @@ impl BitVecJournal {
     pub fn saturation(&self) -> f64 {
         self.elems
             .iter()
-            .fold(0u64, |acc, e| acc + e.count_ones() as u64) as f64
+            .fold(0u64, |acc, e| acc + u64::from(e.count_ones())) as f64
             / (self.elems.len() * 64) as f64
     }
 }
@@ -99,10 +98,10 @@ impl Bloom {
         let bitmap = BitVecJournal::new(bitmap_bits as usize);
         let sips = [SipHasher::new(), SipHasher::new()];
         Bloom {
-            bitmap: bitmap,
-            bitmap_bits: bitmap_bits,
-            k_num: k_num,
-            sips: sips,
+            bitmap,
+            bitmap_bits,
+            k_num,
+            sips,
         }
     }
 
@@ -113,10 +112,10 @@ impl Bloom {
         let bitmap = BitVecJournal::from_parts(parts);
         let sips = [SipHasher::new(), SipHasher::new()];
         Bloom {
-            bitmap: bitmap,
-            bitmap_bits: bitmap_bits,
-            k_num: k_num,
-            sips: sips,
+            bitmap,
+            bitmap_bits,
+            k_num,
+            sips,
         }
     }
 
@@ -189,13 +188,13 @@ impl Bloom {
         T: Hash,
     {
         if k_i < NUMBER_OF_HASHERS as u32 {
-            let mut sip = self.sips[k_i as usize].clone();
+            let mut sip = self.sips[k_i as usize];
             item.hash(&mut sip);
             let hash = sip.finish();
             hashes[k_i as usize] = hash;
             hash
         } else {
-            hashes[0].wrapping_add((k_i as u64).wrapping_mul(hashes[1]) % 0xffffffffffffffc5)
+            hashes[0].wrapping_add((u64::from(k_i)).wrapping_mul(hashes[1]) % 0xffff_ffff_ffff_ffc5)
         }
     }
 
