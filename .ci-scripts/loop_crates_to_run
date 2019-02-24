@@ -167,7 +167,7 @@ function cargo_run_all_for_clippy () {
 
     cargo_run authority_manage
 
-    cargo_run_skip pubsub_rabbitmq
+    cargo_run pubsub_rabbitmq
     cargo_run_skip pubsub_zeromq
     cargo_run_skip pubsub_kafka
 
