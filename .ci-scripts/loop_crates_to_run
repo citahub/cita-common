@@ -169,7 +169,7 @@ function cargo_run_all_for_clippy () {
 
     cargo_run pubsub_rabbitmq
     cargo_run pubsub_zeromq
-    cargo_run_skip pubsub_kafka
+    cargo_run pubsub_kafka
 
     for crate in pubsub; do
         for features in ${FEATURES_FOR_PUBSUB}; do

@@ -44,15 +44,15 @@ impl ConsumerContext for ConsumerContextExample {
     }
 }
 
-pub const KAFKA_URL: &'static str = "KAFKA_URL";
+pub const KAFKA_URL: &str = "KAFKA_URL";
 
 pub fn start_kafka(
     name: &str,
-    keys: Vec<String>,
+    keys: &[String],
     tx: Sender<(String, Vec<u8>)>,
     rx: Receiver<(String, Vec<u8>)>,
 ) {
-    let brokers = std::env::var(KAFKA_URL).expect(format!("{} must be set", KAFKA_URL).as_str());
+    let brokers = std::env::var(KAFKA_URL).unwrap_or_else(|_| panic!("{} must be set", KAFKA_URL));
     let consumer_brokers = brokers.clone();
     let _ = thread::Builder::new()
         .name("publisher".to_string())
@@ -114,7 +114,7 @@ pub fn start_kafka(
         .expect("Consumer creation failed");
 
     //consumer thread
-    let keys_str = keys.clone();
+    let keys_str = keys.to_owned();
 
     let _ = thread::Builder::new()
         .name("subscriber".to_string())
