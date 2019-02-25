@@ -16,10 +16,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate amqp;
+extern crate crossbeam_channel as channel;
 use amqp::{protocol, Basic, Channel, Consumer, Session, Table};
+use channel::Receiver;
+use channel::Sender;
 use std::process;
-use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
 use std::thread;
 
 pub struct Handler {
