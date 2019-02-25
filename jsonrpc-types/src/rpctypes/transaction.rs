@@ -24,6 +24,7 @@ use crate::rpctypes::Data;
 pub struct FullTransaction {
     pub hash: H256,
     pub content: Data,
+    pub from: Address,
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]

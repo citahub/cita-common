@@ -83,6 +83,7 @@ impl TryFromProto<ProtoSignedTransaction> for FullTransaction {
         Ok(FullTransaction {
             hash: H256::from_slice(stx.get_tx_hash()),
             content: Data::try_from_proto(stx.take_transaction_with_sig())?,
+            from: stx.from(),
         })
     }
 }
