@@ -14,7 +14,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-extern crate crossbeam_channel as channel;
+pub extern crate crossbeam_channel as channel;
 extern crate dotenv;
 #[cfg(feature = "kafka")]
 extern crate pubsub_kafka;
