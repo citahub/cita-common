@@ -11,6 +11,7 @@ rev = "84d4062"
 futures = "^0.1.13"
 logger = { path = "../logger" }
 futures-cpupool = "0.1.6"
+crossbeam-channel = "0.3.8"
 
 [dev-dependencies]
 chrono = "^0.4.0"

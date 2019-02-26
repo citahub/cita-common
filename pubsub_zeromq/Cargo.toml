@@ -10,3 +10,4 @@ features = []
 
 [dependencies]
 logger = { path = "../logger" }
+crossbeam-channel = "0.3.8"

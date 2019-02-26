@@ -17,6 +17,7 @@
 
 extern crate cita_crypto as crypto;
 extern crate cita_types as types;
+extern crate crossbeam_channel as channel;
 extern crate libproto;
 extern crate util;
 
@@ -26,8 +27,8 @@ pub use error::*;
 use libproto::Request;
 pub use util::instrument::*;
 
+use channel::Sender;
 use libproto::blockchain::{Block, RichStatus};
-use std::sync::mpsc::Sender;
 use std::time::Duration;
 use types::H256;
 use util::SemanticVersion;

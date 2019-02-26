@@ -17,9 +17,10 @@
 
 #[macro_use]
 extern crate logger;
+extern crate crossbeam_channel as channel;
 extern crate zmq;
-use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
+use channel::Receiver;
+use channel::Sender;
 use std::thread;
 
 pub fn start_zeromq(

@@ -14,6 +14,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+pub extern crate crossbeam_channel as channel;
 extern crate dotenv;
 #[cfg(feature = "kafka")]
 extern crate pubsub_kafka;
@@ -32,9 +33,9 @@ use pubsub_rabbitmq::start_rabbitmq;
 #[cfg(feature = "zeromq")]
 use pubsub_zeromq::start_zeromq;
 
+use channel::Receiver;
+use channel::Sender;
 use std::convert::Into;
-use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
 
 #[cfg(feature = "rabbitmq")]
 pub fn start_pubsub<K>(
@@ -80,13 +81,13 @@ pub fn start_pubsub<K>(
 /* TODO Fix this test.
 #[cfg(test)]
 mod test {
+    extern crate crossbeam_channel as channel;
     use super::*;
     use std::collections::HashMap;
-    use std::sync::mpsc::channel;
     #[test]
     fn basics() {
-        let (ntx_sub, nrx_sub) = channel();
-        let (ntx_pub, nrx_pub) = channel();
+        let (ntx_sub, nrx_sub) = channel::unbounded();
+        let (ntx_pub, nrx_pub) = channel()::unbounded();
         start_pubsub(
             "network",
             vec!["chain.newtx", "chain.newblk"],
@@ -94,8 +95,8 @@ mod test {
             nrx_pub,
         );
 
-        let (ctx_sub, crx_sub) = channel();
-        let (ctx_pub, crx_pub) = channel();
+        let (ctx_sub, crx_sub) = channel()::unbounded();
+        let (ctx_pub, crx_pub) = channel()::unbounded();
         start_pubsub(
             "chain",
             vec!["network.newtx", "network.newblk"],
