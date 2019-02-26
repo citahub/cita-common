@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate amqp;
-extern crate crossbeam_channel as channel;
+pub extern crate crossbeam_channel as channel;
 use amqp::{protocol, Basic, Channel, Consumer, Session, Table};
 use channel::Receiver;
 use channel::Sender;
