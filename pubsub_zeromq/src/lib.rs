@@ -17,7 +17,7 @@
 
 #[macro_use]
 extern crate logger;
-extern crate crossbeam_channel as channel;
+pub extern crate crossbeam_channel as channel;
 extern crate zmq;
 use channel::Receiver;
 use channel::Sender;
