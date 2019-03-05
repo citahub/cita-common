@@ -40,7 +40,7 @@ use std::process::Command;
 
 const DB_BACKGROUND_FLUSHES: i32 = 2;
 const DB_BACKGROUND_COMPACTIONS: i32 = 2;
-const DB_WRITE_BUFFER_SIZE: usize = 2048 * 1000;
+const DB_WRITE_BUFFER_SIZE: usize = 4 * 64 * 1024 * 1024;
 
 /// Required length of prefixes.
 pub const PREFIX_LEN: usize = 12;
