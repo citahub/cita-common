@@ -42,7 +42,7 @@ impl<K: Eq + Hash, V: HeapSizeOf> MemoryLruCache<K, V> {
     pub fn new(max_size: usize) -> Self {
         MemoryLruCache {
             inner: LruCache::new(INITIAL_CAPACITY),
-            max_size: max_size,
+            max_size,
             cur_size: 0,
         }
     }

@@ -82,8 +82,14 @@ macro_rules! map_into {
 
 #[macro_export]
 macro_rules! flush {
-    ($arg:expr) => ($crate::common::flush($arg.into()));
-    ($($arg:tt)*) => ($crate::common::flush(format!("{}", format_args!($($arg)*))));
+    ($arg:expr) => {
+        let s: String = $arg.into();
+        $crate::common::flush(&s);
+    };
+    ($($arg:tt)*) => {
+        let s: String = format!("{}", format_args!($($arg)*));
+        ($crate::common::flush(&s));
+    };
 }
 
 #[macro_export]
@@ -93,7 +99,7 @@ macro_rules! flushln {
 }
 
 #[doc(hidden)]
-pub fn flush(s: String) {
+pub fn flush(s: &str) {
     let _ = io::Write::write(&mut io::stdout(), s.as_bytes());
     let _ = io::Write::flush(&mut io::stdout());
 }

@@ -48,7 +48,7 @@ impl<'a, Q: Query> Lookup<'a, Q> {
                     return Err(Box::new(match depth {
                         0 => TrieError::InvalidStateRoot(hash),
                         _ => TrieError::IncompleteDatabase(hash),
-                    }))
+                    }));
                 }
             };
 

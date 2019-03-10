@@ -393,7 +393,7 @@ impl<'a> TrieDBMut<'a> {
                         query: DBValue::from_slice,
                         hash: hash.clone(),
                     }
-                    .look_up(partial)
+                    .look_up(partial);
                 }
                 NodeHandle::InMemory(ref handle) => match self.storage[handle] {
                     Node::Empty => return Ok(None),

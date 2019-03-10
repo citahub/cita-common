@@ -179,7 +179,7 @@ function cargo_run_all_for_clippy () {
 
     cargo_run blake2b
 
-    cargo_run_skip util
+    cargo_run util
 
     cargo_run_skip jsonrpc-types
     cargo_run_skip cita-web3

@@ -5,7 +5,7 @@ use std::path::Path;
 use git2::{DescribeFormatOptions, DescribeOptions, ErrorCode, Repository};
 use rustc_version;
 
-const ASCII_LOGO: &'static str = r#"
+const ASCII_LOGO: &str = r#"
                        ..-nnmmmmnn-..
                   .-nndNNNNNNmddddmmmho.
                 .smNNMMMNnn-         :nnmhn.
