@@ -61,9 +61,10 @@ impl<'a> Iterator for NibbleSliceIterator<'a> {
     type Item = u8;
     fn next(&mut self) -> Option<u8> {
         self.i += 1;
-        match self.i <= self.p.len() {
-            true => Some(self.p.at(self.i - 1)),
-            false => None,
+        if self.i <= self.p.len() {
+            Some(self.p.at(self.i - 1))
+        } else {
+            None
         }
     }
 }
@@ -80,8 +81,8 @@ where
     /// Create a new nibble slice with the given byte-slice with a nibble offset.
     pub fn new_offset(data: &'a [u8], offset: usize) -> Self {
         NibbleSlice {
-            data: data,
-            offset: offset,
+            data,
+            offset,
             data_encode_suffix: &b""[..],
             offset_encode_suffix: 0,
         }

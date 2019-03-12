@@ -57,7 +57,7 @@ impl From<MerkleProofNode<H256>> for ProofNode {
 
 impl From<MerkleProof<H256>> for Proof {
     fn from(proof: MerkleProof<H256>) -> Self {
-        Proof(proof.0.into_iter().map(|n| ProofNode::from(n)).collect())
+        Proof(proof.0.into_iter().map(ProofNode::from).collect())
     }
 }
 
@@ -76,7 +76,7 @@ impl From<Proof> for MerkleProof<H256> {
             proof
                 .0
                 .into_iter()
-                .map(|n| MerkleProofNode::<H256>::from(n))
+                .map(MerkleProofNode::<H256>::from)
                 .collect(),
         )
     }

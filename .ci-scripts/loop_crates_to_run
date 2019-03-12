@@ -177,14 +177,18 @@ function cargo_run_all_for_clippy () {
         done
     done
 
-    cargo_run_skip blake2b
+    cargo_run blake2b
 
-    cargo_run_skip util
+    cargo_run util
 
     cargo_run_skip jsonrpc-types
     cargo_run_skip cita-web3
 
-    for crate in hashable cita-merklehash db cita-secp256k1 cita-ed25519 cita-sm2; do
+    for crate in hashable cita-merklehash; do
+        cargo_run ${crate} --features "${SELECT_HASH}"
+    done
+
+    for crate in db cita-secp256k1 cita-ed25519 cita-sm2; do
         cargo_run_skip ${crate} --features "${SELECT_HASH}"
     done
 

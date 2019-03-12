@@ -39,16 +39,12 @@ pub struct SemanticVersion {
 impl SemanticVersion {
     /// Create a new object.
     pub fn new(major: u8, minor: u8, tiny: u8) -> SemanticVersion {
-        SemanticVersion {
-            major: major,
-            minor: minor,
-            tiny: tiny,
-        }
+        SemanticVersion { major, minor, tiny }
     }
 
     /// Convert to a `u32` representation.
     pub fn as_u32(&self) -> u32 {
-        ((self.major as u32) << 16) + ((self.minor as u32) << 8) + self.tiny as u32
+        (u32::from(self.major) << 16) + (u32::from(self.minor) << 8) + u32::from(self.tiny)
     }
 }
 

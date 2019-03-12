@@ -29,13 +29,10 @@ pub struct PrettySlice<'a>(&'a [u8]);
 impl<'a> fmt::Debug for PrettySlice<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for i in 0..self.0.len() {
-            match i > 0 {
-                true => {
-                    write!(f, "·{:02x}", self.0[i])?;
-                }
-                false => {
-                    write!(f, "{:02x}", self.0[i])?;
-                }
+            if i > 0 {
+                write!(f, "·{:02x}", self.0[i])?;
+            } else {
+                write!(f, "{:02x}", self.0[i])?;
             }
         }
         Ok(())
@@ -97,9 +94,7 @@ impl<'a> BytesRef<'a> {
             }
             BytesRef::Fixed(ref mut data) if offset < data.len() => {
                 let max = min(data.len() - offset, input.len());
-                for i in 0..max {
-                    data[offset + i] = input[i];
-                }
+                data[offset..(max + offset)].clone_from_slice(&input[..max]);
                 max
             }
             _ => 0,
