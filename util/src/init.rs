@@ -3,7 +3,7 @@ use toml;
 
 #[macro_export]
 macro_rules! micro_service_init {
-    ($x:expr, $y:expr) => {
+    ($x:expr, $y:expr, $s:expr) => {
         dotenv::dotenv().ok();
         // Always print backtrace on panic.
         ::std::env::set_var("RUST_BACKTRACE", "full");
@@ -12,7 +12,11 @@ macro_rules! micro_service_init {
         set_panic_handler();
 
         // log4rs config
-        logger::init_config($x);
+        if $s {
+            logger::init_config(&logger::LogFavour::Stdout($x));
+        } else {
+            logger::init_config(&logger::LogFavour::File($x));
+        }
         info!($y);
     };
 }
