@@ -55,6 +55,14 @@ alias:
         fi
 
   - &job-default
+    branches:
+      only:
+        # This is where pull requests from "bors r+" are built.
+        - staging
+        # This is where pull requests from "bors try" are built.
+        - trying
+        # Uncomment this to enable building pull requests.
+        # - master
     docker:
       - image: cita/cita-build:ubuntu-18.04-20190107
     working_directory: ~/build
