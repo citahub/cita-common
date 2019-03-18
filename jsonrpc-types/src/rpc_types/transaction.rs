@@ -17,7 +17,7 @@
 
 use cita_types::{Address, H256, U256};
 
-use crate::rpctypes::Data;
+use crate::rpc_types::Data;
 
 // TODO: No need Deserialize. Just because test in trans.rs
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]

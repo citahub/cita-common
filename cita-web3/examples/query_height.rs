@@ -26,7 +26,7 @@ fn main() {
     };
     let (_eloop, transport) = cita_web3::web3::transports::Http::new(url.as_str()).unwrap();
     let web3 = cita_web3::web3::Web3::new(transport);
-    let param = cita_web3::types::request::BlockNumberParams::new();
+    let param = cita_web3::types::rpc_request::BlockNumberParams::new();
     let resp = web3
         .api::<cita_web3::api::Cita<cita_web3::web3::transports::Http>>()
         .call(param)

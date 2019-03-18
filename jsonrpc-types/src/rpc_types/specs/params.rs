@@ -54,6 +54,10 @@ impl Params {
             Params::None => 0,
         }
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 impl Serialize for Params {
@@ -126,7 +130,7 @@ impl<'a> Visitor<'a> for ParamsVisitor {
 mod tests {
     use super::Params;
     use error::Error;
-    use rpctypes::Filter;
+    use rpc_types::Filter;
     use serde_json::{self, Map, Number, Value};
 
     #[test]

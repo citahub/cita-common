@@ -86,7 +86,7 @@ macro_rules! impl_convert_with_uint {
     ($uint:ident) => {
         impl From<$uint> for Integer {
             fn from(data: $uint) -> Integer {
-                Integer::new(data as u64)
+                Integer::new(u64::from(data))
             }
         }
 

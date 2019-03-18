@@ -34,6 +34,6 @@ mod macros;
 
 mod error;
 pub use error::{Error, ErrorCode};
-pub mod request;
-pub mod response;
-pub mod rpctypes;
+pub mod rpc_request;
+pub mod rpc_response;
+pub mod rpc_types;

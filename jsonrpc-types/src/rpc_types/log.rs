@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::{H160, H256, U256};
-use rpctypes::Data;
+use rpc_types::Data;
 
 /// Log
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Hash, Clone)]

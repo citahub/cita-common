@@ -110,7 +110,7 @@ impl Error {
     pub fn new(code: ErrorCode) -> Self {
         Error {
             message: code.description(),
-            code: code,
+            code,
             data: None,
         }
     }
