@@ -78,7 +78,7 @@ impl<'de> Visitor<'de> for QuantityVisitor {
                 }
             })?;
             Ok(Quantity::new(data))
-        } else if value.len() > 0 {
+        } else if !value.is_empty() {
             let data = U256::from_dec_str(&value[..]).map_err(|_| {
                 if value.len() > 12 {
                     E::custom(format!(
@@ -93,7 +93,7 @@ impl<'de> Visitor<'de> for QuantityVisitor {
             })?;
             Ok(Quantity::new(data))
         } else {
-            Err(E::custom(format!("invalid input: string is empty")))
+            Err(E::custom("invalid input: string is empty".to_string()))
         }
     }
 

@@ -22,8 +22,8 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{from_value, Value};
 
 use error::Error;
-use request::{RequestInfo, ResponseResult};
-use rpctypes::{Id, Version};
+use rpc_request::{RequestInfo, ResponseResult};
+use rpc_types::{Id, Version};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct RpcFailure {
@@ -54,14 +54,14 @@ impl RpcSuccess {
     }
 
     pub fn output(self) -> Output {
-        Output::Success(self)
+        Output::Success(Box::new(self))
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Output {
     /// Success
-    Success(RpcSuccess),
+    Success(Box<RpcSuccess>),
     /// Failure
     Failure(RpcFailure),
 }
@@ -122,7 +122,7 @@ impl RpcFailure {
 #[derive(Debug, PartialEq)]
 pub enum RpcResponse {
     /// Single response
-    Single(Output),
+    Single(Box<Output>),
     /// Response to batch request (batch of responses)
     Batch(Vec<Output>),
 }
@@ -155,8 +155,8 @@ impl Serialize for RpcResponse {
 #[cfg(test)]
 mod tests {
     use super::RpcSuccess;
-    use request::{RequestInfo, ResponseResult};
-    use rpctypes::{Id, Version};
+    use rpc_request::{RequestInfo, ResponseResult};
+    use rpc_types::{Id, Version};
     use serde_json;
 
     #[test]

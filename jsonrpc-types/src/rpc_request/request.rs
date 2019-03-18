@@ -20,7 +20,7 @@ use serde_json;
 
 use internals::construct_params;
 
-use rpctypes::{
+use rpc_types::{
     Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id, Log,
     MetaData, OneItemTupleTrick, Quantity, Receipt, RpcTransaction, TxResponse, Version,
 };
@@ -35,10 +35,7 @@ pub struct RequestInfo {
 
 impl RequestInfo {
     pub fn new(jsonrpc: Option<Version>, id: Id) -> Self {
-        RequestInfo {
-            jsonrpc: jsonrpc,
-            id: id,
-        }
+        RequestInfo { jsonrpc, id }
     }
     pub fn null() -> Self {
         RequestInfo {
@@ -112,6 +109,7 @@ macro_rules! define_call {
 
         #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
         #[serde(untagged)]
+        #[allow(clippy::large_enum_variant)]   // TODO
         pub enum ResponseResult {
             #[serde(rename = "null")]
             Null,
@@ -148,7 +146,7 @@ macro_rules! define_call {
             pub fn get_method(&self) -> &str {
                 match self {
                     $(
-                        &Call::$enum_name { ref params } => params.method_name(),
+                        Call::$enum_name { ref params } => params.method_name(),
                     )+
                 }
             }

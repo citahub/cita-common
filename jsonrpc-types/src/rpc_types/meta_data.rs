@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use rpctypes::{Data20, EconomicalModel, Quantity};
+use rpc_types::{Data20, EconomicalModel, Quantity};
 
 /// Metadata of current chain.
 ///

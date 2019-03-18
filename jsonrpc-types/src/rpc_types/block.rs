@@ -17,7 +17,7 @@
 
 use cita_types::{Address, H256, U256};
 
-use crate::rpctypes::{BlockTransaction, Proof};
+use crate::rpc_types::{BlockTransaction, Proof};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct BlockBody {

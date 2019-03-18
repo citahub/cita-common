@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /// Structs for combine paramters and exchange between request handler and response handler.
-use rpctypes::BlockNumber;
+use rpc_types::BlockNumber;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct CountOrCode {
@@ -26,10 +26,7 @@ pub struct CountOrCode {
 
 impl CountOrCode {
     pub fn new(address: Vec<u8>, block_id: BlockNumber) -> CountOrCode {
-        CountOrCode {
-            address: address,
-            block_id: block_id,
-        }
+        CountOrCode { address, block_id }
     }
 }
 
@@ -50,10 +47,7 @@ pub struct BlockParamsByHash {
 
 impl BlockParamsByHash {
     pub fn new(hash: Vec<u8>, include_txs: bool) -> BlockParamsByHash {
-        BlockParamsByHash {
-            hash: hash,
-            include_txs: include_txs,
-        }
+        BlockParamsByHash { hash, include_txs }
     }
 }
 
@@ -75,8 +69,8 @@ pub struct BlockParamsByNumber {
 impl BlockParamsByNumber {
     pub fn new(block_id: BlockNumber, include_txs: bool) -> BlockParamsByNumber {
         BlockParamsByNumber {
-            block_id: block_id,
-            include_txs: include_txs,
+            block_id,
+            include_txs,
         }
     }
 }
@@ -100,9 +94,9 @@ pub struct RpcBlock {
 impl RpcBlock {
     pub fn new(hash: Vec<u8>, include_txs: bool, block: Vec<u8>) -> RpcBlock {
         RpcBlock {
-            block: block,
-            include_txs: include_txs,
-            hash: hash,
+            block,
+            include_txs,
+            hash,
         }
     }
 }

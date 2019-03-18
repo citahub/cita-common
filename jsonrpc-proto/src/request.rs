@@ -17,7 +17,7 @@
 
 /// Convert JSON-RPC request to proto request.
 use jsonrpc_types::{
-    request::{Call, Request},
+    rpc_request::{Call, Request},
     Error,
 };
 use libproto::request::Request as ProtoRequest;
