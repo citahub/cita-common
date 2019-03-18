@@ -39,6 +39,11 @@ use std::sync::{Once, ONCE_INIT};
 use std::thread;
 use std::vec::Vec;
 
+pub enum LogFavour<'a> {
+    Stdout(&'a str),
+    File(&'a str),
+}
+
 #[derive(Debug, Clone)]
 struct Directive {
     // module name
@@ -60,7 +65,7 @@ fn notify(signals: &[c_int]) -> Result<channel::Receiver<c_int>, Error> {
     Ok(r)
 }
 
-pub fn init_config(service_name: &str) {
+pub fn init_config(favour: &LogFavour) {
     INIT_LOG.call_once(|| {
         // parse RUST_LOG
         let directives: Vec<Directive> = match env::var("RUST_LOG") {
@@ -68,53 +73,54 @@ pub fn init_config(service_name: &str) {
             Err(_) => Vec::new(),
         };
 
-        // log4rs config
-        let log_name = format!("logs/{}.log", service_name);
-        let directives_clone = directives.clone();
-        let config = config_file_appender(&log_name, directives_clone);
-        let handle = log4rs::init_config(config).unwrap();
-
-        // log rotate via signal(USR1)
-        let signal = notify(&[signal_hook::SIGUSR1]).unwrap();
-
-        // Any and all threads spawned must come after the first call to notify (or notify_on).
-        // This is so all spawned threads inherit the blocked status of signals.
-        // If a thread starts before notify is called, it will not have the correct signal mask.
-        // When a signal is delivered, the result is indeterminate.
-        let service_name_clone = service_name.to_string();
-        thread::spawn(move || {
-            loop {
-                //Blocks until this process is sent an USR1 signal.
-                signal.recv().unwrap();
-
-                //rotate current log file
-                let time_stamp = Local::now().format("_%Y-%m-%d_%H-%M-%S");
-                let log_rotate_name = format!("logs/{}{}.log", &service_name_clone, time_stamp);
-                if let Err(e) = fs::rename(&log_name, log_rotate_name) {
-                    warn!("logrotate failed because of {:?}", e.kind());
-                    continue;
-                }
-
-                // reconfig
-                let directives_clone = directives.clone();
-                let new_config = config_file_appender(&log_name, directives_clone);
-                handle.set_config(new_config);
+        match favour {
+            LogFavour::Stdout(service_name) => {
+                let config = config_console_appender(service_name, directives);
+                log4rs::init_config(config).unwrap();
             }
-        });
+            LogFavour::File(service_name) => {
+                // log4rs config
+                let log_name = format!("logs/{}.log", service_name);
+                let directives_clone = directives.clone();
+                let config = config_file_appender(&log_name, directives_clone);
+                let handle = log4rs::init_config(config).unwrap();
+
+                // log rotate via signal(USR1)
+                let signal = notify(&[signal_hook::SIGUSR1]).unwrap();
+
+                // Any and all threads spawned must come after the first call to notify (or notify_on).
+                // This is so all spawned threads inherit the blocked status of signals.
+                // If a thread starts before notify is called, it will not have the correct signal mask.
+                // When a signal is delivered, the result is indeterminate.
+                let service_name_clone = service_name.to_string();
+                thread::spawn(move || {
+                    loop {
+                        //Blocks until this process is sent an USR1 signal.
+                        signal.recv().unwrap();
+
+                        //rotate current log file
+                        let time_stamp = Local::now().format("_%Y-%m-%d_%H-%M-%S");
+                        let log_rotate_name =
+                            format!("logs/{}{}.log", &service_name_clone, time_stamp);
+                        if let Err(e) = fs::rename(&log_name, log_rotate_name) {
+                            warn!("logrotate failed because of {:?}", e.kind());
+                            continue;
+                        }
+
+                        // reconfig
+                        let directives_clone = directives.clone();
+                        let new_config = config_file_appender(&log_name, directives_clone);
+                        handle.set_config(new_config);
+                    }
+                });
+            }
+        }
     });
 }
 
 // use in tests
 pub fn init() {
-    INIT_LOG.call_once(|| {
-        // parse RUST_LOG
-        let directives: Vec<Directive> = match env::var("RUST_LOG") {
-            Ok(s) => parse_env(&s),
-            Err(_) => Vec::new(),
-        };
-        let config = config_console_appender(directives);
-        log4rs::init_config(config).unwrap();
-    });
+    init_config(&LogFavour::Stdout(""));
 }
 
 // use in unit case
@@ -228,9 +234,10 @@ fn config_file_appender(file_path: &str, directives: Vec<Directive>) -> Config {
 }
 
 // ConsoleAppender config
-fn config_console_appender(directives: Vec<Directive>) -> Config {
+fn config_console_appender(service_name: &str, directives: Vec<Directive>) -> Config {
+    let pattern = format!("[{}]: ", service_name) + "{d} - {l} - {m}{n}";
     let stdout = ConsoleAppender::builder()
-        .encoder(Box::new(PatternEncoder::new("{d} - {l} - {m}{n}")))
+        .encoder(Box::new(PatternEncoder::new(&pattern)))
         .build();
 
     let mut config_builder =
