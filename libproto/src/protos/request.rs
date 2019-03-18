@@ -859,6 +859,7 @@ pub enum Request_oneof_req {
     state_proof(StateProof),
     block_header_height(::std::string::String),
     storage_key(StorageKey),
+    software_version(bool),
 }
 
 impl Request {
@@ -1948,6 +1949,31 @@ impl Request {
             _ => StorageKey::default_instance(),
         }
     }
+
+    // bool software_version = 27;
+
+    pub fn clear_software_version(&mut self) {
+        self.req = ::std::option::Option::None;
+    }
+
+    pub fn has_software_version(&self) -> bool {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::software_version(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_software_version(&mut self, v: bool) {
+        self.req = ::std::option::Option::Some(Request_oneof_req::software_version(v))
+    }
+
+    pub fn get_software_version(&self) -> bool {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::software_version(v)) => v,
+            _ => false,
+        }
+    }
 }
 
 impl ::protobuf::Message for Request {
@@ -2137,6 +2163,12 @@ impl ::protobuf::Message for Request {
                     }
                     self.req = ::std::option::Option::Some(Request_oneof_req::storage_key(is.read_message()?));
                 },
+                27 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.req = ::std::option::Option::Some(Request_oneof_req::software_version(is.read_bool()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -2233,6 +2265,9 @@ impl ::protobuf::Message for Request {
                 &Request_oneof_req::storage_key(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &Request_oneof_req::software_version(v) => {
+                    my_size += 3;
                 },
             };
         }
@@ -2331,6 +2366,9 @@ impl ::protobuf::Message for Request {
                     os.write_tag(26, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
+                },
+                &Request_oneof_req::software_version(v) => {
+                    os.write_bool(27, v)?;
                 },
             };
         }
@@ -2506,6 +2544,11 @@ impl ::protobuf::Message for Request {
                     Request::has_storage_key,
                     Request::get_storage_key,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bool_accessor::<_>(
+                    "software_version",
+                    Request::has_software_version,
+                    Request::get_software_version,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<Request>(
                     "Request",
                     fields,
@@ -2554,6 +2597,7 @@ impl ::protobuf::Clear for Request {
         self.clear_state_proof();
         self.clear_block_header_height();
         self.clear_storage_key();
+        self.clear_software_version();
         self.unknown_fields.clear();
     }
 }
@@ -2807,7 +2851,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     R\x08position\x12\x16\n\x06height\x18\x03\x20\x01(\tR\x06height\"Z\n\nSt\
     orageKey\x12\x18\n\x07address\x18\x01\x20\x01(\x0cR\x07address\x12\x1a\n\
     \x08position\x18\x02\x20\x01(\x0cR\x08position\x12\x16\n\x06height\x18\
-    \x03\x20\x01(\tR\x06height\"\xe4\x07\n\x07Request\x12\x1d\n\nrequest_id\
+    \x03\x20\x01(\tR\x06height\"\x91\x08\n\x07Request\x12\x1d\n\nrequest_id\
     \x18\x01\x20\x01(\x0cR\trequestId\x12#\n\x0cblock_number\x18\x02\x20\x01\
     (\x08H\0R\x0bblockNumber\x12$\n\rblock_by_hash\x18\x03\x20\x01(\tH\0R\
     \x0bblockByHash\x12(\n\x0fblock_by_height\x18\x04\x20\x01(\tH\0R\rblockB\
@@ -2830,11 +2874,12 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x07balance\x18\x17\x20\x01(\tH\0R\x07balance\x12.\n\x0bstate_proof\x18\
     \x18\x20\x01(\x0b2\x0b.StateProofH\0R\nstateProof\x120\n\x13block_header\
     _height\x18\x19\x20\x01(\tH\0R\x11blockHeaderHeight\x12.\n\x0bstorage_ke\
-    y\x18\x1a\x20\x01(\x0b2\x0b.StorageKeyH\0R\nstorageKeyB\x05\n\x03req\"@\
-    \n\x0cBatchRequest\x120\n\x0fnew_tx_requests\x18\x01\x20\x03(\x0b2\x08.R\
-    equestR\rnewTxRequests*1\n\x08BlockTag\x12\n\n\x06Latest\x10\0\x12\x0c\n\
-    \x08Earliest\x10\x01\x12\x0b\n\x07Pending\x10\x02J\xc3\x14\n\x06\x12\x04\
-    \0\0@\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\
+    y\x18\x1a\x20\x01(\x0b2\x0b.StorageKeyH\0R\nstorageKey\x12+\n\x10softwar\
+    e_version\x18\x1b\x20\x01(\x08H\0R\x0fsoftwareVersionB\x05\n\x03req\"@\n\
+    \x0cBatchRequest\x120\n\x0fnew_tx_requests\x18\x01\x20\x03(\x0b2\x08.Req\
+    uestR\rnewTxRequests*1\n\x08BlockTag\x12\n\n\x06Latest\x10\0\x12\x0c\n\
+    \x08Earliest\x10\x01\x12\x0b\n\x07Pending\x10\x02J\xfa\x14\n\x06\x12\x04\
+    \0\0A\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\
     \x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\x08\x01\n\n\n\x03\x05\0\x01\x12\
     \x03\x04\x05\r\n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\x04\x0f\n\x0c\n\x05\
     \x05\0\x02\0\x01\x12\x03\x05\x04\n\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\
@@ -2880,12 +2925,12 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x12\x03\x1a\x04\x16\n\r\n\x05\x04\x02\x02\x02\x04\x12\x04\x1a\x04\x19\
     \x17\n\x0c\n\x05\x04\x02\x02\x02\x05\x12\x03\x1a\x04\n\n\x0c\n\x05\x04\
     \x02\x02\x02\x01\x12\x03\x1a\x0b\x11\n\x0c\n\x05\x04\x02\x02\x02\x03\x12\
-    \x03\x1a\x14\x15\n\n\n\x02\x04\x03\x12\x04\x1d\0<\x01\n\n\n\x03\x04\x03\
+    \x03\x1a\x14\x15\n\n\n\x02\x04\x03\x12\x04\x1d\0=\x01\n\n\n\x03\x04\x03\
     \x01\x12\x03\x1d\x08\x0f\n\x0b\n\x04\x04\x03\x02\0\x12\x03\x1e\x04\x19\n\
     \r\n\x05\x04\x03\x02\0\x04\x12\x04\x1e\x04\x1d\x11\n\x0c\n\x05\x04\x03\
     \x02\0\x05\x12\x03\x1e\x04\t\n\x0c\n\x05\x04\x03\x02\0\x01\x12\x03\x1e\n\
     \x14\n\x0c\n\x05\x04\x03\x02\0\x03\x12\x03\x1e\x17\x18\n\x0c\n\x04\x04\
-    \x03\x08\0\x12\x04\x1f\x04;\x05\n\x0c\n\x05\x04\x03\x08\0\x01\x12\x03\
+    \x03\x08\0\x12\x04\x1f\x04<\x05\n\x0c\n\x05\x04\x03\x08\0\x01\x12\x03\
     \x1f\n\r\n\x0b\n\x04\x04\x03\x02\x01\x12\x03\x20\x08\x1e\n\x0c\n\x05\x04\
     \x03\x02\x01\x05\x12\x03\x20\x08\x0c\n\x0c\n\x05\x04\x03\x02\x01\x01\x12\
     \x03\x20\r\x19\n\x0c\n\x05\x04\x03\x02\x01\x03\x12\x03\x20\x1c\x1d\n\x0b\
@@ -2955,11 +3000,14 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x03\x02\x18\x01\x12\x039\x0f\"\n\x0c\n\x05\x04\x03\x02\x18\x03\x12\
     \x039%'\n\x0b\n\x04\x04\x03\x02\x19\x12\x03:\x08$\n\x0c\n\x05\x04\x03\
     \x02\x19\x06\x12\x03:\x08\x12\n\x0c\n\x05\x04\x03\x02\x19\x01\x12\x03:\
-    \x13\x1e\n\x0c\n\x05\x04\x03\x02\x19\x03\x12\x03:!#\n\n\n\x02\x04\x04\
-    \x12\x04>\0@\x01\n\n\n\x03\x04\x04\x01\x12\x03>\x08\x14\n\x0b\n\x04\x04\
-    \x04\x02\0\x12\x03?\x04)\n\x0c\n\x05\x04\x04\x02\0\x04\x12\x03?\x04\x0c\
-    \n\x0c\n\x05\x04\x04\x02\0\x06\x12\x03?\r\x14\n\x0c\n\x05\x04\x04\x02\0\
-    \x01\x12\x03?\x15$\n\x0c\n\x05\x04\x04\x02\0\x03\x12\x03?'(b\x06proto3\
+    \x13\x1e\n\x0c\n\x05\x04\x03\x02\x19\x03\x12\x03:!#\n\x0b\n\x04\x04\x03\
+    \x02\x1a\x12\x03;\x08#\n\x0c\n\x05\x04\x03\x02\x1a\x05\x12\x03;\x08\x0c\
+    \n\x0c\n\x05\x04\x03\x02\x1a\x01\x12\x03;\r\x1d\n\x0c\n\x05\x04\x03\x02\
+    \x1a\x03\x12\x03;\x20\"\n\n\n\x02\x04\x04\x12\x04?\0A\x01\n\n\n\x03\x04\
+    \x04\x01\x12\x03?\x08\x14\n\x0b\n\x04\x04\x04\x02\0\x12\x03@\x04)\n\x0c\
+    \n\x05\x04\x04\x02\0\x04\x12\x03@\x04\x0c\n\x0c\n\x05\x04\x04\x02\0\x06\
+    \x12\x03@\r\x14\n\x0c\n\x05\x04\x04\x02\0\x01\x12\x03@\x15$\n\x0c\n\x05\
+    \x04\x04\x02\0\x03\x12\x03@'(b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
