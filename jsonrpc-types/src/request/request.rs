@@ -22,7 +22,8 @@ use internals::construct_params;
 
 use rpctypes::{
     Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id, Log,
-    MetaData, OneItemTupleTrick, Quantity, Receipt, RpcTransaction, TxResponse, Version,
+    MetaData, OneItemTupleTrick, Quantity, Receipt, RpcTransaction, SoftwareVersion, TxResponse,
+    Version,
 };
 
 pub type Logs = Vec<Log>;
@@ -247,6 +248,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (GetStateProof, GetStateProofParams: [Data20, Data32, BlockNumber], Data),
             (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
             (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
+            (GetVersion, GetVersionParams: [], SoftwareVersion),
         );
     };
 }

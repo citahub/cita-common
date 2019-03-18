@@ -25,6 +25,7 @@ mod log;
 mod meta_data;
 mod proof;
 mod receipt;
+mod software_version;
 mod specs;
 mod transaction;
 mod tx_response;
@@ -47,6 +48,7 @@ pub use self::log::Log;
 pub use self::meta_data::MetaData;
 pub use self::proof::{BftProof, Proof};
 pub use self::receipt::Receipt;
+pub use self::software_version::SoftwareVersion;
 pub use self::transaction::{BlockTransaction, FullTransaction, RpcTransaction};
 pub use self::tx_response::TxResponse;
 

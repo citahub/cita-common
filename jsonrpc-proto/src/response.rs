@@ -18,7 +18,9 @@
 use jsonrpc_types::{
     request::{RequestInfo, ResponseResult},
     response::{Output, RpcFailure, RpcSuccess},
-    rpctypes::{Block, FilterChanges, Log, MetaData, Receipt, RpcBlock, RpcTransaction},
+    rpctypes::{
+        Block, FilterChanges, Log, MetaData, Receipt, RpcBlock, RpcTransaction, SoftwareVersion,
+    },
     Error,
 };
 use libproto::response::{Response, Response_oneof_data};
@@ -148,6 +150,15 @@ impl OutputExt for Output {
                     Response_oneof_data::storage_value(data) => success
                         .set_result(ResponseResult::GetStorageAt(data.into()))
                         .output(),
+                    Response_oneof_data::software_version(data) => {
+                        serde_json::from_str::<SoftwareVersion>(&data)
+                            .map(|data| {
+                                success
+                                    .set_result(ResponseResult::GetVersion(data.into()))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
+                    }
                 }
             } else {
                 match response {

@@ -21,8 +21,8 @@ use request::{
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
     GetTransactionCountParams, GetTransactionParams, GetTransactionProofParams,
-    GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams, PeerCountParams,
-    SendRawTransactionParams, UninstallFilterParams,
+    GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams, NewFilterParams,
+    PeerCountParams, SendRawTransactionParams, UninstallFilterParams,
 };
 use rpctypes::{BlockNumber, CallRequest, Filter, VariadicValue};
 use serde_json;
@@ -227,4 +227,6 @@ fn serialize_and_deserialize() {
         ["earliest"],
         (BlockNumber::earliest())
     );
+
+    test_ser_and_de!(GetVersionParams, [], ());
 }

@@ -20,8 +20,9 @@ use jsonrpc_types::request::{
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
     GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
-    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
+    GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams,
+    NewFilterParams, PeerCountParams, SendRawTransactionParams, SendTransactionParams,
+    UninstallFilterParams,
 };
 use jsonrpc_types::request::{Call, JsonRpcRequest, PartialCall, PartialRequest, Request};
 use jsonrpc_types::{rpctypes::Params as PartialParams, Error};

@@ -25,8 +25,9 @@ pub use self::request::{
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
     GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
-    GetTransactionProofParams, GetTransactionReceiptParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
+    GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams,
+    NewFilterParams, PeerCountParams, SendRawTransactionParams, SendTransactionParams,
+    UninstallFilterParams,
 };
 pub use self::request::{
     Call, JsonRpcRequest, PartialCall, PartialRequest, Request, RequestInfo, ResponseResult,
