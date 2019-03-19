@@ -28,8 +28,8 @@ impl From<PrivKey> for Signer {
     fn from(k: PrivKey) -> Self {
         let keypair = KeyPair::from_privkey(k).unwrap();
         Signer {
-            address: keypair.address().clone(),
-            keypair: keypair,
+            address: keypair.address(),
+            keypair,
         }
     }
 }

@@ -186,12 +186,13 @@ function cargo_run_all_for_clippy () {
 
     cargo_run cita-secp256k1 --features "${SELECT_HASH}"
     cargo_run cita-ed25519 --features "${SELECT_HASH}"
+    cargo_run cita-sm2 --features "${SELECT_HASH}"
 
     for crate in hashable cita-merklehash; do
         cargo_run ${crate} --features "${SELECT_HASH}"
     done
 
-    for crate in db cita-sm2; do
+    for crate in db; do
         cargo_run_skip ${crate} --features "${SELECT_HASH}"
     done
 
