@@ -46,7 +46,7 @@ impl OverlayDB {
     pub fn new(backing: Arc<KeyValueDB>, col: Option<u32>) -> OverlayDB {
         OverlayDB {
             overlay: MemoryDB::new(),
-            backing: backing,
+            backing,
             column: col,
         }
     }
@@ -83,7 +83,7 @@ impl OverlayDB {
                         deletes += if self.put_payload_in_batch(
                             batch,
                             &key,
-                            (back_value, total_rc as u32),
+                            &(back_value, total_rc as u32),
                         ) {
                             1
                         } else {
@@ -94,7 +94,7 @@ impl OverlayDB {
                         if rc < 0 {
                             return Err(From::from(BaseDataError::NegativelyReferencedHash(key)));
                         }
-                        self.put_payload_in_batch(batch, &key, (value, rc as u32));
+                        self.put_payload_in_batch(batch, &key, &(value, rc as u32));
                     }
                 };
                 ret += 1;
@@ -131,7 +131,7 @@ impl OverlayDB {
         &self,
         batch: &mut DBTransaction,
         key: &H256,
-        payload: (DBValue, u32),
+        payload: &(DBValue, u32),
     ) -> bool {
         if payload.1 > 0 {
             let mut s = RlpStream::new_list(2);

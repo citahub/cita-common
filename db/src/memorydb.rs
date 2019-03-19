@@ -188,13 +188,7 @@ impl HashDB for MemoryDB {
     fn keys(&self) -> HashMap<H256, i32> {
         self.data
             .iter()
-            .filter_map(|(k, v)| {
-                if v.1 != 0 {
-                    Some((k.clone(), v.1))
-                } else {
-                    None
-                }
-            })
+            .filter_map(|(k, v)| if v.1 != 0 { Some((*k, v.1)) } else { None })
             .collect()
     }
 
@@ -210,12 +204,12 @@ impl HashDB for MemoryDB {
     }
 
     fn insert(&mut self, value: &[u8]) -> H256 {
-        if value == &NULL_RLP {
-            return HASH_NULL_RLP.clone();
+        if value == NULL_RLP {
+            return HASH_NULL_RLP;
         }
         let key = value.crypt_hash();
         if match self.data.get_mut(&key) {
-            Some(&mut (ref mut old_value, ref mut rc @ -0x80000000i32...0)) => {
+            Some(&mut (ref mut old_value, ref mut rc @ -0x8000_0000i32...0)) => {
                 *old_value = DBValue::from_slice(value);
                 *rc += 1;
                 false
@@ -227,19 +221,18 @@ impl HashDB for MemoryDB {
             None => true,
         } {
             // ... None falls through into...
-            self.data
-                .insert(key.clone(), (DBValue::from_slice(value), 1));
+            self.data.insert(key, (DBValue::from_slice(value), 1));
         }
         key
     }
 
     fn emplace(&mut self, key: H256, value: DBValue) {
-        if &*value == &NULL_RLP {
+        if *value == NULL_RLP {
             return;
         }
 
         match self.data.get_mut(&key) {
-            Some(&mut (ref mut old_value, ref mut rc @ -0x80000000i32...0)) => {
+            Some(&mut (ref mut old_value, ref mut rc @ -0x8000_0000i32...0)) => {
                 *old_value = value;
                 *rc += 1;
                 return;

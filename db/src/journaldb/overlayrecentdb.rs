@@ -97,7 +97,7 @@ impl Clone for OverlayRecentDB {
             transaction_overlay: self.transaction_overlay.clone(),
             backing: self.backing.clone(),
             journal_overlay: self.journal_overlay.clone(),
-            column: self.column.clone(),
+            column: self.column,
         }
     }
 }
@@ -110,8 +110,8 @@ impl OverlayRecentDB {
         let journal_overlay = Arc::new(RwLock::new(OverlayRecentDB::read_overlay(&*backing, col)));
         OverlayRecentDB {
             transaction_overlay: MemoryDB::new(),
-            backing: backing,
-            journal_overlay: journal_overlay,
+            backing,
+            journal_overlay,
             column: col,
         }
     }
@@ -189,9 +189,9 @@ impl OverlayRecentDB {
                         .entry(era)
                         .or_insert_with(Vec::new)
                         .push(JournalEntry {
-                            id: id,
+                            id,
                             insertions: inserted_keys,
-                            deletions: deletions,
+                            deletions,
                         });
                     index += 1;
                     earliest_era = Some(era);
@@ -210,10 +210,10 @@ impl OverlayRecentDB {
         JournalOverlay {
             backing_overlay: overlay,
             pending_overlay: HashMap::default(),
-            journal: journal,
-            latest_era: latest_era,
-            earliest_era: earliest_era,
-            cumulative_size: cumulative_size,
+            journal,
+            latest_era,
+            earliest_era,
+            cumulative_size,
         }
     }
 }
@@ -302,11 +302,11 @@ impl JournalDB for OverlayRecentDB {
         let mut tx = self.transaction_overlay.drain();
         let inserted_keys: Vec<_> = tx
             .iter()
-            .filter_map(|(k, &(_, c))| if c > 0 { Some(k.clone()) } else { None })
+            .filter_map(|(k, &(_, c))| if c > 0 { Some(*k) } else { None })
             .collect();
         let removed_keys: Vec<_> = tx
             .iter()
-            .filter_map(|(k, &(_, c))| if c < 0 { Some(k.clone()) } else { None })
+            .filter_map(|(k, &(_, c))| if c < 0 { Some(*k) } else { None })
             .collect();
         let ops = inserted_keys.len() + removed_keys.len();
 
@@ -353,7 +353,7 @@ impl JournalDB for OverlayRecentDB {
             .entry(now)
             .or_insert_with(Vec::new)
             .push(JournalEntry {
-                id: id.clone(),
+                id: *id,
                 insertions: inserted_keys,
                 deletions: removed_keys,
             });
@@ -377,8 +377,7 @@ impl JournalDB for OverlayRecentDB {
             let mut canon_insertions: Vec<(H256, DBValue)> = Vec::new();
             let mut canon_deletions: Vec<H256> = Vec::new();
             let mut overlay_deletions: Vec<H256> = Vec::new();
-            let mut index = 0usize;
-            for mut journal in records.drain(..) {
+            for (mut index, mut journal) in records.drain(..).enumerate() {
                 //delete the record from the db
                 let mut r = RlpStream::new_list(3);
                 r.append(&end_era);
@@ -393,7 +392,7 @@ impl JournalDB for OverlayRecentDB {
                                 journal_overlay.backing_overlay.raw(&to_short_key(h))
                             {
                                 if rc > 0 {
-                                    canon_insertions.push((h.clone(), d)); //TODO: optimize this to avoid data copy
+                                    canon_insertions.push((*h, d)); //TODO: optimize this to avoid data copy
                                 }
                             }
                         }
@@ -401,7 +400,6 @@ impl JournalDB for OverlayRecentDB {
                     }
                     overlay_deletions.append(&mut journal.insertions);
                 }
-                index += 1;
             }
 
             ops += canon_insertions.len();

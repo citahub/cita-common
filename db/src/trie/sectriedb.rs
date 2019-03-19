@@ -35,9 +35,9 @@ impl<'db> SecTrieDB<'db> {
     /// Initialise to the state entailed by the genesis block.
     /// This guarantees the trie is built correctly.
     /// Returns an error if root does not exist.
-    pub fn new(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
+    pub fn create(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
         Ok(SecTrieDB {
-            raw: TrieDB::new(db, root)?,
+            raw: TrieDB::create(db, root)?,
         })
     }
 
@@ -98,7 +98,7 @@ fn trie_to_sectrie() {
         t.insert(&(&[0x01u8, 0x23]).crypt_hash(), &[0x01u8, 0x23])
             .unwrap();
     }
-    let t = SecTrieDB::new(&memdb, &root).unwrap();
+    let t = SecTrieDB::create(&memdb, &root).unwrap();
     assert_eq!(
         t.get(&[0x01u8, 0x23]).unwrap().unwrap(),
         DBValue::from_slice(&[0x01u8, 0x23])

@@ -56,7 +56,7 @@ impl<'db> FatDBMut<'db> {
         self.raw.db_mut()
     }
 
-    fn to_aux_key(key: &[u8]) -> H256 {
+    fn aux_key(key: &[u8]) -> H256 {
         key.crypt_hash()
     }
 }
@@ -88,7 +88,7 @@ impl<'db> TrieMut for FatDBMut<'db> {
 
         // don't insert if it doesn't exist.
         if out.is_none() {
-            db.emplace(Self::to_aux_key(&hash), DBValue::from_slice(key));
+            db.emplace(Self::aux_key(&hash), DBValue::from_slice(key));
         }
         Ok(out)
     }
@@ -99,7 +99,7 @@ impl<'db> TrieMut for FatDBMut<'db> {
 
         // don't remove if it already exists.
         if out.is_some() {
-            self.raw.db_mut().remove(&Self::to_aux_key(&hash));
+            self.raw.db_mut().remove(&Self::aux_key(&hash));
         }
 
         Ok(out)
@@ -118,7 +118,7 @@ fn fatdb_to_trie() {
         let mut t = FatDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], &[0x01u8, 0x23]).unwrap();
     }
-    let t = TrieDB::new(&memdb, &root).unwrap();
+    let t = TrieDB::create(&memdb, &root).unwrap();
     assert_eq!(
         t.get(&(&[0x01u8, 0x23]).crypt_hash()).unwrap().unwrap(),
         DBValue::from_slice(&[0x01u8, 0x23])
