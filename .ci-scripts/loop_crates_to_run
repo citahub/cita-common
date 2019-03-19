@@ -189,7 +189,7 @@ function cargo_run_all_for_clippy () {
     done
 
     for crate in db cita-secp256k1 cita-ed25519 cita-sm2; do
-        cargo_run_skip ${crate} --features "${SELECT_HASH}"
+        cargo_run ${crate} --features "${SELECT_HASH}"
     done
 
     for crate in cita-crypto; do
