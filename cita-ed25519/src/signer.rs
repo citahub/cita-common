@@ -29,7 +29,7 @@ impl From<PrivKey> for Signer {
         let keypair = KeyPair::from_privkey(privkey).unwrap();
         Signer {
             address: keypair.address(),
-            keypair: keypair,
+            keypair,
         }
     }
 }
