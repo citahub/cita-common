@@ -78,8 +78,8 @@ impl str::FromStr for Algorithm {
 
 impl Algorithm {
     /// Returns static str describing journal database algorithm.
-    pub fn as_str(&self) -> &'static str {
-        match *self {
+    pub fn as_str(self) -> &'static str {
+        match self {
             Algorithm::Archive => "archive",
             Algorithm::EarlyMerge => "light",
             Algorithm::OverlayRecent => "fast",
@@ -88,8 +88,8 @@ impl Algorithm {
     }
 
     /// Returns static str describing journal database algorithm.
-    pub fn as_internal_name_str(&self) -> &'static str {
-        match *self {
+    pub fn as_internal_name_str(self) -> &'static str {
+        match self {
             Algorithm::Archive => "archive",
             Algorithm::EarlyMerge => "earlymerge",
             Algorithm::OverlayRecent => "overlayrecent",
@@ -98,8 +98,8 @@ impl Algorithm {
     }
 
     /// Returns true if pruning strategy is stable
-    pub fn is_stable(&self) -> bool {
-        match *self {
+    pub fn is_stable(self) -> bool {
+        match self {
             Algorithm::Archive | Algorithm::OverlayRecent => true,
             _ => false,
         }

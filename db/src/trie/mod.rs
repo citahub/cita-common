@@ -282,7 +282,7 @@ impl<'db> Trie for TrieKinds<'db> {
 impl TrieFactory {
     /// Creates new factory.
     pub fn new(spec: TrieSpec) -> Self {
-        TrieFactory { spec: spec }
+        TrieFactory { spec }
     }
 
     /// Create new immutable instance of Trie.
@@ -304,7 +304,7 @@ impl TrieFactory {
     }
 
     /// Create new mutable instance of trie and check for errors.
-    pub fn from_existing<'db>(
+    pub fn get_from_existing<'db>(
         &self,
         db: &'db mut HashDB,
         root: &'db mut H256,

@@ -210,9 +210,9 @@ fn hex_prefix_encode(nibbles: &[u8], leaf: bool) -> Vec<u8> {
 fn as_nibbles(bytes: &[u8]) -> Vec<u8> {
     let mut res = vec![];
     res.reserve(bytes.len() * 2);
-    for i in 0..bytes.len() {
-        res.push(bytes[i] >> 4);
-        res.push((bytes[i] << 4) >> 4);
+    for byte in bytes.iter() {
+        res.push(byte >> 4);
+        res.push((byte << 4) >> 4);
     }
     res
 }
@@ -264,20 +264,18 @@ fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStre
     stream.begin_list(17);
 
     // if first key len is equal to prefix_len, move to next element
-    let mut begin = match pre_len == key.len() {
-        true => 1,
-        false => 0,
-    };
+    let mut begin = if pre_len == key.len() { 1 } else { 0 };
 
     // iterate over all possible nibbles
     for i in 0..16 {
         // cout how many successive elements have same next nibble
-        let len = match begin < input.len() {
-            true => input[begin..]
+        let len = if begin < input.len() {
+            input[begin..]
                 .iter()
                 .take_while(|pair| pair.0[pre_len] == i)
-                .count(),
-            false => 0,
+                .count()
+        } else {
+            0
         };
 
         // if at least 1 successive element has the same nibble
@@ -292,13 +290,10 @@ fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStre
     }
 
     // if fist key len is equal prefix, append its value
-    match pre_len == key.len() {
-        true => {
-            stream.append(&value);
-        }
-        false => {
-            stream.append_empty_data();
-        }
+    if pre_len == key.len() {
+        stream.append(&value);
+    } else {
+        stream.append_empty_data();
     };
 }
 

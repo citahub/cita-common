@@ -30,6 +30,8 @@ use hashdb::DBValue;
 /// Required length of prefixes.
 pub const PREFIX_LEN: usize = 12;
 
+type BoxIter<'a> = Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
+
 #[derive(Clone, PartialEq)]
 pub enum DBOp {
     Insert {
@@ -72,7 +74,7 @@ impl DBTransaction {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
         self.ops.push(DBOp::Insert {
-            col: col,
+            col,
             key: ekey,
             value: DBValue::from_slice(value),
         });
@@ -83,7 +85,7 @@ impl DBTransaction {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
         self.ops.push(DBOp::Insert {
-            col: col,
+            col,
             key: ekey,
             value: DBValue::from_vec(value),
         });
@@ -95,7 +97,7 @@ impl DBTransaction {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
         self.ops.push(DBOp::InsertCompressed {
-            col: col,
+            col,
             key: ekey,
             value: DBValue::from_vec(value),
         });
@@ -105,10 +107,7 @@ impl DBTransaction {
     pub fn delete(&mut self, col: Option<u32>, key: &[u8]) {
         let mut ekey = ElasticArray32::new();
         ekey.append_slice(key);
-        self.ops.push(DBOp::Delete {
-            col: col,
-            key: ekey,
-        });
+        self.ops.push(DBOp::Delete { col, key: ekey });
     }
 }
 
@@ -155,14 +154,10 @@ pub trait KeyValueDB: Sync + Send {
     fn flush(&self) -> Result<(), String>;
 
     /// Iterate over flushed data for a given column.
-    fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
+    fn iter(&self, col: Option<u32>) -> BoxIter;
 
     /// Iterate over flushed data for a given column, starting from a given prefix.
-    fn iter_from_prefix<'a>(
-        &'a self,
-        col: Option<u32>,
-        prefix: &'a [u8],
-    ) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
+    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> BoxIter;
 
     /// Attempt to replace this database with a new one located at the given path.
     fn restore(&self, new_db: &str) -> Result<(), UtilError>;

@@ -46,7 +46,7 @@ impl OverlayDB {
     pub fn new(backing: Arc<KeyValueDB>, col: Option<u32>) -> OverlayDB {
         OverlayDB {
             overlay: MemoryDB::new(),
-            backing: backing,
+            backing,
             column: col,
         }
     }

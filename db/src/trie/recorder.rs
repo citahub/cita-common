@@ -67,7 +67,7 @@ impl Recorder {
 
         if depth >= self.min_depth {
             self.nodes.push(Record {
-                depth: depth,
+                depth,
                 data: data.into(),
                 hash: *hash,
             })

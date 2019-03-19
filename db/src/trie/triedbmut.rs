@@ -304,9 +304,9 @@ impl<'a> TrieDBMut<'a> {
 
         TrieDBMut {
             storage: NodeStorage::empty(),
-            db: db,
-            root: root,
-            root_handle: root_handle,
+            db,
+            root,
+            root_handle,
             death_row: HashSet::new(),
             hash_count: 0,
         }
@@ -322,9 +322,9 @@ impl<'a> TrieDBMut<'a> {
         let root_handle = NodeHandle::Hash(*root);
         Ok(TrieDBMut {
             storage: NodeStorage::empty(),
-            db: db,
-            root: root,
-            root_handle: root_handle,
+            db,
+            root,
+            root_handle,
             death_row: HashSet::new(),
             hash_count: 0,
         })
@@ -391,7 +391,7 @@ impl<'a> TrieDBMut<'a> {
                     return Lookup {
                         db: &*self.db,
                         query: DBValue::from_slice,
-                        hash: hash.clone(),
+                        hash: *hash,
                     }
                     .look_up(partial);
                 }
@@ -478,9 +478,10 @@ impl<'a> TrieDBMut<'a> {
                     let branch = Node::Branch(children, Some(value));
                     *old_val = stored_value;
 
-                    match unchanged {
-                        true => InsertAction::Restore(branch),
-                        false => InsertAction::Replace(branch),
+                    if unchanged {
+                        InsertAction::Restore(branch)
+                    } else {
+                        InsertAction::Replace(branch)
                     }
                 } else {
                     let idx = partial.at(0) as usize;
@@ -514,10 +515,10 @@ impl<'a> TrieDBMut<'a> {
                     let unchanged = stored_value == value;
                     *old_val = Some(stored_value);
 
-                    match unchanged {
-                        // unchanged. restore
-                        true => InsertAction::Restore(Node::Leaf(encoded.clone(), value)),
-                        false => InsertAction::Replace(Node::Leaf(encoded.clone(), value)),
+                    if unchanged {
+                        InsertAction::Restore(Node::Leaf(encoded.clone(), value))
+                    } else {
+                        InsertAction::Replace(Node::Leaf(encoded.clone(), value))
                     }
                 } else if cp == 0 {
                     trace!(target: "trie", "no-common-prefix, not-both-empty (exist={:?}; new={:?}): TRANSMUTE,AUGMENT", existing_key.len(), partial.len());
@@ -614,9 +615,10 @@ impl<'a> TrieDBMut<'a> {
                     let new_ext = Node::Extension(existing_key.encoded(false), new_child.into());
 
                     // if the child branch wasn't changed, meaning this extension remains the same.
-                    match changed {
-                        true => InsertAction::Replace(new_ext),
-                        false => InsertAction::Restore(new_ext),
+                    if changed {
+                        InsertAction::Replace(new_ext)
+                    } else {
+                        InsertAction::Restore(new_ext)
                     }
                 } else {
                     trace!(target: "trie", "partially-shared-prefix (exist={:?}; new={:?}; cp={:?}): AUGMENT-AT-END", existing_key.len(), partial.len(), cp);
@@ -684,11 +686,10 @@ impl<'a> TrieDBMut<'a> {
                         Some((new, changed)) => {
                             children[idx] = Some(new.into());
                             let branch = Node::Branch(children, value);
-                            match changed {
-                                // child was changed, so we were too.
-                                true => Action::Replace(branch),
-                                // unchanged, so we are too.
-                                false => Action::Restore(branch),
+                            if changed {
+                                Action::Replace(branch)
+                            } else {
+                                Action::Restore(branch)
                             }
                         }
                         None => {
@@ -728,11 +729,10 @@ impl<'a> TrieDBMut<'a> {
 
                             // if the child branch was unchanged, then the extension is too.
                             // otherwise, this extension may need fixing.
-                            match changed {
-                                true => {
-                                    Action::Replace(self.fix(Node::Extension(encoded, new_child))?)
-                                }
-                                false => Action::Restore(Node::Extension(encoded, new_child)),
+                            if changed {
+                                Action::Replace(self.fix(Node::Extension(encoded, new_child))?)
+                            } else {
+                                Action::Restore(Node::Extension(encoded, new_child))
                             }
                         }
                         None => {
@@ -766,8 +766,8 @@ impl<'a> TrieDBMut<'a> {
                     Many,
                 };
                 let mut used_index = UsedIndex::None;
-                for i in 0..16 {
-                    match (children[i].is_none(), &used_index) {
+                for (i, children) in children.iter().enumerate().take(16) {
+                    match (children.is_none(), &used_index) {
                         (false, &UsedIndex::None) => used_index = UsedIndex::One(i as u8),
                         (false, &UsedIndex::One(_)) => {
                             used_index = UsedIndex::Many;
@@ -1060,7 +1060,7 @@ mod tests {
             memtrie.commit();
             if *memtrie.root() != real {
                 println!("TRIE MISMATCH");
-                println!("");
+                println!();
                 println!("{:?} vs {:?}", memtrie.root(), real);
                 for i in &x {
                     println!("{:?} -> {:?}", i.0.pretty(), i.1.pretty());
@@ -1071,7 +1071,7 @@ mod tests {
             memtrie.commit();
             if *memtrie.root() != HASH_NULL_RLP {
                 println!("- TRIE MISMATCH");
-                println!("");
+                println!();
                 println!("{:?} vs {:?}", memtrie.root(), real);
                 for i in &x {
                     println!("{:?} -> {:?}", i.0.pretty(), i.1.pretty());
@@ -1339,7 +1339,7 @@ mod tests {
             let mut memtrie_sorted = populate_trie(&mut memdb2, &mut root2, &y);
             if *memtrie.root() != real || *memtrie_sorted.root() != real {
                 println!("TRIE MISMATCH");
-                println!("");
+                println!();
                 println!("ORIGINAL... {:?}", memtrie.root());
                 for i in &x {
                     println!("{:?} -> {:?}", i.0.pretty(), i.1.pretty());

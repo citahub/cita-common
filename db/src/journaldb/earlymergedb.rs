@@ -145,9 +145,9 @@ impl EarlyMergeDB {
         let refs = Some(Arc::new(RwLock::new(refs)));
         EarlyMergeDB {
             overlay: MemoryDB::new(),
-            backing: backing,
-            refs: refs,
-            latest_era: latest_era,
+            backing,
+            refs,
+            latest_era,
             column: col,
         }
     }
@@ -450,8 +450,8 @@ impl JournalDB for EarlyMergeDB {
             overlay: self.overlay.clone(),
             backing: self.backing.clone(),
             refs: self.refs.clone(),
-            latest_era: self.latest_era.clone(),
-            column: self.column.clone(),
+            latest_era: self.latest_era,
+            column: self.column,
         })
     }
 
@@ -525,7 +525,7 @@ impl JournalDB for EarlyMergeDB {
 
             let removes: Vec<H256> = drained
                 .iter()
-                .filter_map(|(k, &(_, c))| if c < 0 { Some(k.clone()) } else { None })
+                .filter_map(|(k, &(_, c))| if c < 0 { Some(*k) } else { None })
                 .collect();
             let inserts: Vec<(H256, _)> = drained
                 .into_iter()

@@ -60,9 +60,10 @@ impl<'a, Q: Query> Lookup<'a, Q> {
             loop {
                 match Node::decoded(node_data) {
                     Node::Leaf(slice, value) => {
-                        return Ok(match slice == key {
-                            true => Some(self.query.decode(value)),
-                            false => None,
+                        return Ok(if slice == key {
+                            Some(self.query.decode(value))
+                        } else {
+                            None
                         });
                     }
                     Node::Extension(slice, item) => {
@@ -73,13 +74,15 @@ impl<'a, Q: Query> Lookup<'a, Q> {
                             return Ok(None);
                         }
                     }
-                    Node::Branch(children, value) => match key.is_empty() {
-                        true => return Ok(value.map(move |val| self.query.decode(val))),
-                        false => {
+                    Node::Branch(children, value) => {
+                        if key.is_empty() {
+                            return Ok(value.map(move |val| self.query.decode(val)));
+                        } else {
                             node_data = children[key.at(0) as usize];
                             key = key.mid(1);
                         }
-                    },
+                    }
+
                     _ => return Ok(None),
                 }
 

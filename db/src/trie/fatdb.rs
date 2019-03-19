@@ -90,7 +90,7 @@ impl<'db> FatDBIterator<'db> {
     pub fn new(trie: &'db TrieDB) -> super::Result<Self> {
         Ok(FatDBIterator {
             trie_iterator: TrieDBIterator::new(trie)?,
-            trie: trie,
+            trie,
         })
     }
 }
