@@ -27,9 +27,9 @@ use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::cmp::PartialEq;
+use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-use std::{fmt, mem};
 use types::H256;
 
 pub struct Signature(pub [u8; 65]);
@@ -81,7 +81,7 @@ impl Signature {
 // remove when integer generics exist
 impl PartialEq for Signature {
     fn eq(&self, other: &Self) -> bool {
-        &self.0[..] == &other.0[..]
+        self.0[..] == other.0[..]
     }
 }
 
@@ -246,7 +246,8 @@ impl DerefMut for Signature {
 pub fn sign(privkey: &PrivKey, message: &Message) -> Result<Signature, Error> {
     let context = &SECP256K1;
     // no way to create from raw byte array.
-    let sec: &SecretKey = unsafe { mem::transmute(privkey) };
+    let sec: &SecretKey =
+        unsafe { &*(privkey as *const types::H256 as *const secp256k1::SecretKey) };
     let s = context.sign_recoverable(&SecpMessage::from_slice(&message.0[..])?, sec);
     let (rec_id, data) = s.serialize_compact();
     let mut data_arr = [0; 65];
@@ -265,7 +266,7 @@ pub fn verify_public(
     let context = &SECP256K1;
     let rsig = RecoverableSignature::from_compact(
         &signature[0..64],
-        RecoveryId::from_i32(signature[64] as i32)?,
+        RecoveryId::from_i32(i32::from(signature[64]))?,
     )?;
     let sig = rsig.to_standard();
 
@@ -297,7 +298,7 @@ pub fn recover(signature: &Signature, message: &Message) -> Result<PubKey, Error
     let context = &SECP256K1;
     let rsig = RecoverableSignature::from_compact(
         &signature[0..64],
-        RecoveryId::from_i32(signature[64] as i32)?,
+        RecoveryId::from_i32(i32::from(signature[64]))?,
     )?;
     let publ = context.recover(&SecpMessage::from_slice(&message.0[..])?, &rsig)?;
     let serialized = publ.serialize_uncompressed();
@@ -316,7 +317,8 @@ impl Sign for Signature {
     fn sign(privkey: &Self::PrivKey, message: &Self::Message) -> Result<Self, Self::Error> {
         let context = &SECP256K1;
         // no way to create from raw byte array.
-        let sec: &SecretKey = unsafe { mem::transmute(privkey) };
+        let sec: &SecretKey =
+            unsafe { &*(privkey as *const types::H256 as *const secp256k1::SecretKey) };
         let msg = SecpMessage::from_slice(&message.0[..]).unwrap();
         let s = context.sign_recoverable(&msg, sec);
         let (rec_id, data) = s.serialize_compact();
@@ -332,7 +334,7 @@ impl Sign for Signature {
         let context = &SECP256K1;
         let rsig = RecoverableSignature::from_compact(
             &self.0[0..64],
-            RecoveryId::from_i32(self.0[64] as i32)?,
+            RecoveryId::from_i32(i32::from(self.0[64]))?,
         )?;
         let publ = context.recover(&SecpMessage::from_slice(&message.0[..])?, &rsig)?;
         let serialized = publ.serialize_uncompressed();
@@ -350,7 +352,7 @@ impl Sign for Signature {
         let context = &SECP256K1;
         let rsig = RecoverableSignature::from_compact(
             &self.0[0..64],
-            RecoveryId::from_i32(self.0[64] as i32)?,
+            RecoveryId::from_i32(i32::from(self.0[64]))?,
         )?;
         let sig = rsig.to_standard();
 
