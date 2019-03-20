@@ -71,6 +71,17 @@ impl TryIntoProto<ProtoRequest> for PeerCountParams {
     }
 }
 
+impl TryIntoProto<ProtoRequest> for PeersInfoParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_peers_info(true);
+        Ok(request)
+    }
+}
+
 impl TryIntoProto<ProtoRequest> for SendRawTransactionParams {
     type Error = Error;
 
