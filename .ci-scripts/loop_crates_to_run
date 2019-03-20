@@ -196,7 +196,9 @@ function cargo_run_all_for_clippy () {
         cargo_run_skip ${crate} --features "${SELECT_CRYPTO}"
     done
 
-    for crate in libproto proof tx_pool jsonrpc-proto engine; do
+    cargo_run proof --features "${SELECT_HASH} ${SELECT_CRYPTO}"
+
+    for crate in libproto tx_pool jsonrpc-proto engine; do
         cargo_run_skip ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
 }

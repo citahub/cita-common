@@ -56,10 +56,10 @@ impl BftProof {
         commits: HashMap<Address, Signature>,
     ) -> BftProof {
         BftProof {
-            height: height,
-            round: round,
-            proposal: proposal,
-            commits: commits,
+            height,
+            round,
+            proposal,
+            commits,
         }
     }
 
@@ -99,7 +99,7 @@ impl BftProof {
         if self.round == MAX {
             return true;
         }
-        return false;
+        false
     }
 
     // Check proof commits
@@ -116,19 +116,13 @@ impl BftProof {
         self.commits.iter().all(|(sender, sig)| {
             if authorities.contains(sender) {
                 let msg = serialize(
-                    &(
-                        h,
-                        self.round,
-                        Step::Precommit,
-                        sender,
-                        Some(self.proposal.clone()),
-                    ),
+                    &(h, self.round, Step::Precommit, sender, Some(self.proposal)),
                     Infinite,
                 )
                 .unwrap();
-                let signature = Signature(sig.0.into());
-                if let Ok(pubkey) = signature.recover(&msg.crypt_hash().into()) {
-                    return pubkey_to_address(&pubkey) == sender.clone().into();
+                let signature = Signature(sig.0);
+                if let Ok(pubkey) = signature.recover(&msg.crypt_hash()) {
+                    return pubkey_to_address(&pubkey) == *sender;
                 }
             }
             false
