@@ -247,6 +247,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (GetBlockHeader, GetBlockHeaderParams: [BlockNumber], Data),
             (GetStorageAt, GetStorageKeyParams: [Data20, Data32, BlockNumber], Data),
             (GetVersion, GetVersionParams: [], SoftwareVersion),
+            (GetPeersInfo, GetPeersInfoParams: [], PeersInfo),
         );
     };
 }
