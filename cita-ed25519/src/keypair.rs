@@ -25,7 +25,7 @@ use std::fmt;
 use types::H160;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
-    Address::from(H160::from(pubkey.crypt_hash()))
+    H160::from(pubkey.crypt_hash())
 }
 
 #[derive(Default)]

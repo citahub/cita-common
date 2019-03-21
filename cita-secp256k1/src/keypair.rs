@@ -25,7 +25,7 @@ use std::fmt;
 use types::H160;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
-    Address::from(H160::from(pubkey.crypt_hash()))
+    H160::from(pubkey.crypt_hash())
 }
 
 /// key pair
@@ -58,10 +58,7 @@ impl CreateKey for KeyPair {
         let mut pubkey = PubKey::default();
         pubkey.0.copy_from_slice(&serialized[1..65]);
 
-        let keypair = KeyPair {
-            privkey: privkey,
-            pubkey: pubkey,
-        };
+        let keypair = KeyPair { privkey, pubkey };
 
         Ok(keypair)
     }
@@ -74,10 +71,7 @@ impl CreateKey for KeyPair {
         privkey.0.copy_from_slice(&s[0..32]);
         let mut pubkey = PubKey::default();
         pubkey.0.copy_from_slice(&serialized[1..65]);
-        KeyPair {
-            privkey: privkey,
-            pubkey: pubkey,
-        }
+        KeyPair { privkey, pubkey }
     }
 
     fn privkey(&self) -> &Self::PrivKey {
