@@ -19,7 +19,8 @@ use jsonrpc_types::{
     rpc_request::{RequestInfo, ResponseResult},
     rpc_response::{Output, RpcFailure, RpcSuccess},
     rpc_types::{
-        Block, FilterChanges, Log, MetaData, Receipt, RpcBlock, RpcTransaction, SoftwareVersion,
+        Block, FilterChanges, Log, MetaData, PeersInfo, Receipt, RpcBlock, RpcTransaction,
+        SoftwareVersion,
     },
     Error,
 };
@@ -155,6 +156,15 @@ impl OutputExt for Output {
                             .map(|data| {
                                 success
                                     .set_result(ResponseResult::GetVersion(data.into()))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
+                    }
+                    Response_oneof_data::peers_info(data) => {
+                        serde_json::from_str::<PeersInfo>(&data)
+                            .map(|data| {
+                                success
+                                    .set_result(ResponseResult::PeersInfo(data.into()))
                                     .output()
                             })
                             .unwrap_or_else(|_| Output::system_error(0))

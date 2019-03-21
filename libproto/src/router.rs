@@ -90,6 +90,7 @@ pub enum MsgType {
     RequestNet,
     LocalSync,
     RequestRpc,
+    RequestPeersInfo,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -183,6 +184,7 @@ impl fmt::Display for MsgType {
                 &MsgType::RequestNet => "request_net",
                 &MsgType::LocalSync => "local_sync",
                 &MsgType::RequestRpc => "request_rpc",
+                &MsgType::RequestPeersInfo => "request_peers_info",
             }
         )
     }
@@ -248,6 +250,7 @@ impl<'a> From<&'a str> for MsgType {
             "request_net" => MsgType::RequestNet,
             "local_sync" => MsgType::LocalSync,
             "request_rpc" => MsgType::RequestRpc,
+            "request_peers_info" => MsgType::RequestPeersInfo,
             _ => MsgType::Unknown,
         }
     }
