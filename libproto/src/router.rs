@@ -89,6 +89,7 @@ pub enum MsgType {
     RequestNewTxBatch,
     RequestNet,
     LocalSync,
+    RequestRpc,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -181,6 +182,7 @@ impl fmt::Display for MsgType {
                 &MsgType::RequestNewTxBatch => "request_new_tx_batch",
                 &MsgType::RequestNet => "request_net",
                 &MsgType::LocalSync => "local_sync",
+                &MsgType::RequestRpc => "request_rpc",
             }
         )
     }
@@ -245,6 +247,7 @@ impl<'a> From<&'a str> for MsgType {
             "request_new_tx_batch" => MsgType::RequestNewTxBatch,
             "request_net" => MsgType::RequestNet,
             "local_sync" => MsgType::LocalSync,
+            "request_rpc" => MsgType::RequestRpc,
             _ => MsgType::Unknown,
         }
     }

@@ -49,6 +49,17 @@ impl TryIntoProto<ProtoRequest> for BlockNumberParams {
     }
 }
 
+impl TryIntoProto<ProtoRequest> for GetVersionParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_software_version(true);
+        Ok(request)
+    }
+}
+
 impl TryIntoProto<ProtoRequest> for PeerCountParams {
     type Error = Error;
 
