@@ -17,8 +17,8 @@
 
 use cita_types::{clean_0x, traits::LowerHex};
 use jsonrpc_types::{
-    request::*, // bring in varied Params
-    rpctypes::{BlockParamsByHash, BlockParamsByNumber, CountOrCode},
+    rpc_request::*, // bring in varied Params
+    rpc_types::{BlockParamsByHash, BlockParamsByNumber, CountOrCode},
     Error,
 };
 use libproto::{request::Request as ProtoRequest, UnverifiedTransaction};

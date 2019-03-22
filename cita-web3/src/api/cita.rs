@@ -21,7 +21,7 @@ use web3::api::Namespace;
 use web3::helpers::CallFuture;
 use web3::Transport;
 
-use types::request;
+use types::rpc_request::JsonRpcRequest;
 
 /// `Cita` namespace
 #[derive(Debug, Clone)]
@@ -45,7 +45,7 @@ impl<T: Transport> Namespace<T> for Cita<T> {
 impl<T: Transport> Cita<T> {
     pub fn call<P>(&self, param: P) -> CallFuture<P::Response, T::Out>
     where
-        P: request::JsonRpcRequest,
+        P: JsonRpcRequest,
     {
         CallFuture::new(
             self.transport

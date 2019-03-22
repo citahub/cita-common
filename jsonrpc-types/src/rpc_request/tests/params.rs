@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::{H160, H256, U256};
-use request::{
+use rpc_request::{
     BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
@@ -24,7 +24,7 @@ use request::{
     GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams, NewFilterParams,
     PeerCountParams, SendRawTransactionParams, UninstallFilterParams,
 };
-use rpctypes::{BlockNumber, CallRequest, Filter, VariadicValue};
+use rpc_types::{BlockNumber, CallRequest, Filter, VariadicValue};
 use serde_json;
 use std::convert::Into;
 

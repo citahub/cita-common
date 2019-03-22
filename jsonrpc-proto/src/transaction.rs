@@ -17,7 +17,7 @@
 
 use cita_types::{traits::LowerHex, H256, U256};
 use jsonrpc_types::{
-    rpctypes::{Data, FullTransaction, RpcTransaction},
+    rpc_types::{Data, FullTransaction, RpcTransaction},
     Error,
 };
 use libproto::{

@@ -81,17 +81,15 @@ impl<'de> Visitor<'de> for DataVisitor {
                 }
             })?;
             Ok(Data::new(data))
+        } else if value.len() > 12 {
+            Err(E::custom(format!(
+                "invalid format: [{}..(omit {})..{}]",
+                &value[..6],
+                value.len() - 12,
+                &value[value.len() - 6..value.len()]
+            )))
         } else {
-            if value.len() > 12 {
-                Err(E::custom(format!(
-                    "invalid format: [{}..(omit {})..{}]",
-                    &value[..6],
-                    value.len() - 12,
-                    &value[value.len() - 6..value.len()]
-                )))
-            } else {
-                Err(E::custom(format!("invalid format: [{}]", value)))
-            }
+            Err(E::custom(format!("invalid format: [{}]", value)))
         }
     }
 

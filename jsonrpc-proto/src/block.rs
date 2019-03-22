@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use cita_types::{Address, H256, U256};
-use jsonrpc_types::rpctypes::{
+use jsonrpc_types::rpc_types::{
     Block, BlockBody, BlockHeader, BlockTransaction, FullTransaction, Proof, RpcBlock,
 };
 use jsonrpc_types::Error;

@@ -21,7 +21,7 @@ use serde::ser::Serialize;
 use serde::{Deserialize, Deserializer, Serializer};
 use serde_json::{from_value, Value};
 
-use rpctypes::{BlockNumber, Data20, Data32, VariadicValue};
+use rpc_types::{BlockNumber, Data20, Data32, VariadicValue};
 
 /// Filter Address
 pub type FilterAddress = VariadicValue<Data20>;
@@ -104,7 +104,7 @@ impl<'de> Deserialize<'de> for FilterChanges {
         let v: Value = Deserialize::deserialize(deserializer)?;
         match v.clone() {
             Value::Array(filter_change) => {
-                if filter_change.len() == 0 {
+                if filter_change.is_empty() {
                     Ok(FilterChanges::Empty)
                 } else {
                     from_value(v.clone())

@@ -16,9 +16,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use jsonrpc_types::{
-    request::{RequestInfo, ResponseResult},
-    response::{Output, RpcFailure, RpcSuccess},
-    rpctypes::{
+    rpc_request::{RequestInfo, ResponseResult},
+    rpc_response::{Output, RpcFailure, RpcSuccess},
+    rpc_types::{
         Block, FilterChanges, Log, MetaData, Receipt, RpcBlock, RpcTransaction, SoftwareVersion,
     },
     Error,

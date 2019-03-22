@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use jsonrpc_types::request::{
+use jsonrpc_types::rpc_request::{
     BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
@@ -24,8 +24,8 @@ use jsonrpc_types::request::{
     NewFilterParams, PeerCountParams, SendRawTransactionParams, SendTransactionParams,
     UninstallFilterParams,
 };
-use jsonrpc_types::request::{Call, JsonRpcRequest, PartialCall, PartialRequest, Request};
-use jsonrpc_types::{rpctypes::Params as PartialParams, Error};
+use jsonrpc_types::rpc_request::{Call, JsonRpcRequest, PartialCall, PartialRequest, Request};
+use jsonrpc_types::{rpc_types::Params as PartialParams, Error};
 use libproto::Request as ProtoRequest;
 use serde_json;
 

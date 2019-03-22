@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use bincode::deserialize;
 use cita_types::Address;
 use jsonrpc_types::{
-    rpctypes::{BftProof, Proof},
+    rpc_types::{BftProof, Proof},
     Error,
 };
 use libproto::blockchain::{Proof as ProtoProof, ProofType as ProtoProofType};
