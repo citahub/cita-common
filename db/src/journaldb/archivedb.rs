@@ -52,8 +52,8 @@ impl ArchiveDB {
             .map(|val| decode::<u64>(&val));
         ArchiveDB {
             overlay: MemoryDB::new(),
-            backing: backing,
-            latest_era: latest_era,
+            backing,
+            latest_era,
             column: col,
         }
     }
@@ -120,7 +120,7 @@ impl JournalDB for ArchiveDB {
             overlay: self.overlay.clone(),
             backing: self.backing.clone(),
             latest_era: self.latest_era,
-            column: self.column.clone(),
+            column: self.column,
         })
     }
 

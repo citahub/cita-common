@@ -145,9 +145,9 @@ impl EarlyMergeDB {
         let refs = Some(Arc::new(RwLock::new(refs)));
         EarlyMergeDB {
             overlay: MemoryDB::new(),
-            backing: backing,
-            refs: refs,
-            latest_era: latest_era,
+            backing,
+            refs,
+            latest_era,
             column: col,
         }
     }
@@ -267,7 +267,7 @@ impl EarlyMergeDB {
         refs: &mut HashMap<H256, RefInfo>,
         batch: &mut DBTransaction,
         col: Option<u32>,
-        from: RemoveFrom,
+        from: &RemoveFrom,
         trace: bool,
     ) {
         // with a remove on {queue_refs: 1, in_archive: true}, we have two options:
@@ -279,7 +279,7 @@ impl EarlyMergeDB {
         for h in deletes.iter() {
             let mut n: Option<RefInfo> = None;
             if let Some(c) = refs.get_mut(h) {
-                if c.in_archive && from == RemoveFrom::Archive {
+                if c.in_archive && from == &RemoveFrom::Archive {
                     c.in_archive = false;
                     Self::reset_already_in(batch, col, h);
                     if trace {
@@ -450,8 +450,8 @@ impl JournalDB for EarlyMergeDB {
             overlay: self.overlay.clone(),
             backing: self.backing.clone(),
             refs: self.refs.clone(),
-            latest_era: self.latest_era.clone(),
-            column: self.column.clone(),
+            latest_era: self.latest_era,
+            column: self.column,
         })
     }
 
@@ -525,7 +525,7 @@ impl JournalDB for EarlyMergeDB {
 
             let removes: Vec<H256> = drained
                 .iter()
-                .filter_map(|(k, &(_, c))| if c < 0 { Some(k.clone()) } else { None })
+                .filter_map(|(k, &(_, c))| if c < 0 { Some(*k) } else { None })
                 .collect();
             let inserts: Vec<(H256, _)> = drained
                 .into_iter()
@@ -617,7 +617,7 @@ impl JournalDB for EarlyMergeDB {
                     &mut refs,
                     batch,
                     self.column,
-                    RemoveFrom::Archive,
+                    &RemoveFrom::Archive,
                     trace,
                 );
 
@@ -666,7 +666,7 @@ impl JournalDB for EarlyMergeDB {
                     &mut refs,
                     batch,
                     self.column,
-                    RemoveFrom::Queue,
+                    &RemoveFrom::Queue,
                     trace,
                 );
             }

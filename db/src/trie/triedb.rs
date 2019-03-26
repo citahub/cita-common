@@ -48,7 +48,7 @@ use util::{nibbleslice::NibbleSlice, Bytes, ToPretty};
 ///   let mut memdb = MemoryDB::new();
 ///   let mut root = H256::new();
 ///   TrieDBMut::new(&mut memdb, &mut root).insert(b"foo", b"bar").unwrap();
-///   let t = TrieDB::new(&memdb, &root).unwrap();
+///   let t = TrieDB::create(&memdb, &root).unwrap();
 ///   assert!(t.contains(b"foo").unwrap());
 ///   assert_eq!(t.get(b"foo").unwrap().unwrap(), DBValue::from_slice(b"bar"));
 /// }
@@ -64,13 +64,13 @@ pub struct TrieDB<'db> {
 impl<'db> TrieDB<'db> {
     /// Create a new trie with the backing database `db` and `root`
     /// Returns an error if `root` does not exist
-    pub fn new(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
+    pub fn create(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
         if !db.contains(root) {
             Err(Box::new(TrieError::InvalidStateRoot(*root)))
         } else {
             Ok(TrieDB {
-                db: db,
-                root: root,
+                db,
+                root,
                 hash_count: 0,
             })
         }
@@ -97,29 +97,29 @@ impl<'db> TrieDB<'db> {
     }
 
     /// Recursion helper for implementation of formatting trait.
-    fn fmt_all(&self, node: Node, f: &mut fmt::Formatter, deepness: usize) -> fmt::Result {
+    fn fmt_all(&self, node: &Node, f: &mut fmt::Formatter, deepness: usize) -> fmt::Result {
         match node {
             Node::Leaf(slice, value) => writeln!(f, "'{:?}: {:?}.", slice, value.pretty())?,
             Node::Extension(ref slice, ref item) => {
                 write!(f, "'{:?} ", slice)?;
                 if let Ok(node) = self.get_raw_or_lookup(&*item) {
-                    self.fmt_all(Node::decoded(&node), f, deepness)?;
+                    self.fmt_all(&Node::decoded(&node), f, deepness)?;
                 }
             }
             Node::Branch(ref nodes, ref value) => {
-                writeln!(f, "")?;
+                writeln!(f)?;
                 if let Some(ref v) = *value {
                     self.fmt_indent(f, deepness + 1)?;
                     writeln!(f, "=: {:?}", v.pretty())?
                 }
-                for i in 0..16 {
-                    let node = self.get_raw_or_lookup(&*nodes[i]);
+                for (i, node) in nodes.iter().enumerate().take(16) {
+                    let node = self.get_raw_or_lookup(&*node);
                     match node.as_ref().map(|n| Node::decoded(&*n)) {
                         Ok(Node::Empty) => {}
                         Ok(n) => {
                             self.fmt_indent(f, deepness + 1)?;
                             write!(f, "'{:x} ", i)?;
-                            self.fmt_all(n, f, deepness + 1)?;
+                            self.fmt_all(&n, f, deepness + 1)?;
                         }
                         Err(e) => {
                             write!(f, "ERROR: {}", e)?;
@@ -141,14 +141,13 @@ impl<'db> TrieDB<'db> {
     fn get_raw_or_lookup(&'db self, node: &'db [u8]) -> super::Result<DBValue> {
         // check if its sha3 + len
         let r = Rlp::new(node);
-        match r.is_data() && r.size() == 32 {
-            true => {
-                let key = r.as_val::<H256>();
-                self.db
-                    .get(&key)
-                    .ok_or_else(|| Box::new(TrieError::IncompleteDatabase(key)))
-            }
-            false => Ok(DBValue::from_slice(node)),
+        if r.is_data() && r.size() == 32 {
+            let key = r.as_val::<H256>();
+            self.db
+                .get(&key)
+                .ok_or_else(|| Box::new(TrieError::IncompleteDatabase(key)))
+        } else {
+            Ok(DBValue::from_slice(node))
         }
     }
 }
@@ -159,7 +158,7 @@ pub fn verify_value_proof<Q: Query>(
     proof: &[Bytes],
     query: Q,
 ) -> Option<Q::Item> {
-    if proof.len() == 0 {
+    if proof.is_empty() {
         return None;
     }
 
@@ -175,9 +174,10 @@ pub fn verify_value_proof<Q: Query>(
 
         match Node::decoded(node) {
             Node::Leaf(slice, value) => {
-                return match slice == key {
-                    true => Some(query.decode(value)),
-                    false => None,
+                return if slice == key {
+                    Some(query.decode(value))
+                } else {
+                    None
                 };
             }
             Node::Extension(slice, item) => {
@@ -188,13 +188,14 @@ pub fn verify_value_proof<Q: Query>(
                     return None;
                 }
             }
-            Node::Branch(children, value) => match key.is_empty() {
-                true => return value.map(move |val| query.decode(val)),
-                false => {
+            Node::Branch(children, value) => {
+                if key.is_empty() {
+                    return value.map(move |val| query.decode(val));
+                } else {
                     next_node_data = children[key.at(0) as usize];
                     key = key.mid(1);
                 }
-            },
+            }
             _ => return None,
         }
 
@@ -211,7 +212,7 @@ pub fn verify_value_proof<Q: Query>(
 
 impl<'db> Trie for TrieDB<'db> {
     fn iter<'a>(&'a self) -> super::Result<Box<TrieIterator<Item = TrieItem> + 'a>> {
-        TrieDBIterator::new(self).map(|iter| Box::new(iter) as Box<_>)
+        TrieDBIterator::create(self).map(|iter| Box::new(iter) as Box<_>)
     }
 
     fn root(&self) -> &H256 {
@@ -228,8 +229,8 @@ impl<'db> Trie for TrieDB<'db> {
     {
         Lookup {
             db: self.db,
-            query: query,
-            hash: self.root.clone(),
+            query,
+            hash: *self.root,
         }
         .look_up(NibbleSlice::new(key))
     }
@@ -240,7 +241,7 @@ impl<'db> Trie for TrieDB<'db> {
     {
         let mut path = Vec::new();
         let mut key = NibbleSlice::new(key);
-        let mut hash = self.root.clone();
+        let mut hash = *self.root;
 
         // this loop iterates through non-inline nodes.
         loop {
@@ -266,13 +267,15 @@ impl<'db> Trie for TrieDB<'db> {
                             return None;
                         }
                     }
-                    Node::Branch(children, _value) => match key.is_empty() {
-                        true => return Some(path),
-                        false => {
+                    Node::Branch(children, _value) => {
+                        if key.is_empty() {
+                            return Some(path);
+                        } else {
                             node_data = children[key.at(0) as usize];
                             key = key.mid(1);
                         }
-                    },
+                    }
+
                     _ => return None,
                 }
 
@@ -291,7 +294,7 @@ impl<'db> fmt::Debug for TrieDB<'db> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "c={:?} [", self.hash_count)?;
         let root_rlp = self.db.get(self.root).expect("Trie root not found!");
-        self.fmt_all(Node::decoded(&root_rlp), f, 0)?;
+        self.fmt_all(&Node::decoded(&root_rlp), f, 0)?;
         writeln!(f, "]")
     }
 }
@@ -333,9 +336,9 @@ pub struct TrieDBIterator<'a> {
 
 impl<'a> TrieDBIterator<'a> {
     /// Create a new iterator.
-    pub fn new(db: &'a TrieDB) -> super::Result<TrieDBIterator<'a>> {
+    pub fn create(db: &'a TrieDB) -> super::Result<TrieDBIterator<'a>> {
         let mut r = TrieDBIterator {
-            db: db,
+            db,
             trail: vec![],
             key_nibbles: Vec::new(),
         };
@@ -383,15 +386,14 @@ impl<'a> TrieDBIterator<'a> {
                             return Ok(());
                         }
                     }
-                    Node::Branch(ref nodes, _) => match key.is_empty() {
-                        true => {
+                    Node::Branch(ref nodes, _) => {
+                        if key.is_empty() {
                             self.trail.push(Crumb {
                                 status: Status::At,
                                 node: node.clone().into(),
                             });
                             return Ok(());
-                        }
-                        false => {
+                        } else {
                             let i = key.at(0);
                             self.trail.push(Crumb {
                                 status: Status::AtChild(i as usize),
@@ -401,7 +403,7 @@ impl<'a> TrieDBIterator<'a> {
                             let child = self.db.get_raw_or_lookup(&*nodes[i as usize])?;
                             (child, 1)
                         }
-                    },
+                    }
                     _ => return Ok(()),
                 }
             };
@@ -414,17 +416,18 @@ impl<'a> TrieDBIterator<'a> {
     /// Descend into a payload.
     fn descend(&mut self, d: &[u8]) -> super::Result<()> {
         let node = Node::decoded(&self.db.get_raw_or_lookup(d)?).into();
-        Ok(self.descend_into_node(node))
+        self.descend_into_node(node);
+        Ok(())
     }
 
     /// Descend into a payload.
     fn descend_into_node(&mut self, node: OwnedNode) {
         self.trail.push(Crumb {
             status: Status::Entering,
-            node: node,
+            node,
         });
-        match &self.trail.last().expect("just pushed item; qed").node {
-            &OwnedNode::Leaf(ref n, _) | &OwnedNode::Extension(ref n, _) => {
+        match self.trail.last().expect("just pushed item; qed").node {
+            OwnedNode::Leaf(ref n, _) | OwnedNode::Extension(ref n, _) => {
                 self.key_nibbles.extend((0..n.len()).map(|i| n.at(i)));
             }
             _ => {}
@@ -556,7 +559,7 @@ fn iterator() {
         }
     }
 
-    let t = TrieDB::new(&memdb, &root).unwrap();
+    let t = TrieDB::create(&memdb, &root).unwrap();
     assert_eq!(
         d.iter().map(|i| i.clone().into_vec()).collect::<Vec<_>>(),
         t.iter().unwrap().map(|x| x.unwrap().0).collect::<Vec<_>>()
@@ -589,7 +592,7 @@ fn iterator_seek() {
         }
     }
 
-    let t = TrieDB::new(&memdb, &root).unwrap();
+    let t = TrieDB::create(&memdb, &root).unwrap();
     let mut iter = t.iter().unwrap();
     assert_eq!(
         iter.next(),
@@ -634,7 +637,7 @@ fn get_len() {
         t.insert(b"B", b"ABCBA").unwrap();
     }
 
-    let t = TrieDB::new(&memdb, &root).unwrap();
+    let t = TrieDB::create(&memdb, &root).unwrap();
     assert_eq!(t.get_with(b"A", |x: &[u8]| x.len()), Ok(Some(3)));
     assert_eq!(t.get_with(b"B", |x: &[u8]| x.len()), Ok(Some(5)));
     assert_eq!(t.get_with(b"C", |x: &[u8]| x.len()), Ok(None));
@@ -662,7 +665,7 @@ fn value_proof() {
             .unwrap();
     }
 
-    let trie = TrieDB::new(&memdb, &root).unwrap();
+    let trie = TrieDB::create(&memdb, &root).unwrap();
 
     /*
     println!("trie {:?}", trie);

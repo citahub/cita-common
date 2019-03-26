@@ -72,10 +72,10 @@ impl RefCountedDB {
 
         RefCountedDB {
             forward: OverlayDB::new(backing.clone(), col),
-            backing: backing,
+            backing,
             inserts: vec![],
             removes: vec![],
-            latest_era: latest_era,
+            latest_era,
             column: col,
         }
     }
@@ -100,11 +100,11 @@ impl HashDB for RefCountedDB {
     }
     fn insert(&mut self, value: &[u8]) -> H256 {
         let r = self.forward.insert(value);
-        self.inserts.push(r.clone());
+        self.inserts.push(r);
         r
     }
     fn emplace(&mut self, key: H256, value: DBValue) {
-        self.inserts.push(key.clone());
+        self.inserts.push(key);
         self.forward.emplace(key, value);
     }
     fn remove(&mut self, key: &H256) {
@@ -120,7 +120,7 @@ impl JournalDB for RefCountedDB {
             latest_era: self.latest_era,
             inserts: self.inserts.clone(),
             removes: self.removes.clone(),
-            column: self.column.clone(),
+            column: self.column,
         })
     }
 
@@ -237,7 +237,7 @@ impl JournalDB for RefCountedDB {
     fn consolidate(&mut self, mut with: MemoryDB) {
         for (key, (value, rc)) in with.drain() {
             for _ in 0..rc {
-                self.emplace(key.clone(), value.clone());
+                self.emplace(key, value.clone());
             }
 
             for _ in rc..0 {

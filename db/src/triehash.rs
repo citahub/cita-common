@@ -155,7 +155,7 @@ pub fn sec_trie_root(input: Vec<(Vec<u8>, Vec<u8>)>) -> H256 {
 
 fn gen_trie_root(input: Vec<(Vec<u8>, Vec<u8>)>) -> H256 {
     let mut stream = RlpStream::new();
-    hash256rlp(&input, 0, &mut stream);
+    hash256rlp(input, 0, &mut stream);
     stream.out().crypt_hash()
 }
 
@@ -210,14 +210,14 @@ fn hex_prefix_encode(nibbles: &[u8], leaf: bool) -> Vec<u8> {
 fn as_nibbles(bytes: &[u8]) -> Vec<u8> {
     let mut res = vec![];
     res.reserve(bytes.len() * 2);
-    for i in 0..bytes.len() {
-        res.push(bytes[i] >> 4);
-        res.push((bytes[i] << 4) >> 4);
+    for byte in bytes.iter() {
+        res.push(byte >> 4);
+        res.push((byte << 4) >> 4);
     }
     res
 }
 
-fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStream) {
+fn hash256rlp(input: Vec<(Vec<u8>, Vec<u8>)>, pre_len: usize, stream: &mut RlpStream) {
     let inlen = input.len();
 
     // in case of empty slice, just append empty data
@@ -225,10 +225,9 @@ fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStre
         stream.append_empty_data();
         return;
     }
-
     // take slices
-    let key: &[u8] = &input[0].0;
-    let value: &[u8] = &input[0].1;
+    let key: &[u8] = &input.clone()[0].0;
+    let value: &[u8] = &input.clone()[0].1;
 
     // if the slice contains just one item, append the suffix of the key
     // and then append value
@@ -264,20 +263,18 @@ fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStre
     stream.begin_list(17);
 
     // if first key len is equal to prefix_len, move to next element
-    let mut begin = match pre_len == key.len() {
-        true => 1,
-        false => 0,
-    };
+    let mut begin = if pre_len == key.len() { 1 } else { 0 };
 
     // iterate over all possible nibbles
     for i in 0..16 {
         // cout how many successive elements have same next nibble
-        let len = match begin < input.len() {
-            true => input[begin..]
+        let len = if begin < input.len() {
+            input[begin..]
                 .iter()
                 .take_while(|pair| pair.0[pre_len] == i)
-                .count(),
-            false => 0,
+                .count()
+        } else {
+            0
         };
 
         // if at least 1 successive element has the same nibble
@@ -286,23 +283,20 @@ fn hash256rlp(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStre
             0 => {
                 stream.append_empty_data();
             }
-            _ => hash256aux(&input[begin..(begin + len)], pre_len + 1, stream),
+            _ => hash256aux(input[begin..(begin + len)].to_vec(), pre_len + 1, stream),
         }
         begin += len;
     }
 
     // if fist key len is equal prefix, append its value
-    match pre_len == key.len() {
-        true => {
-            stream.append(&value);
-        }
-        false => {
-            stream.append_empty_data();
-        }
+    if pre_len == key.len() {
+        stream.append(&value);
+    } else {
+        stream.append_empty_data();
     };
 }
 
-fn hash256aux(input: &[(Vec<u8>, Vec<u8>)], pre_len: usize, stream: &mut RlpStream) {
+fn hash256aux(input: Vec<(Vec<u8>, Vec<u8>)>, pre_len: usize, stream: &mut RlpStream) {
     let mut s = RlpStream::new();
     hash256rlp(input, pre_len, &mut s);
     let out = s.out();

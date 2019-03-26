@@ -67,7 +67,7 @@ impl Recorder {
 
         if depth >= self.min_depth {
             self.nodes.push(Record {
-                depth: depth,
+                depth,
                 data: data.into(),
                 hash: *hash,
             })
@@ -160,7 +160,7 @@ mod tests {
             x.insert(b"yo ho ho", b"and a bottle of rum").unwrap();
         }
 
-        let trie = TrieDB::new(&db, &root).unwrap();
+        let trie = TrieDB::create(&db, &root).unwrap();
         let mut recorder = Recorder::new();
 
         trie.get_with(b"pirate", &mut recorder).unwrap().unwrap();

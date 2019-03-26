@@ -24,10 +24,13 @@ use util::{RwLock, UtilError};
 
 use rlp::{Compressible, RlpType, UntrustedRlp};
 
+type Columns = RwLock<HashMap<Option<u32>, BTreeMap<Vec<u8>, DBValue>>>;
+type BoxIter<'a> = Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
+
 /// A key-value database fulfilling the `KeyValueDB` trait, living in memory.
 /// This is generally intended for tests and is not particularly optimized.
 pub struct InMemory {
-    columns: RwLock<HashMap<Option<u32>, BTreeMap<Vec<u8>, DBValue>>>,
+    columns: Columns,
 }
 
 /// Create an in-memory database with the given number of columns.
@@ -95,7 +98,8 @@ impl KeyValueDB for InMemory {
     fn flush(&self) -> Result<(), String> {
         Ok(())
     }
-    fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
+
+    fn iter(&self, col: Option<u32>) -> BoxIter {
         match self.columns.read().get(&col) {
             Some(map) => Box::new(
                 // TODO: worth optimizing at all?
@@ -107,11 +111,7 @@ impl KeyValueDB for InMemory {
         }
     }
 
-    fn iter_from_prefix<'a>(
-        &'a self,
-        col: Option<u32>,
-        prefix: &'a [u8],
-    ) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
+    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> BoxIter {
         match self.columns.read().get(&col) {
             Some(map) => Box::new(
                 map.clone()

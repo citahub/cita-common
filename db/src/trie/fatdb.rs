@@ -33,9 +33,9 @@ impl<'db> FatDB<'db> {
     /// Create a new trie with the backing database `db` and empty `root`
     /// Initialise to the state entailed by the genesis block.
     /// This guarantees the trie is built correctly.
-    pub fn new(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
+    pub fn create(db: &'db HashDB, root: &'db H256) -> super::Result<Self> {
         let fatdb = FatDB {
-            raw: TrieDB::new(db, root)?,
+            raw: TrieDB::create(db, root)?,
         };
 
         Ok(fatdb)
@@ -49,7 +49,7 @@ impl<'db> FatDB<'db> {
 
 impl<'db> Trie for FatDB<'db> {
     fn iter<'a>(&'a self) -> super::Result<Box<TrieIterator<Item = TrieItem> + 'a>> {
-        FatDBIterator::new(&self.raw).map(|iter| Box::new(iter) as Box<_>)
+        FatDBIterator::create(&self.raw).map(|iter| Box::new(iter) as Box<_>)
     }
 
     fn root(&self) -> &H256 {
@@ -87,10 +87,10 @@ pub struct FatDBIterator<'db> {
 
 impl<'db> FatDBIterator<'db> {
     /// Creates new iterator.
-    pub fn new(trie: &'db TrieDB) -> super::Result<Self> {
+    pub fn create(trie: &'db TrieDB) -> super::Result<Self> {
         Ok(FatDBIterator {
-            trie_iterator: TrieDBIterator::new(trie)?,
-            trie: trie,
+            trie_iterator: TrieDBIterator::create(trie)?,
+            trie,
         })
     }
 }
@@ -133,7 +133,7 @@ fn fatdb_to_trie() {
         let mut t = FatDBMut::new(&mut memdb, &mut root);
         t.insert(&[0x01u8, 0x23], &[0x01u8, 0x23]).unwrap();
     }
-    let t = FatDB::new(&memdb, &root).unwrap();
+    let t = FatDB::create(&memdb, &root).unwrap();
     assert_eq!(
         t.get(&[0x01u8, 0x23]).unwrap().unwrap(),
         DBValue::from_slice(&[0x01u8, 0x23])

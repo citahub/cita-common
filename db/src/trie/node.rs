@@ -24,6 +24,7 @@ pub type NodeKey = ElasticArray36<u8>;
 
 /// Type of node in the trie and essential information thereof.
 #[derive(Eq, PartialEq, Debug, Clone)]
+#[allow(clippy::large_enum_variant)]
 pub enum Node<'a> {
     /// Null trie node; could be an empty root or an empty branch entry.
     Empty,
@@ -52,8 +53,8 @@ impl<'a> Node<'a> {
             // branch - first 16 are nodes, 17th is a value (or empty).
             Prototype::List(17) => {
                 let mut nodes = [&[] as &[u8]; 16];
-                for i in 0..16 {
-                    nodes[i] = r.at(i).as_raw();
+                for (i, node) in nodes.iter_mut().enumerate() {
+                    *node = r.at(i).as_raw();
                 }
                 Node::Branch(
                     nodes,
@@ -91,8 +92,8 @@ impl<'a> Node<'a> {
             }
             Node::Branch(ref nodes, ref value) => {
                 let mut stream = RlpStream::new_list(17);
-                for i in 0..16 {
-                    stream.append_raw(nodes[i], 1);
+                for node in nodes.iter().take(16) {
+                    stream.append_raw(node, 1);
                 }
                 match *value {
                     Some(ref n) => {
@@ -115,6 +116,7 @@ impl<'a> Node<'a> {
 
 /// An owning node type. Useful for trie iterators.
 #[derive(Debug, PartialEq, Eq)]
+#[allow(clippy::large_enum_variant)]
 pub enum OwnedNode {
     /// Empty trie node.
     Empty,

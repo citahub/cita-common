@@ -43,6 +43,8 @@ const DB_BACKGROUND_FLUSHES: i32 = 2;
 const DB_BACKGROUND_COMPACTIONS: i32 = 2;
 const DB_WRITE_BUFFER_SIZE: usize = 4 * 64 * 1024 * 1024;
 
+type BoxIter<'a> = Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a>;
+
 enum KeyState {
     Insert(DBValue),
     InsertCompressed(DBValue),
@@ -69,9 +71,9 @@ impl Default for CompactionProfile {
 
 /// Given output of df command return Linux rotational flag file path.
 #[cfg(target_os = "linux")]
-pub fn rotational_from_df_output(df_out: Vec<u8>) -> Option<PathBuf> {
+pub fn rotational_from_df_output(df_out: &[u8]) -> Option<PathBuf> {
     use std::str;
-    str::from_utf8(df_out.as_slice())
+    str::from_utf8(df_out)
         .ok()
         // Get the drive name.
         .and_then(|df_str| {
@@ -97,11 +99,14 @@ impl CompactionProfile {
         let hdd_check_file = db_path
             .to_str()
             .and_then(|path_str| Command::new("df").arg(path_str).output().ok())
-            .and_then(|df_res| match df_res.status.success() {
-                true => Some(df_res.stdout),
-                false => None,
+            .and_then(|df_res| {
+                if df_res.status.success() {
+                    Some(df_res.stdout)
+                } else {
+                    None
+                }
             })
-            .and_then(rotational_from_df_output);
+            .and_then(|stdout| rotational_from_df_output(stdout.as_slice()));
         // Read out the file and match compaction profile.
         if let Some(hdd_check) = hdd_check_file {
             if let Ok(mut file) = File::open(hdd_check.as_path()) {
@@ -340,9 +345,10 @@ impl Database {
                 info!("Attempting DB repair for {}", path);
                 DB::repair(&opts, path)?;
 
-                match cfnames.is_empty() {
-                    true => DB::open(&opts, path)?,
-                    false => DB::open_cf(&opts, path, &cfnames, &cf_options)?,
+                if cfnames.is_empty() {
+                    DB::open(&opts, path)?
+                } else {
+                    DB::open_cf(&opts, path, &cfnames, &cf_options)?
                 }
             }
             Err(s) => {
@@ -351,14 +357,14 @@ impl Database {
         };
         let num_cols = cfs.len();
         Ok(Database {
-            db: RwLock::new(Some(DBAndColumns { db: db, cfs: cfs })),
+            db: RwLock::new(Some(DBAndColumns { db, cfs })),
             config: config.clone(),
-            write_opts: write_opts,
-            overlay: RwLock::new((0..(num_cols + 1)).map(|_| HashMap::new()).collect()),
-            flushing: RwLock::new((0..(num_cols + 1)).map(|_| HashMap::new()).collect()),
+            write_opts,
+            overlay: RwLock::new((0..=num_cols).map(|_| HashMap::new()).collect()),
+            flushing: RwLock::new((0..=num_cols).map(|_| HashMap::new()).collect()),
             flushing_lock: Mutex::new(false),
             path: path.to_owned(),
-            read_opts: read_opts,
+            read_opts,
         })
     }
 
@@ -367,7 +373,7 @@ impl Database {
         DBTransaction::new()
     }
 
-    fn to_overlay_column(col: Option<u32>) -> usize {
+    fn overlay_column(col: Option<u32>) -> usize {
         col.map_or(0, |c| (c + 1) as usize)
     }
 
@@ -378,15 +384,15 @@ impl Database {
         for op in ops {
             match op {
                 DBOp::Insert { col, key, value } => {
-                    let c = Self::to_overlay_column(col);
+                    let c = Self::overlay_column(col);
                     overlay[c].insert(key, KeyState::Insert(value));
                 }
                 DBOp::InsertCompressed { col, key, value } => {
-                    let c = Self::to_overlay_column(col);
+                    let c = Self::overlay_column(col);
                     overlay[c].insert(key, KeyState::InsertCompressed(value));
                 }
                 DBOp::Delete { col, key } => {
-                    let c = Self::to_overlay_column(col);
+                    let c = Self::overlay_column(col);
                     overlay[c].insert(key, KeyState::Delete);
                 }
             }
@@ -491,13 +497,13 @@ impl Database {
     pub fn get(&self, col: Option<u32>, key: &[u8]) -> Result<Option<DBValue>, String> {
         match *self.db.read() {
             Some(DBAndColumns { ref db, ref cfs }) => {
-                let overlay = &self.overlay.read()[Self::to_overlay_column(col)];
+                let overlay = &self.overlay.read()[Self::overlay_column(col)];
                 match overlay.get(key) {
                     Some(&KeyState::Insert(ref value))
                     | Some(&KeyState::InsertCompressed(ref value)) => Ok(Some(value.clone())),
                     Some(&KeyState::Delete) => Ok(None),
                     None => {
-                        let flushing = &self.flushing.read()[Self::to_overlay_column(col)];
+                        let flushing = &self.flushing.read()[Self::overlay_column(col)];
                         match flushing.get(key) {
                             Some(&KeyState::Insert(ref value))
                             | Some(&KeyState::InsertCompressed(ref value)) => {
@@ -554,7 +560,7 @@ impl Database {
                 );
 
                 Some(DatabaseIterator {
-                    iter: iter,
+                    iter,
                     _marker: PhantomData,
                 })
             }
@@ -583,7 +589,7 @@ impl Database {
                 );
 
                 Some(DatabaseIterator {
-                    iter: iter,
+                    iter,
                     _marker: PhantomData,
                 })
             }
@@ -662,9 +668,8 @@ impl Database {
                 ref mut db,
                 ref mut cfs,
             }) => {
-                if let Some(col) = cfs.pop() {
+                if let Some(_col) = cfs.pop() {
                     let name = format!("col{}", cfs.len());
-                    drop(col);
                     db.drop_cf(&name)?;
                 }
                 Ok(())
@@ -713,16 +718,12 @@ impl KeyValueDB for Database {
         Database::flush(self)
     }
 
-    fn iter<'a>(&'a self, col: Option<u32>) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
+    fn iter(&self, col: Option<u32>) -> BoxIter {
         let unboxed = Database::iter(self, col);
         Box::new(unboxed.into_iter().flat_map(|inner| inner))
     }
 
-    fn iter_from_prefix<'a>(
-        &'a self,
-        col: Option<u32>,
-        prefix: &'a [u8],
-    ) -> Box<Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a> {
+    fn iter_from_prefix<'a>(&'a self, col: Option<u32>, prefix: &'a [u8]) -> BoxIter {
         let unboxed = Database::iter_from_prefix(self, col, prefix);
         Box::new(unboxed.into_iter().flat_map(|inner| inner))
     }
@@ -830,7 +831,7 @@ mod tests {
             52, 54, 49, 54, 32, 32, 54, 55, 37, 32, 47, 10,
         ];
         let expected_output = Some(PathBuf::from("/sys/block/sda/queue/rotational"));
-        assert_eq!(rotational_from_df_output(example_df), expected_output);
+        assert_eq!(rotational_from_df_output(&example_df), expected_output);
     }
 
     #[test]

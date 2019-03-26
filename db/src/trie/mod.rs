@@ -282,15 +282,15 @@ impl<'db> Trie for TrieKinds<'db> {
 impl TrieFactory {
     /// Creates new factory.
     pub fn new(spec: TrieSpec) -> Self {
-        TrieFactory { spec: spec }
+        TrieFactory { spec }
     }
 
     /// Create new immutable instance of Trie.
     pub fn readonly<'db>(&self, db: &'db HashDB, root: &'db H256) -> Result<TrieKinds<'db>> {
         match self.spec {
-            TrieSpec::Generic => Ok(TrieKinds::Generic(TrieDB::new(db, root)?)),
-            TrieSpec::Secure => Ok(TrieKinds::Secure(SecTrieDB::new(db, root)?)),
-            TrieSpec::Fat => Ok(TrieKinds::Fat(FatDB::new(db, root)?)),
+            TrieSpec::Generic => Ok(TrieKinds::Generic(TrieDB::create(db, root)?)),
+            TrieSpec::Secure => Ok(TrieKinds::Secure(SecTrieDB::create(db, root)?)),
+            TrieSpec::Fat => Ok(TrieKinds::Fat(FatDB::create(db, root)?)),
         }
     }
 
@@ -304,7 +304,7 @@ impl TrieFactory {
     }
 
     /// Create new mutable instance of trie and check for errors.
-    pub fn from_existing<'db>(
+    pub fn get_from_existing<'db>(
         &self,
         db: &'db mut HashDB,
         root: &'db mut H256,
