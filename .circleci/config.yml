@@ -75,6 +75,18 @@ alias:
       - run: *clean-build-cache-if-too-large
       - save_cache: *save-build-cache
 
+  # TODO: Config every job.
+  - &branches
+    only:
+      # This is where pull requests from "bors r+" are built.
+      - staging
+      # This is where pull requests from "bors try" are built.
+      - trying
+      # For the future when release version
+      - master
+      # Comment this when start to use bors
+      - develop
+
 version: 2
 jobs:
 
@@ -136,20 +148,30 @@ workflows:
   version: 2
   "Build & Test":
     jobs:
-      - "Check Basic"
+      - "Check Basic":
+          filters:
+            branches: *branches
 
       - "Check Clippy":
+          filters:
+            branches: *branches
           requires:
             - "Check Basic"
 
       - "Unit Test (sha3 & secp256k1)":
+          filters:
+            branches: *branches
           requires:
             - "Check Clippy"
 
       - "Unit Test (blake2b & ed25519)":
+          filters:
+            branches: *branches
           requires:
             - "Unit Test (sha3 & secp256k1)"
 
       - "Unit Test (sm3 & sm2)":
+          filters:
+            branches: *branches
           requires:
             - "Unit Test (sha3 & secp256k1)"
