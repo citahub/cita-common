@@ -60,17 +60,15 @@ impl AuthorityManage {
 
         let vec_out = authority_manage.authorities_log.load();
         if !vec_out.is_empty() {
-            if let Ok((h, authorities_old, authorities, validators)) = deserialize(&(vec_out[0].1))
-            {
-                let auth_old: Vec<Address> = authorities_old;
-                let auth: Vec<Address> = authorities;
+            if let Ok((h, authorities, validators_old, validators)) = deserialize(&(vec_out[0].1)) {
+                let authorities: Vec<Address> = authorities;
+                let validators_old: Vec<Address> = validators_old;
                 let validators: Vec<Address> = validators;
 
-                authority_manage.authorities.extend_from_slice(&auth);
-
+                authority_manage.authorities.extend_from_slice(&authorities);
                 authority_manage
-                    .authorities_old
-                    .extend_from_slice(&auth_old);
+                    .validators_old
+                    .extend_from_slice(&validators_old);
                 authority_manage.authority_h_old = h;
                 authority_manage.validators.extend_from_slice(&validators);
             }
@@ -89,7 +87,15 @@ impl AuthorityManage {
         authorities: &[Address],
         validators: &[Address],
     ) {
-        if self.authorities != authorities || self.validators != validators {
+        let flag = if self.validators != validators {
+            2
+        } else if self.authorities != authorities {
+            1
+        } else {
+            0
+        };
+
+        if flag > 0 {
             self.authorities_old.clear();
             self.authorities_old.extend_from_slice(&self.authorities);
             self.validators_old.clear();
@@ -101,7 +107,9 @@ impl AuthorityManage {
             self.validators.clear();
             self.validators.extend_from_slice(&validators);
 
-            self.save();
+            if flag == 2 {
+                self.save();
+            }
         }
     }
 
@@ -109,8 +117,8 @@ impl AuthorityManage {
         let bmsg = serialize(
             &(
                 self.authority_h_old,
-                self.authorities_old.clone(),
                 self.authorities.clone(),
+                self.validators_old.clone(),
                 self.validators.clone(),
             ),
             Infinite,
