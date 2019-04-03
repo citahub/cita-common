@@ -22,7 +22,7 @@ use rpc_request::{
     GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
     GetTransactionCountParams, GetTransactionParams, GetTransactionProofParams,
     GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, SendRawTransactionParams, UninstallFilterParams,
+    PeerCountParams, PeersInfoParams, SendRawTransactionParams, UninstallFilterParams,
 };
 use rpc_types::{BlockNumber, CallRequest, Filter, VariadicValue};
 use serde_json;
@@ -229,4 +229,5 @@ fn serialize_and_deserialize() {
     );
 
     test_ser_and_de!(GetVersionParams, [], ());
+    test_ser_and_de!(PeersInfoParams, [], ());
 }
