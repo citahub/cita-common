@@ -75,6 +75,7 @@ pub enum InnerMessage_oneof_content {
     GetBlockTxn(super::compact_block::GetBlockTxn),
     BlockTxn(super::compact_block::BlockTxn),
     CompactSignedProposal(super::consensus::CompactSignedProposal),
+    CompactBlock(super::blockchain::CompactBlock),
 }
 
 impl InnerMessage {
