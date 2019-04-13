@@ -543,6 +543,12 @@ impl Message {
             _ => None,
         }
     }
+    pub fn take_compact_block(&mut self) -> Option<CompactBlock> {
+        match self.take_content() {
+            Some(MsgClass::CompactBlock(v)) => Some(v),
+            _ => None,
+        }
+    }
     // Generate MSG-PROTOS methods automatically end.
 }
 

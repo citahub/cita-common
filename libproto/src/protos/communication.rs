@@ -75,6 +75,7 @@ pub enum InnerMessage_oneof_content {
     GetBlockTxn(super::compact_block::GetBlockTxn),
     BlockTxn(super::compact_block::BlockTxn),
     CompactSignedProposal(super::consensus::CompactSignedProposal),
+    CompactBlock(super::blockchain::CompactBlock),
 }
 
 impl InnerMessage {
@@ -1764,6 +1765,10 @@ impl ::protobuf::Message for InnerMessage {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
+                &InnerMessage_oneof_content::CompactBlock(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
             };
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -1899,6 +1904,11 @@ impl ::protobuf::Message for InnerMessage {
                 },
                 &InnerMessage_oneof_content::CompactSignedProposal(ref v) => {
                     os.write_tag(28, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::CompactBlock(ref v) => {
+                    os.write_tag(29, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
