@@ -143,7 +143,7 @@ impl JournalDB for RefCountedDB {
     fn state(&self, id: &H256) -> Option<Bytes> {
         self.backing
             .get_by_prefix(self.column, &id[0..DB_PREFIX_LEN])
-            .map(|b| b.into_vec())
+            .map(<[_]>::into_vec)
     }
 
     fn journal_under(

@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
-use git2::{DescribeFormatOptions, DescribeOptions, ErrorCode, Repository};
+use git2::{DescribeFormatOptions, DescribeOptions, ErrorCode, Reference, Repository};
 use rustc_version;
 
 const ASCII_LOGO: &str = r#"
@@ -61,8 +61,8 @@ fn get_branch(repo: &Repository) -> Option<String> {
         Err(_) => return None,
     };
     head.as_ref()
-        .and_then(|h| h.shorthand())
-        .map(|v| v.to_owned())
+        .and_then(Reference::shorthand)
+        .map(ToOwned::to_owned)
 }
 
 /// [Command]:
