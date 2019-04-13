@@ -27,7 +27,7 @@ use std::thread;
 static ABOUT_PANIC: &str = "
 This is a bug. Please report it at:
 
-    https://github.com/cryptape/cita/issues/new
+    https://github.com/cryptape/cita/issues/new?labels=bug&template=bug_report.md
 ";
 
 /// Set the panic hook
