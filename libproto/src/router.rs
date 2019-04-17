@@ -103,16 +103,16 @@ impl RoutingKey {
     pub fn set_msg_type(&mut self, mt: MsgType) {
         self.1 = mt;
     }
-    pub fn get_sub_module(&self) -> SubModules {
+    pub fn get_sub_module(self) -> SubModules {
         self.0
     }
-    pub fn get_msg_type(&self) -> MsgType {
+    pub fn get_msg_type(self) -> MsgType {
         self.1
     }
-    pub fn is_sub_module(&self, sm: SubModules) -> bool {
+    pub fn is_sub_module(self, sm: SubModules) -> bool {
         self.0 == sm
     }
-    pub fn is_msg_type(&self, mt: MsgType) -> bool {
+    pub fn is_msg_type(self, mt: MsgType) -> bool {
         self.1 == mt
     }
 }
@@ -128,16 +128,16 @@ impl fmt::Display for SubModules {
             "{}",
             match self {
                 // Please use the same rules to name the string
-                &SubModules::Jsonrpc => "jsonrpc",
-                &SubModules::Net => "net",
-                &SubModules::Chain => "chain",
-                &SubModules::Consensus => "consensus",
-                &SubModules::Auth => "auth",
-                &SubModules::Executor => "executor",
-                &SubModules::Synchronizer => "synchronizer",
-                &SubModules::Snapshot => "snapshot",
-                &SubModules::All => "*",
-                &SubModules::Unknown => UNKNOWN,
+                SubModules::Jsonrpc => "jsonrpc",
+                SubModules::Net => "net",
+                SubModules::Chain => "chain",
+                SubModules::Consensus => "consensus",
+                SubModules::Auth => "auth",
+                SubModules::Executor => "executor",
+                SubModules::Synchronizer => "synchronizer",
+                SubModules::Snapshot => "snapshot",
+                SubModules::All => "*",
+                SubModules::Unknown => UNKNOWN,
             }
         )
     }
@@ -150,41 +150,41 @@ impl fmt::Display for MsgType {
             "{}",
             match self {
                 // Generate MSG-PROTOS display automatically begin:
-                &MsgType::RawBytes => "raw_bytes",
-                &MsgType::Request => "request",
-                &MsgType::Response => "response",
-                &MsgType::SyncRequest => "sync_request",
-                &MsgType::SyncResponse => "sync_response",
-                &MsgType::Status => "status",
-                &MsgType::RichStatus => "rich_status",
-                &MsgType::SignedProposal => "signed_proposal",
-                &MsgType::Block => "block",
-                &MsgType::BlockWithProof => "block_with_proof",
-                &MsgType::BlockHeader => "block_header",
-                &MsgType::BlockTxs => "block_txs",
-                &MsgType::BlockTxHashes => "block_tx_hashes",
-                &MsgType::BlockTxHashesReq => "block_tx_hashes_req",
-                &MsgType::VerifyBlockReq => "verify_block_req",
-                &MsgType::VerifyBlockResp => "verify_block_resp",
-                &MsgType::ExecutedResult => "executed_result",
-                &MsgType::SnapshotReq => "snapshot_req",
-                &MsgType::SnapshotResp => "snapshot_resp",
-                &MsgType::Miscellaneous => "miscellaneous",
-                &MsgType::MiscellaneousReq => "miscellaneous_req",
-                &MsgType::BlackList => "black_list",
-                &MsgType::StateSignal => "state_signal",
-                &MsgType::GetBlockTxn => "get_block_txn",
-                &MsgType::BlockTxn => "block_txn",
-                &MsgType::CompactSignedProposal => "compact_signed_proposal",
+                MsgType::RawBytes => "raw_bytes",
+                MsgType::Request => "request",
+                MsgType::Response => "response",
+                MsgType::SyncRequest => "sync_request",
+                MsgType::SyncResponse => "sync_response",
+                MsgType::Status => "status",
+                MsgType::RichStatus => "rich_status",
+                MsgType::SignedProposal => "signed_proposal",
+                MsgType::Block => "block",
+                MsgType::BlockWithProof => "block_with_proof",
+                MsgType::BlockHeader => "block_header",
+                MsgType::BlockTxs => "block_txs",
+                MsgType::BlockTxHashes => "block_tx_hashes",
+                MsgType::BlockTxHashesReq => "block_tx_hashes_req",
+                MsgType::VerifyBlockReq => "verify_block_req",
+                MsgType::VerifyBlockResp => "verify_block_resp",
+                MsgType::ExecutedResult => "executed_result",
+                MsgType::SnapshotReq => "snapshot_req",
+                MsgType::SnapshotResp => "snapshot_resp",
+                MsgType::Miscellaneous => "miscellaneous",
+                MsgType::MiscellaneousReq => "miscellaneous_req",
+                MsgType::BlackList => "black_list",
+                MsgType::StateSignal => "state_signal",
+                MsgType::GetBlockTxn => "get_block_txn",
+                MsgType::BlockTxn => "block_txn",
+                MsgType::CompactSignedProposal => "compact_signed_proposal",
                 // Generate MSG-PROTOS display automatically end.
-                &MsgType::All => "*",
-                &MsgType::Unknown => UNKNOWN,
-                &MsgType::RequestNewTx => "request_new_tx",
-                &MsgType::RequestNewTxBatch => "request_new_tx_batch",
-                &MsgType::RequestNet => "request_net",
-                &MsgType::LocalSync => "local_sync",
-                &MsgType::RequestRpc => "request_rpc",
-                &MsgType::RequestPeersInfo => "request_peers_info",
+                MsgType::All => "*",
+                MsgType::Unknown => UNKNOWN,
+                MsgType::RequestNewTx => "request_new_tx",
+                MsgType::RequestNewTxBatch => "request_new_tx_batch",
+                MsgType::RequestNet => "request_net",
+                MsgType::LocalSync => "local_sync",
+                MsgType::RequestRpc => "request_rpc",
+                MsgType::RequestPeersInfo => "request_peers_info",
             }
         )
     }

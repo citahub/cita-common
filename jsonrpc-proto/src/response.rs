@@ -155,7 +155,7 @@ impl OutputExt for Output {
                         serde_json::from_str::<SoftwareVersion>(&data)
                             .map(|data| {
                                 success
-                                    .set_result(ResponseResult::GetVersion(data.into()))
+                                    .set_result(ResponseResult::GetVersion(data))
                                     .output()
                             })
                             .unwrap_or_else(|_| Output::system_error(0))
@@ -163,9 +163,7 @@ impl OutputExt for Output {
                     Response_oneof_data::peers_info(data) => {
                         serde_json::from_str::<PeersInfo>(&data)
                             .map(|data| {
-                                success
-                                    .set_result(ResponseResult::PeersInfo(data.into()))
-                                    .output()
+                                success.set_result(ResponseResult::PeersInfo(data)).output()
                             })
                             .unwrap_or_else(|_| Output::system_error(0))
                     }

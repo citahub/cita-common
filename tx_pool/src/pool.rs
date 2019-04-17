@@ -38,10 +38,7 @@ struct TxOrder {
 
 impl TxOrder {
     fn new(hash: H256, order: u64) -> Self {
-        TxOrder {
-            hash: hash,
-            order: order,
-        }
+        TxOrder { hash, order }
     }
 }
 
@@ -76,7 +73,7 @@ pub struct Pool {
 impl Pool {
     pub fn new(package_limit: usize) -> Self {
         Pool {
-            package_limit: package_limit,
+            package_limit,
             order_set: BTreeSet::new(),
             txs: HashMap::new(),
             strategy: Strategy::FIFO,
@@ -86,10 +83,10 @@ impl Pool {
 
     pub fn new_with_strategy(package_limit: usize, strategy: Strategy) -> Self {
         Pool {
-            package_limit: package_limit,
+            package_limit,
             order_set: BTreeSet::new(),
             txs: HashMap::new(),
-            strategy: strategy,
+            strategy,
             order: 0,
         }
     }
@@ -202,29 +199,26 @@ impl Pool {
                         }
 
                         if check_quota {
+                            if let Some(value) = specific_quota_limit.get_mut(&address.lower_hex())
+                            {
+                                quota_limit = *value;
+                            }
+
+                            let mut _remainder = if quota < quota_limit {
+                                quota_limit - quota
+                            } else {
+                                0
+                            };
+                            account_quota_used.entry(address).or_insert(_remainder);
                             if account_quota_used.contains_key(&address) {
                                 let value = account_quota_used.get_mut(&address).unwrap();
                                 if *value < quota {
                                     continue;
                                 }
-                                *value = *value - quota;
-                            } else {
-                                if let Some(value) =
-                                    specific_quota_limit.get_mut(&address.lower_hex())
-                                {
-                                    quota_limit = *value;
-                                }
-
-                                let mut _remainder = 0;
-                                if quota < quota_limit {
-                                    _remainder = quota_limit - quota;
-                                } else {
-                                    _remainder = 0;
-                                }
-                                account_quota_used.insert(address, _remainder);
+                                *value -= quota;
                             }
                         }
-                        n = n - quota;
+                        n -= quota;
                         tx_list.push(tx.clone());
                     } else {
                         invalid_tx_list.push(tx.clone());
@@ -274,7 +268,7 @@ impl Pool {
                             < (height + BLOCKLIMIT)
                     {
                         tx_list.push(tx.clone());
-                        n = n - 1;
+                        n -= 1;
                         if n == 0 {
                             break;
                         }
@@ -293,6 +287,10 @@ impl Pool {
 
     pub fn len(&self) -> usize {
         self.txs.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 }
 
