@@ -71,8 +71,7 @@ function cargo_run_test () {
 function cargo_run_clippy () {
     export RUSTFLAGS="-F warnings"
     CARGO_COMMAND="cargo clippy"
-    # TODO Should be replaced by cargo_run_all after no crate need to be skipped.
-    cargo_run_all_for_clippy
+    cargo_run_all
     CARGO_COMMAND=
     unset RUSTFLAGS
 }
@@ -87,12 +86,6 @@ function cargo_run () {
     record_crate_for_check "${crate}"
 }
 
-# TODO Should be deleted after no crate need to be skipped.
-function cargo_run_skip () {
-    crate="${1}"
-    shift 1
-    record_crate_for_check "${crate}"
-}
 
 function cargo_run_all () {
 
@@ -143,62 +136,6 @@ function cargo_run_all () {
     for crate in libproto proof tx_pool jsonrpc-proto engine; do
         cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
-}
-
-# TODO Should be deleted after no crate need to be skipped.
-function cargo_run_all_for_clippy () {
-
-    [ -z "${CARGO_COMMAND}" ] && exit 1
-
-    cargo_run cita-common-benches
-
-    cargo_run cita-types
-    cargo_run logger
-    cargo_run panic_hook
-    cargo_run worker
-    cargo_run error
-    cargo_run snappy
-    cargo_run cita-directories
-    cargo_run cita-crypto-trait
-    cargo_run ethcore-bloom-journal
-
-    cargo_run rlp
-    cargo_run rlp_derive
-
-    cargo_run authority_manage
-
-    cargo_run pubsub_rabbitmq
-    cargo_run pubsub_zeromq
-    cargo_run pubsub_kafka
-
-    for crate in pubsub; do
-        for features in ${FEATURES_FOR_PUBSUB}; do
-            cargo_run ${crate} --features "${features}"
-        done
-    done
-
-    cargo_run blake2b
-
-    cargo_run util
-
-    cargo_run jsonrpc-types
-    cargo_run cita-web3
-
-    cargo_run cita-secp256k1 --features "${SELECT_HASH}"
-    cargo_run cita-ed25519 --features "${SELECT_HASH}"
-    cargo_run cita-sm2 --features "${SELECT_HASH}"
-
-    for crate in hashable cita-merklehash; do
-        cargo_run ${crate} --features "${SELECT_HASH}"
-    done
-
-    cargo_run db --features "${SELECT_HASH}"
-    cargo_run cita-crypto --features "${SELECT_CRYPTO}"
-    cargo_run libproto --features "${SELECT_HASH} ${SELECT_CRYPTO}"
-    cargo_run proof --features "${SELECT_HASH} ${SELECT_CRYPTO}"
-    cargo_run tx_pool --features "${SELECT_HASH} ${SELECT_CRYPTO}"
-    cargo_run jsonrpc-proto --features "${SELECT_HASH} ${SELECT_CRYPTO}"
-    cargo_run engine --features "${SELECT_HASH} ${SELECT_CRYPTO}"
 }
 
 function check_args () {
