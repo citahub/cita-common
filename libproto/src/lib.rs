@@ -36,10 +36,7 @@ mod autoimpl;
 pub mod router;
 
 use cita_merklehash::{merge, Tree, HASH_NULL};
-use crypto::{
-    CreateKey, KeyPair, Message as SignMessage, PrivKey, PubKey, Sign, Signature,
-    SIGNATURE_BYTES_LEN,
-};
+use crypto::{CreateKey, KeyPair, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
 use hashable::Hashable;
 use protobuf::RepeatedField;
 use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
@@ -63,10 +60,7 @@ pub struct TxResponse {
 
 impl TxResponse {
     pub fn new(hash: H256, status: String) -> Self {
-        TxResponse {
-            hash: hash,
-            status: status,
-        }
+        TxResponse { hash, status }
     }
 }
 
@@ -104,7 +98,7 @@ impl Transaction {
         let bytes: Vec<u8> = self.try_into().unwrap();
         let hash = bytes.crypt_hash();
         unverified_tx.set_transaction(self.clone());
-        let signature = Signature::sign(&sk, &SignMessage::from(hash)).unwrap();
+        let signature = Signature::sign(&sk, &hash).unwrap();
         unverified_tx.set_signature(signature.to_vec());
         unverified_tx.set_crypto(Crypto::DEFAULT);
         unverified_tx
@@ -200,7 +194,7 @@ impl SignedTransaction {
     pub fn from(&self) -> Address {
         let signer_pubkey = self.get_signer();
 
-        Address::from(types::H160::from(signer_pubkey.crypt_hash()))
+        types::H160::from(signer_pubkey.crypt_hash())
     }
 }
 
@@ -260,7 +254,6 @@ impl CompactBlock {
         if stxs.len() == hashes.len() {
             stxs.iter()
                 .zip(hashes.iter())
-                .into_iter()
                 .enumerate()
                 .try_for_each(|(idx, (stx, hash))| {
                     if &stx.tx_hash == hash {

@@ -310,12 +310,12 @@ impl Message {
 
     pub fn set_operate(&mut self, ot: OperateType) {
         self.let_raw_be_ok();
-        self.raw[3] = (self.raw[3] & 0b11111100) + ((ot as u8) & 0b00000011);
+        self.raw[3] = (self.raw[3] & 0b1111_1100) + ((ot as u8) & 0b0000_0011);
     }
 
     pub fn get_operate(&self) -> OperateType {
         if self.is_raw_ok() {
-            OperateType::try_from(self.raw[3] & 0b00000011).unwrap_or(DEFAULT_OPERATE_TYPE)
+            OperateType::try_from(self.raw[3] & 0b0000_0011).unwrap_or(DEFAULT_OPERATE_TYPE)
         } else {
             DEFAULT_OPERATE_TYPE
         }
@@ -323,18 +323,18 @@ impl Message {
 
     pub fn set_origin(&mut self, o: Origin) {
         self.let_raw_be_ok();
-        self.raw[4] = ((o & 0xFF000000) >> 24) as u8;
-        self.raw[5] = ((o & 0x00FF0000) >> 16) as u8;
-        self.raw[6] = ((o & 0x0000FF00) >> 8) as u8;
-        self.raw[7] = (o & 0x000000FF) as u8;
+        self.raw[4] = ((o & 0xFF00_0000) >> 24) as u8;
+        self.raw[5] = ((o & 0x00FF_0000) >> 16) as u8;
+        self.raw[6] = ((o & 0x0000_FF00) >> 8) as u8;
+        self.raw[7] = (o & 0x0000_00FF) as u8;
     }
 
     pub fn get_origin(&self) -> Origin {
         if self.is_raw_ok() {
-            ((self.raw[4] as u32) << 24)
-                + ((self.raw[5] as u32) << 16)
-                + ((self.raw[6] as u32) << 8)
-                + (self.raw[7] as u32)
+            (u32::from(self.raw[4]) << 24)
+                + (u32::from(self.raw[5]) << 16)
+                + (u32::from(self.raw[6]) << 8)
+                + (u32::from(self.raw[7]))
         } else {
             ZERO_ORIGIN
         }
@@ -342,13 +342,13 @@ impl Message {
 
     fn set_compressed(&mut self, c: bool) {
         self.let_raw_be_ok();
-        let c_val: u8 = if c { 0b00000100 } else { 0b00000000 };
-        self.raw[3] = (self.raw[3] & 0b11111011) + (c_val & 0b00000100);
+        let c_val: u8 = if c { 0b0000_0100 } else { 0b0000_0000 };
+        self.raw[3] = (self.raw[3] & 0b1111_1011) + (c_val & 0b0000_0100);
     }
 
     pub fn get_compressed(&self) -> bool {
         if self.is_raw_ok() {
-            (self.raw[3] & 0b00000100) != 0
+            (self.raw[3] & 0b0000_0100) != 0
         } else {
             false // default
         }
