@@ -142,7 +142,7 @@ fn parse_env(env: &str) -> Vec<Directive> {
             continue;
         }
         let mut parts = s.split('=');
-        let (log_level, name) = match (parts.next(), parts.next().map(|s| s.trim()), parts.next()) {
+        let (log_level, name) = match (parts.next(), parts.next().map(str::trim), parts.next()) {
             (Some(part0), None, None) => match LevelFilter::from_str(part0) {
                 Ok(num) => {
                     println!(

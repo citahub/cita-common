@@ -46,7 +46,7 @@ pub fn start_pubsub<K>(
     K: Into<String>,
 {
     dotenv().ok();
-    let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
+    let keys: Vec<String> = keys.into_iter().map(Into::into).collect();
     start_rabbitmq(name, keys, tx, rx);
 }
 
@@ -60,7 +60,7 @@ pub fn start_pubsub<K>(
     K: Into<String>,
 {
     dotenv().ok();
-    let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
+    let keys: Vec<String> = keys.into_iter().map(Into::into).collect();
     start_zeromq(name, keys, tx, rx);
 }
 #[cfg(feature = "kafka")]
@@ -73,6 +73,6 @@ pub fn start_pubsub<K>(
     K: Into<String>,
 {
     dotenv().ok();
-    let keys: Vec<String> = keys.into_iter().map(|e| e.into()).collect();
+    let keys: Vec<String> = keys.into_iter().map(Into::into).collect();
     start_kafka(name, &keys, tx, rx);
 }

@@ -17,7 +17,7 @@ env:
   #- HASH_ALGO=sm3hash     CRYPTO_ALGO=ed25519
   - HASH_ALGO=sm3hash     CRYPTO_ALGO=sm2
 install:
-  - docker pull cita/cita-build:ubuntu-18.04-20190304
+  - docker pull cita/cita-build:ubuntu-18.04-20190413
 script:
   - bash '.ci-scripts/test' $HASH_ALGO $CRYPTO_ALGO $UPLOAD_COVERAGE
 stages:

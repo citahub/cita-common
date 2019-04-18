@@ -447,7 +447,7 @@ impl<'a> TrieDBMut<'a> {
         let (new_stored, changed) = self
             .inspect(stored, move |trie, stored| {
                 trie.insert_inspector(stored, partial, value, old_val)
-                    .map(|a| a.into_action())
+                    .map(InsertAction::into_action)
             })?
             .expect("Insertion never deletes.");
 

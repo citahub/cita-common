@@ -19,6 +19,7 @@
 use super::JournalDB;
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 
+use elastic_array::ElasticArray128;
 use hashdb::*;
 use heapsize::HeapSizeOf;
 use kvdb::{DBTransaction, KeyValueDB};
@@ -271,7 +272,7 @@ impl JournalDB for OverlayRecentDB {
         journal_overlay
             .backing_overlay
             .get(&key)
-            .map(|v| v.into_vec())
+            .map(ElasticArray128::into_vec)
             .or_else(|| {
                 journal_overlay
                     .pending_overlay
@@ -281,7 +282,7 @@ impl JournalDB for OverlayRecentDB {
             .or_else(|| {
                 self.backing
                     .get_by_prefix(self.column, &key[0..DB_PREFIX_LEN])
-                    .map(|b| b.into_vec())
+                    .map(<[_]>::into_vec)
             })
     }
 
@@ -332,7 +333,7 @@ impl JournalDB for OverlayRecentDB {
         r.append_list(&removed_keys);
 
         let mut k = RlpStream::new_list(3);
-        let index = journal_overlay.journal.get(&now).map_or(0, |j| j.len());
+        let index = journal_overlay.journal.get(&now).map_or(0, Vec::len);
         k.append(&now);
         k.append(&index);
         k.append(&&PADDING[..]);
