@@ -209,7 +209,9 @@ fn create_loggers(directives: Vec<Directive>, appender: &str) -> Vec<Logger> {
 // FileAppender config
 fn config_file_appender(file_path: &str, directives: Vec<Directive>) -> Config {
     let requests = FileAppender::builder()
-        .encoder(Box::new(PatternEncoder::new("{d} - {l} - {m}{n}")))
+        .encoder(Box::new(PatternEncoder::new(
+            "{d(%Y-%m-%d - %H:%M:%S)} | {t:20.20} - {L:5} | {l:5} - {m}{n}",
+        )))
         .build(file_path)
         .unwrap();
 
