@@ -440,7 +440,7 @@ impl SendRawTransactionParamsExt for SendRawTransactionParams {
                     tx.get_to(),
                     un_tx.crypt_hash().lower_hex()
                 );
-            } else if version == 1 {
+            } else if version == 1 || version == 2 {
                 let to = tx.get_to_v1();
                 if to.len() != 20 && !to.is_empty() {
                     return Err(Error::invalid_params(
