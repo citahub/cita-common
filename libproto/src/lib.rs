@@ -153,7 +153,7 @@ impl UnverifiedTransaction {
         verify_tx_req.set_value(self.get_transaction().get_value().to_vec());
         if version == 0 {
             verify_tx_req.set_chain_id(self.get_transaction().get_chain_id());
-        } else if version == 1 || version == 2 {
+        } else if version < 3 {
             verify_tx_req.set_chain_id_v1(self.get_transaction().get_chain_id_v1().to_vec());
         } else {
             error!("unexpected version {}!", version);
