@@ -19,8 +19,8 @@ use std::str::FromStr;
 
 use super::{clean_0x, delete_left0, pad_left0};
 use super::{Bloom, BloomInput};
-use super::{H1024, H128, H160, H256, H264, H32, H512, H520, H64};
-use super::{U1024, U128, U256, U512, U64};
+use super::{H128, H160, H256, H264, H32, H512, H520, H64};
+use super::{U128, U256, U512, U64};
 
 pub trait LowerHex {
     fn lower_hex(&self) -> String;
@@ -97,7 +97,6 @@ macro_rules! add_cita_funcs {
                 format!("0x{:x}", self)
             }
         }
-
         impl ConvertType for $name {
             #[inline]
             fn from_unaligned(s: &str) -> Option<Self> {
@@ -120,12 +119,10 @@ add_cita_funcs!([
     (H264, 264),
     (H512, 512),
     (H520, 520),
-    (H1024, 1024),
     (U64, 64),
     (U128, 128),
     (U256, 256),
     (U512, 512),
-    (U1024, 1024),
 ]);
 
 pub trait BloomTools {
