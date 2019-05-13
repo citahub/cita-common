@@ -56,7 +56,7 @@ impl TryFromProto<ProtoFullTransaction> for RpcTransaction {
                 tx.get_quota(),
                 match tx.get_version() {
                     0 => tx.get_to().to_owned(),
-                    1 | 2 => tx.get_to_v1().lower_hex(),
+                    version if version < 3 => tx.get_to_v1().lower_hex(),
                     v => {
                         error!("unexpected version {}!", v);
                         "unknown".to_owned()
