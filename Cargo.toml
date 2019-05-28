@@ -3,7 +3,6 @@
 members = [
     "cita-common-benches",
 
-    "logger",
     "error",
     "panic_hook",
     "worker",

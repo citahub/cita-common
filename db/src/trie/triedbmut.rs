@@ -1002,7 +1002,7 @@ impl<'a> Drop for TrieDBMut<'a> {
 
 #[cfg(test)]
 mod tests {
-    extern crate logger;
+    extern crate cita_logger as logger;
 
     use super::super::standardmap::*;
     use super::super::TrieMut;
