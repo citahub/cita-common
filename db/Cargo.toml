@@ -7,7 +7,7 @@ authors = ["Parity Technologies <admin@parity.io>", "Cryptape Technologies <cont
 parity-rocksdb = "0.5"
 elastic-array = "0.9"
 cita-types = { path = "../cita-types" }
-logger = { path = "../logger" }
+cita-logger = "0.1.0"
 hashable = { path = "../hashable" }
 itertools = "0.5"
 heapsize = "0.4"

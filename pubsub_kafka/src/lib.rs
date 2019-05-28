@@ -1,7 +1,7 @@
 extern crate futures;
 extern crate futures_cpupool;
 #[macro_use]
-extern crate logger;
+extern crate cita_logger as logger;
 pub extern crate crossbeam_channel as channel;
 extern crate rdkafka;
 

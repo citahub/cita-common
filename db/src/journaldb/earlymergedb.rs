@@ -718,7 +718,7 @@ impl JournalDB for EarlyMergeDB {
 mod tests {
     #![cfg_attr(feature = "dev", allow(blacklisted_name))]
     #![cfg_attr(feature = "dev", allow(similar_names))]
-    extern crate logger;
+    extern crate cita_logger as logger;
     extern crate mktemp;
 
     use super::super::traits::JournalDB;

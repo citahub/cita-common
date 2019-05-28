@@ -17,7 +17,7 @@
 extern crate cita_types as types;
 extern crate elastic_array;
 #[macro_use]
-extern crate logger;
+extern crate cita_logger as logger;
 extern crate hashable;
 extern crate heapsize;
 extern crate itertools;

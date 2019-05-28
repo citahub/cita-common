@@ -291,6 +291,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "cita-logger"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "chrono 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "crossbeam-channel 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.45 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log4rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "signal-hook 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "cita-merklehash"
 version = "0.1.0"
 dependencies = [
@@ -570,12 +583,12 @@ dependencies = [
 name = "db"
 version = "0.1.0"
 dependencies = [
+ "cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cita-types 0.1.0",
  "elastic-array 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hashable 0.1.0",
  "heapsize 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "logger 0.1.0",
  "mktemp 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-rocksdb 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1074,10 +1087,10 @@ version = "0.1.0"
 dependencies = [
  "bincode 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cita-crypto 0.1.0",
+ "cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cita-types 0.1.0",
  "jsonrpc-types 0.1.0",
  "libproto 0.6.0",
- "logger 0.1.0",
  "proof 0.6.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1173,11 +1186,11 @@ name = "libproto"
 version = "0.6.0"
 dependencies = [
  "cita-crypto 0.1.0",
+ "cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cita-merklehash 0.1.0",
  "cita-types 0.1.0",
  "grpc 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hashable 0.1.0",
- "logger 0.1.0",
  "protobuf 2.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1307,18 +1320,6 @@ dependencies = [
  "serde_yaml 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "typemap 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "logger"
-version = "0.1.0"
-dependencies = [
- "chrono 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "crossbeam-channel 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.45 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "log4rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "signal-hook 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1633,7 +1634,7 @@ name = "panic_hook"
 version = "0.0.1"
 dependencies = [
  "backtrace 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
- "logger 0.1.0",
+ "cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1798,11 +1799,11 @@ name = "pubsub_kafka"
 version = "0.1.0"
 dependencies = [
  "chrono 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crossbeam-channel 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures-cpupool 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "logger 0.1.0",
  "rand 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "rdkafka 0.12.0 (git+https://github.com/fede1024/rust-rdkafka.git?rev=84d4062)",
  "tokio-core 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1820,8 +1821,8 @@ dependencies = [
 name = "pubsub_zeromq"
 version = "0.1.0"
 dependencies = [
+ "cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crossbeam-channel 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "logger 0.1.0",
  "zmq 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -3018,6 +3019,7 @@ dependencies = [
 "checksum cexpr 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "42aac45e9567d97474a834efdee3081b3c942b2205be932092f53354ce503d6c"
 "checksum cfg-if 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)" = "082bb9b28e00d3c9d39cc03e64ce4cea0f1bb9b3fde493f0cbc008472d22bdf4"
 "checksum chrono 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "6962c635d530328acc53ac6a955e83093fedc91c5809dfac1fa60fa470830a37"
+"checksum cita-logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5c0fccf6b33be6ab71808f2b5bb36206acef2eee9f5d0d29f87b81327242b521"
 "checksum clang-sys 0.23.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d7f7c04e52c35222fffcc3a115b5daf5f7e2bfb71c13c4e2321afe1fc71859c2"
 "checksum clap 2.32.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b957d88f4b6a63b9d70d5f454ac8011819c6efa7727858f458ab71c756ce2d3e"
 "checksum cloudabi 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "ddfc5b9aa5d4507acaf872de71051dfd0e309860e88966e1051e462a077aac4f"
