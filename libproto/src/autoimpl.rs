@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+pub use crate::protos::InnerMessage_oneof_content as MsgClass;
+use crate::protos::*;
 use protobuf::{parse_from_bytes, Message as MessageTrait};
-pub use protos::InnerMessage_oneof_content as MsgClass;
-use protos::*;
 use snappy;
 use std::convert::{From, Into};
 
