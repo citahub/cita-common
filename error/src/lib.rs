@@ -1,2 +1,2 @@
 pub mod error;
-pub use error::ErrorCode;
+pub use crate::error::ErrorCode;
