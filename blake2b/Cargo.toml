@@ -3,6 +3,7 @@ name = "blake2b"
 version = "0.1.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
 build = "build.rs"
+edition = "2018"
 
 [build-dependencies]
 cc = "1.0"
