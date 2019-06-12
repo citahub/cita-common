@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2019 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -20,13 +20,6 @@ extern crate bincode;
 extern crate cita_types as types;
 #[macro_use]
 extern crate lazy_static;
-extern crate cita_crypto_trait;
-extern crate hashable;
-extern crate rand;
-extern crate rlp;
-extern crate rustc_serialize;
-extern crate secp256k1;
-extern crate serde;
 
 pub type PrivKey = H256;
 pub type PubKey = H512;
@@ -47,8 +40,8 @@ pub use self::error::*;
 pub use self::keypair::*;
 pub use self::signature::*;
 pub use self::signer::Signer;
+use crate::types::{Address, H256, H512};
 use secp256k1::All;
-use types::{Address, H256, H512};
 
 lazy_static! {
     pub static ref SECP256K1: secp256k1::Secp256k1<All> = secp256k1::Secp256k1::new();

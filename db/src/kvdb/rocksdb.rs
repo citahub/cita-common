@@ -16,9 +16,9 @@
 
 //! Key-Value store abstraction with `RocksDB` backend.
 
+use crate::hashdb::DBValue;
+use crate::kvdb::{DBOp, DBTransaction, KeyValueDB};
 use elastic_array::*;
-use hashdb::DBValue;
-use kvdb::{DBOp, DBTransaction, KeyValueDB};
 use util::{Mutex, MutexGuard, RwLock, UtilError};
 
 use parity_rocksdb::{
@@ -748,8 +748,8 @@ impl Drop for Database {
 mod tests {
     extern crate mktemp;
     use super::*;
+    use crate::types::H256;
     use std::str::FromStr;
-    use types::H256;
 
     fn test_db(config: &DatabaseConfig) {
         let path = mktemp::Temp::new_dir().unwrap();

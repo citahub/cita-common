@@ -17,9 +17,9 @@
 
 extern crate amqp;
 pub extern crate crossbeam_channel as channel;
+use crate::channel::Receiver;
+use crate::channel::Sender;
 use amqp::{protocol, Basic, Channel, Consumer, Session, Table};
-use channel::Receiver;
-use channel::Sender;
 use std::process;
 use std::thread;
 

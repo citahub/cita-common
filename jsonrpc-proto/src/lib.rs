@@ -15,20 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate bincode;
 #[cfg(test)]
 extern crate cita_crypto;
-extern crate cita_types;
 #[macro_use(impl_for_each_jsonrpc_requests)]
 extern crate jsonrpc_types;
-extern crate libproto;
-extern crate rustc_serialize;
-extern crate serde;
-extern crate serde_json;
 #[macro_use]
 extern crate cita_logger as logger;
 extern crate proof as proof_srv;
-extern crate uuid;
 
 pub mod block;
 pub mod complete;

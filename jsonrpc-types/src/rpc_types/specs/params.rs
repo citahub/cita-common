@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::Error;
+use crate::error::Error;
 use serde::de::{DeserializeOwned, MapAccess, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{self, from_value, Value};
@@ -129,8 +129,8 @@ impl<'a> Visitor<'a> for ParamsVisitor {
 #[cfg(test)]
 mod tests {
     use super::Params;
-    use error::Error;
-    use rpc_types::Filter;
+    use crate::error::Error;
+    use crate::rpc_types::Filter;
     use serde_json::{self, Map, Number, Value};
 
     #[test]

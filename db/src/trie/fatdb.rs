@@ -16,9 +16,9 @@
 
 use super::{Query, Trie, TrieDB, TrieDBIterator, TrieItem, TrieIterator};
 
+use crate::hashdb::HashDB;
+use crate::types::H256;
 use hashable::Hashable;
-use hashdb::HashDB;
-use types::H256;
 use util::Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
@@ -123,9 +123,9 @@ impl<'db> Iterator for FatDBIterator<'db> {
 
 #[test]
 fn fatdb_to_trie() {
-    use hashdb::DBValue;
-    use memorydb::MemoryDB;
-    use trie::{FatDBMut, TrieMut};
+    use crate::hashdb::DBValue;
+    use crate::memorydb::MemoryDB;
+    use crate::trie::{FatDBMut, TrieMut};
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

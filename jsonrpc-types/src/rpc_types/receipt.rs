@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use crate::rpc_types::log::Log;
 use cita_types::{Bloom, H160, H256, U256};
-use rpc_types::log::Log;
 
 /// Receipt
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]

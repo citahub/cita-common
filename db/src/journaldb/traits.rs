@@ -16,9 +16,9 @@
 
 //! Disk-backed `HashDB` implementation.
 
-use hashdb::*;
-use kvdb::{self, DBTransaction};
-use types::H256;
+use crate::hashdb::*;
+use crate::kvdb::{self, DBTransaction};
+use crate::types::H256;
 use util::{Bytes, UtilError};
 
 use std::sync::Arc;
@@ -92,7 +92,7 @@ pub trait JournalDB: HashDB {
     fn flush(&self) {}
 
     /// Consolidate all the insertions and deletions in the given memory overlay.
-    fn consolidate(&mut self, overlay: ::memorydb::MemoryDB);
+    fn consolidate(&mut self, overlay: crate::memorydb::MemoryDB);
 
     /// Commit all changes in a single batch
     #[cfg(test)]

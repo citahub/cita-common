@@ -19,11 +19,11 @@
 use super::traits::JournalDB;
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 
-use hashdb::*;
-use kvdb::{DBTransaction, KeyValueDB};
-use memorydb::*;
+use crate::hashdb::*;
+use crate::kvdb::{DBTransaction, KeyValueDB};
+use crate::memorydb::*;
+use crate::types::H256;
 use rlp::*;
-use types::H256;
 use util::{BaseDataError, Bytes, UtilError};
 
 use std::collections::HashMap;
@@ -61,7 +61,7 @@ impl ArchiveDB {
     /// Create a new instance with an anonymous temporary database.
     #[cfg(test)]
     fn new_temp() -> ArchiveDB {
-        let backing = Arc::new(::kvdb::in_memory(0));
+        let backing = Arc::new(crate::kvdb::in_memory(0));
         Self::new(backing, None)
     }
 
@@ -227,13 +227,13 @@ mod tests {
     extern crate mktemp;
 
     use super::*;
+    use crate::hashdb::{DBValue, HashDB};
+    use crate::journaldb::traits::JournalDB;
+    use crate::kvdb::Database;
+    use crate::types::traits::LowerHex;
+    use crate::types::H32;
     use hashable::Hashable;
-    use hashdb::{DBValue, HashDB};
-    use journaldb::traits::JournalDB;
-    use kvdb::Database;
     use std::path::Path;
-    use types::traits::LowerHex;
-    use types::H32;
 
     #[test]
     fn insert_same_in_fork() {

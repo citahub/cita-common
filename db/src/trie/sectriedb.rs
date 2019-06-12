@@ -17,9 +17,9 @@
 use super::triedb::TrieDB;
 use super::{Query, Trie, TrieItem, TrieIterator};
 
+use crate::hashdb::HashDB;
+use crate::types::H256;
 use hashable::Hashable;
-use hashdb::HashDB;
-use types::H256;
 use util::Bytes;
 
 /// A `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
@@ -88,8 +88,8 @@ impl<'db> Trie for SecTrieDB<'db> {
 fn trie_to_sectrie() {
     use super::super::TrieMut;
     use super::triedbmut::TrieDBMut;
-    use hashdb::DBValue;
-    use memorydb::MemoryDB;
+    use crate::hashdb::DBValue;
+    use crate::memorydb::MemoryDB;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

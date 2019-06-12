@@ -16,9 +16,9 @@
 
 //! Key-value datastore with a modified Merkle tree.
 
+use crate::types::H256;
 use hashable::Hashable;
 use rlp::encode;
-use types::H256;
 use util::Bytes;
 
 /// Alphabet to use when creating words for insertion into tries.

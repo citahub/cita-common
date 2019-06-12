@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
+use crate::hashdb::DBValue;
 use elastic_array::ElasticArray36;
-use hashdb::DBValue;
 use rlp::*;
 use util::{nibbleslice::NibbleSlice, nibblevec::NibbleVec, Bytes};
 

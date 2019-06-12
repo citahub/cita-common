@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2019 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -15,10 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate bincode;
-extern crate cita_types;
-extern crate rustc_serialize;
-extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 #[cfg(not(test))]
@@ -33,7 +29,7 @@ pub extern crate jsonrpc_types_internals as internals;
 mod macros;
 
 mod error;
-pub use error::{Error, ErrorCode};
+pub use crate::error::{Error, ErrorCode};
 pub mod rpc_request;
 pub mod rpc_response;
 pub mod rpc_types;

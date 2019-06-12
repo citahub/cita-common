@@ -46,7 +46,7 @@ impl TryFromProto<ProtoProof> for BftProof {
     type Error = Error;
 
     fn try_from_proto(p: ProtoProof) -> Result<Self, Self::Error> {
-        use proof_srv::BftProof as SrvBftProof;
+        use crate::proof_srv::BftProof as SrvBftProof;
 
         let decoded: SrvBftProof = deserialize(&p.get_content()[..]) //
             .map_err(Error::bft_proof_decode_error)?;

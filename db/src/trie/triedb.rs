@@ -23,10 +23,10 @@ use super::lookup::Lookup;
 use super::node::{Node, OwnedNode};
 use super::{Query, Trie, TrieError, TrieItem, TrieIterator};
 
+use crate::hashdb::*;
+use crate::types::H256;
 use hashable::Hashable;
-use hashdb::*;
 use rlp::*;
-use types::H256;
 use util::{nibbleslice::NibbleSlice, Bytes, ToPretty};
 
 /// A `Trie` implementation using a generic `HashDB` backing database.
@@ -541,7 +541,7 @@ impl<'a> Iterator for TrieDBIterator<'a> {
 fn iterator() {
     use super::triedbmut::*;
     use super::TrieMut;
-    use memorydb::*;
+    use crate::memorydb::*;
 
     let d = vec![
         DBValue::from_slice(b"A"),
@@ -574,7 +574,7 @@ fn iterator() {
 fn iterator_seek() {
     use super::triedbmut::*;
     use super::TrieMut;
-    use memorydb::*;
+    use crate::memorydb::*;
 
     let d = vec![
         DBValue::from_slice(b"A"),
@@ -627,7 +627,7 @@ fn iterator_seek() {
 fn get_len() {
     use super::triedbmut::*;
     use super::TrieMut;
-    use memorydb::*;
+    use crate::memorydb::*;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::new();
@@ -645,10 +645,10 @@ fn get_len() {
 
 #[test]
 fn value_proof() {
-    use hashdb::DBValue;
-    use memorydb::MemoryDB;
-    use trie::triedb::verify_value_proof;
-    use trie::{TrieDB, TrieDBMut, TrieMut};
+    use crate::hashdb::DBValue;
+    use crate::memorydb::MemoryDB;
+    use crate::trie::triedb::verify_value_proof;
+    use crate::trie::{TrieDB, TrieDBMut, TrieMut};
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::new();

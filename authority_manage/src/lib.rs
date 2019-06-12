@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2019 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -15,14 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate bincode;
 extern crate cita_types as types;
 
 pub mod wal;
 
+use crate::types::Address;
+use crate::wal::Wal;
 use bincode::{deserialize, serialize, Infinite};
-use types::Address;
-use wal::Wal;
 
 pub const DATA_PATH: &str = "DATA_PATH";
 pub const LOG_TYPE_AUTHORITIES: u8 = 1;

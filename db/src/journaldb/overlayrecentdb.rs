@@ -19,13 +19,13 @@
 use super::JournalDB;
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 
+use crate::hashdb::*;
+use crate::kvdb::{DBTransaction, KeyValueDB};
+use crate::memorydb::*;
+use crate::types::{H256FastMap, H256};
 use elastic_array::ElasticArray128;
-use hashdb::*;
 use heapsize::HeapSizeOf;
-use kvdb::{DBTransaction, KeyValueDB};
-use memorydb::*;
 use rlp::*;
-use types::{H256FastMap, H256};
 use util::{BaseDataError, Bytes, RwLock, UtilError};
 
 use std::collections::HashMap;
@@ -120,7 +120,7 @@ impl OverlayRecentDB {
     /// Create a new instance with an anonymous temporary database.
     #[cfg(test)]
     pub fn new_temp() -> OverlayRecentDB {
-        let backing = Arc::new(::kvdb::in_memory(0));
+        let backing = Arc::new(crate::kvdb::in_memory(0));
         Self::new(backing, None)
     }
 
@@ -378,7 +378,7 @@ impl JournalDB for OverlayRecentDB {
             let mut canon_insertions: Vec<(H256, DBValue)> = Vec::new();
             let mut canon_deletions: Vec<H256> = Vec::new();
             let mut overlay_deletions: Vec<H256> = Vec::new();
-            for (mut index, mut journal) in records.drain(..).enumerate() {
+            for (index, mut journal) in records.drain(..).enumerate() {
                 //delete the record from the db
                 let mut r = RlpStream::new_list(3);
                 r.append(&end_era);
@@ -525,13 +525,13 @@ mod tests {
     extern crate mktemp;
 
     use super::*;
+    use crate::hashdb::{DBValue, HashDB};
+    use crate::journaldb::JournalDB;
+    use crate::kvdb::Database;
+    use crate::types::traits::LowerHex;
+    use crate::types::H32;
     use hashable::Hashable;
-    use hashdb::{DBValue, HashDB};
-    use journaldb::JournalDB;
-    use kvdb::Database;
     use std::path::Path;
-    use types::traits::LowerHex;
-    use types::H32;
 
     fn new_db(path: &Path) -> OverlayRecentDB {
         let backing = Arc::new(Database::open_default(path.to_str().unwrap()).unwrap());

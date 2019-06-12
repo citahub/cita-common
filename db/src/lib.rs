@@ -18,13 +18,6 @@ extern crate cita_types as types;
 extern crate elastic_array;
 #[macro_use]
 extern crate cita_logger as logger;
-extern crate hashable;
-extern crate heapsize;
-extern crate itertools;
-extern crate parity_rocksdb;
-extern crate regex;
-extern crate rlp;
-extern crate util;
 
 pub mod hashdb;
 pub mod journaldb;
@@ -34,11 +27,13 @@ pub mod overlaydb;
 pub mod trie;
 pub mod triehash;
 
-pub use hashdb::*;
+pub use crate::hashdb::*;
+pub use crate::journaldb::JournalDB;
+pub use crate::kvdb::*;
+pub use crate::memorydb::MemoryDB;
+pub use crate::overlaydb::*;
+pub use crate::trie::{
+    SecTrieDB, SecTrieDBMut, Trie, TrieDB, TrieDBMut, TrieError, TrieFactory, TrieMut,
+};
+pub use crate::triehash::*;
 pub use itertools::Itertools;
-pub use journaldb::JournalDB;
-pub use kvdb::*;
-pub use memorydb::MemoryDB;
-pub use overlaydb::*;
-pub use trie::{SecTrieDB, SecTrieDBMut, Trie, TrieDB, TrieDBMut, TrieError, TrieFactory, TrieMut};
-pub use triehash::*;

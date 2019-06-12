@@ -21,13 +21,13 @@ use super::node::Node as RlpNode;
 use super::node::NodeKey;
 use super::{TrieError, TrieMut};
 
-use types::H256;
+use crate::types::H256;
+use crate::HashDB;
 use util::{nibbleslice::NibbleSlice, ToPretty};
-use HashDB;
 
+use crate::hashdb::DBValue;
 use elastic_array::ElasticArray1024;
 use hashable::HASH_NULL_RLP;
-use hashdb::DBValue;
 use rlp::{Rlp, RlpStream};
 
 use std::collections::{HashSet, VecDeque};
@@ -1008,9 +1008,9 @@ mod tests {
     use super::super::TrieMut;
     use super::*;
 
+    use crate::memorydb::*;
+    use crate::triehash::trie_root;
     use hashable::HASH_NULL_RLP;
-    use memorydb::*;
-    use triehash::trie_root;
     use util::ToPretty;
 
     fn populate_trie<'db>(

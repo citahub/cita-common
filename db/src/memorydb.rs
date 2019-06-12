@@ -16,14 +16,14 @@
 
 //! Reference-counted memory-based `HashDB` implementation.
 
+use crate::hashdb::*;
+use crate::types::{H256FastMap, H256};
 use hashable::{Hashable, HASH_NULL_RLP};
-use hashdb::*;
 use heapsize::*;
 use rlp::*;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::mem;
-use types::{H256FastMap, H256};
 
 /// Reference-counted memory-based `HashDB` implementation.
 ///

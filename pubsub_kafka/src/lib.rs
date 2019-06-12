@@ -8,8 +8,8 @@ extern crate rdkafka;
 use futures::*;
 use futures_cpupool::CpuPool;
 
-use channel::Receiver;
-use channel::Sender;
+use crate::channel::Receiver;
+use crate::channel::Sender;
 use rdkafka::client::Context;
 use rdkafka::config::{ClientConfig, RDKafkaLogLevel, TopicConfig};
 use rdkafka::consumer::stream_consumer::StreamConsumer;

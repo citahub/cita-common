@@ -19,13 +19,13 @@
 pub mod in_memory;
 pub mod rocksdb;
 
-pub use in_memory::*;
-pub use rocksdb::*;
+pub use crate::in_memory::*;
+pub use crate::rocksdb::*;
 
 use util::{Bytes, UtilError};
 
+use crate::hashdb::DBValue;
 use elastic_array::*;
-use hashdb::DBValue;
 
 /// Required length of prefixes.
 pub const PREFIX_LEN: usize = 12;

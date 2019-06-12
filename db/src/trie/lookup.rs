@@ -19,9 +19,9 @@
 use super::node::Node;
 use super::{Query, TrieError};
 
-use hashdb::HashDB;
+use crate::hashdb::HashDB;
+use crate::types::H256;
 use rlp::Rlp;
-use types::H256;
 use util::nibbleslice::NibbleSlice;
 
 /// Trie lookup helper object.

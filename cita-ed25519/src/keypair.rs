@@ -16,13 +16,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{Address, PrivKey, PubKey};
+use crate::error::Error;
+use crate::types::H160;
 use cita_crypto_trait::CreateKey;
-use error::Error;
 use hashable::Hashable;
 use rustc_serialize::hex::ToHex;
 use sodiumoxide::crypto::sign::gen_keypair;
 use std::fmt;
-use types::H160;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     H160::from(pubkey.crypt_hash())

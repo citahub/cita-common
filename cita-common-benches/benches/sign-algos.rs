@@ -1,11 +1,5 @@
 #[macro_use]
 extern crate criterion;
-extern crate cita_common_benches;
-extern crate rand;
-
-extern crate libsm;
-extern crate secp256k1;
-extern crate sodiumoxide;
 
 use cita_common_benches::bench_tools;
 use criterion::Criterion;

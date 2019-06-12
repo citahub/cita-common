@@ -19,10 +19,10 @@
 
 //! General error types for use in ethcore.
 
+use crate::types::H256;
 use rlp::DecoderError;
 use rustc_hex::FromHexError;
 use std::fmt;
-use types::H256;
 
 #[derive(Debug)]
 /// Error in database subsystem.

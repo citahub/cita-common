@@ -31,7 +31,7 @@ pub trait ConvertType
 where
     Self: ::std::marker::Sized,
 {
-    fn from_unaligned(&str) -> Option<Self>;
+    fn from_unaligned(_: &str) -> Option<Self>;
 }
 
 fn convert_u8_to_char(u: u8) -> char {
@@ -129,9 +129,9 @@ add_cita_funcs!([
 ]);
 
 pub trait BloomTools {
-    fn from_raw(&[u8]) -> Self;
-    fn contains_raw(&self, &[u8]) -> bool;
-    fn accrue_raw(&mut self, &[u8]);
+    fn from_raw(_: &[u8]) -> Self;
+    fn contains_raw(&self, _: &[u8]) -> bool;
+    fn accrue_raw(&mut self, _: &[u8]);
 }
 
 impl BloomTools for Bloom {
