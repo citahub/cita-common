@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2019 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -17,20 +17,14 @@
 
 #[cfg(test)]
 extern crate bincode;
-extern crate cita_crypto_trait;
 extern crate cita_types as types;
-extern crate hashable;
-extern crate rlp;
-extern crate rustc_serialize;
-extern crate serde;
-extern crate sodiumoxide;
 
 mod error;
 mod keypair;
 mod signature;
 mod signer;
 
-use types::{Address, H256, H512};
+use crate::types::{Address, H256, H512};
 
 pub const ADDR_BYTES_LEN: usize = 20;
 pub const PUBKEY_BYTES_LEN: usize = 32;
