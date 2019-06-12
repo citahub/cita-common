@@ -1,5 +1,3 @@
-extern crate rand;
-
 pub mod bench_tools {
 
     use rand::{thread_rng, Rng};

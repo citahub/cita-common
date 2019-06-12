@@ -1,10 +1,5 @@
 #[macro_use]
 extern crate criterion;
-extern crate cita_common_benches;
-
-extern crate blake2b;
-extern crate libsm;
-extern crate tiny_keccak;
 
 use cita_common_benches::bench_tools;
 use criterion::Criterion;
