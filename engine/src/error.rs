@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use crypto::Signature;
+use crate::crypto::Signature;
+use crate::types::Address;
 use std::fmt;
-use types::Address;
 
 #[derive(Debug)]
 pub enum EngineError {
