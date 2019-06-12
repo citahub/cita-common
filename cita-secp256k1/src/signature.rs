@@ -18,6 +18,7 @@
 use super::{
     pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SECP256K1, SIGNATURE_BYTES_LEN,
 };
+use crate::types::H256;
 use cita_crypto_trait::Sign;
 use rlp::*;
 use rustc_serialize::hex::ToHex;
@@ -30,7 +31,6 @@ use std::cmp::PartialEq;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-use types::H256;
 
 pub struct Signature(pub [u8; 65]);
 
@@ -385,11 +385,11 @@ impl Sign for Signature {
 mod tests {
     use super::super::KeyPair;
     use super::{PrivKey, Signature};
+    use crate::types::H256;
     use bincode::{deserialize, serialize, Infinite};
     use cita_crypto_trait::{CreateKey, Sign};
     use hashable::Hashable;
     use std::str::FromStr;
-    use types::H256;
 
     #[test]
     fn test_sign_verify() {
