@@ -46,16 +46,16 @@ pub mod vector;
 #[macro_use]
 pub mod init;
 
+pub use crate::bytes::*;
+pub use crate::error::*;
+pub use crate::init::*;
+pub use crate::instrument::*;
+pub use crate::semantic_version::*;
+pub use crate::vector::*;
 pub use ansi_term::{Colour, Style};
-pub use bytes::*;
-pub use error::*;
 pub use heapsize::HeapSizeOf;
-pub use init::*;
-pub use instrument::*;
 pub use panic_hook::set_panic_handler;
 pub use parking_lot::{Condvar, Mutex, MutexGuard, RwLock, RwLockReadGuard, RwLockWriteGuard};
-pub use semantic_version::*;
-pub use vector::*;
 
 pub const BLOCKLIMIT: u64 = 100;
 

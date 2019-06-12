@@ -46,7 +46,7 @@ where
 
 #[cfg(test)]
 mod test {
-    use vector::SharedPrefix;
+    use crate::vector::SharedPrefix;
 
     #[test]
     fn test_shared_prefix() {

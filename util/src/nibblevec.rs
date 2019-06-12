@@ -16,8 +16,8 @@
 
 //! An owning, nibble-oriented byte vector.
 
+use crate::nibbleslice::NibbleSlice;
 use elastic_array::ElasticArray36;
-use nibbleslice::NibbleSlice;
 
 /// Owning, nibble-oriented byte vector. Counterpart to `NibbleSlice`.
 #[derive(Clone, PartialEq, Eq, Debug)]
