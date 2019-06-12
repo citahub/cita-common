@@ -275,8 +275,8 @@ impl Sign for Signature {
 #[cfg(test)]
 mod tests {
     use super::{Message, Signature};
+    use crate::keypair::KeyPair;
     use cita_crypto_trait::{CreateKey, Sign};
-    use keypair::KeyPair;
 
     #[test]
     fn test_sign_verify() {

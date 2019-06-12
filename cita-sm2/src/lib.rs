@@ -1,5 +1,5 @@
 // CITA
-// Copyright 2016-2017 Cryptape Technologies LLC.
+// Copyright 2016-2019 Cryptape Technologies LLC.
 
 // This program is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public
@@ -15,15 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate cita_crypto_trait;
 extern crate cita_types as types;
-extern crate hashable;
-extern crate libsm;
-extern crate rlp;
-extern crate rustc_serialize;
-extern crate serde;
 
-use types::{Address, H256, H512};
+use crate::types::{Address, H256, H512};
 
 mod error;
 mod keypair;
