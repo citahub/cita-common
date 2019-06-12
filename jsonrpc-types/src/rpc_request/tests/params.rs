@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use cita_types::{H160, H256, U256};
 use crate::rpc_request::{
     BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
     GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
@@ -25,6 +24,7 @@ use crate::rpc_request::{
     PeerCountParams, PeersInfoParams, SendRawTransactionParams, UninstallFilterParams,
 };
 use crate::rpc_types::{BlockNumber, CallRequest, Filter, VariadicValue};
+use cita_types::{H160, H256, U256};
 use serde_json;
 use std::convert::Into;
 

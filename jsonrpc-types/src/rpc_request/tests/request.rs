@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use cita_types::H256;
 use crate::rpc_request::{BlockNumberParams, GetTransactionReceiptParams, PartialRequest, Request};
+use cita_types::H256;
 use serde_json;
 use std::convert::Into;
 
