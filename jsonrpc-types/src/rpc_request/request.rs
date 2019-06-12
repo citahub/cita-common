@@ -18,9 +18,9 @@
 /// JSON-RPC Request.
 use serde_json;
 
-use internals::construct_params;
+use crate::internals::construct_params;
 
-use rpc_types::{
+use crate::rpc_types::{
     Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id, Log,
     MetaData, OneItemTupleTrick, PeersInfo, Quantity, Receipt, RpcTransaction, SoftwareVersion,
     TxResponse, Version,

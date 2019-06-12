@@ -17,7 +17,7 @@
 
 use cita_types::{H160, H256, U256};
 
-use rpc_types::{BlockTag, Boolean, Data, Data20, Data32, Integer, Quantity};
+use crate::rpc_types::{BlockTag, Boolean, Data, Data20, Data32, Integer, Quantity};
 
 macro_rules! test_from_jsonstr {
     ($type:tt, $jsonstr:expr, $expected_opt:expr) => {

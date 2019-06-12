@@ -21,9 +21,9 @@ use serde::de::Error as SError;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{from_value, Value};
 
-use error::Error;
-use rpc_request::{RequestInfo, ResponseResult};
-use rpc_types::{Id, Version};
+use crate::error::Error;
+use crate::rpc_request::{RequestInfo, ResponseResult};
+use crate::rpc_types::{Id, Version};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct RpcFailure {
@@ -155,8 +155,8 @@ impl Serialize for RpcResponse {
 #[cfg(test)]
 mod tests {
     use super::RpcSuccess;
-    use rpc_request::{RequestInfo, ResponseResult};
-    use rpc_types::{Id, Version};
+    use crate::rpc_request::{RequestInfo, ResponseResult};
+    use crate::rpc_types::{Id, Version};
     use serde_json;
 
     #[test]

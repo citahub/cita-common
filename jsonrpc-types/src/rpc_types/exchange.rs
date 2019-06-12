@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /// Structs for combine paramters and exchange between request handler and response handler.
-use rpc_types::BlockNumber;
+use crate::rpc_types::BlockNumber;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct CountOrCode {
