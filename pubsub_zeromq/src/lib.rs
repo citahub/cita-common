@@ -19,8 +19,8 @@
 extern crate cita_logger as logger;
 pub extern crate crossbeam_channel as channel;
 extern crate zmq;
-use channel::Receiver;
-use channel::Sender;
+use crate::channel::Receiver;
+use crate::channel::Sender;
 use std::thread;
 
 pub fn start_zeromq(
