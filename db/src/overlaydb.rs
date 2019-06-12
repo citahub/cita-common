@@ -16,11 +16,11 @@
 
 //! Disk-backed `HashDB` implementation.
 
-use hashdb::*;
-use kvdb::{DBTransaction, KeyValueDB};
-use memorydb::*;
+use crate::hashdb::*;
+use crate::kvdb::{DBTransaction, KeyValueDB};
+use crate::memorydb::*;
+use crate::types::H256;
 use rlp::*;
-use types::H256;
 use util::{BaseDataError, UtilError};
 
 use std::collections::HashMap;
@@ -54,7 +54,7 @@ impl OverlayDB {
     /// Create a new instance of OverlayDB with an anonymous temporary database.
     #[cfg(test)]
     pub fn new_temp() -> OverlayDB {
-        let backing = Arc::new(::kvdb::in_memory(0));
+        let backing = Arc::new(crate::kvdb::in_memory(0));
         Self::new(backing, None)
     }
 

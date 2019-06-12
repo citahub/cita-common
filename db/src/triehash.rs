@@ -18,10 +18,10 @@
 //!
 //! This module should be used to generate trie root hash.
 
+use crate::types::H256;
 use hashable::Hashable;
 use rlp;
 use rlp::RlpStream;
-use types::H256;
 use util::SharedPrefix;
 
 use std::cmp;
@@ -354,8 +354,8 @@ fn test_hex_prefix_encode() {
 #[cfg(test)]
 mod tests {
     use super::trie_root;
+    use crate::types::H256;
     use std::str::FromStr;
-    use types::H256;
 
     #[test]
     fn simple_test() {

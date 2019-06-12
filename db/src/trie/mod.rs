@@ -16,9 +16,9 @@
 
 //! Trie interface and implementation.
 
-use hashdb::{DBValue, HashDB};
+use crate::hashdb::{DBValue, HashDB};
+use crate::types::H256;
 use std::fmt;
-use types::H256;
 use util::Bytes;
 
 /// Export the node module.
@@ -88,10 +88,10 @@ pub trait Query {
     type Item;
 
     /// Decode a byte-slice into the desired item.
-    fn decode(self, &[u8]) -> Self::Item;
+    fn decode(self, _: &[u8]) -> Self::Item;
 
     /// Record that a node has been passed through.
-    fn record(&mut self, &H256, &[u8], u32) {}
+    fn record(&mut self, _: &H256, _: &[u8], _: u32) {}
 }
 
 impl<'a> Query for &'a mut Recorder {

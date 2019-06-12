@@ -19,13 +19,13 @@
 use super::traits::JournalDB;
 use super::{DB_PREFIX_LEN, LATEST_ERA_KEY};
 
-use hashdb::*;
+use crate::hashdb::*;
+use crate::kvdb::{DBTransaction, KeyValueDB};
+use crate::memorydb::MemoryDB;
+use crate::overlaydb::OverlayDB;
+use crate::types::H256;
 use heapsize::HeapSizeOf;
-use kvdb::{DBTransaction, KeyValueDB};
-use memorydb::MemoryDB;
-use overlaydb::OverlayDB;
 use rlp::*;
-use types::H256;
 use util::{Bytes, UtilError};
 
 use std::collections::HashMap;
@@ -83,7 +83,7 @@ impl RefCountedDB {
     /// Create a new instance with an anonymous temporary database.
     #[cfg(test)]
     fn new_temp() -> RefCountedDB {
-        let backing = Arc::new(::kvdb::in_memory(0));
+        let backing = Arc::new(crate::kvdb::in_memory(0));
         Self::new(backing, None)
     }
 }
@@ -254,8 +254,8 @@ mod tests {
 
     use super::super::traits::JournalDB;
     use super::*;
+    use crate::hashdb::{DBValue, HashDB};
     use hashable::Hashable;
-    use hashdb::{DBValue, HashDB};
 
     #[test]
     fn long_history() {

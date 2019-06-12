@@ -16,8 +16,8 @@
 
 //! Trie query recorder.
 
+use crate::types::H256;
 use hashable::Hashable;
-use types::H256;
 use util::Bytes;
 
 /// A record of a visited node.
@@ -83,8 +83,8 @@ impl Recorder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::H256;
     use hashable::Hashable;
-    use types::H256;
 
     #[test]
     fn basic_recorder() {
@@ -140,8 +140,8 @@ mod tests {
 
     #[test]
     fn trie_record() {
-        use memorydb::MemoryDB;
-        use trie::{Trie, TrieDB, TrieDBMut, TrieMut};
+        use crate::memorydb::MemoryDB;
+        use crate::trie::{Trie, TrieDB, TrieDBMut, TrieMut};
 
         let mut db = MemoryDB::new();
 

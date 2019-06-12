@@ -124,7 +124,7 @@ impl fmt::Display for Algorithm {
 
 /// Create a new `JournalDB` trait object over a generic key-value database.
 pub fn new(
-    backing: Arc<::kvdb::KeyValueDB>,
+    backing: Arc<crate::kvdb::KeyValueDB>,
     algorithm: Algorithm,
     col: Option<u32>,
 ) -> Box<JournalDB> {
@@ -137,8 +137,9 @@ pub fn new(
 }
 
 // all keys must be at least 12 bytes
-const DB_PREFIX_LEN: usize = ::kvdb::PREFIX_LEN;
-const LATEST_ERA_KEY: [u8; ::kvdb::PREFIX_LEN] = [b'l', b'a', b's', b't', 0, 0, 0, 0, 0, 0, 0, 0];
+const DB_PREFIX_LEN: usize = crate::kvdb::PREFIX_LEN;
+const LATEST_ERA_KEY: [u8; crate::kvdb::PREFIX_LEN] =
+    [b'l', b'a', b's', b't', 0, 0, 0, 0, 0, 0, 0, 0];
 
 #[cfg(test)]
 mod tests {

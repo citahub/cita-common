@@ -15,9 +15,9 @@
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{TrieDBMut, TrieMut};
+use crate::hashdb::{DBValue, HashDB};
+use crate::types::H256;
 use hashable::Hashable;
-use hashdb::{DBValue, HashDB};
-use types::H256;
 
 /// A mutable `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 /// Additionaly it stores inserted hash-key mappings for later retrieval.
@@ -110,7 +110,7 @@ impl<'db> TrieMut for FatDBMut<'db> {
 fn fatdb_to_trie() {
     use super::Trie;
     use super::TrieDB;
-    use memorydb::MemoryDB;
+    use crate::memorydb::MemoryDB;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

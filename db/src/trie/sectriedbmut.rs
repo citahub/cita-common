@@ -16,9 +16,9 @@
 
 use super::triedbmut::TrieDBMut;
 use super::TrieMut;
+use crate::hashdb::{DBValue, HashDB};
+use crate::types::H256;
 use hashable::Hashable;
-use hashdb::{DBValue, HashDB};
-use types::H256;
 
 /// A mutable `Trie` implementation which hashes keys and uses a generic `HashDB` backing database.
 ///
@@ -90,7 +90,7 @@ impl<'db> TrieMut for SecTrieDBMut<'db> {
 fn sectrie_to_trie() {
     use super::triedb::*;
     use super::Trie;
-    use memorydb::*;
+    use crate::memorydb::*;
 
     let mut memdb = MemoryDB::new();
     let mut root = H256::default();

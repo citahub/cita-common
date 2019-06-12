@@ -18,8 +18,8 @@
 
 use std::collections::{BTreeMap, HashMap};
 
-use hashdb::DBValue;
-use kvdb::{DBOp, DBTransaction, KeyValueDB};
+use crate::hashdb::DBValue;
+use crate::kvdb::{DBOp, DBTransaction, KeyValueDB};
 use util::{RwLock, UtilError};
 
 use rlp::{Compressible, RlpType, UntrustedRlp};
