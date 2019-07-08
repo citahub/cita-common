@@ -21,7 +21,6 @@ function check_dependencies () {
             echo "[Error] Please check if you have installed ${bin} in your \$PATH."
             echo "    protoc:                 https://developers.google.com/protocol-buffers/"
             echo "    protoc-gen-rust:        https://crates.io/crates/protobuf"
-            echo "    protoc-gen-rust-grpc:   https://crates.io/crates/grpc-compiler"
             exit 1
         fi
     done
@@ -35,11 +34,6 @@ function gen_rs_for_protos () {
     find ./proto -name "*.proto" | while read protofile; do
         protoc ${protofile} --proto_path ./proto --rust_out ./src/protos
     done
-}
-
-function gen_grpc_rs_for_protos() {
-    protoc --rust-grpc_out=./src/protos ./proto/executor.proto --proto_path ./proto
-    protoc --rust-grpc_out=./src/protos ./proto/citacode.proto --proto_path ./proto
 }
 
 function add_license () {
@@ -95,20 +89,6 @@ function gen_modrs_for_protos () {
             | sort \
             | cut -d"." -f 1 | while read name; do
         items=$(grep "^pub [se].* {$" "./src/protos/${name}.rs" | sort | awk '{ printf $3", " }')
-        echo "pub use self::${name}::{${items/%, }};" >> "${modrs}"
-    done
-}
-
-function gen_modrs_for_protos_grpc () {
-    local modrs="./src/protos/mod.rs"
-    echo >> "${modrs}"
-    echo "// For gprc" >> "${modrs}"
-    find ./src/protos -maxdepth 1 -name "*_grpc.rs" \
-            -exec basename {} \; \
-            | sort \
-            | cut -d"." -f 1 | while read name; do
-        items=$(grep "^pub [set].* {$" "./src/protos/${name}.rs" | sort | awk '{ printf $3", " }')
-        echo "pub mod ${name};" >> "${modrs}"
         echo "pub use self::${name}::{${items/%, }};" >> "${modrs}"
     done
 }
@@ -176,8 +156,6 @@ function main () {
         '\"$(camelcase_to_underscore ${struct})\" =\> MsgType::${struct},'
     generate_methods_for_msg
     gen_modrs_for_protos
-    gen_grpc_rs_for_protos
-    gen_modrs_for_protos_grpc
     add_license
     cd "${currdir}"
 }
