@@ -25,8 +25,8 @@ pub mod traits;
 
 pub use ethereum_types::clean_0x;
 pub use ethereum_types::{Bloom, BloomInput, BloomRef};
-pub use ethereum_types::{H1024, H128, H160, H256, H264, H32, H512, H520, H64};
-pub use ethereum_types::{U1024, U128, U256, U512, U64};
+pub use ethereum_types::{H128, H160, H256, H264, H32, H512, H520, H64};
+pub use ethereum_types::{U128, U256, U512, U64};
 pub use plain_hasher::PlainHasher;
 
 pub type Address = H160;
