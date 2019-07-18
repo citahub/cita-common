@@ -11,7 +11,6 @@ Crates below are extracted from [Parity](https://github.com/paritytech/parity):
 - rlp
 - rlp_derive
 - util
-- db
 
 with following modifications:
 
