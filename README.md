@@ -7,7 +7,6 @@ This repository is a collection of crates used by microservices in [CITA](https:
 
 Crates below are extracted from [Parity](https://github.com/paritytech/parity):
 
-- ethcore-bloom-journal
 - rlp
 - rlp_derive
 - util
