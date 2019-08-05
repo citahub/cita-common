@@ -36,7 +36,6 @@ extern crate toml;
 pub mod build_info;
 pub mod bytes;
 pub mod cache;
-pub mod common;
 pub mod error;
 pub mod instrument;
 pub mod nibbleslice;
