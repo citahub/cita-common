@@ -42,7 +42,6 @@ pub mod instrument;
 pub mod nibbleslice;
 pub mod nibblevec;
 pub mod semantic_version;
-pub mod vector;
 #[macro_use]
 pub mod init;
 
@@ -51,7 +50,6 @@ pub use crate::error::*;
 pub use crate::init::*;
 pub use crate::instrument::*;
 pub use crate::semantic_version::*;
-pub use crate::vector::*;
 pub use ansi_term::{Colour, Style};
 pub use heapsize::HeapSizeOf;
 pub use panic_hook::set_panic_handler;
