@@ -29,13 +29,13 @@ use crate::channel::Sender;
 use crate::types::H256;
 use libproto::blockchain::{Block, RichStatus};
 use std::time::Duration;
-use util::SemanticVersion;
+use util::SemVer;
 
 pub trait Engine: Sync + Send {
     fn name(&self) -> &str;
 
-    fn version(&self) -> SemanticVersion {
-        SemanticVersion::new(1, 2, 3)
+    fn version(&self) -> SemVer {
+        SemVer::new(1, 2, 3)
     }
 
     fn duration(&self) -> Duration;
