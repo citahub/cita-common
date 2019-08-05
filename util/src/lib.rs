@@ -34,7 +34,6 @@ extern crate serde;
 extern crate toml;
 
 pub mod build_info;
-pub mod bytes;
 pub mod cache;
 pub mod common;
 pub mod error;
@@ -46,7 +45,6 @@ pub mod vector;
 #[macro_use]
 pub mod init;
 
-pub use crate::bytes::*;
 pub use crate::error::*;
 pub use crate::init::*;
 pub use crate::instrument::*;
