@@ -113,6 +113,20 @@ jobs:
               fi
       - save_cache: *save-clippy-cache
 
+  "Release":
+    <<: *job-default
+    steps:
+      - restore_cache: *restore-source-codes-cache
+      - restore_cache: *restore-dependencies-cache
+      - run: *before-restore-build-cache
+      - restore_cache: *restore-build-cache
+      - run:
+          name: Build Release
+          command: ./.ci-scripts/loop_crates_to_run build "${HASH_ALGO}" "${CRYPTO_ALGO}"
+          no_output_timeout: 20m
+      - run: *clean-build-cache-if-too-large
+      - save_cache: *save-build-cache
+
   "Unit Test (sha3 & secp256k1)":
     <<: *job-unit-test
     environment:
@@ -139,6 +153,10 @@ workflows:
       - "Check Basic"
 
       - "Check Clippy":
+          requires:
+            - "Check Basic"
+
+      - "Release":
           requires:
             - "Check Basic"
 
