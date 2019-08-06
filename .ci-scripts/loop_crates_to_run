@@ -102,7 +102,6 @@ function cargo_run_all () {
     cargo_run cita-crypto-trait
 
     cargo_run rlp
-    cargo_run rlp_derive
 
     cargo_run authority_manage
 
