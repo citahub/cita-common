@@ -36,8 +36,6 @@ extern crate toml;
 pub mod build_info;
 pub mod error;
 pub mod instrument;
-pub mod nibbleslice;
-pub mod nibblevec;
 pub mod semantic_version;
 #[macro_use]
 pub mod init;
