@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 rustc-serialize = "0.3"
-sodiumoxide = "0.1.0"
+sodiumoxide = "0.2.2"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
