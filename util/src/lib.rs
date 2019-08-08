@@ -34,13 +34,11 @@ extern crate serde;
 extern crate toml;
 
 pub mod build_info;
-pub mod error;
 pub mod instrument;
 pub mod semantic_version;
 #[macro_use]
 pub mod init;
 
-pub use crate::error::*;
 pub use crate::init::*;
 pub use crate::instrument::*;
 pub use crate::semantic_version::*;

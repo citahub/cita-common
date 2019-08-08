@@ -8,13 +8,3 @@ This repository is a collection of crates used by microservices in [CITA](https:
 Crates below are extracted from [Parity](https://github.com/paritytech/parity):
 
 - rlp
-- util
-
-with following modifications:
-
-- add UtilError::Snappy in util::error
-- add some modules in util:
-    - build_info.rs
-    - init.rs
-    - instrument.rs
-- add get_value_proof and verify_value_proof in db::trie::triedb
