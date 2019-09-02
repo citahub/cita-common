@@ -2,6 +2,7 @@
 name = "cita-web3"
 version = "0.1.0"
 authors = ["Cryptape Technologies <arch@cryptape.com>"]
+license = "Apache-2.0"
 
 [dependencies]
 jsonrpc-types = { path = "../jsonrpc-types" }
