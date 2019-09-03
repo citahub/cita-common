@@ -1,40 +1,70 @@
-// CITA
-// Copyright 2016-2019 Cryptape Technologies LLC.
-
-// This program is free software: you can redistribute it
-// and/or modify it under the terms of the GNU General Public
-// License as published by the Free Software Foundation,
-// either version 3 of the License, or (at your option) any
-// later version.
-
-// This program is distributed in the hope that it will be
-// useful, but WITHOUT ANY WARRANTY; without even the implied
-// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-// PURPOSE. See the GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>
+// Copyright Cryptape Technologies LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 extern crate hashable;
-#[macro_use]
-extern crate rlp_derive;
 
 use self::hashable::Hashable;
 use cita_types::H256;
-use rlp::RlpStream;
+use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 pub use static_merkle_tree::{Proof as MerkleProof, ProofNode as MerkleProofNode};
 
 pub use self::hashable::HASH_NULL_RLP as HASH_NULL;
 pub use static_merkle_tree::Tree;
 
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable)]
+#[derive(Debug, Clone)]
 pub struct ProofNode {
     is_right: bool,
     hash: H256,
 }
 
-#[derive(Debug, Clone, RlpEncodableWrapper, RlpDecodableWrapper)]
+impl Encodable for ProofNode {
+    fn rlp_append(&self, s: &mut RlpStream) {
+        s.begin_list(2);
+        s.append(&self.is_right);
+        s.append(&self.hash);
+    }
+}
+
+impl Decodable for ProofNode {
+    fn decode(r: &UntrustedRlp) -> Result<Self, DecoderError> {
+        if r.item_count()? != 2 {
+            return Err(DecoderError::RlpIncorrectListLen);
+        }
+        let proof_node = ProofNode {
+            is_right: r.val_at(0)?,
+            hash: r.val_at(1)?,
+        };
+        Ok(proof_node)
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Proof(Vec<ProofNode>);
+
+impl Encodable for Proof {
+    fn rlp_append(&self, s: &mut RlpStream) {
+        s.append_list(&self.0);
+    }
+}
+
+impl Decodable for Proof {
+    fn decode(r: &UntrustedRlp) -> Result<Self, DecoderError> {
+        let proof = Proof(r.as_list()?);
+
+        Ok(proof)
+    }
+}
 
 pub fn merge(left: &H256, right: &H256) -> H256 {
     let mut stream = RlpStream::new();

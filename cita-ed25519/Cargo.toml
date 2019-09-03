@@ -2,11 +2,12 @@
 name = "cita-ed25519"
 version = "0.6.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
+license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
 rustc-serialize = "0.3"
-sodiumoxide = "0.1.0"
+sodiumoxide = "0.2.2"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }

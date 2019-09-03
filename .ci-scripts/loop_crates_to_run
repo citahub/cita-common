@@ -100,10 +100,8 @@ function cargo_run_all () {
     cargo_run snappy
     cargo_run cita-directories
     cargo_run cita-crypto-trait
-    cargo_run ethcore-bloom-journal
 
     cargo_run rlp
-    cargo_run rlp_derive
 
     cargo_run authority_manage
 
@@ -124,7 +122,7 @@ function cargo_run_all () {
     cargo_run jsonrpc-types
     cargo_run cita-web3
 
-    for crate in hashable cita-merklehash db cita-secp256k1 cita-ed25519 cita-sm2; do
+    for crate in hashable cita-merklehash cita-secp256k1 cita-ed25519 cita-sm2; do
         cargo_run ${crate} --features "${SELECT_HASH}"
     done
 

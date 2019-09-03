@@ -16,7 +16,6 @@ members = [
     "pubsub_kafka",
     "pubsub",
 
-    "ethcore-bloom-journal",
     "hashable",
     "cita-merklehash",
     "blake2b",
@@ -27,7 +26,6 @@ members = [
     "cita-crypto",
 
     "rlp",
-    "rlp_derive",
     "libproto",
 
     "tx_pool",
@@ -37,7 +35,6 @@ members = [
 
     "jsonrpc-types",
     "cita-web3",
-    "db",
     "jsonrpc-proto",
 
     "engine",
