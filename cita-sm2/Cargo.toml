@@ -2,6 +2,7 @@
 name = "cita-sm2"
 version = "0.1.0"
 authors = ["Cryptape Technologies <contact@cryptape.com>"]
+license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
@@ -11,7 +12,7 @@ cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
 rlp = { path = "../rlp" }
-libsm = { git = "https://github.com/cryptape/libsm", rev = "ac323abd3512a9fdb8bfd6cd349a6fc46deb688f" }
+libsm = { git = "https://github.com/cryptape/libsm", rev = "4d0e6199fca0934c58131de1d0036e9aa4da26c1" }
 
 [features]
 default = []

@@ -223,7 +223,7 @@ version = "0.1.0"
 dependencies = [
  "blake2b 0.1.0",
  "criterion 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
+ "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=4d0e6199fca0934c58131de1d0036e9aa4da26c1)",
  "rand 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "secp256k1 0.12.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "sodiumoxide 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -314,7 +314,7 @@ dependencies = [
  "cita-crypto-trait 0.1.0",
  "cita-types 0.1.0",
  "hashable 0.1.0",
- "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
+ "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=4d0e6199fca0934c58131de1d0036e9aa4da26c1)",
  "rlp 0.2.0",
  "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.69 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -824,7 +824,7 @@ version = "0.1.0"
 dependencies = [
  "blake2b 0.1.0",
  "cita-types 0.1.0",
- "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)",
+ "libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=4d0e6199fca0934c58131de1d0036e9aa4da26c1)",
  "tiny-keccak 1.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -1083,7 +1083,7 @@ dependencies = [
 [[package]]
 name = "libsm"
 version = "0.3.0"
-source = "git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f#ac323abd3512a9fdb8bfd6cd349a6fc46deb688f"
+source = "git+https://github.com/cryptape/libsm?rev=4d0e6199fca0934c58131de1d0036e9aa4da26c1#4d0e6199fca0934c58131de1d0036e9aa4da26c1"
 dependencies = [
  "byteorder 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2812,7 +2812,7 @@ dependencies = [
 "checksum libc 0.2.45 (registry+https://github.com/rust-lang/crates.io-index)" = "2d2857ec59fadc0773853c664d2d18e7198e83883e7060b63c924cb077bd5c74"
 "checksum libflate 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)" = "90c6f86f4b0caa347206f916f8b687b51d77c6ef8ff18d52dd007491fd580529"
 "checksum libgit2-sys 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)" = "7adce4cc6db027611f537837a7c404319b6314dae49c5db80ad5332229894751"
-"checksum libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=ac323abd3512a9fdb8bfd6cd349a6fc46deb688f)" = "<none>"
+"checksum libsm 0.3.0 (git+https://github.com/cryptape/libsm?rev=4d0e6199fca0934c58131de1d0036e9aa4da26c1)" = "<none>"
 "checksum libsodium-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "de29595a79ddae2612ad0f27793a0b86cdf05a12f94ad5b87674540cc568171e"
 "checksum libssh2-sys 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)" = "5afcb36f9a2012ab8d3a9ba5186ee2d1c4587acf199cb47879a73c5fe1b731a4"
 "checksum libz-sys 1.0.18 (registry+https://github.com/rust-lang/crates.io-index)" = "87f737ad6cc6fd6eefe3d9dc5412f1573865bded441300904d2f42269e140f16"

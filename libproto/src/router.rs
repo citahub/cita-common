@@ -1,19 +1,16 @@
-// CITA
-// Copyright 2016-2018 Cryptape Technologies LLC.
-
-// This program is free software: you can redistribute it
-// and/or modify it under the terms of the GNU General Public
-// License as published by the Free Software Foundation,
-// either version 3 of the License, or (at your option) any
-// later version.
-
-// This program is distributed in the hope that it will be
-// useful, but WITHOUT ANY WARRANTY; without even the implied
-// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-// PURPOSE. See the GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright Cryptape Technologies LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 use std::convert::{From, Into};
 use std::fmt;
@@ -150,32 +147,32 @@ impl fmt::Display for MsgType {
             "{}",
             match self {
                 // Generate MSG-PROTOS display automatically begin:
-                MsgType::RawBytes => "raw_bytes",
-                MsgType::Request => "request",
-                MsgType::Response => "response",
-                MsgType::SyncRequest => "sync_request",
-                MsgType::SyncResponse => "sync_response",
-                MsgType::Status => "status",
-                MsgType::RichStatus => "rich_status",
-                MsgType::SignedProposal => "signed_proposal",
-                MsgType::Block => "block",
-                MsgType::BlockWithProof => "block_with_proof",
-                MsgType::BlockHeader => "block_header",
-                MsgType::BlockTxs => "block_txs",
-                MsgType::BlockTxHashes => "block_tx_hashes",
-                MsgType::BlockTxHashesReq => "block_tx_hashes_req",
-                MsgType::VerifyBlockReq => "verify_block_req",
-                MsgType::VerifyBlockResp => "verify_block_resp",
-                MsgType::ExecutedResult => "executed_result",
-                MsgType::SnapshotReq => "snapshot_req",
-                MsgType::SnapshotResp => "snapshot_resp",
-                MsgType::Miscellaneous => "miscellaneous",
-                MsgType::MiscellaneousReq => "miscellaneous_req",
-                MsgType::BlackList => "black_list",
-                MsgType::StateSignal => "state_signal",
-                MsgType::GetBlockTxn => "get_block_txn",
-                MsgType::BlockTxn => "block_txn",
-                MsgType::CompactSignedProposal => "compact_signed_proposal",
+                &MsgType::RawBytes => "raw_bytes",
+                &MsgType::Request => "request",
+                &MsgType::Response => "response",
+                &MsgType::SyncRequest => "sync_request",
+                &MsgType::SyncResponse => "sync_response",
+                &MsgType::Status => "status",
+                &MsgType::RichStatus => "rich_status",
+                &MsgType::SignedProposal => "signed_proposal",
+                &MsgType::Block => "block",
+                &MsgType::BlockWithProof => "block_with_proof",
+                &MsgType::BlockHeader => "block_header",
+                &MsgType::BlockTxs => "block_txs",
+                &MsgType::BlockTxHashes => "block_tx_hashes",
+                &MsgType::BlockTxHashesReq => "block_tx_hashes_req",
+                &MsgType::VerifyBlockReq => "verify_block_req",
+                &MsgType::VerifyBlockResp => "verify_block_resp",
+                &MsgType::ExecutedResult => "executed_result",
+                &MsgType::SnapshotReq => "snapshot_req",
+                &MsgType::SnapshotResp => "snapshot_resp",
+                &MsgType::Miscellaneous => "miscellaneous",
+                &MsgType::MiscellaneousReq => "miscellaneous_req",
+                &MsgType::BlackList => "black_list",
+                &MsgType::StateSignal => "state_signal",
+                &MsgType::GetBlockTxn => "get_block_txn",
+                &MsgType::BlockTxn => "block_txn",
+                &MsgType::CompactSignedProposal => "compact_signed_proposal",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
