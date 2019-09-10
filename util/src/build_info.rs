@@ -104,7 +104,7 @@ fn get_latest_tag(repo: &Repository) -> Option<String> {
 }
 
 /// Generate the build info functions (The file will be used by `include!` macro)
-pub fn gen_build_info(out_dir: &str, dest_name: &str) {
+pub fn gen_build_info(out_dir: &str, dest_name: &str, version_str: String) {
     let dest_path = Path::new(&out_dir).join(dest_name);
     let mut f = File::create(&dest_path).unwrap();
 
@@ -125,11 +125,11 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str) {
         ((ver.major, ver.minor, ver.patch), pre, ver_meta.commit_date)
     };
 
-    let version_string = descr_dirty.clone().unwrap_or_else(|| {
+    let version_string = {
         let branch_string = branch.clone().unwrap_or_else(|| "unknown".to_owned());
         let commit_id_string = commit_id.clone().unwrap_or_else(|| "unknown".to_owned());
-        format!("{}-{:.8}", branch_string, commit_id_string)
-    });
+        format!("{}-{}-{:.8}", version_str, branch_string, commit_id_string)
+    };
     let pre_str = pre.as_ref().map(|x| &**x).unwrap_or("unknown");
     let commit_date_str = commit_date.as_ref().map(|x| &**x).unwrap_or("unknown");
     let rustc_str = format!(
