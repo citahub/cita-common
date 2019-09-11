@@ -13,3 +13,5 @@ features = []
 [dependencies]
 cita-logger = "0.1.0"
 crossbeam-channel = "0.3.8"
+lazy_static = "1.1"
+rand = "0.4"
