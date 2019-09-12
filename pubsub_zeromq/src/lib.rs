@@ -64,7 +64,7 @@ pub fn start_zeromq(
     tx: Sender<(String, Vec<u8>)>,
     rx: Receiver<(String, Vec<u8>)>,
 ) {
-    let ip = std::env::var(ZEROMQ_IP).unwrap_or("127.0.0.1".to_string());
+    let mut ip = std::env::var(ZEROMQ_IP).unwrap_or("127.0.0.1".to_string());
     let base_port_string = std::env::var(TMP_BORROW_AMQP_URL)
         .expect(&*format!("{} must be number", TMP_BORROW_AMQP_URL));
     let port: u16 = *base_port_string.as_bytes().last().unwrap() as u16 - '0' as u16;
@@ -74,15 +74,15 @@ pub fn start_zeromq(
     //pub
     let publisher = CONTEXT.socket(zmq::PUB).unwrap();
     let mut publish_flag = true;
-    let delimiter = ":".to_string();
-    let con_type = "tcp".to_string();
-    let wild_cast = "*".to_string();
-    /*if ip == "localhost" || ip == "127.0.0.1" {
+    let mut delimiter = ":".to_string();
+    let mut con_type = "tcp".to_string();
+    let mut wild_cast = "*".to_string();
+    if ip == "localhost" || ip == "127.0.0.1" {
         delimiter = "".to_string();
         con_type = "ipc".to_string();
         wild_cast = "ipc".to_string();
         ip = "ipc".to_string();
-    }*/
+    }
 
     /*URL like tcp://8.8.8.8:6000  or like ipc://ipc6000*/
     let _ = SERVICE_PORT_INDEX.get(&name).map_or_else(
