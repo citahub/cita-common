@@ -164,6 +164,9 @@ impl OutputExt for Output {
                             })
                             .unwrap_or_else(|_| Output::system_error(0))
                     }
+                    Response_oneof_data::estimate_quota(x) => success
+                        .set_result(ResponseResult::EstimateQuota(x.as_slice().into()))
+                        .output(),
                 }
             } else {
                 match response {

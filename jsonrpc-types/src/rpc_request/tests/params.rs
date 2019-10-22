@@ -13,12 +13,13 @@
 // limitations under the License.
 
 use crate::rpc_request::{
-    BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
-    GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
-    GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
-    GetTransactionCountParams, GetTransactionParams, GetTransactionProofParams,
-    GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams, NewFilterParams,
-    PeerCountParams, PeersInfoParams, SendRawTransactionParams, UninstallFilterParams,
+    BlockNumberParams, CallParams, EstimateQuotaParams, GetAbiParams, GetBalanceParams,
+    GetBlockByHashParams, GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams,
+    GetFilterChangesParams, GetFilterLogsParams, GetLogsParams, GetMetaDataParams,
+    GetStateProofParams, GetTransactionCountParams, GetTransactionParams,
+    GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams,
+    NewFilterParams, PeerCountParams, PeersInfoParams, SendRawTransactionParams,
+    UninstallFilterParams,
 };
 use crate::rpc_types::{BlockNumber, CallRequest, Filter, VariadicValue};
 use cita_types::{H160, H256, U256};
@@ -113,6 +114,21 @@ fn serialize_and_deserialize() {
 
     test_ser_and_de!(
     CallParams,
+    [
+        {
+            "from": "0x000000000000000000000000000000000000000b",
+            "to": "0x000000000000000000000000000000000000000c",
+        },
+        "latest",
+    ],
+    (
+        CallRequest::new(Some(H160::from(11).into()),
+        H160::from(12).into(), None),
+        BlockNumber::latest()
+    ));
+
+    test_ser_and_de!(
+    EstimateQuotaParams,
     [
         {
             "from": "0x000000000000000000000000000000000000000b",

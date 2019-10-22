@@ -13,10 +13,10 @@
 // limitations under the License.
 
 use jsonrpc_types::rpc_request::{
-    BlockNumberParams, CallParams, GetAbiParams, GetBalanceParams, GetBlockByHashParams,
-    GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams, GetFilterChangesParams,
-    GetFilterLogsParams, GetLogsParams, GetMetaDataParams, GetStateProofParams,
-    GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
+    BlockNumberParams, CallParams, EstimateQuotaParams, GetAbiParams, GetBalanceParams,
+    GetBlockByHashParams, GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams,
+    GetFilterChangesParams, GetFilterLogsParams, GetLogsParams, GetMetaDataParams,
+    GetStateProofParams, GetStorageKeyParams, GetTransactionCountParams, GetTransactionParams,
     GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams,
     NewFilterParams, PeerCountParams, PeersInfoParams, SendRawTransactionParams,
     SendTransactionParams, UninstallFilterParams,
