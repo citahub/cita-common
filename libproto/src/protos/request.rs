@@ -858,6 +858,7 @@ pub enum Request_oneof_req {
     storage_key(StorageKey),
     software_version(bool),
     peers_info(bool),
+    estimate_quota(Call),
 }
 
 impl Request {
@@ -1997,6 +1998,55 @@ impl Request {
             _ => false,
         }
     }
+
+    // .Call estimate_quota = 29;
+
+    pub fn clear_estimate_quota(&mut self) {
+        self.req = ::std::option::Option::None;
+    }
+
+    pub fn has_estimate_quota(&self) -> bool {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::estimate_quota(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_estimate_quota(&mut self, v: Call) {
+        self.req = ::std::option::Option::Some(Request_oneof_req::estimate_quota(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_estimate_quota(&mut self) -> &mut Call {
+        if let ::std::option::Option::Some(Request_oneof_req::estimate_quota(_)) = self.req {
+        } else {
+            self.req = ::std::option::Option::Some(Request_oneof_req::estimate_quota(Call::new()));
+        }
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::estimate_quota(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_estimate_quota(&mut self) -> Call {
+        if self.has_estimate_quota() {
+            match self.req.take() {
+                ::std::option::Option::Some(Request_oneof_req::estimate_quota(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            Call::new()
+        }
+    }
+
+    pub fn get_estimate_quota(&self) -> &Call {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::estimate_quota(ref v)) => v,
+            _ => Call::default_instance(),
+        }
+    }
 }
 
 impl ::protobuf::Message for Request {
@@ -2022,6 +2072,11 @@ impl ::protobuf::Message for Request {
             }
         }
         if let Some(Request_oneof_req::storage_key(ref v)) = self.req {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(Request_oneof_req::estimate_quota(ref v)) = self.req {
             if !v.is_initialized() {
                 return false;
             }
@@ -2198,6 +2253,12 @@ impl ::protobuf::Message for Request {
                     }
                     self.req = ::std::option::Option::Some(Request_oneof_req::peers_info(is.read_bool()?));
                 },
+                29 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.req = ::std::option::Option::Some(Request_oneof_req::estimate_quota(is.read_message()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -2300,6 +2361,10 @@ impl ::protobuf::Message for Request {
                 },
                 &Request_oneof_req::peers_info(v) => {
                     my_size += 3;
+                },
+                &Request_oneof_req::estimate_quota(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
             };
         }
@@ -2404,6 +2469,11 @@ impl ::protobuf::Message for Request {
                 },
                 &Request_oneof_req::peers_info(v) => {
                     os.write_bool(28, v)?;
+                },
+                &Request_oneof_req::estimate_quota(ref v) => {
+                    os.write_tag(29, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
             };
         }
@@ -2589,6 +2659,11 @@ impl ::protobuf::Message for Request {
                     Request::has_peers_info,
                     Request::get_peers_info,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, Call>(
+                    "estimate_quota",
+                    Request::has_estimate_quota,
+                    Request::get_estimate_quota,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<Request>(
                     "Request",
                     fields,
@@ -2639,6 +2714,7 @@ impl ::protobuf::Clear for Request {
         self.clear_storage_key();
         self.clear_software_version();
         self.clear_peers_info();
+        self.clear_estimate_quota();
         self.unknown_fields.clear();
     }
 }
@@ -2892,7 +2968,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     R\x08position\x12\x16\n\x06height\x18\x03\x20\x01(\tR\x06height\"Z\n\nSt\
     orageKey\x12\x18\n\x07address\x18\x01\x20\x01(\x0cR\x07address\x12\x1a\n\
     \x08position\x18\x02\x20\x01(\x0cR\x08position\x12\x16\n\x06height\x18\
-    \x03\x20\x01(\tR\x06height\"\xb2\x08\n\x07Request\x12\x1d\n\nrequest_id\
+    \x03\x20\x01(\tR\x06height\"\xe2\x08\n\x07Request\x12\x1d\n\nrequest_id\
     \x18\x01\x20\x01(\x0cR\trequestId\x12#\n\x0cblock_number\x18\x02\x20\x01\
     (\x08H\0R\x0bblockNumber\x12$\n\rblock_by_hash\x18\x03\x20\x01(\tH\0R\
     \x0bblockByHash\x12(\n\x0fblock_by_height\x18\x04\x20\x01(\tH\0R\rblockB\
@@ -2917,28 +2993,29 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     _height\x18\x19\x20\x01(\tH\0R\x11blockHeaderHeight\x12.\n\x0bstorage_ke\
     y\x18\x1a\x20\x01(\x0b2\x0b.StorageKeyH\0R\nstorageKey\x12+\n\x10softwar\
     e_version\x18\x1b\x20\x01(\x08H\0R\x0fsoftwareVersion\x12\x1f\n\npeers_i\
-    nfo\x18\x1c\x20\x01(\x08H\0R\tpeersInfoB\x05\n\x03req\"@\n\x0cBatchReque\
-    st\x120\n\x0fnew_tx_requests\x18\x01\x20\x03(\x0b2\x08.RequestR\rnewTxRe\
-    quests*1\n\x08BlockTag\x12\n\n\x06Latest\x10\0\x12\x0c\n\x08Earliest\x10\
-    \x01\x12\x0b\n\x07Pending\x10\x02J\xb1\x15\n\x06\x12\x04\0\0B\x01\n\x08\
-    \n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\
-    \x05\0\x12\x04\x04\0\x08\x01\n\n\n\x03\x05\0\x01\x12\x03\x04\x05\r\n\x0b\
-    \n\x04\x05\0\x02\0\x12\x03\x05\x04\x0f\n\x0c\n\x05\x05\0\x02\0\x01\x12\
-    \x03\x05\x04\n\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x05\r\x0e\n\x0b\n\x04\
-    \x05\0\x02\x01\x12\x03\x06\x04\x11\n\x0c\n\x05\x05\0\x02\x01\x01\x12\x03\
-    \x06\x04\x0c\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x06\x0f\x10\n\x0b\n\
-    \x04\x05\0\x02\x02\x12\x03\x07\x04\x10\n\x0c\n\x05\x05\0\x02\x02\x01\x12\
-    \x03\x07\x04\x0b\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\x07\x0e\x0f\n\n\n\
-    \x02\x04\0\x12\x04\n\0\x0f\x01\n\n\n\x03\x04\0\x01\x12\x03\n\x08\x0c\n\
-    \x0b\n\x04\x04\0\x02\0\x12\x03\x0b\x04\x13\n\r\n\x05\x04\0\x02\0\x04\x12\
-    \x04\x0b\x04\n\x0e\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0b\x04\t\n\x0c\n\
-    \x05\x04\0\x02\0\x01\x12\x03\x0b\n\x0e\n\x0c\n\x05\x04\0\x02\0\x03\x12\
-    \x03\x0b\x11\x12\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x0c\x04\x11\n\r\n\x05\
-    \x04\0\x02\x01\x04\x12\x04\x0c\x04\x0b\x13\n\x0c\n\x05\x04\0\x02\x01\x05\
-    \x12\x03\x0c\x04\t\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x0c\n\x0c\n\x0c\
-    \n\x05\x04\0\x02\x01\x03\x12\x03\x0c\x0f\x10\n\x0b\n\x04\x04\0\x02\x02\
-    \x12\x03\r\x04\x13\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\r\x04\x0c\x11\n\
-    \x0c\n\x05\x04\0\x02\x02\x05\x12\x03\r\x04\t\n\x0c\n\x05\x04\0\x02\x02\
+    nfo\x18\x1c\x20\x01(\x08H\0R\tpeersInfo\x12.\n\x0eestimate_quota\x18\x1d\
+    \x20\x01(\x0b2\x05.CallH\0R\restimateQuotaB\x05\n\x03req\"@\n\x0cBatchRe\
+    quest\x120\n\x0fnew_tx_requests\x18\x01\x20\x03(\x0b2\x08.RequestR\rnewT\
+    xRequests*1\n\x08BlockTag\x12\n\n\x06Latest\x10\0\x12\x0c\n\x08Earliest\
+    \x10\x01\x12\x0b\n\x07Pending\x10\x02J\xe8\x15\n\x06\x12\x04\0\0C\x01\n\
+    \x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\
+    \x02\x05\0\x12\x04\x04\0\x08\x01\n\n\n\x03\x05\0\x01\x12\x03\x04\x05\r\n\
+    \x0b\n\x04\x05\0\x02\0\x12\x03\x05\x04\x0f\n\x0c\n\x05\x05\0\x02\0\x01\
+    \x12\x03\x05\x04\n\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x05\r\x0e\n\x0b\n\
+    \x04\x05\0\x02\x01\x12\x03\x06\x04\x11\n\x0c\n\x05\x05\0\x02\x01\x01\x12\
+    \x03\x06\x04\x0c\n\x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x06\x0f\x10\n\x0b\
+    \n\x04\x05\0\x02\x02\x12\x03\x07\x04\x10\n\x0c\n\x05\x05\0\x02\x02\x01\
+    \x12\x03\x07\x04\x0b\n\x0c\n\x05\x05\0\x02\x02\x02\x12\x03\x07\x0e\x0f\n\
+    \n\n\x02\x04\0\x12\x04\n\0\x0f\x01\n\n\n\x03\x04\0\x01\x12\x03\n\x08\x0c\
+    \n\x0b\n\x04\x04\0\x02\0\x12\x03\x0b\x04\x13\n\r\n\x05\x04\0\x02\0\x04\
+    \x12\x04\x0b\x04\n\x0e\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0b\x04\t\n\
+    \x0c\n\x05\x04\0\x02\0\x01\x12\x03\x0b\n\x0e\n\x0c\n\x05\x04\0\x02\0\x03\
+    \x12\x03\x0b\x11\x12\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x0c\x04\x11\n\r\n\
+    \x05\x04\0\x02\x01\x04\x12\x04\x0c\x04\x0b\x13\n\x0c\n\x05\x04\0\x02\x01\
+    \x05\x12\x03\x0c\x04\t\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x0c\n\x0c\n\
+    \x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x0c\x0f\x10\n\x0b\n\x04\x04\0\x02\
+    \x02\x12\x03\r\x04\x13\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\r\x04\x0c\x11\
+    \n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\r\x04\t\n\x0c\n\x05\x04\0\x02\x02\
     \x01\x12\x03\r\n\x0e\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\r\x11\x12\n\
     \x0b\n\x04\x04\0\x02\x03\x12\x03\x0e\x04\x16\n\r\n\x05\x04\0\x02\x03\x04\
     \x12\x04\x0e\x04\r\x13\n\x0c\n\x05\x04\0\x02\x03\x05\x12\x03\x0e\x04\n\n\
@@ -2967,11 +3044,11 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x05\x04\x02\x02\x02\x04\x12\x04\x1a\x04\x19\x17\n\x0c\n\x05\x04\x02\x02\
     \x02\x05\x12\x03\x1a\x04\n\n\x0c\n\x05\x04\x02\x02\x02\x01\x12\x03\x1a\
     \x0b\x11\n\x0c\n\x05\x04\x02\x02\x02\x03\x12\x03\x1a\x14\x15\n\n\n\x02\
-    \x04\x03\x12\x04\x1d\0>\x01\n\n\n\x03\x04\x03\x01\x12\x03\x1d\x08\x0f\n\
+    \x04\x03\x12\x04\x1d\0?\x01\n\n\n\x03\x04\x03\x01\x12\x03\x1d\x08\x0f\n\
     \x0b\n\x04\x04\x03\x02\0\x12\x03\x1e\x04\x19\n\r\n\x05\x04\x03\x02\0\x04\
     \x12\x04\x1e\x04\x1d\x11\n\x0c\n\x05\x04\x03\x02\0\x05\x12\x03\x1e\x04\t\
     \n\x0c\n\x05\x04\x03\x02\0\x01\x12\x03\x1e\n\x14\n\x0c\n\x05\x04\x03\x02\
-    \0\x03\x12\x03\x1e\x17\x18\n\x0c\n\x04\x04\x03\x08\0\x12\x04\x1f\x04=\
+    \0\x03\x12\x03\x1e\x17\x18\n\x0c\n\x04\x04\x03\x08\0\x12\x04\x1f\x04>\
     \x05\n\x0c\n\x05\x04\x03\x08\0\x01\x12\x03\x1f\n\r\n\x0b\n\x04\x04\x03\
     \x02\x01\x12\x03\x20\x08\x1e\n\x0c\n\x05\x04\x03\x02\x01\x05\x12\x03\x20\
     \x08\x0c\n\x0c\n\x05\x04\x03\x02\x01\x01\x12\x03\x20\r\x19\n\x0c\n\x05\
@@ -3047,11 +3124,14 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x03\x02\x1a\x01\x12\x03;\r\x1d\n\x0c\n\x05\x04\x03\x02\x1a\x03\x12\x03;\
     \x20\"\n\x0b\n\x04\x04\x03\x02\x1b\x12\x03<\x08\x1d\n\x0c\n\x05\x04\x03\
     \x02\x1b\x05\x12\x03<\x08\x0c\n\x0c\n\x05\x04\x03\x02\x1b\x01\x12\x03<\r\
-    \x17\n\x0c\n\x05\x04\x03\x02\x1b\x03\x12\x03<\x1a\x1c\n\n\n\x02\x04\x04\
-    \x12\x04@\0B\x01\n\n\n\x03\x04\x04\x01\x12\x03@\x08\x14\n\x0b\n\x04\x04\
-    \x04\x02\0\x12\x03A\x04)\n\x0c\n\x05\x04\x04\x02\0\x04\x12\x03A\x04\x0c\
-    \n\x0c\n\x05\x04\x04\x02\0\x06\x12\x03A\r\x14\n\x0c\n\x05\x04\x04\x02\0\
-    \x01\x12\x03A\x15$\n\x0c\n\x05\x04\x04\x02\0\x03\x12\x03A'(b\x06proto3\
+    \x17\n\x0c\n\x05\x04\x03\x02\x1b\x03\x12\x03<\x1a\x1c\n\x0b\n\x04\x04\
+    \x03\x02\x1c\x12\x03=\x08!\n\x0c\n\x05\x04\x03\x02\x1c\x06\x12\x03=\x08\
+    \x0c\n\x0c\n\x05\x04\x03\x02\x1c\x01\x12\x03=\r\x1b\n\x0c\n\x05\x04\x03\
+    \x02\x1c\x03\x12\x03=\x1e\x20\n\n\n\x02\x04\x04\x12\x04A\0C\x01\n\n\n\
+    \x03\x04\x04\x01\x12\x03A\x08\x14\n\x0b\n\x04\x04\x04\x02\0\x12\x03B\x04\
+    )\n\x0c\n\x05\x04\x04\x02\0\x04\x12\x03B\x04\x0c\n\x0c\n\x05\x04\x04\x02\
+    \0\x06\x12\x03B\r\x14\n\x0c\n\x05\x04\x04\x02\0\x01\x12\x03B\x15$\n\x0c\
+    \n\x05\x04\x04\x02\0\x03\x12\x03B'(b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
