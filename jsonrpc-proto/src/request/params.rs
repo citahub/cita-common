@@ -401,6 +401,27 @@ impl TryIntoProto<ProtoRequest> for GetStorageKeyParams {
     }
 }
 
+impl TryIntoProto<ProtoRequest> for EstimateQuotaParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut call = libproto::Call::new();
+
+        call.set_from(self.0.from.unwrap_or_default().into());
+        call.set_to(self.0.to.into());
+        call.set_data(self.0.data.unwrap_or_default().into());
+
+        serde_json::to_string(&self.1)
+            .map_err(|err| Error::invalid_params(err.to_string()))
+            .map(|height| {
+                call.set_height(height);
+                request.set_call(call);
+                request
+            })
+    }
+}
+
 impl SendRawTransactionParamsExt for SendRawTransactionParams {
     fn extract_unverified_tx(data: &[u8]) -> Result<UnverifiedTransaction, Error> {
         use libproto::TryFrom;
