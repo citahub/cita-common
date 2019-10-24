@@ -416,7 +416,7 @@ impl TryIntoProto<ProtoRequest> for EstimateQuotaParams {
             .map_err(|err| Error::invalid_params(err.to_string()))
             .map(|height| {
                 call.set_height(height);
-                request.set_call(call);
+                request.set_estimate_quota(call);
                 request
             })
     }
