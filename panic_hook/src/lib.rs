@@ -1,4 +1,4 @@
-// Copyright Cryptape Technologies LLC.
+// Copyright Rivtower Technologies LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ use std::thread;
 static ABOUT_PANIC: &str = "
 This is a bug. Please report it at:
 
-    https://github.com/cryptape/cita/issues/new?labels=bug&template=bug_report.md
+    https://github.com/citahub/cita/issues/new?labels=bug&template=bug_report.md
 ";
 
 /// Set the panic hook

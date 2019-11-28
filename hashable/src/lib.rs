@@ -1,4 +1,4 @@
-// Copyright Cryptape Technologies LLC.
+// Copyright Rivtower Technologies LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ pub const HASH_EMPTY_LIST_RLP: H256 = H256([
 ]);
 
 #[cfg(feature = "blake2bhash")]
-pub const BLAKE2BKEY: &str = "CryptapeCryptape";
+pub const BLAKE2BKEY: &str = "RivtowerRivtower";
 
 pub trait Hashable {
     /// Calculate crypt HASH of this object.
