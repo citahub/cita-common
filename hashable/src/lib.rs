@@ -73,7 +73,7 @@ pub const HASH_EMPTY_LIST_RLP: H256 = H256([
 ]);
 
 #[cfg(feature = "blake2bhash")]
-pub const BLAKE2BKEY: &str = "RivtowerRivtower";
+pub const BLAKE2BKEY: &str = "CryptapeCryptape";
 
 pub trait Hashable {
     /// Calculate crypt HASH of this object.

@@ -22,7 +22,7 @@ const ERR_MSG_BLOCK_DECODE_ERROR: &str = "chain block decode error";
 const ERR_MSG_TX_CONTENT_ENCODE_ERROR: &str = "transaction content encode error";
 
 pub trait ErrorExt {
-    fn rpc_block_decode_error(err: Box<Debug>) -> Error {
+    fn rpc_block_decode_error(err: Box<dyn Debug>) -> Error {
         error!("jsonrpc_proto: fail to decode block from chain {:?}", err);
         Error::server_error(ERR_CODE_INTERNAL_ERROR, ERR_MSG_BLOCK_DECODE_ERROR)
     }
