@@ -22,7 +22,7 @@ pub enum BlockTag {
     Pending,
 }
 
-/// Economical Model
+// Economical Model
 enum_number!(
     EconomicalModel {
         Quota = 0,

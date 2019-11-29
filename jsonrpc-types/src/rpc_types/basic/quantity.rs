@@ -163,7 +163,7 @@ mod tests {
 
     #[test]
     fn serialize() {
-        let data = Quantity::new(U256::from(1311768467463790320u64));
+        let data = Quantity::new(U256::from(1_311_768_467_463_790_320u64));
         let serialized = serde_json::to_string(&data).unwrap();
         assert_eq!(serialized, r#""0x123456789abcdef0""#);
     }
@@ -186,8 +186,8 @@ mod tests {
             (r#""0x0a""#, Some(10u64)),
             (r#""00010""#, Some(10u64)),
             (r#""0x000a""#, Some(10u64)),
-            (r#""0xabcdef""#, Some(11259375u64)),
-            (r#""0XABCDEF""#, Some(11259375u64)),
+            (r#""0xabcdef""#, Some(11_259_375u64)),
+            (r#""0XABCDEF""#, Some(11_259_375u64)),
         ];
         for (data, expected_opt) in testdata.into_iter() {
             let result: Result<Quantity, serde_json::Error> = serde_json::from_str(data);

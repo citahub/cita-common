@@ -27,6 +27,7 @@ macro_rules! test_from_jsonstr {
     };
 }
 
+#[allow(clippy::cognitive_complexity)]
 #[test]
 fn from_jsonstr() {
     test_from_jsonstr!(BlockTag, r#""latest""#, Some(BlockTag::Latest));
@@ -38,7 +39,7 @@ fn from_jsonstr() {
         r#""0xabcdef""#,
         Some(Data::new(vec![0xab, 0xcd, 0xef]))
     );
-    let auint = 11259375u64;
+    let auint = 11_259_375u64;
     test_from_jsonstr!(
         Data20,
         format!(r#""{:#042x}""#, auint).as_ref(),

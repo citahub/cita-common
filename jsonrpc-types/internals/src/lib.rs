@@ -111,7 +111,8 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 types = quote!(#param_attrs pub #typ, #[serde(skip)] OneItemTupleTrick);
                 params_with_types = quote!(param: #typ);
                 params = quote!(param, OneItemTupleTrick::default());
-                params_into_vec = quote!(serde_json::to_value(self.0).unwrap())
+                let index = syn::Index::from(0);
+                params_into_vec = quote!(serde_json::to_value(self.#index).unwrap())
             }
             _ => {
                 let mut param_num = 0;
@@ -122,9 +123,10 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                     types = quote!(#types #param_attrs pub #typ,);
                     params_with_types = quote!(#params_with_types #param_name: #typ,);
                     params = quote!(#params #param_name,);
+                    let index = syn::Index::from(param_num);
                     params_into_vec = quote!(
                         #params_into_vec
-                        serde_json::to_value(self.#param_num).unwrap(), );
+                        serde_json::to_value(self.#index).unwrap(), );
                     param_num += 1;
                 }
             }

@@ -121,7 +121,7 @@ mod tests {
 
     #[test]
     fn serialize() {
-        let data = Integer::new(1311768467463790320u64);
+        let data = Integer::new(1_311_768_467_463_790_320u64);
         let serialized = serde_json::to_string(&data).unwrap();
         assert_eq!(serialized, r#"1311768467463790320"#);
     }
