@@ -39,7 +39,7 @@ function gen_rs_for_protos () {
 function add_license () {
     for i in `find ./src/protos -name "*.rs"`
     do
-        if grep -q -e "Copyright 2015-20.. Parity Technologies" -e "Copyright 2016-20.. Cryptape Technologies" $i
+        if grep -q -e "Copyright 2015-20.. Parity Technologies" -e "Copyright 2016-20.. Rivtower Technologies" $i
         then
             echo "Ignoring the " $i
         else
@@ -56,7 +56,7 @@ function generate_readme () {
 
 // https://github.com/Manishearth/rust-clippy/issues/702
 #![allow(unknown_lints)]
-#![allow(clippy)]
+#![allow(clippy::all)]
 
 #![cfg_attr(rustfmt, rustfmt_skip)]
 

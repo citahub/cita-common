@@ -2,7 +2,7 @@
 
 Rust implementation of JSON-RPC multi-transport client for [CITA].
 
-[CITA]: https://github.com/cryptape/cita
+[CITA]: https://github.com/citahub/cita
 
 ## Usage
 
@@ -10,7 +10,7 @@ First, add the dependencies to `Cargo.toml`:
 
 ```toml
 [dependencies]
-cita-web3 = { git = "https://github.com/cryptape/cita-common" }
+cita-web3 = { git = "https://github.com/citahub/cita-common" }
 ```
 
 Then, add this crate to the source codes:
