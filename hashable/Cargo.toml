@@ -9,7 +9,7 @@ edition = "2018"
 cita-types = { path = "../cita-types" }
 tiny-keccak= { version = "1.4", optional = true }
 blake2b = { path = "../blake2b", optional = true }
-libsm = { git = "https://github.com/cryptape/libsm", rev = "4d0e6199fca0934c58131de1d0036e9aa4da26c1", optional = true }
+libsm = { git = "https://github.com/citahub/libsm", rev = "4d0e6199fca0934c58131de1d0036e9aa4da26c1", optional = true }
 
 [features]
 default = []
