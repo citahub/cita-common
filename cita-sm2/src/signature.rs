@@ -15,7 +15,7 @@
 use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
 use cita_crypto_trait::Sign;
 use libsm::sm2::signature::{SigCtx, Signature as Sm2Signature};
-use rlp::*;
+use rlp::{Rlp, RlpStream, Encodable, Decodable, DecoderError};
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
@@ -50,7 +50,7 @@ impl PartialEq for Signature {
 }
 
 impl Decodable for Signature {
-    fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
+    fn decode(rlp: &Rlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| {
             let mut sig = [0u8; 128];
             sig.copy_from_slice(bytes);
@@ -218,7 +218,7 @@ impl Sign for Signature {
             .map_err(|_| Error::RecoverError)
             .map(|sk| {
                 let pk = ctx.pk_from_sk(&sk);
-                let signature = ctx.sign(&message, &sk, &pk);
+                let signature = ctx.sign(message.as_bytes(), &sk, &pk);
                 let mut sig_bytes = [0u8; SIGNATURE_BYTES_LEN];
                 let r_bytes = signature.get_r().to_bytes_be();
                 let s_bytes = signature.get_s().to_bytes_be();
@@ -238,8 +238,8 @@ impl Sign for Signature {
         ctx.load_pubkey(&pk_full[..])
             .map_err(|_| Error::RecoverError)
             .and_then(|pk| {
-                if ctx.verify(&message, &pk, &sig) {
-                    Ok(PubKey::from(self.pk()))
+                if ctx.verify(message.as_bytes(), &pk, &sig) {
+                    Ok(PubKey::from_slice(self.pk()))
                 } else {
                     Err(Error::RecoverError)
                 }
@@ -247,7 +247,7 @@ impl Sign for Signature {
     }
 
     fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Error> {
-        let pubkey_from_sig = PubKey::from(self.pk());
+        let pubkey_from_sig = PubKey::from_slice(self.pk());
         if pubkey_from_sig == *pubkey {
             let ctx = SigCtx::new();
             let sig = Sm2Signature::new(self.r(), self.s());
@@ -256,7 +256,7 @@ impl Sign for Signature {
             pk_full[1..].copy_from_slice(self.pk());
             ctx.load_pubkey(&pk_full[..])
                 .map_err(|_| Error::RecoverError)
-                .map(|pk| ctx.verify(&message, &pk, &sig))
+                .map(|pk| ctx.verify(message.as_bytes(), &pk, &sig))
         } else {
             Ok(false)
         }

@@ -43,12 +43,12 @@ fn from_jsonstr() {
     test_from_jsonstr!(
         Data20,
         format!(r#""{:#042x}""#, auint).as_ref(),
-        Some(Data20::new(H160::from(auint)))
+        Some(Data20::new(H160::from_low_u64_be(auint)))
     );
     test_from_jsonstr!(
         Data32,
         format!(r#""{:#066x}""#, auint).as_ref(),
-        Some(Data32::new(H256::from(auint)))
+        Some(Data32::new(H256::from_low_u64_be(auint)))
     );
     test_from_jsonstr!(
         Integer,

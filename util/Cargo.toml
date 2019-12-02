@@ -8,7 +8,7 @@ edition = "2018"
 [dependencies]
 rustc-hex = "1.0"
 elastic-array = "0.9"
-rlp = { path = "../rlp" }
+rlp = "0.4.4"
 heapsize = "0.4"
 cita-types = { path = "../cita-types" }
 snappy = { path = "../snappy" }

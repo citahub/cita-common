@@ -16,7 +16,7 @@ use super::{
     pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
 };
 use cita_crypto_trait::{CreateKey, Sign};
-use rlp::*;
+use rlp::{Rlp, RlpStream, Encodable, Decodable, DecoderError};
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
@@ -46,7 +46,7 @@ impl PartialEq for Signature {
 }
 
 impl Decodable for Signature {
-    fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
+    fn decode(rlp: &Rlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| {
             let mut sig = [0u8; 96];
             sig[0..96].copy_from_slice(bytes);
@@ -243,7 +243,7 @@ impl Sign for Signature {
         let is_valid = verify_detached(
             &EdSignature::from_slice(&sig).unwrap(),
             message.as_ref(),
-            &EdPublicKey::from_slice(&pubkey).unwrap(),
+            &EdPublicKey::from_slice(pubkey.as_bytes()).unwrap(),
         );
         if !is_valid {
             Err(Error::InvalidSignature)

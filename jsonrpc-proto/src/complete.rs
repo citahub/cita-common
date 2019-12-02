@@ -112,7 +112,7 @@ mod tests {
 
     #[test]
     fn test_get_transaction_receipt_params_complete() {
-        let params = GetTransactionReceiptParams::new(H256::from(10).into());
+        let params = GetTransactionReceiptParams::new(H256::from_low_u64_be(10).into());
         let full_req = params.into_request(1);
 
         let req_str = r#"{

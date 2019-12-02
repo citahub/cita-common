@@ -185,7 +185,7 @@ impl Pool {
                             && (tx_version == version)
                     };
                 if let Some(tx) = tx {
-                    let address = pubkey_to_address(&PubKey::from(tx.get_signer()));
+                    let address = pubkey_to_address(&PubKey::from_slice(tx.get_signer()));
                     if tx_is_valid(tx, height, address, version) {
                         let quota = tx.get_transaction_with_sig().get_transaction().quota;
                         if n <= quota {

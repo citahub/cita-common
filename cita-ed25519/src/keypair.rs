@@ -45,7 +45,7 @@ impl CreateKey for KeyPair {
     type Error = Error;
 
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
-        let pubkey = PubKey::from(&privkey.0[32..]);
+        let pubkey = PubKey::from_slice(&privkey.0[32..]);
         Ok(KeyPair { privkey, pubkey })
     }
 

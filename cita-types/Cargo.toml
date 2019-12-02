@@ -5,5 +5,5 @@ authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
 
 [dependencies]
-ethereum-types = "0.4"
-plain_hasher = "0.1.0"
+ethereum-types = "0.8.0"
+plain_hasher = "0.2.2"

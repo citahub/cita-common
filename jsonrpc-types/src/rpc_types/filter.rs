@@ -154,14 +154,14 @@ mod tests {
             (
                 BlockNumber::new(10u64.into()),
                 BlockNumber::latest(),
-                Some(VariadicValue::single(H160::from(16).into())),
+                Some(VariadicValue::single(H160::from_low_u64_be(16).into())),
                 Some(
                     vec![
-                        VariadicValue::single(H256::from(1).into()),
+                        VariadicValue::single(H256::from_low_u64_be(1).into()),
                         VariadicValue::multiple(
                             vec![
-                                H256::from(2).into(),
-                                H256::from(3).into(),
+                                H256::from_low_u64_be(2).into(),
+                                H256::from_low_u64_be(3).into(),
                             ]),
                         VariadicValue::null(),
                     ]
@@ -178,14 +178,14 @@ mod tests {
         assert_eq!(
             json!(["0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"]),
             serde_json::to_value(FilterChanges::Hashes(vec![Data32::new(
-                "000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b".into(),
+                H256::from_str("000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b").unwrap(),
             )]))
             .unwrap()
         );
 
         assert_eq!(
             FilterChanges::Hashes(vec![Data32::new(
-                "000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b".into(),
+                H256::from_str("000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b").unwrap(),
             )]),
             serde_json::from_value(json!([
                 "0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"

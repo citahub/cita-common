@@ -8,7 +8,7 @@ edition = "2018"
 [dependencies]
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
-rlp = { path = "../rlp" }
+rlp = "0.4.4"
 static_merkle_tree = "~0.1.1"
 
 [features]

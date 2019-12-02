@@ -17,7 +17,7 @@ use super::{
 };
 use crate::types::H256;
 use cita_crypto_trait::Sign;
-use rlp::*;
+use rlp::{Rlp, RlpStream, Encodable, Decodable, DecoderError};
 use rustc_serialize::hex::ToHex;
 use secp256k1::key::{PublicKey, SecretKey};
 use secp256k1::{Error as SecpError, Message as SecpMessage, RecoverableSignature, RecoveryId};
@@ -28,6 +28,7 @@ use std::cmp::PartialEq;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
+use std::str::FromStr;
 
 pub struct Signature(pub [u8; 65]);
 
@@ -59,18 +60,18 @@ impl Signature {
     /// Check if this is a "low" signature.
     pub fn is_low_s(&self) -> bool {
         H256::from_slice(self.s())
-            <= "7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0".into()
+            <= H256::from_str("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0").unwrap()
     }
 
     /// Check if each component of the signature is in range.
     pub fn is_valid(&self) -> bool {
         self.v() <= 1
             && H256::from_slice(self.r())
-                < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
-            && H256::from_slice(self.r()) >= 1.into()
+                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141").unwrap()
+            && H256::from_slice(self.r()) >= H256::from_low_u64_be(1)
             && H256::from_slice(self.s())
-                < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
-            && H256::from_slice(self.s()) >= 1.into()
+                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141").unwrap()
+            && H256::from_slice(self.s()) >= H256::from_low_u64_be(1)
     }
 }
 
@@ -83,7 +84,7 @@ impl PartialEq for Signature {
 }
 
 impl Decodable for Signature {
-    fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
+    fn decode(rlp: &Rlp) -> Result<Self, DecoderError> {
         rlp.decoder().decode_value(|bytes| {
             let mut sig = [0u8; 65];
             sig[0..65].copy_from_slice(bytes);
@@ -269,7 +270,7 @@ pub fn verify_public(
 
     let pdata: [u8; 65] = {
         let mut temp = [4u8; 65];
-        temp[1..65].copy_from_slice(pubkey);
+        temp[1..65].copy_from_slice(pubkey.as_bytes());
         temp
     };
 
@@ -355,7 +356,7 @@ impl Sign for Signature {
 
         let pdata: [u8; 65] = {
             let mut temp = [4u8; 65];
-            temp[1..65].copy_from_slice(pubkey);
+            temp[1..65].copy_from_slice(pubkey.as_bytes());
             temp
         };
 

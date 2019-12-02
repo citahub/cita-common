@@ -45,8 +45,8 @@ mod tests {
             })
             .to_string(),
             Some(CallRequest::new(
-                Some(H160::from(1).into()),
-                H160::from(2).into(),
+                Some(H160::from_low_u64_be(1).into()),
+                H160::from_low_u64_be(2).into(),
                 Some(vec![0xab, 0xcd, 0xef].into()),
             )),
         )];

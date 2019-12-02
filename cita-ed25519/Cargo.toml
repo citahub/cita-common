@@ -11,7 +11,7 @@ sodiumoxide = "0.2.2"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
-rlp = { path = "../rlp" }
+rlp = "0.4.4"
 serde = "1.0"
 bincode = "0.8.0"
 

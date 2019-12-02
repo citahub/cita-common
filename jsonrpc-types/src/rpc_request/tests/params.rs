@@ -64,7 +64,7 @@ fn serialize_and_deserialize() {
             "0x000000000000000000000000000000000000000000000000000000000000000a",
             true
         ],
-        (H256::from(10).into(), true.into())
+        (H256::from_low_u64_be(10).into(), true.into())
     );
 
     test_ser_and_de!(
@@ -76,7 +76,7 @@ fn serialize_and_deserialize() {
     test_ser_and_de!(
         GetTransactionReceiptParams,
         ["0x000000000000000000000000000000000000000000000000000000000000000a"],
-        (H256::from(10).into())
+        (H256::from_low_u64_be(10).into())
     );
 
     test_ser_and_de!(
@@ -97,14 +97,14 @@ fn serialize_and_deserialize() {
         (Filter::new(
             BlockNumber::new(11u64.into()),
             BlockNumber::latest(),
-            Some(VariadicValue::single(H160::from(16).into())),
+            Some(VariadicValue::single(H160::from_low_u64_be(16).into())),
             Some(
                 vec![
-                    VariadicValue::single(H256::from(1).into()),
+                    VariadicValue::single(H256::from_low_u64_be(1).into()),
                     VariadicValue::multiple(
                         vec![
-                            H256::from(2).into(),
-                            H256::from(3).into(),
+                            H256::from_low_u64_be(2).into(),
+                            H256::from_low_u64_be(3).into(),
                         ]),
                     VariadicValue::null(),
                 ]
@@ -122,8 +122,8 @@ fn serialize_and_deserialize() {
         "latest",
     ],
     (
-        CallRequest::new(Some(H160::from(11).into()),
-        H160::from(12).into(), None),
+        CallRequest::new(Some(H160::from_low_u64_be(11).into()),
+        H160::from_low_u64_be(12).into(), None),
         BlockNumber::latest()
     ));
 
@@ -137,39 +137,39 @@ fn serialize_and_deserialize() {
         "latest",
     ],
     (
-        CallRequest::new(Some(H160::from(11).into()),
-        H160::from(12).into(), None),
+        CallRequest::new(Some(H160::from_low_u64_be(11).into()),
+        H160::from_low_u64_be(12).into(), None),
         BlockNumber::latest()
     ));
 
     test_ser_and_de!(
         GetTransactionParams,
         ["0x000000000000000000000000000000000000000000000000000000000000000a"],
-        (H256::from(10).into())
+        (H256::from_low_u64_be(10).into())
     );
 
     test_ser_and_de!(
         GetTransactionCountParams,
         ["0x000000000000000000000000000000000000000a", "0x10"],
-        (H160::from(10).into(), BlockNumber::new(16u64.into()))
+        (H160::from_low_u64_be(10).into(), BlockNumber::new(16u64.into()))
     );
 
     test_ser_and_de!(
         GetCodeParams,
         ["0x000000000000000000000000000000000000000b", "0x11"],
-        (H160::from(11).into(), BlockNumber::new(17u64.into()))
+        (H160::from_low_u64_be(11).into(), BlockNumber::new(17u64.into()))
     );
 
     test_ser_and_de!(
         GetAbiParams,
         ["0x000000000000000000000000000000000000000c", "0x12"],
-        (H160::from(12).into(), BlockNumber::new(18u64.into()))
+        (H160::from_low_u64_be(12).into(), BlockNumber::new(18u64.into()))
     );
 
     test_ser_and_de!(
         GetBalanceParams,
         ["0x000000000000000000000000000000000000000d", "0x13"],
-        (H160::from(13).into(), BlockNumber::new(19u64.into()))
+        (H160::from_low_u64_be(13).into(), BlockNumber::new(19u64.into()))
     );
 
     test_ser_and_de!(
@@ -190,14 +190,14 @@ fn serialize_and_deserialize() {
         (Filter::new(
             BlockNumber::new(12u64.into()),
             BlockNumber::latest(),
-            Some(VariadicValue::single(H160::from(16).into())),
+            Some(VariadicValue::single(H160::from_low_u64_be(16).into())),
             Some(
                 vec![
-                    VariadicValue::single(H256::from(1).into()),
+                    VariadicValue::single(H256::from_low_u64_be(1).into()),
                     VariadicValue::multiple(
                         vec![
-                            H256::from(2).into(),
-                            H256::from(3).into(),
+                            H256::from_low_u64_be(2).into(),
+                            H256::from_low_u64_be(3).into(),
                         ]),
                     VariadicValue::null(),
                 ]
@@ -216,7 +216,7 @@ fn serialize_and_deserialize() {
     test_ser_and_de!(
         GetTransactionProofParams,
         ["0x000000000000000000000000000000000000000000000000000000000000000b"],
-        (H256::from(11).into())
+        (H256::from_low_u64_be(11).into())
     );
 
     test_ser_and_de!(GetMetaDataParams, ["earliest"], (BlockNumber::earliest()));
@@ -229,8 +229,8 @@ fn serialize_and_deserialize() {
             "earliest"
         ],
         (
-            H160::from(10).into(),
-            H256::from(11).into(),
+            H160::from_low_u64_be(10).into(),
+            H256::from_low_u64_be(11).into(),
             BlockNumber::earliest()
         )
     );

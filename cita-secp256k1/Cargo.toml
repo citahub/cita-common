@@ -12,7 +12,7 @@ rustc-serialize = "0.3"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
-rlp = { path = "../rlp" }
+rlp = "0.4.4"
 rand = "0.3"
 serde = "1.0"
 bincode = "0.8"

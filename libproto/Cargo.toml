@@ -14,7 +14,7 @@ cita-crypto = { path = "../cita-crypto" }
 hashable = { path = "../hashable" }
 snappy = { path = "../snappy" }
 rustc-serialize = "0.3"
-rlp = { path = "../rlp" }
+rlp = "0.4.4"
 serde = "1.0"
 serde_derive = "1.0"
 cita-logger = "0.1.0"

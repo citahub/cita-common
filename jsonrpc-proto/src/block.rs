@@ -42,14 +42,14 @@ impl TryFromProto<libproto::BlockHeader> for BlockHeader {
 
         Ok(BlockHeader {
             timestamp: proto_header.timestamp,
-            prev_hash: H256::from(proto_header.get_prevhash()),
+            prev_hash: H256::from_slice(proto_header.get_prevhash()),
             number: U256::from(proto_header.get_height()),
-            state_root: H256::from(proto_header.get_state_root()),
-            transactions_root: H256::from(proto_header.get_transactions_root()),
-            receipts_root: H256::from(proto_header.get_receipts_root()),
+            state_root: H256::from_slice(proto_header.get_state_root()),
+            transactions_root: H256::from_slice(proto_header.get_transactions_root()),
+            receipts_root: H256::from_slice(proto_header.get_receipts_root()),
             quota_used: U256::from(proto_header.get_quota_used()),
             proof,
-            proposer: Address::from(proto_header.get_proposer()),
+            proposer: Address::from_slice(proto_header.get_proposer()),
         })
     }
 }

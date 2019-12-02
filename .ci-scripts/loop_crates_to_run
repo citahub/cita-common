@@ -22,11 +22,8 @@ function check_crates_list () {
             | grep -v "^target$" \
             | while read crate; do
         if [ $(grep -c "^${crate}$" "${CRATES_HAVE_RUN}") -eq 0 ]; then
-            # ignore cita-web3
-            if [ "^${crate}$" -nq "^cita-web3$" ]; then
-              echo "[Error] A new crate [${crate}] was added but did not added into this script [$0]."
-              exit 1
-            fi
+            echo "[Error] A new crate [${crate}] was added but did not added into this script [$0]."
+            exit 1
         fi
     done
     rm "${CRATES_HAVE_RUN}"
@@ -104,8 +101,6 @@ function cargo_run_all () {
     cargo_run cita-directories
     cargo_run cita-crypto-trait
 
-    cargo_run rlp
-
     cargo_run authority_manage
 
     cargo_run pubsub_rabbitmq
@@ -123,6 +118,7 @@ function cargo_run_all () {
     cargo_run util
 
     cargo_run jsonrpc-types
+    cargo_run cita-web3
 
     for crate in hashable cita-merklehash cita-secp256k1 cita-ed25519 cita-sm2; do
         cargo_run ${crate} --features "${SELECT_HASH}"

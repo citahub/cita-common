@@ -16,7 +16,7 @@ extern crate hashable;
 
 use self::hashable::Hashable;
 use cita_types::H256;
-use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
+use rlp::{Decodable, DecoderError, Encodable, RlpStream, Rlp};
 pub use static_merkle_tree::{Proof as MerkleProof, ProofNode as MerkleProofNode};
 
 pub use self::hashable::HASH_NULL_RLP as HASH_NULL;
@@ -37,7 +37,7 @@ impl Encodable for ProofNode {
 }
 
 impl Decodable for ProofNode {
-    fn decode(r: &UntrustedRlp) -> Result<Self, DecoderError> {
+    fn decode(r: &Rlp) -> Result<Self, DecoderError> {
         if r.item_count()? != 2 {
             return Err(DecoderError::RlpIncorrectListLen);
         }
@@ -59,7 +59,7 @@ impl Encodable for Proof {
 }
 
 impl Decodable for Proof {
-    fn decode(r: &UntrustedRlp) -> Result<Self, DecoderError> {
+    fn decode(r: &Rlp) -> Result<Self, DecoderError> {
         let proof = Proof(r.as_list()?);
 
         Ok(proof)
