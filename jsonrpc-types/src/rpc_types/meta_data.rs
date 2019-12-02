@@ -67,7 +67,7 @@ mod tests {
             "chainName": "test-chain-name",
             "operator": "test-operator",
             "website": "https://www.google.com",
-            "genesisTimestamp": 1524000000000u64,
+            "genesisTimestamp": 1_524_000_000_000u64,
             "validators": [
                 "0xa83ca59edc87a9cc7e384afa8d218dcca71cae88",
                 "0xbc1fafd5ba5485f97e937fe574f836b275e593dd",
@@ -87,7 +87,7 @@ mod tests {
             chain_name: "test-chain-name".to_owned(),
             operator: "test-operator".to_owned(),
             website: "https://www.google.com".to_owned(),
-            genesis_timestamp: 1524000000000,
+            genesis_timestamp: 1_524_000_000_000,
             validators: vec![
                 "a83ca59edc87a9cc7e384afa8d218dcca71cae88",
                 "bc1fafd5ba5485f97e937fe574f836b275e593dd",
