@@ -2,12 +2,12 @@
 description = "proto"
 name = "libproto"
 version = "0.6.0"
-authors = ["Cryptape Technologies <contact@cryptape.com>"]
+authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-protobuf = { version = "2.6.2", features = ["with-bytes"]}
+protobuf = { version = "2.8.1", features = ["with-bytes"]}
 cita-types = { path = "../cita-types" }
 cita-merklehash = { path = "../cita-merklehash" }
 cita-crypto = { path = "../cita-crypto" }

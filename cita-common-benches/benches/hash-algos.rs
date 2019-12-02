@@ -1,4 +1,4 @@
-// Copyright Cryptape Technologies LLC.
+// Copyright Rivtower Technologies LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ use cita_common_benches::bench_tools;
 use criterion::Criterion;
 use std::sync::Arc;
 
-const BLAKE2BKEY: &str = "CryptapeCryptape";
+const BLAKE2BKEY: &str = "RivtowerRivtower";
 const KIB_UNIT: usize = 1024;
 
 fn bench_keccak256(data: &[u8]) {

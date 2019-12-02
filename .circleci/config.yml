@@ -56,9 +56,8 @@ alias:
 
   - &job-default
     docker:
-      - image: cita/cita-build:ubuntu-18.04-20190515
+      - image: cita/cita-build:ubuntu-18.04-20191128
     working_directory: ~/build
-    resource_class: xlarge
 
   - &job-unit-test
     <<: *job-default

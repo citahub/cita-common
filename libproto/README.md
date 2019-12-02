@@ -21,8 +21,8 @@ it is temporarily not supported.
 2. Install rust plugin
 
 ```
-$ cargo install protobuf-codegen --vers 2.0.4
-$ cargo install grpc-compiler --vers 0.5.0
+$ cargo install protobuf-codegen --vers 2.8.1 --force
+$ cargo install grpc-compiler --vers 0.6.1 --force
 ```
 
 3. You can start modifying `./src/proto/*.proto`

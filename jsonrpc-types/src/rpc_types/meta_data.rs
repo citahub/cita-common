@@ -1,4 +1,4 @@
-// Copyright Cryptape Technologies LLC.
+// Copyright Rivtower Technologies LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ mod tests {
             "blockInterval": 3000,
             "tokenName": "Nervos",
             "tokenSymbol": "NOS",
-            "tokenAvatar": "https://cdn.cryptape.com/icon_appchain.png",
+            "tokenAvatar": "https://cdn.citahub.com/icon_appchain.png",
             "version":108,
             "economicalModel": 1
         });
@@ -101,7 +101,7 @@ mod tests {
             block_interval: 3000,
             token_name: "Nervos".to_owned(),
             token_symbol: "NOS".to_owned(),
-            token_avatar: "https://cdn.cryptape.com/icon_appchain.png".to_owned(),
+            token_avatar: "https://cdn.citahub.com/icon_appchain.png".to_owned(),
             version: 108,
             economical_model: EconomicalModel::Charge,
         };
