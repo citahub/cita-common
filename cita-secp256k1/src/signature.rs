@@ -17,10 +17,11 @@ use super::{
 };
 use crate::types::H256;
 use cita_crypto_trait::Sign;
-use rlp::{Rlp, RlpStream, Encodable, Decodable, DecoderError};
+use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 use rustc_serialize::hex::ToHex;
 use secp256k1::key::{PublicKey, SecretKey};
-use secp256k1::{Error as SecpError, Message as SecpMessage, RecoverableSignature, RecoveryId};
+use secp256k1::recovery::{RecoverableSignature, RecoveryId};
+use secp256k1::{Error as SecpError, Message as SecpMessage};
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -60,17 +61,20 @@ impl Signature {
     /// Check if this is a "low" signature.
     pub fn is_low_s(&self) -> bool {
         H256::from_slice(self.s())
-            <= H256::from_str("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0").unwrap()
+            <= H256::from_str("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0")
+                .unwrap()
     }
 
     /// Check if each component of the signature is in range.
     pub fn is_valid(&self) -> bool {
         self.v() <= 1
             && H256::from_slice(self.r())
-                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141").unwrap()
+                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
+                    .unwrap()
             && H256::from_slice(self.r()) >= H256::from_low_u64_be(1)
             && H256::from_slice(self.s())
-                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141").unwrap()
+                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
+                    .unwrap()
             && H256::from_slice(self.s()) >= H256::from_low_u64_be(1)
     }
 }
@@ -384,7 +388,7 @@ mod tests {
     use super::super::KeyPair;
     use super::{PrivKey, Signature};
     use crate::types::H256;
-    use bincode::{deserialize, serialize, Infinite};
+    use bincode::{deserialize, serialize};
     use cita_crypto_trait::{CreateKey, Sign};
     use hashable::Hashable;
     use std::str::FromStr;
@@ -435,7 +439,7 @@ mod tests {
         let str = "".to_owned();
         let message = str.crypt_hash();
         let signature = Signature::sign(keypair.privkey().into(), &message.into()).unwrap();
-        let se_result = serialize(&signature, Infinite).unwrap();
+        let se_result = serialize(&signature).unwrap();
         let de_result: Signature = deserialize(&se_result).unwrap();
         assert_eq!(signature, de_result);
     }

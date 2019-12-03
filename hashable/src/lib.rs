@@ -93,8 +93,11 @@ where
     T: AsRef<[u8]>,
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
+        use tiny_keccak::Hasher;
         let input: &[u8] = self.as_ref();
-        tiny_keccak::Keccak::keccak256(input, dest);
+        let mut hasher = tiny_keccak::Keccak::v256();
+        hasher.update(input);
+        hasher.finalize(dest);
     }
 }
 
@@ -145,7 +148,8 @@ mod tests {
         use std::str::FromStr;
         assert_eq!(
             [0x41u8; 32].crypt_hash(),
-            H256::from_str("59cad5948673622c1d64e2322488bf01619f7ff45789741b15a9f782ce9290a8").unwrap()
+            H256::from_str("59cad5948673622c1d64e2322488bf01619f7ff45789741b15a9f782ce9290a8")
+                .unwrap()
         );
     }
 
@@ -160,7 +164,8 @@ mod tests {
         use std::str::FromStr;
         assert_eq!(
             [0x41u8; 32].crypt_hash(),
-            H256::from_str("8a786e4840b7b5ad9b0cfa44539b886086c2e1050bb802c8e40ecf09b3a64a11").unwrap()
+            H256::from_str("8a786e4840b7b5ad9b0cfa44539b886086c2e1050bb802c8e40ecf09b3a64a11")
+                .unwrap()
         );
     }
 

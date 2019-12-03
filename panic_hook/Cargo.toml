@@ -6,5 +6,5 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-backtrace = "0.3"
-cita-logger = "0.1.0"
+backtrace = "0.3.40"
+cita-logger = "0.1.1"

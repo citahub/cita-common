@@ -6,16 +6,16 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-secp256k1 = {version = "0.12", features = ["rand"]}
-lazy_static = "1.1"
-rustc-serialize = "0.3"
+secp256k1 = {version = "0.15.0", features = ["rand", "recovery"]}
+lazy_static = "1.4.0"
+rustc-serialize = "0.3.24"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
 rlp = "0.4.4"
-rand = "0.3"
-serde = "1.0"
-bincode = "0.8"
+rand = "0.6"
+serde = "1.0.103"
+bincode = "1.2.0"
 
 [features]
 default = []

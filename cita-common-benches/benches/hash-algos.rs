@@ -24,7 +24,9 @@ const KIB_UNIT: usize = 1024;
 
 fn bench_keccak256(data: &[u8]) {
     let mut result = [0u8; 32];
-    tiny_keccak::Keccak::keccak256(data, &mut result);
+    let mut hasher = tiny_keccak::Keccak::v256();
+    hasher.update(&data);
+    hasher.finalize(&mut result);
 }
 
 fn bench_blake2b(data: &[u8]) {

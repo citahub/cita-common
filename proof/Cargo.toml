@@ -11,9 +11,9 @@ cita-crypto = { path = "../cita-crypto" }
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-directories = { path = "../cita-directories" }
-serde = "1.0"
-serde_derive = "1.0"
-bincode = "0.8.0"
+serde = "1.0.103"
+serde_derive = "1.0.103"
+bincode = "1.2.0"
 
 [features]
 default = []

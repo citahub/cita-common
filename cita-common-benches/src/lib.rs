@@ -14,9 +14,13 @@
 
 pub mod bench_tools {
 
-    use rand::{thread_rng, Rng};
+    use rand::distributions::{Distribution, Standard};
+    use rand::thread_rng;
 
     pub fn random_bytes(len: usize) -> Vec<u8> {
-        thread_rng().gen_iter::<u8>().take(len).collect::<Vec<u8>>()
+        Standard
+            .sample_iter(thread_rng())
+            .take(len)
+            .collect::<Vec<u8>>()
     }
 }

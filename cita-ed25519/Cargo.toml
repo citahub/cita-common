@@ -6,14 +6,14 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-rustc-serialize = "0.3"
-sodiumoxide = "0.2.2"
+rustc-serialize = "0.3.24"
+sodiumoxide = "0.2.5"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
 rlp = "0.4.4"
-serde = "1.0"
-bincode = "0.8.0"
+serde = "1.0.103"
+bincode = "1.2.0"
 
 [features]
 default = []

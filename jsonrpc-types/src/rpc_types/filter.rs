@@ -178,14 +178,16 @@ mod tests {
         assert_eq!(
             json!(["0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"]),
             serde_json::to_value(FilterChanges::Hashes(vec![Data32::new(
-                H256::from_str("000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b").unwrap(),
+                H256::from_str("000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b")
+                    .unwrap(),
             )]))
             .unwrap()
         );
 
         assert_eq!(
             FilterChanges::Hashes(vec![Data32::new(
-                H256::from_str("000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b").unwrap(),
+                H256::from_str("000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b")
+                    .unwrap(),
             )]),
             serde_json::from_value(json!([
                 "0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"

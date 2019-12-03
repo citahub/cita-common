@@ -24,7 +24,6 @@ extern crate rustc_serialize;
 extern crate serde_derive;
 extern crate cita_merklehash;
 extern crate snappy;
-extern crate tls_api;
 
 pub mod protos;
 pub use crate::protos::*;
@@ -32,11 +31,11 @@ mod autoimpl;
 pub mod router;
 
 use crate::crypto::{CreateKey, KeyPair, PrivKey, PubKey, Sign, Signature, SIGNATURE_BYTES_LEN};
-use crate::types::{Address, H256, traits::LowerHex};
+use crate::types::{traits::LowerHex, Address, H256};
 use cita_merklehash::{merge, Tree, HASH_NULL};
 use hashable::Hashable;
 use protobuf::RepeatedField;
-use rlp::{Decodable, DecoderError, Encodable, RlpStream, Rlp};
+use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 use std::convert::From;
 use std::ops::Deref;
 

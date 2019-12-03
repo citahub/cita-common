@@ -10,7 +10,7 @@ libproto = { path = "../libproto" }
 util = { path = "../util" }
 cita-crypto = { path = "../cita-crypto" }
 cita-types = { path = "../cita-types" }
-crossbeam-channel = "0.3.8"
+crossbeam-channel = "0.4.0"
 
 [features]
 default = []

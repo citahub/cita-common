@@ -6,4 +6,4 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-libc = "0.2.45"
+libc = "0.2.66"

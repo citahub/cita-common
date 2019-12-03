@@ -55,7 +55,7 @@ pub struct Receipt {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bincode::{deserialize, serialize, Infinite};
+    use bincode::{deserialize, serialize};
     use cita_types::{Bloom, H256};
     use serde_json;
 
@@ -148,7 +148,7 @@ mod tests {
 
         println!("{:?}", receipt);
 
-        let encoded: Vec<u8> = serialize(&receipt, Infinite).unwrap();
+        let encoded: Vec<u8> = serialize(&receipt).unwrap();
 
         println!("{:?}", encoded);
 

@@ -16,7 +16,7 @@ use super::{
     pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
 };
 use cita_crypto_trait::{CreateKey, Sign};
-use rlp::{Rlp, RlpStream, Encodable, Decodable, DecoderError};
+use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
@@ -262,7 +262,7 @@ impl Sign for Signature {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bincode::{deserialize, serialize, Infinite};
+    use bincode::{deserialize, serialize};
     use cita_crypto_trait::CreateKey;
 
     const MESSAGE: [u8; 32] = [
@@ -311,7 +311,7 @@ mod tests {
         let keypair = KeyPair::gen_keypair();
         let msg = Message::from_slice(&MESSAGE[..]);
         let sig = Signature::sign(keypair.privkey(), &msg).unwrap();
-        let se_result = serialize(&sig, Infinite).unwrap();
+        let se_result = serialize(&sig).unwrap();
         let de_result: Signature = deserialize(&se_result).unwrap();
         assert_eq!(sig, de_result);
     }

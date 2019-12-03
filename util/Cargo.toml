@@ -6,18 +6,17 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-rustc-hex = "1.0"
-elastic-array = "0.9"
+rustc-hex = "2.0.1"
+elastic-array = "0.10.3"
 rlp = "0.4.4"
-heapsize = "0.4"
+heapsize = "0.4.2"
 cita-types = { path = "../cita-types" }
 snappy = { path = "../snappy" }
-parking_lot = "0.6"
-ansi_term = "0.9"
-tiny-keccak= "1.4"
-lru-cache = "0.1.0"
+parking_lot = "0.10.0"
+ansi_term = "0.12.1"
+lru-cache = "0.1.2"
 panic_hook = {path = "../panic_hook"}
-serde = "1.0"
-toml = "0.4"
-git2 = "0.7"
-rustc_version = "0.2.0"
+serde = "1.0.103"
+toml = "0.5.5"
+git2 = "0.10.2"
+rustc_version = "0.2.3"

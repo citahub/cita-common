@@ -151,25 +151,37 @@ fn serialize_and_deserialize() {
     test_ser_and_de!(
         GetTransactionCountParams,
         ["0x000000000000000000000000000000000000000a", "0x10"],
-        (H160::from_low_u64_be(10).into(), BlockNumber::new(16u64.into()))
+        (
+            H160::from_low_u64_be(10).into(),
+            BlockNumber::new(16u64.into())
+        )
     );
 
     test_ser_and_de!(
         GetCodeParams,
         ["0x000000000000000000000000000000000000000b", "0x11"],
-        (H160::from_low_u64_be(11).into(), BlockNumber::new(17u64.into()))
+        (
+            H160::from_low_u64_be(11).into(),
+            BlockNumber::new(17u64.into())
+        )
     );
 
     test_ser_and_de!(
         GetAbiParams,
         ["0x000000000000000000000000000000000000000c", "0x12"],
-        (H160::from_low_u64_be(12).into(), BlockNumber::new(18u64.into()))
+        (
+            H160::from_low_u64_be(12).into(),
+            BlockNumber::new(18u64.into())
+        )
     );
 
     test_ser_and_de!(
         GetBalanceParams,
         ["0x000000000000000000000000000000000000000d", "0x13"],
-        (H160::from_low_u64_be(13).into(), BlockNumber::new(19u64.into()))
+        (
+            H160::from_low_u64_be(13).into(),
+            BlockNumber::new(19u64.into())
+        )
     );
 
     test_ser_and_de!(

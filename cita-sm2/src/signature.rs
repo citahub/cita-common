@@ -15,7 +15,7 @@
 use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
 use cita_crypto_trait::Sign;
 use libsm::sm2::signature::{SigCtx, Signature as Sm2Signature};
-use rlp::{Rlp, RlpStream, Encodable, Decodable, DecoderError};
+use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;

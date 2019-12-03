@@ -16,7 +16,7 @@ extern crate hashable;
 
 use self::hashable::Hashable;
 use cita_types::H256;
-use rlp::{Decodable, DecoderError, Encodable, RlpStream, Rlp};
+use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 pub use static_merkle_tree::{Proof as MerkleProof, ProofNode as MerkleProofNode};
 
 pub use self::hashable::HASH_NULL_RLP as HASH_NULL;

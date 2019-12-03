@@ -18,7 +18,7 @@ pub mod wal;
 
 use crate::types::Address;
 use crate::wal::Wal;
-use bincode::{deserialize, serialize, Infinite};
+use bincode::{deserialize, serialize};
 
 pub const DATA_PATH: &str = "DATA_PATH";
 pub const LOG_TYPE_AUTHORITIES: u8 = 1;
@@ -110,15 +110,12 @@ impl AuthorityManage {
     }
 
     pub fn save(&mut self) {
-        let bmsg = serialize(
-            &(
-                self.authority_h_old,
-                self.authorities.clone(),
-                self.validators_old.clone(),
-                self.validators.clone(),
-            ),
-            Infinite,
-        )
+        let bmsg = serialize(&(
+            self.authority_h_old,
+            self.authorities.clone(),
+            self.validators_old.clone(),
+            self.validators.clone(),
+        ))
         .unwrap();
         let _ = self.authorities_log.save(LOG_TYPE_AUTHORITIES, &bmsg);
     }
