@@ -4,8 +4,6 @@ set -xe -o pipefail
 
 CARGO_COMMAND=
 
-FEATURES_FOR_PUBSUB="rabbitmq zeromq kafka"
-
 CRATES_HAVE_RUN=".crates.have-run"
 
 DEFAULT_HASH="sha3hash"
@@ -94,8 +92,6 @@ function cargo_run_all () {
     cargo_run cita-common-benches
 
     cargo_run cita-types
-    cargo_run panic_hook
-    cargo_run worker
     cargo_run error
     cargo_run snappy
     cargo_run cita-directories
@@ -103,15 +99,7 @@ function cargo_run_all () {
 
     cargo_run authority_manage
 
-    cargo_run pubsub_rabbitmq
-    cargo_run pubsub_zeromq
-    cargo_run pubsub_kafka
-
-    for crate in pubsub; do
-        for features in ${FEATURES_FOR_PUBSUB}; do
-            cargo_run ${crate} --features "${features}"
-        done
-    done
+    cargo_run pubsub
 
     cargo_run blake2b
 
@@ -124,11 +112,11 @@ function cargo_run_all () {
         cargo_run ${crate} --features "${SELECT_HASH}"
     done
 
-    for crate in cita-crypto; do
+    for crate in cita-crypto engine; do
         cargo_run ${crate} --features "${SELECT_CRYPTO}"
     done
 
-    for crate in libproto proof tx_pool jsonrpc-proto engine; do
+    for crate in libproto proof tx_pool jsonrpc-proto; do
         cargo_run ${crate} --features "${SELECT_HASH} ${SELECT_CRYPTO}"
     done
 }

@@ -6,17 +6,11 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-libproto = { path = "../libproto" }
-util = { path = "../util" }
 cita-crypto = { path = "../cita-crypto" }
 cita-types = { path = "../cita-types" }
-crossbeam-channel = "0.4.0"
 
 [features]
 default = []
-secp256k1 = ["cita-crypto/secp256k1", "libproto/secp256k1"]
-ed25519 = ["cita-crypto/ed25519", "libproto/ed25519"]
-sm2 = ["cita-crypto/sm2", "libproto/sm2"]
-sha3hash = ["libproto/sha3hash"]
-blake2bhash = ["libproto/blake2bhash"]
-sm3hash = ["libproto/sm3hash"]
+secp256k1 = ["cita-crypto/secp256k1"]
+ed25519 = ["cita-crypto/ed25519"]
+sm2 = ["cita-crypto/sm2"]
