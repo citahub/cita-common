@@ -76,6 +76,8 @@ pub enum MsgType {
     GetBlockTxn,
     BlockTxn,
     CompactSignedProposal,
+    GetCrl,
+    GetCrlResp,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -173,6 +175,8 @@ impl fmt::Display for MsgType {
                 &MsgType::GetBlockTxn => "get_block_txn",
                 &MsgType::BlockTxn => "block_txn",
                 &MsgType::CompactSignedProposal => "compact_signed_proposal",
+                &MsgType::GetCrl => "get_crl",
+                &MsgType::GetCrlResp => "get_crl_resp",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
