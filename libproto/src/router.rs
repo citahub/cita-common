@@ -244,6 +244,8 @@ impl<'a> From<&'a str> for MsgType {
             "get_block_txn" => MsgType::GetBlockTxn,
             "block_txn" => MsgType::BlockTxn,
             "compact_signed_proposal" => MsgType::CompactSignedProposal,
+            "get_crl" => MsgType::GetCrl,
+            "get_crl_resp" => MsgType::GetCrlResp,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
