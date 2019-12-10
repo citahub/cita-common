@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-extern crate backtrace;
-#[macro_use]
-extern crate cita_logger as logger;
-
 use backtrace::Backtrace;
 use std::panic::{self, PanicInfo};
 use std::process;

@@ -14,33 +14,27 @@
 
 extern crate ansi_term;
 extern crate cita_types as types;
-extern crate elastic_array;
 extern crate git2;
-extern crate heapsize;
-extern crate lru_cache;
-// TODO: remove rlp
 extern crate parking_lot;
-extern crate rlp;
-extern crate rustc_hex;
 extern crate rustc_version;
-extern crate snappy;
 pub extern crate tiny_keccak as sha3;
 
-extern crate panic_hook;
 extern crate serde;
 extern crate toml;
 
+extern crate backtrace;
+#[macro_use]
+extern crate cita_logger as logger;
+
 pub mod build_info;
 pub mod instrument;
-pub mod semantic_version;
 #[macro_use]
 pub mod init;
+pub mod panic_hook;
 
 pub use crate::init::*;
 pub use crate::instrument::*;
-pub use crate::semantic_version::*;
 pub use ansi_term::{Colour, Style};
-pub use heapsize::HeapSizeOf;
 pub use panic_hook::set_panic_handler;
 pub use parking_lot::{Condvar, Mutex, MutexGuard, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
