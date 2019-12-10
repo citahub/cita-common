@@ -5,14 +5,16 @@ authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
 edition = "2018"
 
+[dependencies.amqp]
+version = "0.1"
+default-features = false
+
 [dependencies]
 dotenv = "0.13.0"
-pubsub_zeromq = { path = "../pubsub_zeromq", optional = true }
-pubsub_rabbitmq = { path = "../pubsub_rabbitmq", optional = true }
-pubsub_kafka = { path = "../pubsub_kafka", optional = true }
+crossbeam-channel = "0.3.8"
 
 [features]
 default = []
-rabbitmq = ["pubsub_rabbitmq"]
-zeromq = ["pubsub_zeromq"]
-kafka = ["pubsub_kafka"]
+rabbitmq = []
+zeromq = []
+kafka = []
