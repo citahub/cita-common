@@ -8,11 +8,13 @@ edition = "2018"
 [dependencies]
 jsonrpc-types-internals = { path = "internals" }
 cita-types = { path = "../cita-types" }
-bincode = "0.8"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
 rustc-serialize = "0.3"
+
+[dev-dependencies]
+bincode = "0.8"
 
 [features]
 default = []

@@ -24,7 +24,6 @@ extern crate rustc_serialize;
 extern crate serde_derive;
 extern crate cita_merklehash;
 extern crate snappy;
-extern crate tls_api;
 
 pub mod protos;
 pub use crate::protos::*;
