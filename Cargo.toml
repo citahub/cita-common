@@ -4,16 +4,11 @@ members = [
     "cita-common-benches",
 
     "error",
-    "panic_hook",
-    "worker",
     "cita-types",
     "snappy",
     "cita-directories",
     "util",
 
-    "pubsub_zeromq",
-    "pubsub_rabbitmq",
-    "pubsub_kafka",
     "pubsub",
 
     "hashable",
