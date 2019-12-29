@@ -1,7 +1,12 @@
 #!/bin/echo Warning: this file should be sourced!
 
-DOCKER_IMAGE="cita/cita-build:ubuntu-18.04-20190515"
-DOCKER_CARGO_HOME="/root/.cargo"
+DOCKER_IMAGE="cita/cita-build:ubuntu-18.04-20191128"
+readonly CARGO_HOME="/opt/.cargo"
+readonly DOCKER_CARGO="${HOME}/.docker_cargo"
+mkdir -p "${DOCKER_CARGO}/git"
+mkdir -p "${DOCKER_CARGO}/registry"
+
+readonly PUB_KEY_PATH="${HOME}/.ssh/id_rsa"
 
 SRCDIR=$(readlink -f $(dirname ${SCRIPT_PATH})/..)
 cd ${SRCDIR}
@@ -9,11 +14,17 @@ cd ${SRCDIR}
 WORKDIR=/data/work
 
 function run_in_docker () {
+    eval $(ssh-agent)
+    ssh-add
+
     docker run --rm \
            -e CODECOV_TOKEN=$CODECOV_TOKEN \
            --volume "${SRCDIR}:${WORKDIR}" \
-           --volume "rust-git:${DOCKER_CARGO_HOME}/git" \
-           --volume "rust-registry:${DOCKER_CARGO_HOME}/registry" \
+           --volume "${DOCKER_CARGO}/git:${CARGO_HOME}/git" \
+           --volume "${DOCKER_CARGO}/registry:${CARGO_HOME}/registry" \
+           --volume "${PUB_KEY_PATH}:${PUB_KEY_PATH}" \
+           --volume $(readlink -f $SSH_AUTH_SOCK):/ssh-agent \
+           --env SSH_AUTH_SOCK=/ssh-agent \
            --workdir "${WORKDIR}" \
            "${DOCKER_IMAGE}" \
            "$@"
