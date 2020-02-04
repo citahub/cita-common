@@ -78,6 +78,7 @@ pub enum MsgType {
     CompactSignedProposal,
     GetCrl,
     GetCrlResp,
+    InvalidLicense,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -177,6 +178,7 @@ impl fmt::Display for MsgType {
                 &MsgType::CompactSignedProposal => "compact_signed_proposal",
                 &MsgType::GetCrl => "get_crl",
                 &MsgType::GetCrlResp => "get_crl_resp",
+                &MsgType::InvalidLicense => "invalid_license",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -246,6 +248,7 @@ impl<'a> From<&'a str> for MsgType {
             "compact_signed_proposal" => MsgType::CompactSignedProposal,
             "get_crl" => MsgType::GetCrl,
             "get_crl_resp" => MsgType::GetCrlResp,
+            "invalid_license" => MsgType::InvalidLicense,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
