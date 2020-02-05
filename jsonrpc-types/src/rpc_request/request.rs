@@ -18,9 +18,9 @@ use serde_json;
 use crate::internals::construct_params;
 
 use crate::rpc_types::{
-    Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id, Log,
-    MetaData, OneItemTupleTrick, PeersInfo, Quantity, Receipt, RpcTransaction, SoftwareVersion,
-    TxResponse, Version,
+    Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id,
+    LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo, Quantity, Receipt, RpcTransaction,
+    SoftwareVersion, TxResponse, Version,
 };
 
 pub type Logs = Vec<Log>;
@@ -246,6 +246,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (GetVersion, GetVersionParams: [], SoftwareVersion),
             (PeersInfo, PeersInfoParams: [], PeersInfo),
             (EstimateQuota, EstimateQuotaParams: [CallRequest, BlockNumber], Quantity),
+            (LicenseInfo, LicenseInfoParams: [], LicenseInfo),
         );
     };
 }

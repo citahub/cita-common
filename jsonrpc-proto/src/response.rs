@@ -16,8 +16,8 @@ use jsonrpc_types::{
     rpc_request::{RequestInfo, ResponseResult},
     rpc_response::{Output, RpcFailure, RpcSuccess},
     rpc_types::{
-        Block, FilterChanges, Log, MetaData, PeersInfo, Receipt, RpcBlock, RpcTransaction,
-        SoftwareVersion,
+        Block, FilterChanges, LicenseInfo, Log, MetaData, PeersInfo, Receipt, RpcBlock,
+        RpcTransaction, SoftwareVersion,
     },
     Error,
 };
@@ -167,6 +167,15 @@ impl OutputExt for Output {
                     Response_oneof_data::estimate_quota(x) => success
                         .set_result(ResponseResult::EstimateQuota(x.as_slice().into()))
                         .output(),
+                    Response_oneof_data::license_info(data) => {
+                        serde_json::from_str::<LicenseInfo>(&data)
+                            .map(|data| {
+                                success
+                                    .set_result(ResponseResult::LicenseInfo(data))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
+                    }
                 }
             } else {
                 match response {
