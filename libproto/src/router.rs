@@ -76,9 +76,6 @@ pub enum MsgType {
     GetBlockTxn,
     BlockTxn,
     CompactSignedProposal,
-    GetCrl,
-    GetCrlResp,
-    InvalidLicense,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -91,6 +88,9 @@ pub enum MsgType {
     LocalSync,
     RequestRpc,
     RequestPeersInfo,
+    GetCrl,
+    GetCrlResp,
+    InvalidLicense,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -176,9 +176,6 @@ impl fmt::Display for MsgType {
                 &MsgType::GetBlockTxn => "get_block_txn",
                 &MsgType::BlockTxn => "block_txn",
                 &MsgType::CompactSignedProposal => "compact_signed_proposal",
-                &MsgType::GetCrl => "get_crl",
-                &MsgType::GetCrlResp => "get_crl_resp",
-                &MsgType::InvalidLicense => "invalid_license",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -188,6 +185,9 @@ impl fmt::Display for MsgType {
                 MsgType::LocalSync => "local_sync",
                 MsgType::RequestRpc => "request_rpc",
                 MsgType::RequestPeersInfo => "request_peers_info",
+                MsgType::GetCrl => "get_crl",
+                MsgType::GetCrlResp => "get_crl_resp",
+                MsgType::InvalidLicense => "invalid_license",
             }
         )
     }
@@ -246,9 +246,6 @@ impl<'a> From<&'a str> for MsgType {
             "get_block_txn" => MsgType::GetBlockTxn,
             "block_txn" => MsgType::BlockTxn,
             "compact_signed_proposal" => MsgType::CompactSignedProposal,
-            "get_crl" => MsgType::GetCrl,
-            "get_crl_resp" => MsgType::GetCrlResp,
-            "invalid_license" => MsgType::InvalidLicense,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "request_new_tx" => MsgType::RequestNewTx,
@@ -257,6 +254,9 @@ impl<'a> From<&'a str> for MsgType {
             "local_sync" => MsgType::LocalSync,
             "request_rpc" => MsgType::RequestRpc,
             "request_peers_info" => MsgType::RequestPeersInfo,
+            "get_crl" => MsgType::GetCrl,
+            "get_crl_resp" => MsgType::GetCrlResp,
+            "invalid_license" => MsgType::InvalidLicense,
             _ => MsgType::Unknown,
         }
     }

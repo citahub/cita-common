@@ -17,9 +17,9 @@ use crate::rpc_request::{
     GetBlockByHashParams, GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams,
     GetFilterChangesParams, GetFilterLogsParams, GetLogsParams, GetMetaDataParams,
     GetStateProofParams, GetTransactionCountParams, GetTransactionParams,
-    GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams, NewBlockFilterParams,
-    NewFilterParams, PeerCountParams, PeersInfoParams, SendRawTransactionParams,
-    UninstallFilterParams,
+    GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams, LicenseInfoParams,
+    NewBlockFilterParams, NewFilterParams, PeerCountParams, PeersInfoParams,
+    SendRawTransactionParams, UninstallFilterParams,
 };
 use crate::rpc_types::{BlockNumber, CallRequest, Filter, VariadicValue};
 use cita_types::{H160, H256, U256};
@@ -243,4 +243,5 @@ fn serialize_and_deserialize() {
 
     test_ser_and_de!(GetVersionParams, [], ());
     test_ser_and_de!(PeersInfoParams, [], ());
+    test_ser_and_de!(LicenseInfoParams, [], ());
 }
