@@ -20,7 +20,10 @@ use cita_crypto_trait::Sign;
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use secp256k1::key::{PublicKey, SecretKey};
-use secp256k1::{Error as SecpError, Message as SecpMessage, RecoverableSignature, RecoveryId};
+use secp256k1::{
+    recovery::RecoverableSignature, recovery::RecoveryId, Error as SecpError,
+    Message as SecpMessage,
+};
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
