@@ -346,7 +346,7 @@ impl BlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        *Tree::from_hashes(self.transaction_hashes().clone(), merge)
+        *Tree::from_hashes(self.transaction_hashes(), merge)
             .get_root_hash()
             .unwrap_or(&HASH_NULL)
     }
@@ -378,7 +378,7 @@ impl CompactBlockBody {
     }
 
     pub fn transactions_root(&self) -> H256 {
-        *Tree::from_hashes(self.transaction_hashes().clone(), merge)
+        *Tree::from_hashes(self.transaction_hashes(), merge)
             .get_root_hash()
             .unwrap_or(&HASH_NULL)
     }
