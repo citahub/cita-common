@@ -44,7 +44,7 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str, version_str: String) {
     };
 
     let version_string = {
-        let commit_id_string = commit_id.clone().unwrap_or_else(|| "unknown".to_owned());
+        let commit_id_string = commit_id.unwrap_or_else(|| "unknown".to_owned());
         format!("{}-{:.8}", version_str, commit_id_string)
     };
     let pre_str = pre.as_ref().map(|x| &**x).unwrap_or("unknown");
