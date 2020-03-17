@@ -38,7 +38,7 @@ function record_crate_for_check () {
 }
 
 function cargo_run_build () {
-    export RUSTFLAGS='-F warnings'
+    export RUSTFLAGS='-F warnings -A deprecated'
     CARGO_COMMAND="cargo test --no-run"
     cargo_run_all
     CARGO_COMMAND=
@@ -61,7 +61,7 @@ function upload_coverage () {
 }
 
 function cargo_run_test () {
-    export RUSTFLAGS="-F warnings"
+    export RUSTFLAGS="-F warnings -A deprecated"
     CARGO_COMMAND="cargo test"
     cargo_run_all
     CARGO_COMMAND=
@@ -72,7 +72,7 @@ function cargo_run_test () {
 }
 
 function cargo_run_clippy () {
-    export RUSTFLAGS="-F warnings"
+    export RUSTFLAGS="-F warnings -A deprecated"
     CARGO_COMMAND="cargo clippy"
     cargo_run_all
     CARGO_COMMAND=
