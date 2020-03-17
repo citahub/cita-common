@@ -76,7 +76,7 @@ pub fn construct_rpcname(input: proc_macro::TokenStream) -> proc_macro::TokenStr
     output.into()
 }
 
-fn generate_attrs_list(attrs_vec: &Vec<syn::Attribute>) -> proc_macro2::TokenStream {
+fn generate_attrs_list(attrs_vec: &[syn::Attribute]) -> proc_macro2::TokenStream {
     let mut attrs = quote!();
     for attr in attrs_vec.iter() {
         attrs = quote!(#attrs #attr);
