@@ -2153,34 +2153,34 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
     o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\x1a\x13compact_block.proto\
     \"\xc6\n\n\x0cInnerMessage\x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0\
-    R\x08RawBytes\x12$\n\x07Request\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\
-    \x07Request\x12'\n\x08Response\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08R\
+    R\x08rawBytes\x12$\n\x07Request\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\
+    \x07request\x12'\n\x08Response\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08r\
     esponse\x120\n\x0bSyncRequest\x18\x04\x20\x01(\x0b2\x0c.SyncRequestH\0R\
-    \x0bSyncRequest\x123\n\x0cSyncResponse\x18\x05\x20\x01(\x0b2\r.SyncRespo\
-    nseH\0R\x0cSyncResponse\x12!\n\x06Status\x18\x06\x20\x01(\x0b2\x07.Statu\
-    sH\0R\x06Status\x12-\n\nRichStatus\x18\x07\x20\x01(\x0b2\x0b.RichStatusH\
-    \0R\nRichStatus\x129\n\x0eSignedProposal\x18\x08\x20\x01(\x0b2\x0f.Signe\
-    dProposalH\0R\x0eSignedProposal\x12\x1e\n\x05Block\x18\t\x20\x01(\x0b2\
-    \x06.BlockH\0R\x05Block\x129\n\x0eBlockWithProof\x18\n\x20\x01(\x0b2\x0f\
-    .BlockWithProofH\0R\x0eBlockWithProof\x120\n\x0bBlockHeader\x18\x0b\x20\
-    \x01(\x0b2\x0c.BlockHeaderH\0R\x0bBlockHeader\x12'\n\x08BlockTxs\x18\x0c\
-    \x20\x01(\x0b2\t.BlockTxsH\0R\x08BlockTxs\x126\n\rBlockTxHashes\x18\r\
-    \x20\x01(\x0b2\x0e.BlockTxHashesH\0R\rBlockTxHashes\x12?\n\x10BlockTxHas\
-    hesReq\x18\x0e\x20\x01(\x0b2\x11.BlockTxHashesReqH\0R\x10BlockTxHashesRe\
+    \x0bsyncRequest\x123\n\x0cSyncResponse\x18\x05\x20\x01(\x0b2\r.SyncRespo\
+    nseH\0R\x0csyncResponse\x12!\n\x06Status\x18\x06\x20\x01(\x0b2\x07.Statu\
+    sH\0R\x06status\x12-\n\nRichStatus\x18\x07\x20\x01(\x0b2\x0b.RichStatusH\
+    \0R\nrichStatus\x129\n\x0eSignedProposal\x18\x08\x20\x01(\x0b2\x0f.Signe\
+    dProposalH\0R\x0esignedProposal\x12\x1e\n\x05Block\x18\t\x20\x01(\x0b2\
+    \x06.BlockH\0R\x05block\x129\n\x0eBlockWithProof\x18\n\x20\x01(\x0b2\x0f\
+    .BlockWithProofH\0R\x0eblockWithProof\x120\n\x0bBlockHeader\x18\x0b\x20\
+    \x01(\x0b2\x0c.BlockHeaderH\0R\x0bblockHeader\x12'\n\x08BlockTxs\x18\x0c\
+    \x20\x01(\x0b2\t.BlockTxsH\0R\x08blockTxs\x126\n\rBlockTxHashes\x18\r\
+    \x20\x01(\x0b2\x0e.BlockTxHashesH\0R\rblockTxHashes\x12?\n\x10BlockTxHas\
+    hesReq\x18\x0e\x20\x01(\x0b2\x11.BlockTxHashesReqH\0R\x10blockTxHashesRe\
     q\x129\n\x0eVerifyBlockReq\x18\x11\x20\x01(\x0b2\x0f.VerifyBlockReqH\0R\
-    \x0eVerifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.V\
-    erifyBlockRespH\0R\x0fVerifyBlockResp\x129\n\x0eExecutedResult\x18\x13\
-    \x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eExecutedResult\x120\n\x0bSnapsh\
-    otReq\x18\x14\x20\x01(\x0b2\x0c.SnapshotReqH\0R\x0bSnapshotReq\x123\n\
-    \x0cSnapshotResp\x18\x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0cSnapshotRes\
-    p\x126\n\rMiscellaneous\x18\x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rMis\
+    \x0everifyBlockReq\x12<\n\x0fVerifyBlockResp\x18\x12\x20\x01(\x0b2\x10.V\
+    erifyBlockRespH\0R\x0fverifyBlockResp\x129\n\x0eExecutedResult\x18\x13\
+    \x20\x01(\x0b2\x0f.ExecutedResultH\0R\x0eexecutedResult\x120\n\x0bSnapsh\
+    otReq\x18\x14\x20\x01(\x0b2\x0c.SnapshotReqH\0R\x0bsnapshotReq\x123\n\
+    \x0cSnapshotResp\x18\x15\x20\x01(\x0b2\r.SnapshotRespH\0R\x0csnapshotRes\
+    p\x126\n\rMiscellaneous\x18\x16\x20\x01(\x0b2\x0e.MiscellaneousH\0R\rmis\
     cellaneous\x12?\n\x10MiscellaneousReq\x18\x17\x20\x01(\x0b2\x11.Miscella\
-    neousReqH\0R\x10MiscellaneousReq\x12*\n\tBlackList\x18\x18\x20\x01(\x0b2\
-    \n.BlackListH\0R\tBlackList\x120\n\x0bStateSignal\x18\x19\x20\x01(\x0b2\
-    \x0c.StateSignalH\0R\x0bStateSignal\x120\n\x0bGetBlockTxn\x18\x1a\x20\
-    \x01(\x0b2\x0c.GetBlockTxnH\0R\x0bGetBlockTxn\x12'\n\x08BlockTxn\x18\x1b\
-    \x20\x01(\x0b2\t.BlockTxnH\0R\x08BlockTxn\x12N\n\x15CompactSignedProposa\
-    l\x18\x1c\x20\x01(\x0b2\x16.CompactSignedProposalH\0R\x15CompactSignedPr\
+    neousReqH\0R\x10miscellaneousReq\x12*\n\tBlackList\x18\x18\x20\x01(\x0b2\
+    \n.BlackListH\0R\tblackList\x120\n\x0bStateSignal\x18\x19\x20\x01(\x0b2\
+    \x0c.StateSignalH\0R\x0bstateSignal\x120\n\x0bGetBlockTxn\x18\x1a\x20\
+    \x01(\x0b2\x0c.GetBlockTxnH\0R\x0bgetBlockTxn\x12'\n\x08BlockTxn\x18\x1b\
+    \x20\x01(\x0b2\t.BlockTxnH\0R\x08blockTxn\x12N\n\x15CompactSignedProposa\
+    l\x18\x1c\x20\x01(\x0b2\x16.CompactSignedProposalH\0R\x15compactSignedPr\
     oposalB\t\n\x07contentJ\xbf\x0c\n\x06\x12\x04\0\08\x01\n\x08\n\x01\x0c\
     \x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\
     \x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\
