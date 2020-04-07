@@ -32,6 +32,8 @@ pub enum EngineError {
     VoteMsgForth(usize),
     InvalidSignature,
     InvalidTxInProposal,
+    NilProposal,
+    ErrFormatted,
 }
 
 impl fmt::Display for EngineError {
@@ -54,6 +56,8 @@ impl fmt::Display for EngineError {
             VoteMsgForth(height) => format!("The vote message is fulture height :{}", height),
             InvalidSignature => "Invalid Signature.".into(),
             InvalidTxInProposal => "Invalid Tx In Proposal.".into(),
+            NilProposal => "Proposal's content is Nil".into(),
+            ErrFormatted => "Message is not right formatted".into(),
         };
         f.write_fmt(format_args!("Engine error ({})", msg))
     }
