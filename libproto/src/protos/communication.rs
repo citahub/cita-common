@@ -83,6 +83,7 @@ pub enum InnerMessage_oneof_content {
     GetBlockTxn(super::compact_block::GetBlockTxn),
     BlockTxn(super::compact_block::BlockTxn),
     CompactSignedProposal(super::consensus::CompactSignedProposal),
+    GetTxList(super::auth::GetTxList),
 }
 
 impl InnerMessage {
@@ -1363,6 +1364,55 @@ impl InnerMessage {
             super::consensus::CompactSignedProposal::new()
         }
     }
+
+    // .GetTxList GetTxList = 29;
+
+
+    pub fn get_GetTxList(&self) -> &super::auth::GetTxList {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(ref v)) => v,
+            _ => super::auth::GetTxList::default_instance(),
+        }
+    }
+    pub fn clear_GetTxList(&mut self) {
+        self.content = ::std::option::Option::None;
+    }
+
+    pub fn has_GetTxList(&self) -> bool {
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_GetTxList(&mut self, v: super::auth::GetTxList) {
+        self.content = ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_GetTxList(&mut self) -> &mut super::auth::GetTxList {
+        if let ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(_)) = self.content {
+        } else {
+            self.content = ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(super::auth::GetTxList::new()));
+        }
+        match self.content {
+            ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_GetTxList(&mut self) -> super::auth::GetTxList {
+        if self.has_GetTxList() {
+            match self.content.take() {
+                ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            super::auth::GetTxList::new()
+        }
+    }
 }
 
 impl ::protobuf::Message for InnerMessage {
@@ -1488,6 +1538,11 @@ impl ::protobuf::Message for InnerMessage {
             }
         }
         if let Some(InnerMessage_oneof_content::CompactSignedProposal(ref v)) = self.content {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(InnerMessage_oneof_content::GetTxList(ref v)) = self.content {
             if !v.is_initialized() {
                 return false;
             }
@@ -1655,6 +1710,12 @@ impl ::protobuf::Message for InnerMessage {
                     }
                     self.content = ::std::option::Option::Some(InnerMessage_oneof_content::CompactSignedProposal(is.read_message()?));
                 },
+                29 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.content = ::std::option::Option::Some(InnerMessage_oneof_content::GetTxList(is.read_message()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -1769,6 +1830,10 @@ impl ::protobuf::Message for InnerMessage {
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
                 &InnerMessage_oneof_content::CompactSignedProposal(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &InnerMessage_oneof_content::GetTxList(ref v) => {
                     let len = v.compute_size();
                     my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -1907,6 +1972,11 @@ impl ::protobuf::Message for InnerMessage {
                 },
                 &InnerMessage_oneof_content::CompactSignedProposal(ref v) => {
                     os.write_tag(28, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &InnerMessage_oneof_content::GetTxList(ref v) => {
+                    os.write_tag(29, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -2084,6 +2154,11 @@ impl ::protobuf::Message for InnerMessage {
                     InnerMessage::has_CompactSignedProposal,
                     InnerMessage::get_CompactSignedProposal,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, super::auth::GetTxList>(
+                    "GetTxList",
+                    InnerMessage::has_GetTxList,
+                    InnerMessage::get_GetTxList,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<InnerMessage>(
                     "InnerMessage",
                     fields,
@@ -2132,6 +2207,7 @@ impl ::protobuf::Clear for InnerMessage {
         self.content = ::std::option::Option::None;
         self.content = ::std::option::Option::None;
         self.content = ::std::option::Option::None;
+        self.content = ::std::option::Option::None;
         self.unknown_fields.clear();
     }
 }
@@ -2152,7 +2228,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x13communication.proto\x1a\rrequest.proto\x1a\x0eresponse.proto\x1a\n\
     sync.proto\x1a\x10blockchain.proto\x1a\x0fconsensus.proto\x1a\nauth.prot\
     o\x1a\x0eexecutor.proto\x1a\x0esnapshot.proto\x1a\x13compact_block.proto\
-    \"\xc6\n\n\x0cInnerMessage\x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0\
+    \"\xf2\n\n\x0cInnerMessage\x12\x1c\n\x08RawBytes\x18\x01\x20\x01(\x0cH\0\
     R\x08rawBytes\x12$\n\x07Request\x18\x02\x20\x01(\x0b2\x08.RequestH\0R\
     \x07request\x12'\n\x08Response\x18\x03\x20\x01(\x0b2\t.ResponseH\0R\x08r\
     esponse\x120\n\x0bSyncRequest\x18\x04\x20\x01(\x0b2\x0c.SyncRequestH\0R\
@@ -2181,24 +2257,25 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x01(\x0b2\x0c.GetBlockTxnH\0R\x0bgetBlockTxn\x12'\n\x08BlockTxn\x18\x1b\
     \x20\x01(\x0b2\t.BlockTxnH\0R\x08blockTxn\x12N\n\x15CompactSignedProposa\
     l\x18\x1c\x20\x01(\x0b2\x16.CompactSignedProposalH\0R\x15compactSignedPr\
-    oposalB\t\n\x07contentJ\xbf\x0c\n\x06\x12\x04\0\08\x01\n\x08\n\x01\x0c\
-    \x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\
-    \x12\x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\
-    \x03\x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\t\n\x02\
-    \x03\x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\x17\n\t\n\
-    \x02\x03\x07\x12\x03\t\x07\x17\n\t\n\x02\x03\x08\x12\x03\n\x07\x1c\n\n\n\
-    \x02\x04\0\x12\x04\x0c\08\x01\n\n\n\x03\x04\0\x01\x12\x03\x0c\x08\x14\n\
-    \x0c\n\x04\x04\0\x08\0\x12\x04\x0e\x047\x05\n\x0c\n\x05\x04\0\x08\0\x01\
-    \x12\x03\x0e\n\x11\n\x0b\n\x04\x04\0\x02\0\x12\x03\x10\x08\x1b\n\x0c\n\
-    \x05\x04\0\x02\0\x05\x12\x03\x10\x08\r\n\x0c\n\x05\x04\0\x02\0\x01\x12\
-    \x03\x10\x0e\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x10\x19\x1a\n\x0b\n\
-    \x04\x04\0\x02\x01\x12\x03\x12\x08\x1c\n\x0c\n\x05\x04\0\x02\x01\x06\x12\
-    \x03\x12\x08\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x12\x10\x17\n\x0c\
-    \n\x05\x04\0\x02\x01\x03\x12\x03\x12\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\
-    \x12\x03\x13\x08\x1e\n\x0c\n\x05\x04\0\x02\x02\x06\x12\x03\x13\x08\x10\n\
-    \x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x13\x11\x19\n\x0c\n\x05\x04\0\x02\
-    \x02\x03\x12\x03\x13\x1c\x1d\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x15\x08$\
-    \n\x0c\n\x05\x04\0\x02\x03\x06\x12\x03\x15\x08\x13\n\x0c\n\x05\x04\0\x02\
+    oposal\x12*\n\tGetTxList\x18\x1d\x20\x01(\x0b2\n.GetTxListH\0R\tgetTxLis\
+    tB\t\n\x07contentJ\xf6\x0c\n\x06\x12\x04\0\09\x01\n\x08\n\x01\x0c\x12\
+    \x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x16\n\t\n\x02\x03\x01\x12\
+    \x03\x03\x07\x17\n\t\n\x02\x03\x02\x12\x03\x04\x07\x13\n\t\n\x02\x03\x03\
+    \x12\x03\x05\x07\x19\n\t\n\x02\x03\x04\x12\x03\x06\x07\x18\n\t\n\x02\x03\
+    \x05\x12\x03\x07\x07\x13\n\t\n\x02\x03\x06\x12\x03\x08\x07\x17\n\t\n\x02\
+    \x03\x07\x12\x03\t\x07\x17\n\t\n\x02\x03\x08\x12\x03\n\x07\x1c\n\n\n\x02\
+    \x04\0\x12\x04\x0c\09\x01\n\n\n\x03\x04\0\x01\x12\x03\x0c\x08\x14\n\x0c\
+    \n\x04\x04\0\x08\0\x12\x04\x0e\x048\x05\n\x0c\n\x05\x04\0\x08\0\x01\x12\
+    \x03\x0e\n\x11\n\x0b\n\x04\x04\0\x02\0\x12\x03\x10\x08\x1b\n\x0c\n\x05\
+    \x04\0\x02\0\x05\x12\x03\x10\x08\r\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\
+    \x10\x0e\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x10\x19\x1a\n\x0b\n\x04\
+    \x04\0\x02\x01\x12\x03\x12\x08\x1c\n\x0c\n\x05\x04\0\x02\x01\x06\x12\x03\
+    \x12\x08\x0f\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x12\x10\x17\n\x0c\n\
+    \x05\x04\0\x02\x01\x03\x12\x03\x12\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\
+    \x03\x13\x08\x1e\n\x0c\n\x05\x04\0\x02\x02\x06\x12\x03\x13\x08\x10\n\x0c\
+    \n\x05\x04\0\x02\x02\x01\x12\x03\x13\x11\x19\n\x0c\n\x05\x04\0\x02\x02\
+    \x03\x12\x03\x13\x1c\x1d\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x15\x08$\n\
+    \x0c\n\x05\x04\0\x02\x03\x06\x12\x03\x15\x08\x13\n\x0c\n\x05\x04\0\x02\
     \x03\x01\x12\x03\x15\x14\x1f\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\x15\"\
     #\n\x0b\n\x04\x04\0\x02\x04\x12\x03\x16\x08&\n\x0c\n\x05\x04\0\x02\x04\
     \x06\x12\x03\x16\x08\x14\n\x0c\n\x05\x04\0\x02\x04\x01\x12\x03\x16\x15!\
@@ -2255,7 +2332,10 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x10\n\x0c\n\x05\x04\0\x02\x18\x01\x12\x034\x11\x19\n\x0c\n\x05\x04\0\
     \x02\x18\x03\x12\x034\x1c\x1e\n\x0b\n\x04\x04\0\x02\x19\x12\x036\x089\n\
     \x0c\n\x05\x04\0\x02\x19\x06\x12\x036\x08\x1d\n\x0c\n\x05\x04\0\x02\x19\
-    \x01\x12\x036\x1e3\n\x0c\n\x05\x04\0\x02\x19\x03\x12\x03668b\x06proto3\
+    \x01\x12\x036\x1e3\n\x0c\n\x05\x04\0\x02\x19\x03\x12\x03668\n\x0b\n\x04\
+    \x04\0\x02\x1a\x12\x037\x08!\n\x0c\n\x05\x04\0\x02\x1a\x06\x12\x037\x08\
+    \x11\n\x0c\n\x05\x04\0\x02\x1a\x01\x12\x037\x12\x1b\n\x0c\n\x05\x04\0\
+    \x02\x1a\x03\x12\x037\x1e\x20b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

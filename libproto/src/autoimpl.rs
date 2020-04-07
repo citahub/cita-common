@@ -150,6 +150,7 @@ macro_rules! loop_macro_for_structs {
             // Generate ALL-PROTOS automatically begin:
             BlockTxHashes,
             BlockTxHashesReq,
+            GetTxList,
             Miscellaneous,
             MiscellaneousReq,
             VerifyBlockReq,
@@ -234,6 +235,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             GetBlockTxn,
             BlockTxn,
             CompactSignedProposal,
+            GetTxList,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -527,6 +529,12 @@ impl Message {
     pub fn take_compact_signed_proposal(&mut self) -> Option<CompactSignedProposal> {
         match self.take_content() {
             Some(MsgClass::CompactSignedProposal(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_get_tx_list(&mut self) -> Option<GetTxList> {
+        match self.take_content() {
+            Some(MsgClass::GetTxList(v)) => Some(v),
             _ => None,
         }
     }
