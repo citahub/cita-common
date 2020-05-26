@@ -10,7 +10,7 @@ First, add the dependencies to `Cargo.toml`:
 
 ```toml
 [dependencies]
-cita-web3 = { git = "https://github.com/citahub/cita-common" }
+cita-web3 = { git = "https://github.com/citahub/cita-common",  branch = "develop" }
 ```
 
 Then, add this crate to the source codes:
