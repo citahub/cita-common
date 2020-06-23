@@ -11,7 +11,7 @@ default-features = false
 
 [dependencies]
 dotenv = "0.13.0"
-crossbeam-channel = "0.3.8"
+crossbeam-channel = "0.4.2"
 
 [features]
 default = []
