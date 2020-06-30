@@ -129,7 +129,8 @@ impl BftProof {
 
 impl From<Proof> for BftProof {
     fn from(p: Proof) -> Self {
-        let decoded: BftProof = deserialize(&p.get_content()[..]).unwrap_or(BftProof::default());
+        let decoded: BftProof =
+            deserialize(&p.get_content()[..]).unwrap_or_else(|_| BftProof::default());
         decoded
     }
 }
