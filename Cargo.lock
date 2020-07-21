@@ -316,7 +316,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f28d41799c3ceeaa16c6aef432fbffb96722a270fe877696c09656cfead4e2b"
 dependencies = [
  "chrono",
- "crossbeam-channel",
+ "crossbeam-channel 0.3.9",
  "libc",
  "log 0.4.8",
  "log4rs",
@@ -345,7 +345,7 @@ dependencies = [
  "rand 0.6.5",
  "rlp",
  "rustc-serialize",
- "secp256k1 0.15.5",
+ "secp256k1 0.17.2",
  "serde",
 ]
 
@@ -471,6 +471,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c8ec7fcd21571dc78f96cc96243cab8d8f035247c3efd16c687be154c3fa9efa"
 dependencies = [
  "crossbeam-utils 0.6.6",
+]
+
+[[package]]
+name = "crossbeam-channel"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cced8691919c02aac3cb0a1bc2e9b73d89e832bf9a06fc579d4e71b68a2da061"
+dependencies = [
+ "crossbeam-utils 0.7.2",
+ "maybe-uninit",
 ]
 
 [[package]]
@@ -1670,7 +1680,7 @@ name = "pubsub"
 version = "0.6.0"
 dependencies = [
  "amqp",
- "crossbeam-channel",
+ "crossbeam-channel 0.4.2",
  "dotenv",
 ]
 
@@ -2071,12 +2081,21 @@ dependencies = [
 
 [[package]]
 name = "secp256k1"
-version = "0.15.5"
+version = "0.17.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d311229f403d64002e9eed9964dfa5a0a0c1ac443344f7546bf48e916c6053a"
+checksum = "2932dc07acd2066ff2e3921a4419606b220ba6cd03a9935123856cc534877056"
+dependencies = [
+ "rand 0.6.5",
+ "secp256k1-sys",
+]
+
+[[package]]
+name = "secp256k1-sys"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ab2c26f0d3552a0f12e639ae8a64afc2e3db9c52fe32f5fc6c289d38519f220"
 dependencies = [
  "cc",
- "rand 0.6.5",
 ]
 
 [[package]]
