@@ -1140,7 +1140,7 @@ dependencies = [
 [[package]]
 name = "libsm"
 version = "0.3.0"
-source = "git+https://github.com/citahub/libsm?rev=4d0e6199fca0934c58131de1d0036e9aa4da26c1#4d0e6199fca0934c58131de1d0036e9aa4da26c1"
+source = "git+https://github.com/citahub/libsm#4d0e6199fca0934c58131de1d0036e9aa4da26c1"
 dependencies = [
  "byteorder 1.3.4",
  "lazy_static 1.4.0",
