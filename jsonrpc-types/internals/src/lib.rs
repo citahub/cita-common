@@ -19,17 +19,19 @@ extern crate syn;
 #[macro_use]
 extern crate quote;
 
+use syn::parse::{Parse, ParseStream, Result};
+
 struct TypeWithAttrs {
     typ: syn::Type,
     attrs: Vec<syn::Attribute>,
 }
 
-impl syn::synom::Synom for TypeWithAttrs {
-    named!(parse -> Self, do_parse!(
-        attrs: many0!(syn::Attribute::parse_outer) >>
-        typ: syn!(syn::Type) >>
-        (TypeWithAttrs{ typ, attrs })
-    ));
+impl Parse for TypeWithAttrs {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let attrs = input.call(syn::Attribute::parse_outer)?;
+        let typ: syn::Type = input.parse()?;
+        Ok(TypeWithAttrs { typ, attrs })
+    }
 }
 
 struct ParamsType {
@@ -41,15 +43,22 @@ struct ParamsType {
     resp: syn::Ident,
 }
 
-impl syn::synom::Synom for ParamsType {
-    named!(parse -> Self, do_parse!(
-        name: syn!(syn::Ident) >>
-        punct!(:) >>
-        types: brackets!(call!(syn::punctuated::Punctuated::parse_separated)) >>
-        punct!(,) >>
-        resp: syn!(syn::Ident) >>
-        (ParamsType { name, types, resp })
-    ));
+impl Parse for ParamsType {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let name: syn::Ident = input.parse()?;
+        let _colon: Token![:] = input.parse()?;
+
+        let inner;
+        let bracket = bracketed!(inner in input);
+        let types = syn::punctuated::Punctuated::parse_terminated(&inner)?;
+        let _comma: Token![,] = input.parse()?;
+        let resp: syn::Ident = input.parse()?;
+        Ok(ParamsType {
+            name,
+            types: (bracket, types),
+            resp,
+        })
+    }
 }
 
 // Get JSON-RPC name from params name.
