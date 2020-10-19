@@ -12,7 +12,9 @@ cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
 rlp = { path = "../rlp" }
-libsm = { git = "https://github.com/citahub/libsm", branch = "master" }
+libsm = { git = "https://github.com/citahub/libsm", rev = "4d0e6199fca0934c58131de1d0036e9aa4da26c1" }
+ring = { git = "https://github.com/Pencil-Yao/ring", branch = "smx" }
+untrusted = { version = "0.7.1" }
 
 [features]
 default = []

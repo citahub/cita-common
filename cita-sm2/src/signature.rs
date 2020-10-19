@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{pubkey_to_address, Address, Error, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
-use cita_crypto_trait::Sign;
+use super::{pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
+use cita_crypto_trait::{Sign, CreateKey};
 use libsm::sm2::signature::{SigCtx, Signature as Sm2Signature};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
@@ -23,6 +23,8 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
+use ring::signature;
+use ring::signature::{EcdsaKeyPair, ECDSA_SM2P256_SM3_ASN1_SIGNING};
 
 pub struct Signature(pub [u8; 128]);
 
@@ -213,50 +215,74 @@ impl Sign for Signature {
     type Error = Error;
 
     fn sign(privkey: &Self::PrivKey, message: &Self::Message) -> Result<Self, Error> {
-        let ctx = SigCtx::new();
-        ctx.load_seckey(&privkey.0)
-            .map_err(|_| Error::RecoverError)
-            .map(|sk| {
-                let pk = ctx.pk_from_sk(&sk);
-                let signature = ctx.sign(&message, &sk, &pk);
-                let mut sig_bytes = [0u8; SIGNATURE_BYTES_LEN];
-                let r_bytes = signature.get_r().to_bytes_be();
-                let s_bytes = signature.get_s().to_bytes_be();
-                sig_bytes[32 - r_bytes.len()..32].copy_from_slice(&r_bytes[..]);
-                sig_bytes[64 - s_bytes.len()..64].copy_from_slice(&s_bytes[..]);
-                sig_bytes[64..].copy_from_slice(&ctx.serialize_pubkey(&pk, false)[1..]);
-                sig_bytes.into()
-            })
+        let rng = ring::rand::SystemRandom::new();
+        let key_pair = KeyPair::from_privkey(privkey.clone())?;
+        let sig = key_pair.inner.sign(&rng, &message)
+            .map_err(|_| Error::SignError)?;
+        let signature = untrusted::Input::from(sig.as_ref());
+        let (r, s) = key_pair.inner.split_rs(
+            &signature::ECDSA_SM2P256_SM3_ASN1,
+            &signature,
+        ).map_err(|_| Error::SignError)?;
+        let mut sig_bytes = [0u8; SIGNATURE_BYTES_LEN];
+        let r_bytes = r.as_slice_less_safe();
+        let s_bytes = s.as_slice_less_safe();
+        sig_bytes[32 - r_bytes.len()..32].copy_from_slice(&r_bytes);
+        sig_bytes[64 - s_bytes.len()..64].copy_from_slice(&s_bytes);
+        sig_bytes[64..].copy_from_slice(key_pair.pubkey());
+        Ok(Signature(sig_bytes))
     }
 
     fn recover(&self, message: &Message) -> Result<Self::PubKey, Error> {
-        let ctx = SigCtx::new();
-        let sig = Sm2Signature::new(self.r(), self.s());
-        let mut pk_full = [0u8; 65];
-        pk_full[0] = 4;
-        pk_full[1..].copy_from_slice(self.pk());
-        ctx.load_pubkey(&pk_full[..])
-            .map_err(|_| Error::RecoverError)
-            .and_then(|pk| {
-                if ctx.verify(&message, &pk, &sig) {
-                    Ok(PubKey::from(self.pk()))
-                } else {
-                    Err(Error::RecoverError)
-                }
-            })
+        let mut pubkey = [0u8; 65];
+        pubkey[0] = 4;
+        pubkey[1..].copy_from_slice(self.pk());
+
+        let pk = signature::UnparsedPublicKey::new(
+            &signature::ECDSA_SM2P256_SM3_ASN1,
+            pubkey.as_ref(),
+        );
+
+        let r = self.r();
+        let s = self.s();
+        let signature = EcdsaKeyPair::format_rs(
+            &ECDSA_SM2P256_SM3_ASN1_SIGNING,
+            r,
+            s,
+        ).map_err(|_| Error::RecoverError)?;
+
+        if pk.verify(&message, signature.as_ref()).is_ok() {
+            Ok(PubKey::from(self.pk()))
+        } else {
+            Err(Error::RecoverError)
+        }
     }
 
     fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Error> {
-        let pubkey_from_sig = PubKey::from(self.pk());
-        if pubkey_from_sig == *pubkey {
-            let ctx = SigCtx::new();
-            let sig = Sm2Signature::new(self.r(), self.s());
-            let mut pk_full = [0u8; 65];
-            pk_full[0] = 4;
-            pk_full[1..].copy_from_slice(self.pk());
-            ctx.load_pubkey(&pk_full[..])
-                .map_err(|_| Error::RecoverError)
-                .map(|pk| ctx.verify(&message, &pk, &sig))
+
+        let mut pubkey_sig = [0u8; 65];
+        pubkey_sig[0] = 4;
+        pubkey_sig[1..].copy_from_slice(self.pk());
+
+        let pk = signature::UnparsedPublicKey::new(
+            &signature::ECDSA_SM2P256_SM3_ASN1,
+            pubkey_sig.as_ref(),
+        );
+
+        let r = self.r();
+        let s = self.s();
+        let signature = EcdsaKeyPair::format_rs(
+            &ECDSA_SM2P256_SM3_ASN1_SIGNING,
+            r,
+            s,
+        ).map_err(|_| Error::SignError)?;
+
+        if PubKey::from(self.pk()) == *pubkey {
+            if pk.verify(message.as_ref(), signature.as_ref()).is_ok() {
+                Ok(true)
+            } else {
+                Ok(false)
+            }
         } else {
             Ok(false)
         }
