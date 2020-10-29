@@ -14,7 +14,7 @@
 
 use super::{pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
 use cita_crypto_trait::{Sign, CreateKey};
-use libsm::sm2::signature::{SigCtx, Signature as Sm2Signature};
+use libsm::sm2::signature::SigCtx;
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
@@ -217,6 +217,7 @@ impl Sign for Signature {
     fn sign(privkey: &Self::PrivKey, message: &Self::Message) -> Result<Self, Error> {
         let rng = ring::rand::SystemRandom::new();
         let key_pair = KeyPair::from_privkey(privkey.clone())?;
+
         let sig = key_pair.inner.sign(&rng, &message)
             .map_err(|_| Error::SignError)?;
         let signature = untrusted::Input::from(sig.as_ref());
@@ -278,7 +279,7 @@ impl Sign for Signature {
         ).map_err(|_| Error::SignError)?;
 
         if PubKey::from(self.pk()) == *pubkey {
-            if pk.verify(message.as_ref(), signature.as_ref()).is_ok() {
+            if pk.verify(&message, signature.as_ref()).is_ok() {
                 Ok(true)
             } else {
                 Ok(false)
@@ -300,6 +301,8 @@ mod tests {
     use super::{Message, Signature};
     use crate::keypair::KeyPair;
     use cita_crypto_trait::{CreateKey, Sign};
+    use hashable::Hashable;
+    use crate::PrivKey;
 
     #[test]
     fn test_sign_verify() {
@@ -333,5 +336,24 @@ mod tests {
         let sig = &sig;
         let slice: &[u8] = sig.into();
         assert_eq!(Signature::from(slice), *sig);
+    }
+
+    #[test]
+    fn test_sign_ring_libsm() {
+        let pri = hex::decode("fffffc4d0000064efffffb8c00000324fffffdc600000543fffff8950000053b").unwrap();
+        let keypair = KeyPair::from_privkey(PrivKey::from(pri.as_slice())).unwrap();
+        let pk = keypair.pubkey();
+        println!("{}", hex::encode(&pk));
+
+        let mut pubkey = [0u8; 65];
+        pubkey[0] = 4;
+        pubkey[1..].copy_from_slice(pk);
+        let message = "hello world".as_bytes();
+
+        let message = message.crypt_hash();
+        println!("real msg: {}", hex::encode(&message));
+
+        let sig = Signature::sign(keypair.privkey(), &message).unwrap();
+        println!("sig: {}", hex::encode(sig.as_ref()));
     }
 }
