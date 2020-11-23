@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[cfg(feature = "blake2bhash")]
-extern crate blake2b;
 #[cfg(feature = "sm3hash")]
 extern crate libsm;
 #[cfg(feature = "sha3hash")]
@@ -107,11 +105,11 @@ where
         let input: &[u8] = self.as_ref();
 
         unsafe {
-            blake2b::blake2b(
+            libsodium_sys::crypto_generichash_blake2b(
                 dest.as_mut_ptr(),
                 dest.len(),
                 input.as_ptr(),
-                input.len(),
+                input.len() as u64,
                 BLAKE2BKEY.as_bytes().as_ptr(),
                 BLAKE2BKEY.len(),
             );

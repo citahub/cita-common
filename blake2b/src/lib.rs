@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#[deprecated(
+    since = "0.1.0",
+    note = "use libsodium_sys::crypto_generichash_blake2b replace"
+)]
 extern "C" {
     pub fn blake2b(
         out: *mut u8,

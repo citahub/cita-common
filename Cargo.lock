@@ -909,9 +909,9 @@ dependencies = [
 name = "hashable"
 version = "0.1.0"
 dependencies = [
- "blake2b",
  "cita-types",
  "libsm",
+ "libsodium-sys",
  "tiny-keccak",
 ]
 
