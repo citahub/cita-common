@@ -8,11 +8,11 @@ edition = "2018"
 [dependencies]
 cita-types = { path = "../cita-types" }
 tiny-keccak= { version = "1.4", optional = true }
-blake2b = { path = "../blake2b", optional = true }
+libsodium-sys = { version = "0.2.5", optional = true }
 libsm = { git = "https://github.com/citahub/libsm", branch = "master", optional = true }
 
 [features]
 default = []
 sha3hash = ["tiny-keccak"]
-blake2bhash = ["blake2b"]
+blake2bhash = ["libsodium-sys"]
 sm3hash = ["libsm"]
