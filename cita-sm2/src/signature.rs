@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN};
-use cita_crypto_trait::{Sign, CreateKey};
-use libsm::sm2::signature::SigCtx;
+use super::{
+    pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
+};
+use cita_crypto_trait::{CreateKey, Sign};
+use ring::signature;
+use ring::signature::{EcdsaKeyPair, ECDSA_SM2P256_SM3_ASN1_SIGNING};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
@@ -23,8 +26,6 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-use ring::signature;
-use ring::signature::{EcdsaKeyPair, ECDSA_SM2P256_SM3_ASN1_SIGNING};
 
 pub struct Signature(pub [u8; 128]);
 
@@ -216,15 +217,17 @@ impl Sign for Signature {
 
     fn sign(privkey: &Self::PrivKey, message: &Self::Message) -> Result<Self, Error> {
         let rng = ring::rand::SystemRandom::new();
-        let key_pair = KeyPair::from_privkey(privkey.clone())?;
+        let key_pair = KeyPair::from_privkey(*privkey)?;
 
-        let sig = key_pair.inner.sign(&rng, &message)
+        let sig = key_pair
+            .inner
+            .sign(&rng, &message)
             .map_err(|_| Error::SignError)?;
         let signature = untrusted::Input::from(sig.as_ref());
-        let (r, s) = key_pair.inner.split_rs(
-            &signature::ECDSA_SM2P256_SM3_ASN1,
-            &signature,
-        ).map_err(|_| Error::SignError)?;
+        let (r, s) = key_pair
+            .inner
+            .split_rs(&signature::ECDSA_SM2P256_SM3_ASN1, &signature)
+            .map_err(|_| Error::SignError)?;
         let mut sig_bytes = [0u8; SIGNATURE_BYTES_LEN];
         let r_bytes = r.as_slice_less_safe();
         let s_bytes = s.as_slice_less_safe();
@@ -239,18 +242,13 @@ impl Sign for Signature {
         pubkey[0] = 4;
         pubkey[1..].copy_from_slice(self.pk());
 
-        let pk = signature::UnparsedPublicKey::new(
-            &signature::ECDSA_SM2P256_SM3_ASN1,
-            pubkey.as_ref(),
-        );
+        let pk =
+            signature::UnparsedPublicKey::new(&signature::ECDSA_SM2P256_SM3_ASN1, pubkey.as_ref());
 
         let r = self.r();
         let s = self.s();
-        let signature = EcdsaKeyPair::format_rs(
-            &ECDSA_SM2P256_SM3_ASN1_SIGNING,
-            r,
-            s,
-        ).map_err(|_| Error::RecoverError)?;
+        let signature = EcdsaKeyPair::format_rs(&ECDSA_SM2P256_SM3_ASN1_SIGNING, r, s)
+            .map_err(|_| Error::RecoverError)?;
 
         if pk.verify(&message, signature.as_ref()).is_ok() {
             Ok(PubKey::from(self.pk()))
@@ -260,7 +258,6 @@ impl Sign for Signature {
     }
 
     fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Error> {
-
         let mut pubkey_sig = [0u8; 65];
         pubkey_sig[0] = 4;
         pubkey_sig[1..].copy_from_slice(self.pk());
@@ -272,11 +269,8 @@ impl Sign for Signature {
 
         let r = self.r();
         let s = self.s();
-        let signature = EcdsaKeyPair::format_rs(
-            &ECDSA_SM2P256_SM3_ASN1_SIGNING,
-            r,
-            s,
-        ).map_err(|_| Error::SignError)?;
+        let signature = EcdsaKeyPair::format_rs(&ECDSA_SM2P256_SM3_ASN1_SIGNING, r, s)
+            .map_err(|_| Error::SignError)?;
 
         if PubKey::from(self.pk()) == *pubkey {
             if pk.verify(&message, signature.as_ref()).is_ok() {
@@ -300,9 +294,9 @@ impl Sign for Signature {
 mod tests {
     use super::{Message, Signature};
     use crate::keypair::KeyPair;
+    use crate::PrivKey;
     use cita_crypto_trait::{CreateKey, Sign};
     use hashable::Hashable;
-    use crate::PrivKey;
 
     #[test]
     fn test_sign_verify() {
@@ -340,7 +334,8 @@ mod tests {
 
     #[test]
     fn test_sign_ring_libsm() {
-        let pri = hex::decode("fffffc4d0000064efffffb8c00000324fffffdc600000543fffff8950000053b").unwrap();
+        let pri = hex::decode("fffffc4d0000064efffffb8c00000324fffffdc600000543fffff8950000053b")
+            .unwrap();
         let keypair = KeyPair::from_privkey(PrivKey::from(pri.as_slice())).unwrap();
         let pk = keypair.pubkey();
         println!("{}", hex::encode(&pk));
