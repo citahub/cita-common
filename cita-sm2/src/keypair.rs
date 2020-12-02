@@ -16,7 +16,7 @@ use super::{Address, Error, PrivKey, PubKey};
 use crate::types::H160;
 use cita_crypto_trait::CreateKey;
 use hashable::Hashable;
-use libsm::sm2::signature::SigCtx;
+use ring::signature::{EcdsaKeyPair, ECDSA_SM2P256_SM3_ASN1_SIGNING};
 use rustc_serialize::hex::ToHex;
 use std::fmt;
 
@@ -24,16 +24,16 @@ pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
     H160::from(pubkey.crypt_hash())
 }
 
-#[derive(Default)]
 pub struct KeyPair {
+    pub inner: EcdsaKeyPair,
     privkey: PrivKey,
     pubkey: PubKey,
 }
 
 impl fmt::Display for KeyPair {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        writeln!(f, "privkey:  {}", self.privkey.0.to_hex())?;
-        writeln!(f, "pubkey:  {}", self.pubkey.0.to_hex())?;
+        writeln!(f, "privkey:  {}", self.privkey().0.to_hex())?;
+        writeln!(f, "pubkey:  {}", self.pubkey().0.to_hex())?;
         write!(f, "address:  {}", self.address().0.to_hex())
     }
 }
@@ -44,22 +44,31 @@ impl CreateKey for KeyPair {
     type Error = Error;
 
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
-        let ctx = SigCtx::new();
-        ctx.load_seckey(&privkey.0)
-            .map_err(|_| Error::RecoverError)
-            .map(|sk| {
-                let pk = ctx.pk_from_sk(&sk);
-                let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, false)[1..]);
-                KeyPair { privkey, pubkey }
-            })
+        let inner = EcdsaKeyPair::from_privatekey_bytes(
+            &ECDSA_SM2P256_SM3_ASN1_SIGNING,
+            untrusted::Input::from(privkey.as_ref()),
+        )
+        .map_err(|_| Error::RecoverError)?;
+        let out = &inner.private_key()[16..];
+        let privkey = PrivKey::from(out);
+        let pubkey = PubKey::from(&inner.public_key()[1..]);
+        Ok(KeyPair {
+            inner,
+            privkey,
+            pubkey,
+        })
     }
 
     fn gen_keypair() -> Self {
-        let ctx = SigCtx::new();
-        let (pk, sk) = ctx.new_keypair();
-        let pubkey = PubKey::from(&ctx.serialize_pubkey(&pk, false)[1..]);
-        let privkey = PrivKey::from(&ctx.serialize_seckey(&sk)[..]);
-        KeyPair { privkey, pubkey }
+        let inner = EcdsaKeyPair::generate_keypair(&ECDSA_SM2P256_SM3_ASN1_SIGNING).unwrap();
+        let out = &inner.private_key()[16..];
+        let privkey = PrivKey::from(out);
+        let pubkey = PubKey::from(&inner.public_key()[1..]);
+        KeyPair {
+            inner,
+            privkey,
+            pubkey,
+        }
     }
 
     fn privkey(&self) -> &Self::PrivKey {
@@ -71,7 +80,13 @@ impl CreateKey for KeyPair {
     }
 
     fn address(&self) -> Address {
-        pubkey_to_address(&self.pubkey)
+        pubkey_to_address(self.pubkey())
+    }
+}
+
+impl Default for KeyPair {
+    fn default() -> Self {
+        unimplemented!()
     }
 }
 

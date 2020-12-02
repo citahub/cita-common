@@ -9,12 +9,12 @@ edition = "2018"
 rand = "0.4"
 
 [dev-dependencies]
-criterion = "0.2"
+criterion = "0.3.3"
 tiny-keccak= "1.4"
 blake2b = { path = "../blake2b" }
 secp256k1 = {version = "0.12", features = ["rand"]}
 sodiumoxide = "0.2.2"
-libsm = { git = "https://github.com/citahub/libsm", branch = "master" }
+libsm = { git = "https://github.com/citahub/libsm", branch = "smx" }
 
 [[bench]]
 name = "hash-algos"
