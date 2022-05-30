@@ -77,6 +77,8 @@ pub enum MsgType {
     BlockTxn,
     CompactSignedProposal,
     GetTxList,
+    SyncLightRequest,
+    SyncLightResponse,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -178,6 +180,8 @@ impl fmt::Display for MsgType {
                 &MsgType::BlockTxn => "block_txn",
                 &MsgType::CompactSignedProposal => "compact_signed_proposal",
                 &MsgType::GetTxList => "get_tx_list",
+                &MsgType::SyncLightRequest => "sync_light_request",
+                &MsgType::SyncLightResponse => "sync_light_response",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -249,6 +253,8 @@ impl<'a> From<&'a str> for MsgType {
             "block_txn" => MsgType::BlockTxn,
             "compact_signed_proposal" => MsgType::CompactSignedProposal,
             "get_tx_list" => MsgType::GetTxList,
+            "sync_light_request" => MsgType::SyncLightRequest,
+            "sync_light_response" => MsgType::SyncLightResponse,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "req_new_tx" => MsgType::RequestNewTx,
