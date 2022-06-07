@@ -79,6 +79,8 @@ pub enum MsgType {
     GetTxList,
     SyncLightRequest,
     SyncLightResponse,
+    LightRequest,
+    LightResponse,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -182,6 +184,8 @@ impl fmt::Display for MsgType {
                 &MsgType::GetTxList => "get_tx_list",
                 &MsgType::SyncLightRequest => "sync_light_request",
                 &MsgType::SyncLightResponse => "sync_light_response",
+                &MsgType::LightRequest => "light_request",
+                &MsgType::LightResponse => "light_request",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -255,6 +259,8 @@ impl<'a> From<&'a str> for MsgType {
             "get_tx_list" => MsgType::GetTxList,
             "sync_light_request" => MsgType::SyncLightRequest,
             "sync_light_response" => MsgType::SyncLightResponse,
+            "light_request" => MsgType::LightRequest,
+            "light_request" => MsgType::LightResponse,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "req_new_tx" => MsgType::RequestNewTx,
