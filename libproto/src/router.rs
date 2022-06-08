@@ -82,6 +82,8 @@ pub enum MsgType {
     CodeResponse,
     AbiResponse,
     BlockResponse,
+    SyncLightRequest,
+    SyncLightResponse,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -188,6 +190,8 @@ impl fmt::Display for MsgType {
                 &MsgType::CodeResponse => "code_response",
                 &MsgType::AbiResponse => "abi_response",
                 &MsgType::BlockResponse => "block_response",
+                &MsgType::SyncLightRequest => "sync_light_request",
+                &MsgType::SyncLightResponse => "sync_light_response",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -264,6 +268,8 @@ impl<'a> From<&'a str> for MsgType {
             "code_response" => MsgType::CodeResponse,
             "abi_response" => MsgType::AbiResponse,
             "block_response" => MsgType::BlockResponse,
+            "sync_light_request" => MsgType::SyncLightRequest,
+            "sync_light_response" => MsgType::SyncLightResponse,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "req_new_tx" => MsgType::RequestNewTx,

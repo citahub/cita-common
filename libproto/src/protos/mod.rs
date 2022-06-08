@@ -52,4 +52,4 @@ pub use self::executor::{ReceiptError, AbiResponse, BlockResponse, CodeResponse,
 pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request, StateProof, StorageKey};
 pub use self::response::{Response_oneof_data, FullTransaction, Response};
 pub use self::snapshot::{Cmd, Resp, SnapshotReq, SnapshotResp};
-pub use self::sync::{SyncRequest, SyncResponse};
+pub use self::sync::{SyncLightRequest, SyncLightResponse, SyncRequest, SyncResponse};

@@ -204,6 +204,8 @@ macro_rules! loop_macro_for_structs {
             Response,
             SnapshotReq,
             SnapshotResp,
+            SyncLightRequest,
+            SyncLightResponse,
             SyncRequest,
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
@@ -247,6 +249,8 @@ macro_rules! loop_macro_for_structs_in_msg {
             CodeResponse,
             AbiResponse,
             BlockResponse,
+            SyncLightRequest,
+            SyncLightResponse,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -576,6 +580,18 @@ impl Message {
     pub fn take_block_response(&mut self) -> Option<BlockResponse> {
         match self.take_content() {
             Some(MsgClass::BlockResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_sync_light_request(&mut self) -> Option<SyncLightRequest> {
+        match self.take_content() {
+            Some(MsgClass::SyncLightRequest(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_sync_light_response(&mut self) -> Option<SyncLightResponse> {
+        match self.take_content() {
+            Some(MsgClass::SyncLightResponse(v)) => Some(v),
             _ => None,
         }
     }
