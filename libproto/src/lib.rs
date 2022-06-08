@@ -35,7 +35,7 @@ use crate::types::{Address, H256};
 use cita_merklehash::{merge, Tree, HASH_NULL};
 use hashable::Hashable;
 use protobuf::RepeatedField;
-use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
+use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
 use std::convert::From;
 use std::ops::Deref;
 
@@ -196,7 +196,7 @@ impl SignedTransaction {
 impl Eq for Proof {}
 
 impl Decodable for Proof {
-    fn decode(data: &Rlp) -> Result<Self, DecoderError> {
+    fn decode(data: &UntrustedRlp) -> Result<Self, DecoderError> {
         data.decoder()
             .decode_value(|bytes| Ok(Proof::try_from(bytes).unwrap()))
     }
