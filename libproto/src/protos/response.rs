@@ -383,6 +383,12 @@ pub enum Response_oneof_data {
     peers_info(::std::string::String),
     estimate_quota(::std::vec::Vec<u8>),
     license_info(::std::string::String),
+    lgiht_call(::std::vec::Vec<u8>),
+    light_transaction_receipt(::std::vec::Vec<u8>),
+    light_transaction(::std::vec::Vec<u8>),
+    light_code(::std::vec::Vec<u8>),
+    light_abi(::std::vec::Vec<u8>),
+    light_block(::std::vec::Vec<u8>),
 }
 
 impl Response {
@@ -1609,6 +1615,300 @@ impl Response {
             ::std::string::String::new()
         }
     }
+
+    // bytes lgiht_call = 30;
+
+
+    pub fn get_lgiht_call(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::lgiht_call(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_lgiht_call(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_lgiht_call(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::lgiht_call(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_lgiht_call(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::lgiht_call(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_lgiht_call(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::lgiht_call(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(Response_oneof_data::lgiht_call(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::lgiht_call(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_lgiht_call(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_lgiht_call() {
+            match self.data.take() {
+                ::std::option::Option::Some(Response_oneof_data::lgiht_call(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes light_transaction_receipt = 31;
+
+
+    pub fn get_light_transaction_receipt(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_light_transaction_receipt(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_light_transaction_receipt(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_transaction_receipt(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_transaction_receipt(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_transaction_receipt(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_light_transaction_receipt() {
+            match self.data.take() {
+                ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes light_transaction = 32;
+
+
+    pub fn get_light_transaction(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_transaction(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_light_transaction(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_light_transaction(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_transaction(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_transaction(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_transaction(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::light_transaction(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_transaction(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_transaction(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_light_transaction() {
+            match self.data.take() {
+                ::std::option::Option::Some(Response_oneof_data::light_transaction(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes light_code = 33;
+
+
+    pub fn get_light_code(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_code(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_light_code(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_light_code(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_code(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_code(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::light_code(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_code(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::light_code(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_code(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_code(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_code(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_light_code() {
+            match self.data.take() {
+                ::std::option::Option::Some(Response_oneof_data::light_code(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes light_abi = 34;
+
+
+    pub fn get_light_abi(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_abi(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_light_abi(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_light_abi(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_abi(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_abi(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::light_abi(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_abi(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::light_abi(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_abi(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_abi(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_abi(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_light_abi() {
+            match self.data.take() {
+                ::std::option::Option::Some(Response_oneof_data::light_abi(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes light_block = 35;
+
+
+    pub fn get_light_block(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_block(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_light_block(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_light_block(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_block(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_block(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::light_block(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_block(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::light_block(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_block(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(Response_oneof_data::light_block(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_block(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_light_block() {
+            match self.data.take() {
+                ::std::option::Option::Some(Response_oneof_data::light_block(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
 }
 
 impl ::protobuf::Message for Response {
@@ -1797,6 +2097,42 @@ impl ::protobuf::Message for Response {
                     }
                     self.data = ::std::option::Option::Some(Response_oneof_data::license_info(is.read_string()?));
                 },
+                30 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(Response_oneof_data::lgiht_call(is.read_bytes()?));
+                },
+                31 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(is.read_bytes()?));
+                },
+                32 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction(is.read_bytes()?));
+                },
+                33 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_code(is.read_bytes()?));
+                },
+                34 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_abi(is.read_bytes()?));
+                },
+                35 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_block(is.read_bytes()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -1899,6 +2235,24 @@ impl ::protobuf::Message for Response {
                 &Response_oneof_data::license_info(ref v) => {
                     my_size += ::protobuf::rt::string_size(29, &v);
                 },
+                &Response_oneof_data::lgiht_call(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(30, &v);
+                },
+                &Response_oneof_data::light_transaction_receipt(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(31, &v);
+                },
+                &Response_oneof_data::light_transaction(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(32, &v);
+                },
+                &Response_oneof_data::light_code(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(33, &v);
+                },
+                &Response_oneof_data::light_abi(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(34, &v);
+                },
+                &Response_oneof_data::light_block(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(35, &v);
+                },
             };
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -1997,6 +2351,24 @@ impl ::protobuf::Message for Response {
                 },
                 &Response_oneof_data::license_info(ref v) => {
                     os.write_string(29, v)?;
+                },
+                &Response_oneof_data::lgiht_call(ref v) => {
+                    os.write_bytes(30, v)?;
+                },
+                &Response_oneof_data::light_transaction_receipt(ref v) => {
+                    os.write_bytes(31, v)?;
+                },
+                &Response_oneof_data::light_transaction(ref v) => {
+                    os.write_bytes(32, v)?;
+                },
+                &Response_oneof_data::light_code(ref v) => {
+                    os.write_bytes(33, v)?;
+                },
+                &Response_oneof_data::light_abi(ref v) => {
+                    os.write_bytes(34, v)?;
+                },
+                &Response_oneof_data::light_block(ref v) => {
+                    os.write_bytes(35, v)?;
                 },
             };
         }
@@ -2187,6 +2559,36 @@ impl ::protobuf::Message for Response {
                     Response::has_license_info,
                     Response::get_license_info,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "lgiht_call",
+                    Response::has_lgiht_call,
+                    Response::get_lgiht_call,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "light_transaction_receipt",
+                    Response::has_light_transaction_receipt,
+                    Response::get_light_transaction_receipt,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "light_transaction",
+                    Response::has_light_transaction,
+                    Response::get_light_transaction,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "light_code",
+                    Response::has_light_code,
+                    Response::get_light_code,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "light_abi",
+                    Response::has_light_abi,
+                    Response::get_light_abi,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "light_block",
+                    Response::has_light_block,
+                    Response::get_light_block,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<Response>(
                     "Response",
                     fields,
@@ -2238,6 +2640,12 @@ impl ::protobuf::Clear for Response {
         self.data = ::std::option::Option::None;
         self.data = ::std::option::Option::None;
         self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
         self.unknown_fields.clear();
     }
 }
@@ -2259,8 +2667,8 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     ion\x124\n\x0btransaction\x18\x01\x20\x01(\x0b2\x12.SignedTransactionR\
     \x0btransaction\x12!\n\x0cblock_number\x18\x02\x20\x01(\x04R\x0bblockNum\
     ber\x12\x1d\n\nblock_hash\x18\x03\x20\x01(\x0cR\tblockHash\x12\x14\n\x05\
-    index\x18\x04\x20\x01(\rR\x05index\"\xf5\x07\n\x08Response\x12\x1d\n\nre\
-    quest_id\x18\x01\x20\x01(\x0cR\trequestId\x12\x12\n\x04code\x18\x02\x20\
+    index\x18\x04\x20\x01(\rR\x05index\"\xe6\t\n\x08Response\x12\x1d\n\nrequ\
+    est_id\x18\x01\x20\x01(\x0cR\trequestId\x12\x12\n\x04code\x18\x02\x20\
     \x01(\x03R\x04code\x12\x1d\n\terror_msg\x18\x03\x20\x01(\tH\0R\x08errorM\
     sg\x12\x1b\n\x08tx_state\x18\x04\x20\x01(\tH\0R\x07txState\x12#\n\x0cblo\
     ck_number\x18\x05\x20\x01(\x04H\0R\x0bblockNumber\x12\x16\n\x05block\x18\
@@ -2283,109 +2691,130 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x0cH\0R\x0cstorageValue\x12+\n\x10software_version\x18\x1a\x20\
     \x01(\tH\0R\x0fsoftwareVersion\x12\x1f\n\npeers_info\x18\x1b\x20\x01(\tH\
     \0R\tpeersInfo\x12'\n\x0eestimate_quota\x18\x1c\x20\x01(\x0cH\0R\restima\
-    teQuota\x12#\n\x0clicense_info\x18\x1d\x20\x01(\tH\0R\x0blicenseInfoB\
-    \x06\n\x04dataJ\x80\x10\n\x06\x12\x04\0\0.\x01\n\x08\n\x01\x0c\x12\x03\0\
-    \0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\
-    \t\x01\n\n\n\x03\x04\0\x01\x12\x03\x04\x08\x17\n\x0b\n\x04\x04\0\x02\0\
-    \x12\x03\x05\x04&\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x05\x04\x04\x19\n\
-    \x0c\n\x05\x04\0\x02\0\x06\x12\x03\x05\x04\x15\n\x0c\n\x05\x04\0\x02\0\
-    \x01\x12\x03\x05\x16!\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x05$%\n\x0b\n\
-    \x04\x04\0\x02\x01\x12\x03\x06\x04\x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\
-    \x04\x06\x04\x05&\n\x0c\n\x05\x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\
-    \n\x05\x04\0\x02\x01\x01\x12\x03\x06\x0b\x17\n\x0c\n\x05\x04\0\x02\x01\
-    \x03\x12\x03\x06\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x07\x04\x19\n\
-    \r\n\x05\x04\0\x02\x02\x04\x12\x04\x07\x04\x06\x1c\n\x0c\n\x05\x04\0\x02\
-    \x02\x05\x12\x03\x07\x04\t\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x07\n\
-    \x14\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x07\x17\x18\n\x0b\n\x04\x04\0\
-    \x02\x03\x12\x03\x08\x04\x15\n\r\n\x05\x04\0\x02\x03\x04\x12\x04\x08\x04\
-    \x07\x19\n\x0c\n\x05\x04\0\x02\x03\x05\x12\x03\x08\x04\n\n\x0c\n\x05\x04\
-    \0\x02\x03\x01\x12\x03\x08\x0b\x10\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\
-    \x08\x13\x14\n\n\n\x02\x04\x01\x12\x04\x0c\0.\x01\n\n\n\x03\x04\x01\x01\
-    \x12\x03\x0c\x08\x10\n\x0b\n\x04\x04\x01\x02\0\x12\x03\r\x04\x19\n\r\n\
-    \x05\x04\x01\x02\0\x04\x12\x04\r\x04\x0c\x12\n\x0c\n\x05\x04\x01\x02\0\
-    \x05\x12\x03\r\x04\t\n\x0c\n\x05\x04\x01\x02\0\x01\x12\x03\r\n\x14\n\x0c\
-    \n\x05\x04\x01\x02\0\x03\x12\x03\r\x17\x18\n\x0b\n\x04\x04\x01\x02\x01\
-    \x12\x03\x0e\x04\x13\n\r\n\x05\x04\x01\x02\x01\x04\x12\x04\x0e\x04\r\x19\
-    \n\x0c\n\x05\x04\x01\x02\x01\x05\x12\x03\x0e\x04\t\n\x0c\n\x05\x04\x01\
-    \x02\x01\x01\x12\x03\x0e\n\x0e\n\x0c\n\x05\x04\x01\x02\x01\x03\x12\x03\
-    \x0e\x11\x12\n\x0c\n\x04\x04\x01\x08\0\x12\x04\x0f\x04-\x05\n\x0c\n\x05\
-    \x04\x01\x08\0\x01\x12\x03\x0f\n\x0e\n\x0b\n\x04\x04\x01\x02\x02\x12\x03\
-    \x10\x08\x1d\n\x0c\n\x05\x04\x01\x02\x02\x05\x12\x03\x10\x08\x0e\n\x0c\n\
-    \x05\x04\x01\x02\x02\x01\x12\x03\x10\x0f\x18\n\x0c\n\x05\x04\x01\x02\x02\
-    \x03\x12\x03\x10\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x03\x12\x03\x11\x08\x1c\
-    \n\x0c\n\x05\x04\x01\x02\x03\x05\x12\x03\x11\x08\x0e\n\x0c\n\x05\x04\x01\
-    \x02\x03\x01\x12\x03\x11\x0f\x17\n\x0c\n\x05\x04\x01\x02\x03\x03\x12\x03\
-    \x11\x1a\x1b\n\x0b\n\x04\x04\x01\x02\x04\x12\x03\x12\x08\x20\n\x0c\n\x05\
-    \x04\x01\x02\x04\x05\x12\x03\x12\x08\x0e\n\x0c\n\x05\x04\x01\x02\x04\x01\
-    \x12\x03\x12\x0f\x1b\n\x0c\n\x05\x04\x01\x02\x04\x03\x12\x03\x12\x1e\x1f\
-    \n\x0b\n\x04\x04\x01\x02\x05\x12\x03\x13\x08\x19\n\x0c\n\x05\x04\x01\x02\
-    \x05\x05\x12\x03\x13\x08\x0e\n\x0c\n\x05\x04\x01\x02\x05\x01\x12\x03\x13\
-    \x0f\x14\n\x0c\n\x05\x04\x01\x02\x05\x03\x12\x03\x13\x17\x18\n\x0b\n\x04\
-    \x04\x01\x02\x06\x12\x03\x14\x08\x1f\n\x0c\n\x05\x04\x01\x02\x06\x06\x12\
-    \x03\x14\x08\x17\n\x0c\n\x05\x04\x01\x02\x06\x01\x12\x03\x14\x18\x1a\n\
-    \x0c\n\x05\x04\x01\x02\x06\x03\x12\x03\x14\x1d\x1e\n\x0b\n\x04\x04\x01\
-    \x02\x07\x12\x03\x15\x08\x1d\n\x0c\n\x05\x04\x01\x02\x07\x05\x12\x03\x15\
-    \x08\x0e\n\x0c\n\x05\x04\x01\x02\x07\x01\x12\x03\x15\x0f\x18\n\x0c\n\x05\
-    \x04\x01\x02\x07\x03\x12\x03\x15\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x08\x12\
-    \x03\x16\x08\x1e\n\x0c\n\x05\x04\x01\x02\x08\x05\x12\x03\x16\x08\r\n\x0c\
-    \n\x05\x04\x01\x02\x08\x01\x12\x03\x16\x0e\x19\n\x0c\n\x05\x04\x01\x02\
-    \x08\x03\x12\x03\x16\x1c\x1d\n\x0b\n\x04\x04\x01\x02\t\x12\x03\x17\x08\
-    \x19\n\x0c\n\x05\x04\x01\x02\t\x05\x12\x03\x17\x08\x0e\n\x0c\n\x05\x04\
-    \x01\x02\t\x01\x12\x03\x17\x0f\x13\n\x0c\n\x05\x04\x01\x02\t\x03\x12\x03\
-    \x17\x16\x18\n\x0b\n\x04\x04\x01\x02\n\x12\x03\x18\x08\x1c\n\x0c\n\x05\
-    \x04\x01\x02\n\x05\x12\x03\x18\x08\x0e\n\x0c\n\x05\x04\x01\x02\n\x01\x12\
-    \x03\x18\x0f\x16\n\x0c\n\x05\x04\x01\x02\n\x03\x12\x03\x18\x19\x1b\n\x0b\
-    \n\x04\x04\x01\x02\x0b\x12\x03\x19\x08&\n\x0c\n\x05\x04\x01\x02\x0b\x05\
-    \x12\x03\x19\x08\x0e\n\x0c\n\x05\x04\x01\x02\x0b\x01\x12\x03\x19\x0f\x20\
-    \n\x0c\n\x05\x04\x01\x02\x0b\x03\x12\x03\x19#%\n\x0b\n\x04\x04\x01\x02\
-    \x0c\x12\x03\x1a\x08!\n\x0c\n\x05\x04\x01\x02\x0c\x05\x12\x03\x1a\x08\r\
-    \n\x0c\n\x05\x04\x01\x02\x0c\x01\x12\x03\x1a\x0e\x1b\n\x0c\n\x05\x04\x01\
-    \x02\x0c\x03\x12\x03\x1a\x1e\x20\n\x0b\n\x04\x04\x01\x02\r\x12\x03\x1b\
-    \x08\x20\n\x0c\n\x05\x04\x01\x02\r\x05\x12\x03\x1b\x08\r\n\x0c\n\x05\x04\
-    \x01\x02\r\x01\x12\x03\x1b\x0e\x1a\n\x0c\n\x05\x04\x01\x02\r\x03\x12\x03\
-    \x1b\x1d\x1f\n\x0b\n\x04\x04\x01\x02\x0e\x12\x03\x1c\x08\x1e\n\x0c\n\x05\
-    \x04\x01\x02\x0e\x05\x12\x03\x1c\x08\x0e\n\x0c\n\x05\x04\x01\x02\x0e\x01\
-    \x12\x03\x1c\x0f\x18\n\x0c\n\x05\x04\x01\x02\x0e\x03\x12\x03\x1c\x1b\x1d\
-    \n\x0b\n\x04\x04\x01\x02\x0f\x12\x03\x1d\x08#\n\x0c\n\x05\x04\x01\x02\
-    \x0f\x05\x12\x03\x1d\x08\x0c\n\x0c\n\x05\x04\x01\x02\x0f\x01\x12\x03\x1d\
-    \r\x1d\n\x0c\n\x05\x04\x01\x02\x0f\x03\x12\x03\x1d\x20\"\n\x0b\n\x04\x04\
-    \x01\x02\x10\x12\x03\x1e\x08#\n\x0c\n\x05\x04\x01\x02\x10\x05\x12\x03\
-    \x1e\x08\x0e\n\x0c\n\x05\x04\x01\x02\x10\x01\x12\x03\x1e\x0f\x1d\n\x0c\n\
-    \x05\x04\x01\x02\x10\x03\x12\x03\x1e\x20\"\n\x0b\n\x04\x04\x01\x02\x11\
-    \x12\x03\x1f\x08\x20\n\x0c\n\x05\x04\x01\x02\x11\x05\x12\x03\x1f\x08\x0e\
-    \n\x0c\n\x05\x04\x01\x02\x11\x01\x12\x03\x1f\x0f\x1a\n\x0c\n\x05\x04\x01\
-    \x02\x11\x03\x12\x03\x1f\x1d\x1f\n\x0b\n\x04\x04\x01\x02\x12\x12\x03\x20\
-    \x08\x17\n\x0c\n\x05\x04\x01\x02\x12\x05\x12\x03\x20\x08\x0c\n\x0c\n\x05\
-    \x04\x01\x02\x12\x01\x12\x03\x20\r\x11\n\x0c\n\x05\x04\x01\x02\x12\x03\
-    \x12\x03\x20\x14\x16\n\x0b\n\x04\x04\x01\x02\x13\x12\x03!\x08%\n\x0c\n\
-    \x05\x04\x01\x02\x13\x05\x12\x03!\x08\r\n\x0c\n\x05\x04\x01\x02\x13\x01\
-    \x12\x03!\x0e\x1f\n\x0c\n\x05\x04\x01\x02\x13\x03\x12\x03!\"$\n\x1f\n\
-    \x04\x04\x01\x02\x14\x12\x03#\x08\x1e\x1a\x12\x20cita_getMetaData\n\n\
-    \x0c\n\x05\x04\x01\x02\x14\x05\x12\x03#\x08\x0e\n\x0c\n\x05\x04\x01\x02\
-    \x14\x01\x12\x03#\x0f\x18\n\x0c\n\x05\x04\x01\x02\x14\x03\x12\x03#\x1b\
-    \x1d\n\x1d\n\x04\x04\x01\x02\x15\x12\x03%\x08\x1b\x1a\x10\x20eth_getBala\
-    nce\n\n\x0c\n\x05\x04\x01\x02\x15\x05\x12\x03%\x08\r\n\x0c\n\x05\x04\x01\
-    \x02\x15\x01\x12\x03%\x0e\x15\n\x0c\n\x05\x04\x01\x02\x15\x03\x12\x03%\
-    \x18\x1a\n\x0b\n\x04\x04\x01\x02\x16\x12\x03&\x08\x1f\n\x0c\n\x05\x04\
-    \x01\x02\x16\x05\x12\x03&\x08\r\n\x0c\n\x05\x04\x01\x02\x16\x01\x12\x03&\
-    \x0e\x19\n\x0c\n\x05\x04\x01\x02\x16\x03\x12\x03&\x1c\x1e\n\x0b\n\x04\
-    \x04\x01\x02\x17\x12\x03'\x08\x20\n\x0c\n\x05\x04\x01\x02\x17\x05\x12\
-    \x03'\x08\r\n\x0c\n\x05\x04\x01\x02\x17\x01\x12\x03'\x0e\x1a\n\x0c\n\x05\
-    \x04\x01\x02\x17\x03\x12\x03'\x1d\x1f\n\x0b\n\x04\x04\x01\x02\x18\x12\
-    \x03(\x08!\n\x0c\n\x05\x04\x01\x02\x18\x05\x12\x03(\x08\r\n\x0c\n\x05\
-    \x04\x01\x02\x18\x01\x12\x03(\x0e\x1b\n\x0c\n\x05\x04\x01\x02\x18\x03\
-    \x12\x03(\x1e\x20\n\x0b\n\x04\x04\x01\x02\x19\x12\x03)\x08%\n\x0c\n\x05\
-    \x04\x01\x02\x19\x05\x12\x03)\x08\x0e\n\x0c\n\x05\x04\x01\x02\x19\x01\
-    \x12\x03)\x0f\x1f\n\x0c\n\x05\x04\x01\x02\x19\x03\x12\x03)\"$\n\x0b\n\
-    \x04\x04\x01\x02\x1a\x12\x03*\x08\x1f\n\x0c\n\x05\x04\x01\x02\x1a\x05\
-    \x12\x03*\x08\x0e\n\x0c\n\x05\x04\x01\x02\x1a\x01\x12\x03*\x0f\x19\n\x0c\
-    \n\x05\x04\x01\x02\x1a\x03\x12\x03*\x1c\x1e\n\x0b\n\x04\x04\x01\x02\x1b\
-    \x12\x03+\x08\"\n\x0c\n\x05\x04\x01\x02\x1b\x05\x12\x03+\x08\r\n\x0c\n\
-    \x05\x04\x01\x02\x1b\x01\x12\x03+\x0e\x1c\n\x0c\n\x05\x04\x01\x02\x1b\
-    \x03\x12\x03+\x1f!\n\x0b\n\x04\x04\x01\x02\x1c\x12\x03,\x08!\n\x0c\n\x05\
-    \x04\x01\x02\x1c\x05\x12\x03,\x08\x0e\n\x0c\n\x05\x04\x01\x02\x1c\x01\
-    \x12\x03,\x0f\x1b\n\x0c\n\x05\x04\x01\x02\x1c\x03\x12\x03,\x1e\x20b\x06p\
-    roto3\
+    teQuota\x12#\n\x0clicense_info\x18\x1d\x20\x01(\tH\0R\x0blicenseInfo\x12\
+    \x1f\n\nlgiht_call\x18\x1e\x20\x01(\x0cH\0R\tlgihtCall\x12<\n\x19light_t\
+    ransaction_receipt\x18\x1f\x20\x01(\x0cH\0R\x17lightTransactionReceipt\
+    \x12-\n\x11light_transaction\x18\x20\x20\x01(\x0cH\0R\x10lightTransactio\
+    n\x12\x1f\n\nlight_code\x18!\x20\x01(\x0cH\0R\tlightCode\x12\x1d\n\tligh\
+    t_abi\x18\"\x20\x01(\x0cH\0R\x08lightAbi\x12!\n\x0blight_block\x18#\x20\
+    \x01(\x0cH\0R\nlightBlockB\x06\n\x04dataJ\xca\x12\n\x06\x12\x04\0\05\x01\
+    \n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\
+    \n\x02\x04\0\x12\x04\x04\0\t\x01\n\n\n\x03\x04\0\x01\x12\x03\x04\x08\x17\
+    \n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04&\n\r\n\x05\x04\0\x02\0\x04\x12\
+    \x04\x05\x04\x04\x19\n\x0c\n\x05\x04\0\x02\0\x06\x12\x03\x05\x04\x15\n\
+    \x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\x16!\n\x0c\n\x05\x04\0\x02\0\x03\
+    \x12\x03\x05$%\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x06\x04\x1c\n\r\n\x05\
+    \x04\0\x02\x01\x04\x12\x04\x06\x04\x05&\n\x0c\n\x05\x04\0\x02\x01\x05\
+    \x12\x03\x06\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x06\x0b\x17\n\
+    \x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x06\x1a\x1b\n\x0b\n\x04\x04\0\x02\
+    \x02\x12\x03\x07\x04\x19\n\r\n\x05\x04\0\x02\x02\x04\x12\x04\x07\x04\x06\
+    \x1c\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x07\x04\t\n\x0c\n\x05\x04\0\
+    \x02\x02\x01\x12\x03\x07\n\x14\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x07\
+    \x17\x18\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x08\x04\x15\n\r\n\x05\x04\0\
+    \x02\x03\x04\x12\x04\x08\x04\x07\x19\n\x0c\n\x05\x04\0\x02\x03\x05\x12\
+    \x03\x08\x04\n\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\x08\x0b\x10\n\x0c\n\
+    \x05\x04\0\x02\x03\x03\x12\x03\x08\x13\x14\n\n\n\x02\x04\x01\x12\x04\x0c\
+    \05\x01\n\n\n\x03\x04\x01\x01\x12\x03\x0c\x08\x10\n\x0b\n\x04\x04\x01\
+    \x02\0\x12\x03\r\x04\x19\n\r\n\x05\x04\x01\x02\0\x04\x12\x04\r\x04\x0c\
+    \x12\n\x0c\n\x05\x04\x01\x02\0\x05\x12\x03\r\x04\t\n\x0c\n\x05\x04\x01\
+    \x02\0\x01\x12\x03\r\n\x14\n\x0c\n\x05\x04\x01\x02\0\x03\x12\x03\r\x17\
+    \x18\n\x0b\n\x04\x04\x01\x02\x01\x12\x03\x0e\x04\x13\n\r\n\x05\x04\x01\
+    \x02\x01\x04\x12\x04\x0e\x04\r\x19\n\x0c\n\x05\x04\x01\x02\x01\x05\x12\
+    \x03\x0e\x04\t\n\x0c\n\x05\x04\x01\x02\x01\x01\x12\x03\x0e\n\x0e\n\x0c\n\
+    \x05\x04\x01\x02\x01\x03\x12\x03\x0e\x11\x12\n\x0c\n\x04\x04\x01\x08\0\
+    \x12\x04\x0f\x044\x05\n\x0c\n\x05\x04\x01\x08\0\x01\x12\x03\x0f\n\x0e\n\
+    \x0b\n\x04\x04\x01\x02\x02\x12\x03\x10\x08\x1d\n\x0c\n\x05\x04\x01\x02\
+    \x02\x05\x12\x03\x10\x08\x0e\n\x0c\n\x05\x04\x01\x02\x02\x01\x12\x03\x10\
+    \x0f\x18\n\x0c\n\x05\x04\x01\x02\x02\x03\x12\x03\x10\x1b\x1c\n\x0b\n\x04\
+    \x04\x01\x02\x03\x12\x03\x11\x08\x1c\n\x0c\n\x05\x04\x01\x02\x03\x05\x12\
+    \x03\x11\x08\x0e\n\x0c\n\x05\x04\x01\x02\x03\x01\x12\x03\x11\x0f\x17\n\
+    \x0c\n\x05\x04\x01\x02\x03\x03\x12\x03\x11\x1a\x1b\n\x0b\n\x04\x04\x01\
+    \x02\x04\x12\x03\x12\x08\x20\n\x0c\n\x05\x04\x01\x02\x04\x05\x12\x03\x12\
+    \x08\x0e\n\x0c\n\x05\x04\x01\x02\x04\x01\x12\x03\x12\x0f\x1b\n\x0c\n\x05\
+    \x04\x01\x02\x04\x03\x12\x03\x12\x1e\x1f\n\x0b\n\x04\x04\x01\x02\x05\x12\
+    \x03\x13\x08\x19\n\x0c\n\x05\x04\x01\x02\x05\x05\x12\x03\x13\x08\x0e\n\
+    \x0c\n\x05\x04\x01\x02\x05\x01\x12\x03\x13\x0f\x14\n\x0c\n\x05\x04\x01\
+    \x02\x05\x03\x12\x03\x13\x17\x18\n\x0b\n\x04\x04\x01\x02\x06\x12\x03\x14\
+    \x08\x1f\n\x0c\n\x05\x04\x01\x02\x06\x06\x12\x03\x14\x08\x17\n\x0c\n\x05\
+    \x04\x01\x02\x06\x01\x12\x03\x14\x18\x1a\n\x0c\n\x05\x04\x01\x02\x06\x03\
+    \x12\x03\x14\x1d\x1e\n\x0b\n\x04\x04\x01\x02\x07\x12\x03\x15\x08\x1d\n\
+    \x0c\n\x05\x04\x01\x02\x07\x05\x12\x03\x15\x08\x0e\n\x0c\n\x05\x04\x01\
+    \x02\x07\x01\x12\x03\x15\x0f\x18\n\x0c\n\x05\x04\x01\x02\x07\x03\x12\x03\
+    \x15\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x08\x12\x03\x16\x08\x1e\n\x0c\n\x05\
+    \x04\x01\x02\x08\x05\x12\x03\x16\x08\r\n\x0c\n\x05\x04\x01\x02\x08\x01\
+    \x12\x03\x16\x0e\x19\n\x0c\n\x05\x04\x01\x02\x08\x03\x12\x03\x16\x1c\x1d\
+    \n\x0b\n\x04\x04\x01\x02\t\x12\x03\x17\x08\x19\n\x0c\n\x05\x04\x01\x02\t\
+    \x05\x12\x03\x17\x08\x0e\n\x0c\n\x05\x04\x01\x02\t\x01\x12\x03\x17\x0f\
+    \x13\n\x0c\n\x05\x04\x01\x02\t\x03\x12\x03\x17\x16\x18\n\x0b\n\x04\x04\
+    \x01\x02\n\x12\x03\x18\x08\x1c\n\x0c\n\x05\x04\x01\x02\n\x05\x12\x03\x18\
+    \x08\x0e\n\x0c\n\x05\x04\x01\x02\n\x01\x12\x03\x18\x0f\x16\n\x0c\n\x05\
+    \x04\x01\x02\n\x03\x12\x03\x18\x19\x1b\n\x0b\n\x04\x04\x01\x02\x0b\x12\
+    \x03\x19\x08&\n\x0c\n\x05\x04\x01\x02\x0b\x05\x12\x03\x19\x08\x0e\n\x0c\
+    \n\x05\x04\x01\x02\x0b\x01\x12\x03\x19\x0f\x20\n\x0c\n\x05\x04\x01\x02\
+    \x0b\x03\x12\x03\x19#%\n\x0b\n\x04\x04\x01\x02\x0c\x12\x03\x1a\x08!\n\
+    \x0c\n\x05\x04\x01\x02\x0c\x05\x12\x03\x1a\x08\r\n\x0c\n\x05\x04\x01\x02\
+    \x0c\x01\x12\x03\x1a\x0e\x1b\n\x0c\n\x05\x04\x01\x02\x0c\x03\x12\x03\x1a\
+    \x1e\x20\n\x0b\n\x04\x04\x01\x02\r\x12\x03\x1b\x08\x20\n\x0c\n\x05\x04\
+    \x01\x02\r\x05\x12\x03\x1b\x08\r\n\x0c\n\x05\x04\x01\x02\r\x01\x12\x03\
+    \x1b\x0e\x1a\n\x0c\n\x05\x04\x01\x02\r\x03\x12\x03\x1b\x1d\x1f\n\x0b\n\
+    \x04\x04\x01\x02\x0e\x12\x03\x1c\x08\x1e\n\x0c\n\x05\x04\x01\x02\x0e\x05\
+    \x12\x03\x1c\x08\x0e\n\x0c\n\x05\x04\x01\x02\x0e\x01\x12\x03\x1c\x0f\x18\
+    \n\x0c\n\x05\x04\x01\x02\x0e\x03\x12\x03\x1c\x1b\x1d\n\x0b\n\x04\x04\x01\
+    \x02\x0f\x12\x03\x1d\x08#\n\x0c\n\x05\x04\x01\x02\x0f\x05\x12\x03\x1d\
+    \x08\x0c\n\x0c\n\x05\x04\x01\x02\x0f\x01\x12\x03\x1d\r\x1d\n\x0c\n\x05\
+    \x04\x01\x02\x0f\x03\x12\x03\x1d\x20\"\n\x0b\n\x04\x04\x01\x02\x10\x12\
+    \x03\x1e\x08#\n\x0c\n\x05\x04\x01\x02\x10\x05\x12\x03\x1e\x08\x0e\n\x0c\
+    \n\x05\x04\x01\x02\x10\x01\x12\x03\x1e\x0f\x1d\n\x0c\n\x05\x04\x01\x02\
+    \x10\x03\x12\x03\x1e\x20\"\n\x0b\n\x04\x04\x01\x02\x11\x12\x03\x1f\x08\
+    \x20\n\x0c\n\x05\x04\x01\x02\x11\x05\x12\x03\x1f\x08\x0e\n\x0c\n\x05\x04\
+    \x01\x02\x11\x01\x12\x03\x1f\x0f\x1a\n\x0c\n\x05\x04\x01\x02\x11\x03\x12\
+    \x03\x1f\x1d\x1f\n\x0b\n\x04\x04\x01\x02\x12\x12\x03\x20\x08\x17\n\x0c\n\
+    \x05\x04\x01\x02\x12\x05\x12\x03\x20\x08\x0c\n\x0c\n\x05\x04\x01\x02\x12\
+    \x01\x12\x03\x20\r\x11\n\x0c\n\x05\x04\x01\x02\x12\x03\x12\x03\x20\x14\
+    \x16\n\x0b\n\x04\x04\x01\x02\x13\x12\x03!\x08%\n\x0c\n\x05\x04\x01\x02\
+    \x13\x05\x12\x03!\x08\r\n\x0c\n\x05\x04\x01\x02\x13\x01\x12\x03!\x0e\x1f\
+    \n\x0c\n\x05\x04\x01\x02\x13\x03\x12\x03!\"$\n\x1f\n\x04\x04\x01\x02\x14\
+    \x12\x03#\x08\x1e\x1a\x12\x20cita_getMetaData\n\n\x0c\n\x05\x04\x01\x02\
+    \x14\x05\x12\x03#\x08\x0e\n\x0c\n\x05\x04\x01\x02\x14\x01\x12\x03#\x0f\
+    \x18\n\x0c\n\x05\x04\x01\x02\x14\x03\x12\x03#\x1b\x1d\n\x1d\n\x04\x04\
+    \x01\x02\x15\x12\x03%\x08\x1b\x1a\x10\x20eth_getBalance\n\n\x0c\n\x05\
+    \x04\x01\x02\x15\x05\x12\x03%\x08\r\n\x0c\n\x05\x04\x01\x02\x15\x01\x12\
+    \x03%\x0e\x15\n\x0c\n\x05\x04\x01\x02\x15\x03\x12\x03%\x18\x1a\n\x0b\n\
+    \x04\x04\x01\x02\x16\x12\x03&\x08\x1f\n\x0c\n\x05\x04\x01\x02\x16\x05\
+    \x12\x03&\x08\r\n\x0c\n\x05\x04\x01\x02\x16\x01\x12\x03&\x0e\x19\n\x0c\n\
+    \x05\x04\x01\x02\x16\x03\x12\x03&\x1c\x1e\n\x0b\n\x04\x04\x01\x02\x17\
+    \x12\x03'\x08\x20\n\x0c\n\x05\x04\x01\x02\x17\x05\x12\x03'\x08\r\n\x0c\n\
+    \x05\x04\x01\x02\x17\x01\x12\x03'\x0e\x1a\n\x0c\n\x05\x04\x01\x02\x17\
+    \x03\x12\x03'\x1d\x1f\n\x0b\n\x04\x04\x01\x02\x18\x12\x03(\x08!\n\x0c\n\
+    \x05\x04\x01\x02\x18\x05\x12\x03(\x08\r\n\x0c\n\x05\x04\x01\x02\x18\x01\
+    \x12\x03(\x0e\x1b\n\x0c\n\x05\x04\x01\x02\x18\x03\x12\x03(\x1e\x20\n\x0b\
+    \n\x04\x04\x01\x02\x19\x12\x03)\x08%\n\x0c\n\x05\x04\x01\x02\x19\x05\x12\
+    \x03)\x08\x0e\n\x0c\n\x05\x04\x01\x02\x19\x01\x12\x03)\x0f\x1f\n\x0c\n\
+    \x05\x04\x01\x02\x19\x03\x12\x03)\"$\n\x0b\n\x04\x04\x01\x02\x1a\x12\x03\
+    *\x08\x1f\n\x0c\n\x05\x04\x01\x02\x1a\x05\x12\x03*\x08\x0e\n\x0c\n\x05\
+    \x04\x01\x02\x1a\x01\x12\x03*\x0f\x19\n\x0c\n\x05\x04\x01\x02\x1a\x03\
+    \x12\x03*\x1c\x1e\n\x0b\n\x04\x04\x01\x02\x1b\x12\x03+\x08\"\n\x0c\n\x05\
+    \x04\x01\x02\x1b\x05\x12\x03+\x08\r\n\x0c\n\x05\x04\x01\x02\x1b\x01\x12\
+    \x03+\x0e\x1c\n\x0c\n\x05\x04\x01\x02\x1b\x03\x12\x03+\x1f!\n\x0b\n\x04\
+    \x04\x01\x02\x1c\x12\x03,\x08!\n\x0c\n\x05\x04\x01\x02\x1c\x05\x12\x03,\
+    \x08\x0e\n\x0c\n\x05\x04\x01\x02\x1c\x01\x12\x03,\x0f\x1b\n\x0c\n\x05\
+    \x04\x01\x02\x1c\x03\x12\x03,\x1e\x20\n\x0b\n\x04\x04\x01\x02\x1d\x12\
+    \x03.\x08\x1e\n\x0c\n\x05\x04\x01\x02\x1d\x05\x12\x03.\x08\r\n\x0c\n\x05\
+    \x04\x01\x02\x1d\x01\x12\x03.\x0e\x18\n\x0c\n\x05\x04\x01\x02\x1d\x03\
+    \x12\x03.\x1b\x1d\n\x0b\n\x04\x04\x01\x02\x1e\x12\x03/\x08-\n\x0c\n\x05\
+    \x04\x01\x02\x1e\x05\x12\x03/\x08\r\n\x0c\n\x05\x04\x01\x02\x1e\x01\x12\
+    \x03/\x0e'\n\x0c\n\x05\x04\x01\x02\x1e\x03\x12\x03/*,\n\x0b\n\x04\x04\
+    \x01\x02\x1f\x12\x030\x08%\n\x0c\n\x05\x04\x01\x02\x1f\x05\x12\x030\x08\
+    \r\n\x0c\n\x05\x04\x01\x02\x1f\x01\x12\x030\x0e\x1f\n\x0c\n\x05\x04\x01\
+    \x02\x1f\x03\x12\x030\"$\n\x0b\n\x04\x04\x01\x02\x20\x12\x031\x08\x1e\n\
+    \x0c\n\x05\x04\x01\x02\x20\x05\x12\x031\x08\r\n\x0c\n\x05\x04\x01\x02\
+    \x20\x01\x12\x031\x0e\x18\n\x0c\n\x05\x04\x01\x02\x20\x03\x12\x031\x1b\
+    \x1d\n\x0b\n\x04\x04\x01\x02!\x12\x032\x08\x1d\n\x0c\n\x05\x04\x01\x02!\
+    \x05\x12\x032\x08\r\n\x0c\n\x05\x04\x01\x02!\x01\x12\x032\x0e\x17\n\x0c\
+    \n\x05\x04\x01\x02!\x03\x12\x032\x1a\x1c\n\x0b\n\x04\x04\x01\x02\"\x12\
+    \x033\x08\x1f\n\x0c\n\x05\x04\x01\x02\"\x05\x12\x033\x08\r\n\x0c\n\x05\
+    \x04\x01\x02\"\x01\x12\x033\x0e\x19\n\x0c\n\x05\x04\x01\x02\"\x03\x12\
+    \x033\x1c\x1eb\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
