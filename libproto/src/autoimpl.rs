@@ -180,9 +180,9 @@ macro_rules! loop_macro_for_structs {
             Proposal,
             SignedProposal,
             Vote,
-            AbiRespond,
+            AbiResponse,
             BlockResponse,
-            CodeRespond,
+            CodeResponse,
             ConsensusConfig,
             ExecutedHeader,
             ExecutedInfo,
@@ -190,7 +190,7 @@ macro_rules! loop_macro_for_structs {
             LogEntry,
             Receipt,
             ReceiptErrorWithOption,
-            ReceiptsResponse,
+            ReceiptResponse,
             ReceiptWithOption,
             StateRoot,
             TrieID,
@@ -242,10 +242,10 @@ macro_rules! loop_macro_for_structs_in_msg {
             BlockTxn,
             CompactSignedProposal,
             GetTxList,
-            ReceiptsResponse,
             TrieResponse,
-            CodeRespond,
-            AbiRespond,
+            ReceiptResponse,
+            CodeResponse,
+            AbiResponse,
             BlockResponse,
             // Generate MSG-PROTOS struct automatically end.
         );
@@ -549,27 +549,27 @@ impl Message {
             _ => None,
         }
     }
-    pub fn take_receipts_response(&mut self) -> Option<ReceiptsResponse> {
-        match self.take_content() {
-            Some(MsgClass::ReceiptsResponse(v)) => Some(v),
-            _ => None,
-        }
-    }
     pub fn take_trie_response(&mut self) -> Option<TrieResponse> {
         match self.take_content() {
             Some(MsgClass::TrieResponse(v)) => Some(v),
             _ => None,
         }
     }
-    pub fn take_code_respond(&mut self) -> Option<CodeRespond> {
+    pub fn take_receipt_response(&mut self) -> Option<ReceiptResponse> {
         match self.take_content() {
-            Some(MsgClass::CodeRespond(v)) => Some(v),
+            Some(MsgClass::ReceiptResponse(v)) => Some(v),
             _ => None,
         }
     }
-    pub fn take_abi_respond(&mut self) -> Option<AbiRespond> {
+    pub fn take_code_response(&mut self) -> Option<CodeResponse> {
         match self.take_content() {
-            Some(MsgClass::AbiRespond(v)) => Some(v),
+            Some(MsgClass::CodeResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_abi_response(&mut self) -> Option<AbiResponse> {
+        match self.take_content() {
+            Some(MsgClass::AbiResponse(v)) => Some(v),
             _ => None,
         }
     }

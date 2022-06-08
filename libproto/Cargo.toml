@@ -1,20 +1,20 @@
 [package]
-description = "proto"
 name = "libproto"
-version = "0.6.0"
+version = "0.1.0"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
+description = "decorate proto struct"
 license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
 protobuf = { version = "=2.8.1", features = ["with-bytes"]}
-cita-types = { path = "../cita-types" }
-cita-merklehash = { path = "../cita-merklehash" }
-cita-crypto = { path = "../cita-crypto" }
-hashable = { path = "../hashable" }
-snappy = { path = "../snappy" }
+cita-types = "0.1"
+cita-merklehash = "0.1"
+cita-crypto = "0.1"
+hashable = { package = "cita-hashable", version = "0.1" }
+snappy = { package = "cita-snappy", version = "0.1" }
 rustc-serialize = "0.3"
-rlp = { path = "../rlp" }
+rlp = "0.5.1"
 serde = "1.0"
 serde_derive = "1.0"
 cmb-logger = "0.1.0"
