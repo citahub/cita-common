@@ -383,12 +383,12 @@ pub enum Response_oneof_data {
     peers_info(::std::string::String),
     estimate_quota(::std::vec::Vec<u8>),
     license_info(::std::string::String),
-    lgiht_call(::std::vec::Vec<u8>),
-    light_transaction_receipt(::std::vec::Vec<u8>),
+    light_call(::std::vec::Vec<u8>),
+    light_transaction_receipt(::std::string::String),
     light_transaction(::std::vec::Vec<u8>),
     light_code(::std::vec::Vec<u8>),
     light_abi(::std::vec::Vec<u8>),
-    light_block(::std::vec::Vec<u8>),
+    light_block(::std::string::String),
 }
 
 impl Response {
@@ -1616,48 +1616,48 @@ impl Response {
         }
     }
 
-    // bytes lgiht_call = 30;
+    // bytes light_call = 30;
 
 
-    pub fn get_lgiht_call(&self) -> &[u8] {
+    pub fn get_light_call(&self) -> &[u8] {
         match self.data {
-            ::std::option::Option::Some(Response_oneof_data::lgiht_call(ref v)) => v,
+            ::std::option::Option::Some(Response_oneof_data::light_call(ref v)) => v,
             _ => &[],
         }
     }
-    pub fn clear_lgiht_call(&mut self) {
+    pub fn clear_light_call(&mut self) {
         self.data = ::std::option::Option::None;
     }
 
-    pub fn has_lgiht_call(&self) -> bool {
+    pub fn has_light_call(&self) -> bool {
         match self.data {
-            ::std::option::Option::Some(Response_oneof_data::lgiht_call(..)) => true,
+            ::std::option::Option::Some(Response_oneof_data::light_call(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
-    pub fn set_lgiht_call(&mut self, v: ::std::vec::Vec<u8>) {
-        self.data = ::std::option::Option::Some(Response_oneof_data::lgiht_call(v))
+    pub fn set_light_call(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(Response_oneof_data::light_call(v))
     }
 
     // Mutable pointer to the field.
-    pub fn mut_lgiht_call(&mut self) -> &mut ::std::vec::Vec<u8> {
-        if let ::std::option::Option::Some(Response_oneof_data::lgiht_call(_)) = self.data {
+    pub fn mut_light_call(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(Response_oneof_data::light_call(_)) = self.data {
         } else {
-            self.data = ::std::option::Option::Some(Response_oneof_data::lgiht_call(::std::vec::Vec::new()));
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_call(::std::vec::Vec::new()));
         }
         match self.data {
-            ::std::option::Option::Some(Response_oneof_data::lgiht_call(ref mut v)) => v,
+            ::std::option::Option::Some(Response_oneof_data::light_call(ref mut v)) => v,
             _ => panic!(),
         }
     }
 
     // Take field
-    pub fn take_lgiht_call(&mut self) -> ::std::vec::Vec<u8> {
-        if self.has_lgiht_call() {
+    pub fn take_light_call(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_light_call() {
             match self.data.take() {
-                ::std::option::Option::Some(Response_oneof_data::lgiht_call(v)) => v,
+                ::std::option::Option::Some(Response_oneof_data::light_call(v)) => v,
                 _ => panic!(),
             }
         } else {
@@ -1665,13 +1665,13 @@ impl Response {
         }
     }
 
-    // bytes light_transaction_receipt = 31;
+    // string light_transaction_receipt = 31;
 
 
-    pub fn get_light_transaction_receipt(&self) -> &[u8] {
+    pub fn get_light_transaction_receipt(&self) -> &str {
         match self.data {
             ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(ref v)) => v,
-            _ => &[],
+            _ => "",
         }
     }
     pub fn clear_light_transaction_receipt(&mut self) {
@@ -1686,15 +1686,15 @@ impl Response {
     }
 
     // Param is passed by value, moved
-    pub fn set_light_transaction_receipt(&mut self, v: ::std::vec::Vec<u8>) {
+    pub fn set_light_transaction_receipt(&mut self, v: ::std::string::String) {
         self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(v))
     }
 
     // Mutable pointer to the field.
-    pub fn mut_light_transaction_receipt(&mut self) -> &mut ::std::vec::Vec<u8> {
+    pub fn mut_light_transaction_receipt(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(_)) = self.data {
         } else {
-            self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(::std::vec::Vec::new()));
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(::std::string::String::new()));
         }
         match self.data {
             ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(ref mut v)) => v,
@@ -1703,14 +1703,14 @@ impl Response {
     }
 
     // Take field
-    pub fn take_light_transaction_receipt(&mut self) -> ::std::vec::Vec<u8> {
+    pub fn take_light_transaction_receipt(&mut self) -> ::std::string::String {
         if self.has_light_transaction_receipt() {
             match self.data.take() {
                 ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(v)) => v,
                 _ => panic!(),
             }
         } else {
-            ::std::vec::Vec::new()
+            ::std::string::String::new()
         }
     }
 
@@ -1861,13 +1861,13 @@ impl Response {
         }
     }
 
-    // bytes light_block = 35;
+    // string light_block = 35;
 
 
-    pub fn get_light_block(&self) -> &[u8] {
+    pub fn get_light_block(&self) -> &str {
         match self.data {
             ::std::option::Option::Some(Response_oneof_data::light_block(ref v)) => v,
-            _ => &[],
+            _ => "",
         }
     }
     pub fn clear_light_block(&mut self) {
@@ -1882,15 +1882,15 @@ impl Response {
     }
 
     // Param is passed by value, moved
-    pub fn set_light_block(&mut self, v: ::std::vec::Vec<u8>) {
+    pub fn set_light_block(&mut self, v: ::std::string::String) {
         self.data = ::std::option::Option::Some(Response_oneof_data::light_block(v))
     }
 
     // Mutable pointer to the field.
-    pub fn mut_light_block(&mut self) -> &mut ::std::vec::Vec<u8> {
+    pub fn mut_light_block(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(Response_oneof_data::light_block(_)) = self.data {
         } else {
-            self.data = ::std::option::Option::Some(Response_oneof_data::light_block(::std::vec::Vec::new()));
+            self.data = ::std::option::Option::Some(Response_oneof_data::light_block(::std::string::String::new()));
         }
         match self.data {
             ::std::option::Option::Some(Response_oneof_data::light_block(ref mut v)) => v,
@@ -1899,14 +1899,14 @@ impl Response {
     }
 
     // Take field
-    pub fn take_light_block(&mut self) -> ::std::vec::Vec<u8> {
+    pub fn take_light_block(&mut self) -> ::std::string::String {
         if self.has_light_block() {
             match self.data.take() {
                 ::std::option::Option::Some(Response_oneof_data::light_block(v)) => v,
                 _ => panic!(),
             }
         } else {
-            ::std::vec::Vec::new()
+            ::std::string::String::new()
         }
     }
 }
@@ -2101,13 +2101,13 @@ impl ::protobuf::Message for Response {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.data = ::std::option::Option::Some(Response_oneof_data::lgiht_call(is.read_bytes()?));
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_call(is.read_bytes()?));
                 },
                 31 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(is.read_bytes()?));
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_transaction_receipt(is.read_string()?));
                 },
                 32 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
@@ -2131,7 +2131,7 @@ impl ::protobuf::Message for Response {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.data = ::std::option::Option::Some(Response_oneof_data::light_block(is.read_bytes()?));
+                    self.data = ::std::option::Option::Some(Response_oneof_data::light_block(is.read_string()?));
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -2235,11 +2235,11 @@ impl ::protobuf::Message for Response {
                 &Response_oneof_data::license_info(ref v) => {
                     my_size += ::protobuf::rt::string_size(29, &v);
                 },
-                &Response_oneof_data::lgiht_call(ref v) => {
+                &Response_oneof_data::light_call(ref v) => {
                     my_size += ::protobuf::rt::bytes_size(30, &v);
                 },
                 &Response_oneof_data::light_transaction_receipt(ref v) => {
-                    my_size += ::protobuf::rt::bytes_size(31, &v);
+                    my_size += ::protobuf::rt::string_size(31, &v);
                 },
                 &Response_oneof_data::light_transaction(ref v) => {
                     my_size += ::protobuf::rt::bytes_size(32, &v);
@@ -2251,7 +2251,7 @@ impl ::protobuf::Message for Response {
                     my_size += ::protobuf::rt::bytes_size(34, &v);
                 },
                 &Response_oneof_data::light_block(ref v) => {
-                    my_size += ::protobuf::rt::bytes_size(35, &v);
+                    my_size += ::protobuf::rt::string_size(35, &v);
                 },
             };
         }
@@ -2352,11 +2352,11 @@ impl ::protobuf::Message for Response {
                 &Response_oneof_data::license_info(ref v) => {
                     os.write_string(29, v)?;
                 },
-                &Response_oneof_data::lgiht_call(ref v) => {
+                &Response_oneof_data::light_call(ref v) => {
                     os.write_bytes(30, v)?;
                 },
                 &Response_oneof_data::light_transaction_receipt(ref v) => {
-                    os.write_bytes(31, v)?;
+                    os.write_string(31, v)?;
                 },
                 &Response_oneof_data::light_transaction(ref v) => {
                     os.write_bytes(32, v)?;
@@ -2368,7 +2368,7 @@ impl ::protobuf::Message for Response {
                     os.write_bytes(34, v)?;
                 },
                 &Response_oneof_data::light_block(ref v) => {
-                    os.write_bytes(35, v)?;
+                    os.write_string(35, v)?;
                 },
             };
         }
@@ -2560,11 +2560,11 @@ impl ::protobuf::Message for Response {
                     Response::get_license_info,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
-                    "lgiht_call",
-                    Response::has_lgiht_call,
-                    Response::get_lgiht_call,
+                    "light_call",
+                    Response::has_light_call,
+                    Response::get_light_call,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "light_transaction_receipt",
                     Response::has_light_transaction_receipt,
                     Response::get_light_transaction_receipt,
@@ -2584,7 +2584,7 @@ impl ::protobuf::Message for Response {
                     Response::has_light_abi,
                     Response::get_light_abi,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "light_block",
                     Response::has_light_block,
                     Response::get_light_block,
@@ -2692,15 +2692,15 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x01(\tH\0R\x0fsoftwareVersion\x12\x1f\n\npeers_info\x18\x1b\x20\x01(\tH\
     \0R\tpeersInfo\x12'\n\x0eestimate_quota\x18\x1c\x20\x01(\x0cH\0R\restima\
     teQuota\x12#\n\x0clicense_info\x18\x1d\x20\x01(\tH\0R\x0blicenseInfo\x12\
-    \x1f\n\nlgiht_call\x18\x1e\x20\x01(\x0cH\0R\tlgihtCall\x12<\n\x19light_t\
-    ransaction_receipt\x18\x1f\x20\x01(\x0cH\0R\x17lightTransactionReceipt\
-    \x12-\n\x11light_transaction\x18\x20\x20\x01(\x0cH\0R\x10lightTransactio\
-    n\x12\x1f\n\nlight_code\x18!\x20\x01(\x0cH\0R\tlightCode\x12\x1d\n\tligh\
-    t_abi\x18\"\x20\x01(\x0cH\0R\x08lightAbi\x12!\n\x0blight_block\x18#\x20\
-    \x01(\x0cH\0R\nlightBlockB\x06\n\x04dataJ\xca\x12\n\x06\x12\x04\0\05\x01\
-    \n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\
-    \n\x02\x04\0\x12\x04\x04\0\t\x01\n\n\n\x03\x04\0\x01\x12\x03\x04\x08\x17\
-    \n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04&\n\r\n\x05\x04\0\x02\0\x04\x12\
+    \x1f\n\nlight_call\x18\x1e\x20\x01(\x0cH\0R\tlightCall\x12<\n\x19light_t\
+    ransaction_receipt\x18\x1f\x20\x01(\tH\0R\x17lightTransactionReceipt\x12\
+    -\n\x11light_transaction\x18\x20\x20\x01(\x0cH\0R\x10lightTransaction\
+    \x12\x1f\n\nlight_code\x18!\x20\x01(\x0cH\0R\tlightCode\x12\x1d\n\tlight\
+    _abi\x18\"\x20\x01(\x0cH\0R\x08lightAbi\x12!\n\x0blight_block\x18#\x20\
+    \x01(\tH\0R\nlightBlockB\x06\n\x04dataJ\xca\x12\n\x06\x12\x04\0\05\x01\n\
+    \x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\
+    \x02\x04\0\x12\x04\x04\0\t\x01\n\n\n\x03\x04\0\x01\x12\x03\x04\x08\x17\n\
+    \x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04&\n\r\n\x05\x04\0\x02\0\x04\x12\
     \x04\x05\x04\x04\x19\n\x0c\n\x05\x04\0\x02\0\x06\x12\x03\x05\x04\x15\n\
     \x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\x16!\n\x0c\n\x05\x04\0\x02\0\x03\
     \x12\x03\x05$%\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x06\x04\x1c\n\r\n\x05\
@@ -2801,20 +2801,20 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x01\x02\x1c\x03\x12\x03,\x1e\x20\n\x0b\n\x04\x04\x01\x02\x1d\x12\
     \x03.\x08\x1e\n\x0c\n\x05\x04\x01\x02\x1d\x05\x12\x03.\x08\r\n\x0c\n\x05\
     \x04\x01\x02\x1d\x01\x12\x03.\x0e\x18\n\x0c\n\x05\x04\x01\x02\x1d\x03\
-    \x12\x03.\x1b\x1d\n\x0b\n\x04\x04\x01\x02\x1e\x12\x03/\x08-\n\x0c\n\x05\
-    \x04\x01\x02\x1e\x05\x12\x03/\x08\r\n\x0c\n\x05\x04\x01\x02\x1e\x01\x12\
-    \x03/\x0e'\n\x0c\n\x05\x04\x01\x02\x1e\x03\x12\x03/*,\n\x0b\n\x04\x04\
-    \x01\x02\x1f\x12\x030\x08%\n\x0c\n\x05\x04\x01\x02\x1f\x05\x12\x030\x08\
-    \r\n\x0c\n\x05\x04\x01\x02\x1f\x01\x12\x030\x0e\x1f\n\x0c\n\x05\x04\x01\
-    \x02\x1f\x03\x12\x030\"$\n\x0b\n\x04\x04\x01\x02\x20\x12\x031\x08\x1e\n\
-    \x0c\n\x05\x04\x01\x02\x20\x05\x12\x031\x08\r\n\x0c\n\x05\x04\x01\x02\
-    \x20\x01\x12\x031\x0e\x18\n\x0c\n\x05\x04\x01\x02\x20\x03\x12\x031\x1b\
-    \x1d\n\x0b\n\x04\x04\x01\x02!\x12\x032\x08\x1d\n\x0c\n\x05\x04\x01\x02!\
-    \x05\x12\x032\x08\r\n\x0c\n\x05\x04\x01\x02!\x01\x12\x032\x0e\x17\n\x0c\
-    \n\x05\x04\x01\x02!\x03\x12\x032\x1a\x1c\n\x0b\n\x04\x04\x01\x02\"\x12\
-    \x033\x08\x1f\n\x0c\n\x05\x04\x01\x02\"\x05\x12\x033\x08\r\n\x0c\n\x05\
-    \x04\x01\x02\"\x01\x12\x033\x0e\x19\n\x0c\n\x05\x04\x01\x02\"\x03\x12\
-    \x033\x1c\x1eb\x06proto3\
+    \x12\x03.\x1b\x1d\n\x0b\n\x04\x04\x01\x02\x1e\x12\x03/\x08.\n\x0c\n\x05\
+    \x04\x01\x02\x1e\x05\x12\x03/\x08\x0e\n\x0c\n\x05\x04\x01\x02\x1e\x01\
+    \x12\x03/\x0f(\n\x0c\n\x05\x04\x01\x02\x1e\x03\x12\x03/+-\n\x0b\n\x04\
+    \x04\x01\x02\x1f\x12\x030\x08%\n\x0c\n\x05\x04\x01\x02\x1f\x05\x12\x030\
+    \x08\r\n\x0c\n\x05\x04\x01\x02\x1f\x01\x12\x030\x0e\x1f\n\x0c\n\x05\x04\
+    \x01\x02\x1f\x03\x12\x030\"$\n\x0b\n\x04\x04\x01\x02\x20\x12\x031\x08\
+    \x1e\n\x0c\n\x05\x04\x01\x02\x20\x05\x12\x031\x08\r\n\x0c\n\x05\x04\x01\
+    \x02\x20\x01\x12\x031\x0e\x18\n\x0c\n\x05\x04\x01\x02\x20\x03\x12\x031\
+    \x1b\x1d\n\x0b\n\x04\x04\x01\x02!\x12\x032\x08\x1d\n\x0c\n\x05\x04\x01\
+    \x02!\x05\x12\x032\x08\r\n\x0c\n\x05\x04\x01\x02!\x01\x12\x032\x0e\x17\n\
+    \x0c\n\x05\x04\x01\x02!\x03\x12\x032\x1a\x1c\n\x0b\n\x04\x04\x01\x02\"\
+    \x12\x033\x08\x20\n\x0c\n\x05\x04\x01\x02\"\x05\x12\x033\x08\x0e\n\x0c\n\
+    \x05\x04\x01\x02\"\x01\x12\x033\x0f\x1a\n\x0c\n\x05\x04\x01\x02\"\x03\
+    \x12\x033\x1d\x1fb\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

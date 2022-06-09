@@ -208,6 +208,7 @@ impl Sign for Signature {
         let mut ret = [0u8; 96];
         let sig = sign_detached(message.as_ref(), &secret_key);
 
+        ret[0..64].copy_from_slice(&sig.as_ref());
         ret[0..64].copy_from_slice(sig.as_ref());
         ret[64..96].copy_from_slice(pubkey.as_ref() as &[u8]);
         Ok(Signature(ret))
