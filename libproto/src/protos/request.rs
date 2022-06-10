@@ -897,6 +897,9 @@ pub enum Request_oneof_req {
     light_block_by_height(::std::string::String),
     lgiht_call(Call),
     light_transaction_count(::std::string::String),
+    light_meta_data(::std::string::String),
+    light_balance(::std::string::String),
+    light_estimate_quota(Call),
 }
 
 impl Request {
@@ -2502,6 +2505,153 @@ impl Request {
             ::std::string::String::new()
         }
     }
+
+    // string light_meta_data = 39;
+
+
+    pub fn get_light_meta_data(&self) -> &str {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_meta_data(ref v)) => v,
+            _ => "",
+        }
+    }
+    pub fn clear_light_meta_data(&mut self) {
+        self.req = ::std::option::Option::None;
+    }
+
+    pub fn has_light_meta_data(&self) -> bool {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_meta_data(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_meta_data(&mut self, v: ::std::string::String) {
+        self.req = ::std::option::Option::Some(Request_oneof_req::light_meta_data(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_meta_data(&mut self) -> &mut ::std::string::String {
+        if let ::std::option::Option::Some(Request_oneof_req::light_meta_data(_)) = self.req {
+        } else {
+            self.req = ::std::option::Option::Some(Request_oneof_req::light_meta_data(::std::string::String::new()));
+        }
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_meta_data(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_meta_data(&mut self) -> ::std::string::String {
+        if self.has_light_meta_data() {
+            match self.req.take() {
+                ::std::option::Option::Some(Request_oneof_req::light_meta_data(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::string::String::new()
+        }
+    }
+
+    // string light_balance = 40;
+
+
+    pub fn get_light_balance(&self) -> &str {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_balance(ref v)) => v,
+            _ => "",
+        }
+    }
+    pub fn clear_light_balance(&mut self) {
+        self.req = ::std::option::Option::None;
+    }
+
+    pub fn has_light_balance(&self) -> bool {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_balance(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_balance(&mut self, v: ::std::string::String) {
+        self.req = ::std::option::Option::Some(Request_oneof_req::light_balance(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_balance(&mut self) -> &mut ::std::string::String {
+        if let ::std::option::Option::Some(Request_oneof_req::light_balance(_)) = self.req {
+        } else {
+            self.req = ::std::option::Option::Some(Request_oneof_req::light_balance(::std::string::String::new()));
+        }
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_balance(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_balance(&mut self) -> ::std::string::String {
+        if self.has_light_balance() {
+            match self.req.take() {
+                ::std::option::Option::Some(Request_oneof_req::light_balance(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::string::String::new()
+        }
+    }
+
+    // .Call light_estimate_quota = 41;
+
+
+    pub fn get_light_estimate_quota(&self) -> &Call {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(ref v)) => v,
+            _ => Call::default_instance(),
+        }
+    }
+    pub fn clear_light_estimate_quota(&mut self) {
+        self.req = ::std::option::Option::None;
+    }
+
+    pub fn has_light_estimate_quota(&self) -> bool {
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_light_estimate_quota(&mut self, v: Call) {
+        self.req = ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_light_estimate_quota(&mut self) -> &mut Call {
+        if let ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(_)) = self.req {
+        } else {
+            self.req = ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(Call::new()));
+        }
+        match self.req {
+            ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_light_estimate_quota(&mut self) -> Call {
+        if self.has_light_estimate_quota() {
+            match self.req.take() {
+                ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            Call::new()
+        }
+    }
 }
 
 impl ::protobuf::Message for Request {
@@ -2537,6 +2687,11 @@ impl ::protobuf::Message for Request {
             }
         }
         if let Some(Request_oneof_req::lgiht_call(ref v)) = self.req {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(Request_oneof_req::light_estimate_quota(ref v)) = self.req {
             if !v.is_initialized() {
                 return false;
             }
@@ -2773,6 +2928,24 @@ impl ::protobuf::Message for Request {
                     }
                     self.req = ::std::option::Option::Some(Request_oneof_req::light_transaction_count(is.read_string()?));
                 },
+                39 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.req = ::std::option::Option::Some(Request_oneof_req::light_meta_data(is.read_string()?));
+                },
+                40 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.req = ::std::option::Option::Some(Request_oneof_req::light_balance(is.read_string()?));
+                },
+                41 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.req = ::std::option::Option::Some(Request_oneof_req::light_estimate_quota(is.read_message()?));
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -2907,6 +3080,16 @@ impl ::protobuf::Message for Request {
                 },
                 &Request_oneof_req::light_transaction_count(ref v) => {
                     my_size += ::protobuf::rt::string_size(38, &v);
+                },
+                &Request_oneof_req::light_meta_data(ref v) => {
+                    my_size += ::protobuf::rt::string_size(39, &v);
+                },
+                &Request_oneof_req::light_balance(ref v) => {
+                    my_size += ::protobuf::rt::string_size(40, &v);
+                },
+                &Request_oneof_req::light_estimate_quota(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
             };
         }
@@ -3045,6 +3228,17 @@ impl ::protobuf::Message for Request {
                 },
                 &Request_oneof_req::light_transaction_count(ref v) => {
                     os.write_string(38, v)?;
+                },
+                &Request_oneof_req::light_meta_data(ref v) => {
+                    os.write_string(39, v)?;
+                },
+                &Request_oneof_req::light_balance(ref v) => {
+                    os.write_string(40, v)?;
+                },
+                &Request_oneof_req::light_estimate_quota(ref v) => {
+                    os.write_tag(41, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
             };
         }
@@ -3280,6 +3474,21 @@ impl ::protobuf::Message for Request {
                     Request::has_light_transaction_count,
                     Request::get_light_transaction_count,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
+                    "light_meta_data",
+                    Request::has_light_meta_data,
+                    Request::get_light_meta_data,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
+                    "light_balance",
+                    Request::has_light_balance,
+                    Request::get_light_balance,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, Call>(
+                    "light_estimate_quota",
+                    Request::has_light_estimate_quota,
+                    Request::get_light_estimate_quota,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<Request>(
                     "Request",
                     fields,
@@ -3303,6 +3512,9 @@ impl ::protobuf::Message for Request {
 impl ::protobuf::Clear for Request {
     fn clear(&mut self) {
         self.request_id.clear();
+        self.req = ::std::option::Option::None;
+        self.req = ::std::option::Option::None;
+        self.req = ::std::option::Option::None;
         self.req = ::std::option::Option::None;
         self.req = ::std::option::Option::None;
         self.req = ::std::option::Option::None;
@@ -3599,7 +3811,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     R\x08position\x12\x16\n\x06height\x18\x03\x20\x01(\tR\x06height\"Z\n\nSt\
     orageKey\x12\x18\n\x07address\x18\x01\x20\x01(\x0cR\x07address\x12\x1a\n\
     \x08position\x18\x02\x20\x01(\x0cR\x08position\x12\x16\n\x06height\x18\
-    \x03\x20\x01(\tR\x06height\"\xfc\x0b\n\x07Request\x12\x1d\n\nrequest_id\
+    \x03\x20\x01(\tR\x06height\"\x88\r\n\x07Request\x12\x1d\n\nrequest_id\
     \x18\x01\x20\x01(\x0cR\trequestId\x12#\n\x0cblock_number\x18\x02\x20\x01\
     (\x08H\0R\x0bblockNumber\x12$\n\rblock_by_hash\x18\x03\x20\x01(\tH\0R\
     \x0bblockByHash\x12(\n\x0fblock_by_height\x18\x04\x20\x01(\tH\0R\rblockB\
@@ -3634,23 +3846,26 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     ghtBlockByHash\x123\n\x15light_block_by_height\x18$\x20\x01(\tH\0R\x12li\
     ghtBlockByHeight\x12&\n\nlgiht_call\x18%\x20\x01(\x0b2\x05.CallH\0R\tlgi\
     htCall\x128\n\x17light_transaction_count\x18&\x20\x01(\tH\0R\x15lightTra\
-    nsactionCountB\x05\n\x03req\"@\n\x0cBatchRequest\x120\n\x0fnew_tx_reques\
-    ts\x18\x01\x20\x03(\x0b2\x08.RequestR\rnewTxRequests*1\n\x08BlockTag\x12\
-    \n\n\x06Latest\x10\0\x12\x0c\n\x08Earliest\x10\x01\x12\x0b\n\x07Pending\
-    \x10\x02J\xd7\x19\n\x06\x12\x04\0\0M\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\
-    \n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\x08\
-    \x01\n\n\n\x03\x05\0\x01\x12\x03\x04\x05\r\n\x0b\n\x04\x05\0\x02\0\x12\
-    \x03\x05\x04\x0f\n\x0c\n\x05\x05\0\x02\0\x01\x12\x03\x05\x04\n\n\x0c\n\
-    \x05\x05\0\x02\0\x02\x12\x03\x05\r\x0e\n\x0b\n\x04\x05\0\x02\x01\x12\x03\
-    \x06\x04\x11\n\x0c\n\x05\x05\0\x02\x01\x01\x12\x03\x06\x04\x0c\n\x0c\n\
-    \x05\x05\0\x02\x01\x02\x12\x03\x06\x0f\x10\n\x0b\n\x04\x05\0\x02\x02\x12\
-    \x03\x07\x04\x10\n\x0c\n\x05\x05\0\x02\x02\x01\x12\x03\x07\x04\x0b\n\x0c\
-    \n\x05\x05\0\x02\x02\x02\x12\x03\x07\x0e\x0f\n\n\n\x02\x04\0\x12\x04\n\0\
-    \x0f\x01\n\n\n\x03\x04\0\x01\x12\x03\n\x08\x0c\n\x0b\n\x04\x04\0\x02\0\
-    \x12\x03\x0b\x04\x13\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x0b\x04\n\x0e\n\
-    \x0c\n\x05\x04\0\x02\0\x05\x12\x03\x0b\x04\t\n\x0c\n\x05\x04\0\x02\0\x01\
-    \x12\x03\x0b\n\x0e\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x0b\x11\x12\n\x0b\
-    \n\x04\x04\0\x02\x01\x12\x03\x0c\x04\x11\n\r\n\x05\x04\0\x02\x01\x04\x12\
+    nsactionCount\x12(\n\x0flight_meta_data\x18'\x20\x01(\tH\0R\rlightMetaDa\
+    ta\x12%\n\rlight_balance\x18(\x20\x01(\tH\0R\x0clightBalance\x129\n\x14l\
+    ight_estimate_quota\x18)\x20\x01(\x0b2\x05.CallH\0R\x12lightEstimateQuot\
+    aB\x05\n\x03req\"@\n\x0cBatchRequest\x120\n\x0fnew_tx_requests\x18\x01\
+    \x20\x03(\x0b2\x08.RequestR\rnewTxRequests*1\n\x08BlockTag\x12\n\n\x06La\
+    test\x10\0\x12\x0c\n\x08Earliest\x10\x01\x12\x0b\n\x07Pending\x10\x02J\
+    \xfc\x1a\n\x06\x12\x04\0\0P\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\
+    \x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x05\0\x12\x04\x04\0\x08\x01\n\n\
+    \n\x03\x05\0\x01\x12\x03\x04\x05\r\n\x0b\n\x04\x05\0\x02\0\x12\x03\x05\
+    \x04\x0f\n\x0c\n\x05\x05\0\x02\0\x01\x12\x03\x05\x04\n\n\x0c\n\x05\x05\0\
+    \x02\0\x02\x12\x03\x05\r\x0e\n\x0b\n\x04\x05\0\x02\x01\x12\x03\x06\x04\
+    \x11\n\x0c\n\x05\x05\0\x02\x01\x01\x12\x03\x06\x04\x0c\n\x0c\n\x05\x05\0\
+    \x02\x01\x02\x12\x03\x06\x0f\x10\n\x0b\n\x04\x05\0\x02\x02\x12\x03\x07\
+    \x04\x10\n\x0c\n\x05\x05\0\x02\x02\x01\x12\x03\x07\x04\x0b\n\x0c\n\x05\
+    \x05\0\x02\x02\x02\x12\x03\x07\x0e\x0f\n\n\n\x02\x04\0\x12\x04\n\0\x0f\
+    \x01\n\n\n\x03\x04\0\x01\x12\x03\n\x08\x0c\n\x0b\n\x04\x04\0\x02\0\x12\
+    \x03\x0b\x04\x13\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x0b\x04\n\x0e\n\x0c\n\
+    \x05\x04\0\x02\0\x05\x12\x03\x0b\x04\t\n\x0c\n\x05\x04\0\x02\0\x01\x12\
+    \x03\x0b\n\x0e\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x0b\x11\x12\n\x0b\n\
+    \x04\x04\0\x02\x01\x12\x03\x0c\x04\x11\n\r\n\x05\x04\0\x02\x01\x04\x12\
     \x04\x0c\x04\x0b\x13\n\x0c\n\x05\x04\0\x02\x01\x05\x12\x03\x0c\x04\t\n\
     \x0c\n\x05\x04\0\x02\x01\x01\x12\x03\x0c\n\x0c\n\x0c\n\x05\x04\0\x02\x01\
     \x03\x12\x03\x0c\x0f\x10\n\x0b\n\x04\x04\0\x02\x02\x12\x03\r\x04\x13\n\r\
@@ -3683,12 +3898,12 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x04\x02\x02\x02\x12\x03\x1a\x04\x16\n\r\n\x05\x04\x02\x02\x02\x04\
     \x12\x04\x1a\x04\x19\x17\n\x0c\n\x05\x04\x02\x02\x02\x05\x12\x03\x1a\x04\
     \n\n\x0c\n\x05\x04\x02\x02\x02\x01\x12\x03\x1a\x0b\x11\n\x0c\n\x05\x04\
-    \x02\x02\x02\x03\x12\x03\x1a\x14\x15\n\n\n\x02\x04\x03\x12\x04\x1d\0I\
+    \x02\x02\x02\x03\x12\x03\x1a\x14\x15\n\n\n\x02\x04\x03\x12\x04\x1d\0L\
     \x01\n\n\n\x03\x04\x03\x01\x12\x03\x1d\x08\x0f\n\x0b\n\x04\x04\x03\x02\0\
     \x12\x03\x1e\x04\x19\n\r\n\x05\x04\x03\x02\0\x04\x12\x04\x1e\x04\x1d\x11\
     \n\x0c\n\x05\x04\x03\x02\0\x05\x12\x03\x1e\x04\t\n\x0c\n\x05\x04\x03\x02\
     \0\x01\x12\x03\x1e\n\x14\n\x0c\n\x05\x04\x03\x02\0\x03\x12\x03\x1e\x17\
-    \x18\n\x0c\n\x04\x04\x03\x08\0\x12\x04\x1f\x04H\x05\n\x0c\n\x05\x04\x03\
+    \x18\n\x0c\n\x04\x04\x03\x08\0\x12\x04\x1f\x04K\x05\n\x0c\n\x05\x04\x03\
     \x08\0\x01\x12\x03\x1f\n\r\n\x0b\n\x04\x04\x03\x02\x01\x12\x03\x20\x08\
     \x1e\n\x0c\n\x05\x04\x03\x02\x01\x05\x12\x03\x20\x08\x0c\n\x0c\n\x05\x04\
     \x03\x02\x01\x01\x12\x03\x20\r\x19\n\x0c\n\x05\x04\x03\x02\x01\x03\x12\
@@ -3789,11 +4004,19 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0c\n\x0c\n\x05\x04\x03\x02$\x01\x12\x03F\r\x17\n\x0c\n\x05\x04\x03\x02\
     $\x03\x12\x03F\x1a\x1c\n\x0b\n\x04\x04\x03\x02%\x12\x03G\x08,\n\x0c\n\
     \x05\x04\x03\x02%\x05\x12\x03G\x08\x0e\n\x0c\n\x05\x04\x03\x02%\x01\x12\
-    \x03G\x0f&\n\x0c\n\x05\x04\x03\x02%\x03\x12\x03G)+\n\n\n\x02\x04\x04\x12\
-    \x04K\0M\x01\n\n\n\x03\x04\x04\x01\x12\x03K\x08\x14\n\x0b\n\x04\x04\x04\
-    \x02\0\x12\x03L\x04)\n\x0c\n\x05\x04\x04\x02\0\x04\x12\x03L\x04\x0c\n\
-    \x0c\n\x05\x04\x04\x02\0\x06\x12\x03L\r\x14\n\x0c\n\x05\x04\x04\x02\0\
-    \x01\x12\x03L\x15$\n\x0c\n\x05\x04\x04\x02\0\x03\x12\x03L'(b\x06proto3\
+    \x03G\x0f&\n\x0c\n\x05\x04\x03\x02%\x03\x12\x03G)+\n\x0b\n\x04\x04\x03\
+    \x02&\x12\x03H\x08$\n\x0c\n\x05\x04\x03\x02&\x05\x12\x03H\x08\x0e\n\x0c\
+    \n\x05\x04\x03\x02&\x01\x12\x03H\x0f\x1e\n\x0c\n\x05\x04\x03\x02&\x03\
+    \x12\x03H!#\n\x0b\n\x04\x04\x03\x02'\x12\x03I\x08\"\n\x0c\n\x05\x04\x03\
+    \x02'\x05\x12\x03I\x08\x0e\n\x0c\n\x05\x04\x03\x02'\x01\x12\x03I\x0f\x1c\
+    \n\x0c\n\x05\x04\x03\x02'\x03\x12\x03I\x1f!\n\x0b\n\x04\x04\x03\x02(\x12\
+    \x03J\x08'\n\x0c\n\x05\x04\x03\x02(\x06\x12\x03J\x08\x0c\n\x0c\n\x05\x04\
+    \x03\x02(\x01\x12\x03J\r!\n\x0c\n\x05\x04\x03\x02(\x03\x12\x03J$&\n\n\n\
+    \x02\x04\x04\x12\x04N\0P\x01\n\n\n\x03\x04\x04\x01\x12\x03N\x08\x14\n\
+    \x0b\n\x04\x04\x04\x02\0\x12\x03O\x04)\n\x0c\n\x05\x04\x04\x02\0\x04\x12\
+    \x03O\x04\x0c\n\x0c\n\x05\x04\x04\x02\0\x06\x12\x03O\r\x14\n\x0c\n\x05\
+    \x04\x04\x02\0\x01\x12\x03O\x15$\n\x0c\n\x05\x04\x04\x02\0\x03\x12\x03O'\
+    (b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
