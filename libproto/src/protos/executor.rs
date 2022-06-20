@@ -2988,7 +2988,7 @@ pub struct TrieResponse {
     // message fields
     pub id: ::protobuf::SingularPtrField<TrieID>,
     pub key: ::std::vec::Vec<u8>,
-    pub state_proof: ::std::vec::Vec<u8>,
+    pub state_proof: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -3064,10 +3064,10 @@ impl TrieResponse {
         ::std::mem::replace(&mut self.key, ::std::vec::Vec::new())
     }
 
-    // bytes state_proof = 3;
+    // repeated bytes state_proof = 3;
 
 
-    pub fn get_state_proof(&self) -> &[u8] {
+    pub fn get_state_proof(&self) -> &[::std::vec::Vec<u8>] {
         &self.state_proof
     }
     pub fn clear_state_proof(&mut self) {
@@ -3075,19 +3075,18 @@ impl TrieResponse {
     }
 
     // Param is passed by value, moved
-    pub fn set_state_proof(&mut self, v: ::std::vec::Vec<u8>) {
+    pub fn set_state_proof(&mut self, v: ::protobuf::RepeatedField<::std::vec::Vec<u8>>) {
         self.state_proof = v;
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
-    pub fn mut_state_proof(&mut self) -> &mut ::std::vec::Vec<u8> {
+    pub fn mut_state_proof(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
         &mut self.state_proof
     }
 
     // Take field
-    pub fn take_state_proof(&mut self) -> ::std::vec::Vec<u8> {
-        ::std::mem::replace(&mut self.state_proof, ::std::vec::Vec::new())
+    pub fn take_state_proof(&mut self) -> ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        ::std::mem::replace(&mut self.state_proof, ::protobuf::RepeatedField::new())
     }
 }
 
@@ -3112,7 +3111,7 @@ impl ::protobuf::Message for TrieResponse {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.key)?;
                 },
                 3 => {
-                    ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.state_proof)?;
+                    ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.state_proof)?;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -3133,9 +3132,9 @@ impl ::protobuf::Message for TrieResponse {
         if !self.key.is_empty() {
             my_size += ::protobuf::rt::bytes_size(2, &self.key);
         }
-        if !self.state_proof.is_empty() {
-            my_size += ::protobuf::rt::bytes_size(3, &self.state_proof);
-        }
+        for value in &self.state_proof {
+            my_size += ::protobuf::rt::bytes_size(3, &value);
+        };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -3150,9 +3149,9 @@ impl ::protobuf::Message for TrieResponse {
         if !self.key.is_empty() {
             os.write_bytes(2, &self.key)?;
         }
-        if !self.state_proof.is_empty() {
-            os.write_bytes(3, &self.state_proof)?;
-        }
+        for v in &self.state_proof {
+            os.write_bytes(3, &v)?;
+        };
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
@@ -3205,7 +3204,7 @@ impl ::protobuf::Message for TrieResponse {
                     |m: &TrieResponse| { &m.key },
                     |m: &mut TrieResponse| { &mut m.key },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "state_proof",
                     |m: &TrieResponse| { &m.state_proof },
                     |m: &mut TrieResponse| { &mut m.state_proof },
@@ -4507,7 +4506,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x04R\x0bblockNumber\x12\x17\n\x07acc_key\x18\x04\x20\x01(\x0cR\
     \x06accKey\"Z\n\x0cTrieResponse\x12\x17\n\x02id\x18\x01\x20\x01(\x0b2\
     \x07.TrieIDR\x02id\x12\x10\n\x03key\x18\x02\x20\x01(\x0cR\x03key\x12\x1f\
-    \n\x0bstate_proof\x18\x03\x20\x01(\x0cR\nstateProof\"\x9f\x01\n\x0fRecei\
+    \n\x0bstate_proof\x18\x03\x20\x03(\x0cR\nstateProof\"\x9f\x01\n\x0fRecei\
     ptResponse\x12\x1c\n\tuntrusted\x18\x01\x20\x01(\x08R\tuntrusted\x12\x12\
     \n\x04hash\x18\x02\x20\x01(\x0cR\x04hash\x12\x16\n\x06number\x18\x03\x20\
     \x01(\x04R\x06number\x12\x1c\n\x05block\x18\x04\x20\x01(\x0b2\x06.BlockR\
@@ -4529,7 +4528,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0b\x12\x12\n\x0eBadInstruction\x10\x0c\x12\x12\n\x0eStackUnderflow\x10\
     \r\x12\x0e\n\nOutOfStack\x10\x0e\x12\x0c\n\x08Internal\x10\x0f\x12\x1e\n\
     \x1aMutableCallInStaticContext\x10\x10\x12\x0f\n\x0bOutOfBounds\x10\x11\
-    \x12\x0c\n\x08Reverted\x10\x12\x12\x11\n\rAccountFrozen\x10\x13J\xf1'\n\
+    \x12\x0c\n\x08Reverted\x10\x12\x12\x11\n\rAccountFrozen\x10\x13J\xf0'\n\
     \x06\x12\x04\0\0\x7f\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\
     \x12\x03\x02\x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\x0f\x01\n\n\n\x03\x04\
     \0\x01\x12\x03\x04\x08\x16\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04\x17\n\
@@ -4719,17 +4718,17 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x04\n\x02\x01\x12\x03d\x04\x12\n\r\n\x05\x04\n\x02\x01\x04\x12\x04d\
     \x04c\x12\n\x0c\n\x05\x04\n\x02\x01\x05\x12\x03d\x04\t\n\x0c\n\x05\x04\n\
     \x02\x01\x01\x12\x03d\n\r\n\x0c\n\x05\x04\n\x02\x01\x03\x12\x03d\x10\x11\
-    \n\x0b\n\x04\x04\n\x02\x02\x12\x03e\x04\x1a\n\r\n\x05\x04\n\x02\x02\x04\
-    \x12\x04e\x04d\x12\n\x0c\n\x05\x04\n\x02\x02\x05\x12\x03e\x04\t\n\x0c\n\
-    \x05\x04\n\x02\x02\x01\x12\x03e\n\x15\n\x0c\n\x05\x04\n\x02\x02\x03\x12\
-    \x03e\x18\x19\n\n\n\x02\x04\x0b\x12\x04h\0n\x01\n\n\n\x03\x04\x0b\x01\
-    \x12\x03h\x08\x17\n\x0b\n\x04\x04\x0b\x02\0\x12\x03i\x04\x17\n\r\n\x05\
-    \x04\x0b\x02\0\x04\x12\x04i\x04h\x19\n\x0c\n\x05\x04\x0b\x02\0\x05\x12\
-    \x03i\x04\x08\n\x0c\n\x05\x04\x0b\x02\0\x01\x12\x03i\t\x12\n\x0c\n\x05\
-    \x04\x0b\x02\0\x03\x12\x03i\x15\x16\n\x0b\n\x04\x04\x0b\x02\x01\x12\x03j\
-    \x04\x13\n\r\n\x05\x04\x0b\x02\x01\x04\x12\x04j\x04i\x17\n\x0c\n\x05\x04\
-    \x0b\x02\x01\x05\x12\x03j\x04\t\n\x0c\n\x05\x04\x0b\x02\x01\x01\x12\x03j\
-    \n\x0e\n\x0c\n\x05\x04\x0b\x02\x01\x03\x12\x03j\x11\x12\n\x0b\n\x04\x04\
+    \n\x0b\n\x04\x04\n\x02\x02\x12\x03e\x04#\n\x0c\n\x05\x04\n\x02\x02\x04\
+    \x12\x03e\x04\x0c\n\x0c\n\x05\x04\n\x02\x02\x05\x12\x03e\r\x12\n\x0c\n\
+    \x05\x04\n\x02\x02\x01\x12\x03e\x13\x1e\n\x0c\n\x05\x04\n\x02\x02\x03\
+    \x12\x03e!\"\n\n\n\x02\x04\x0b\x12\x04h\0n\x01\n\n\n\x03\x04\x0b\x01\x12\
+    \x03h\x08\x17\n\x0b\n\x04\x04\x0b\x02\0\x12\x03i\x04\x17\n\r\n\x05\x04\
+    \x0b\x02\0\x04\x12\x04i\x04h\x19\n\x0c\n\x05\x04\x0b\x02\0\x05\x12\x03i\
+    \x04\x08\n\x0c\n\x05\x04\x0b\x02\0\x01\x12\x03i\t\x12\n\x0c\n\x05\x04\
+    \x0b\x02\0\x03\x12\x03i\x15\x16\n\x0b\n\x04\x04\x0b\x02\x01\x12\x03j\x04\
+    \x13\n\r\n\x05\x04\x0b\x02\x01\x04\x12\x04j\x04i\x17\n\x0c\n\x05\x04\x0b\
+    \x02\x01\x05\x12\x03j\x04\t\n\x0c\n\x05\x04\x0b\x02\x01\x01\x12\x03j\n\
+    \x0e\n\x0c\n\x05\x04\x0b\x02\x01\x03\x12\x03j\x11\x12\n\x0b\n\x04\x04\
     \x0b\x02\x02\x12\x03k\x04\x16\n\r\n\x05\x04\x0b\x02\x02\x04\x12\x04k\x04\
     j\x13\n\x0c\n\x05\x04\x0b\x02\x02\x05\x12\x03k\x04\n\n\x0c\n\x05\x04\x0b\
     \x02\x02\x01\x12\x03k\x0b\x11\n\x0c\n\x05\x04\x0b\x02\x02\x03\x12\x03k\
