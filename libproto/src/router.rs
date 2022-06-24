@@ -101,6 +101,7 @@ pub enum MsgType {
     GetCrl,
     GetCrlResp,
     InvalidLicense,
+    ExecuteRequest,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -208,6 +209,7 @@ impl fmt::Display for MsgType {
                 MsgType::GetCrl => "get_crl",
                 MsgType::GetCrlResp => "get_crl_resp",
                 MsgType::InvalidLicense => "invalid_license",
+                MsgType::ExecuteRequest => "execute_request",
             }
         )
     }
@@ -287,6 +289,7 @@ impl<'a> From<&'a str> for MsgType {
             "get_crl" => MsgType::GetCrl,
             "get_crl_resp" => MsgType::GetCrlResp,
             "invalid_license" => MsgType::InvalidLicense,
+            "execute_request" => MsgType::ExecuteRequest,
             _ => MsgType::Unknown,
         }
     }
