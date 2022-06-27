@@ -17,7 +17,7 @@ extern crate cita_crypto;
 #[macro_use(impl_for_each_jsonrpc_requests)]
 extern crate jsonrpc_types;
 #[macro_use]
-extern crate cita_logger as logger;
+extern crate cmb_logger as logger;
 extern crate proof as proof_srv;
 
 pub mod block;
