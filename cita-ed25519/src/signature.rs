@@ -208,7 +208,7 @@ impl Sign for Signature {
         let mut ret = [0u8; 96];
         let sig = sign_detached(message.as_ref(), &secret_key);
 
-        ret[0..64].copy_from_slice(&sig.0[..]);
+        ret[0..64].copy_from_slice(sig.as_ref());
         ret[64..96].copy_from_slice(pubkey.as_ref() as &[u8]);
         Ok(Signature(ret))
     }
@@ -217,7 +217,7 @@ impl Sign for Signature {
         let sig = self.sig();
         let pubkey = self.pk();
         let is_valid = verify_detached(
-            &EdSignature::from_slice(&sig).unwrap(),
+            &EdSignature::from_bytes(&sig).unwrap(),
             message.as_ref(),
             &EdPublicKey::from_slice(&pubkey).unwrap(),
         );
@@ -241,7 +241,7 @@ impl Sign for Signature {
         }
 
         let is_valid = verify_detached(
-            &EdSignature::from_slice(&sig).unwrap(),
+            &EdSignature::from_bytes(&sig).unwrap(),
             message.as_ref(),
             &EdPublicKey::from_slice(&pubkey).unwrap(),
         );
