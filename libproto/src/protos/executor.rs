@@ -4136,7 +4136,7 @@ pub struct TransactionResponse {
     // message fields
     pub block_hash: ::std::vec::Vec<u8>,
     pub block: ::protobuf::SingularPtrField<super::blockchain::Block>,
-    pub tx_index: u32,
+    pub index: u64,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -4212,19 +4212,19 @@ impl TransactionResponse {
         self.block.take().unwrap_or_else(|| super::blockchain::Block::new())
     }
 
-    // uint32 tx_index = 3;
+    // uint64 index = 3;
 
 
-    pub fn get_tx_index(&self) -> u32 {
-        self.tx_index
+    pub fn get_index(&self) -> u64 {
+        self.index
     }
-    pub fn clear_tx_index(&mut self) {
-        self.tx_index = 0;
+    pub fn clear_index(&mut self) {
+        self.index = 0;
     }
 
     // Param is passed by value, moved
-    pub fn set_tx_index(&mut self, v: u32) {
-        self.tx_index = v;
+    pub fn set_index(&mut self, v: u64) {
+        self.index = v;
     }
 }
 
@@ -4252,8 +4252,8 @@ impl ::protobuf::Message for TransactionResponse {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    let tmp = is.read_uint32()?;
-                    self.tx_index = tmp;
+                    let tmp = is.read_uint64()?;
+                    self.index = tmp;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -4274,8 +4274,8 @@ impl ::protobuf::Message for TransactionResponse {
             let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         }
-        if self.tx_index != 0 {
-            my_size += ::protobuf::rt::value_size(3, self.tx_index, ::protobuf::wire_format::WireTypeVarint);
+        if self.index != 0 {
+            my_size += ::protobuf::rt::value_size(3, self.index, ::protobuf::wire_format::WireTypeVarint);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -4291,8 +4291,8 @@ impl ::protobuf::Message for TransactionResponse {
             os.write_raw_varint32(v.get_cached_size())?;
             v.write_to_with_cached_sizes(os)?;
         }
-        if self.tx_index != 0 {
-            os.write_uint32(3, self.tx_index)?;
+        if self.index != 0 {
+            os.write_uint64(3, self.index)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -4346,10 +4346,10 @@ impl ::protobuf::Message for TransactionResponse {
                     |m: &TransactionResponse| { &m.block },
                     |m: &mut TransactionResponse| { &mut m.block },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
-                    "tx_index",
-                    |m: &TransactionResponse| { &m.tx_index },
-                    |m: &mut TransactionResponse| { &mut m.tx_index },
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                    "index",
+                    |m: &TransactionResponse| { &m.index },
+                    |m: &mut TransactionResponse| { &mut m.index },
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TransactionResponse>(
                     "TransactionResponse",
@@ -4375,7 +4375,7 @@ impl ::protobuf::Clear for TransactionResponse {
     fn clear(&mut self) {
         self.block_hash.clear();
         self.block.clear();
-        self.tx_index = 0;
+        self.index = 0;
         self.unknown_fields.clear();
     }
 }
@@ -4551,32 +4551,32 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04data\x18\x03\x20\x01(\x0cR\x04data\"T\n\x0bAbiResponse\x12\x17\n\x02\
     id\x18\x01\x20\x01(\x0b2\x07.TrieIDR\x02id\x12\x18\n\x07address\x18\x02\
     \x20\x01(\x0cR\x07address\x12\x12\n\x04data\x18\x03\x20\x01(\x0cR\x04dat\
-    a\"m\n\x13TransactionResponse\x12\x1d\n\nblock_hash\x18\x01\x20\x01(\x0c\
+    a\"h\n\x13TransactionResponse\x12\x1d\n\nblock_hash\x18\x01\x20\x01(\x0c\
     R\tblockHash\x12\x1c\n\x05block\x18\x02\x20\x01(\x0b2\x06.BlockR\x05bloc\
-    k\x12\x19\n\x08tx_index\x18\x03\x20\x01(\rR\x07txIndex*\xce\x03\n\x0cRec\
-    eiptError\x12\x16\n\x12NotEnoughBaseQuota\x10\0\x12\x1a\n\x16BlockQuotaL\
-    imitReached\x10\x01\x12\x1c\n\x18AccountQuotaLimitReached\x10\x02\x12\
-    \x1b\n\x17InvalidTransactionNonce\x10\x03\x12\x11\n\rNotEnoughCash\x10\
-    \x04\x12\x1b\n\x17NoTransactionPermission\x10\x05\x12\x18\n\x14NoContrac\
-    tPermission\x10\x06\x12\x14\n\x10NoCallPermission\x10\x07\x12\x15\n\x11E\
-    xecutionInternal\x10\x08\x12\x18\n\x14TransactionMalformed\x10\t\x12\x0e\
-    \n\nOutOfQuota\x10\n\x12\x16\n\x12BadJumpDestination\x10\x0b\x12\x12\n\
-    \x0eBadInstruction\x10\x0c\x12\x12\n\x0eStackUnderflow\x10\r\x12\x0e\n\n\
-    OutOfStack\x10\x0e\x12\x0c\n\x08Internal\x10\x0f\x12\x1e\n\x1aMutableCal\
-    lInStaticContext\x10\x10\x12\x0f\n\x0bOutOfBounds\x10\x11\x12\x0c\n\x08R\
-    everted\x10\x12\x12\x11\n\rAccountFrozen\x10\x13J\xb8(\n\x07\x12\x05\0\0\
-    \x80\x01\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\
-    \x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\x0f\x01\n\n\n\x03\x04\0\x01\x12\
-    \x03\x04\x08\x16\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04\x17\n\r\n\x05\
-    \x04\0\x02\0\x04\x12\x04\x05\x04\x04\x18\n\x0c\n\x05\x04\0\x02\0\x05\x12\
-    \x03\x05\x04\t\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\n\x12\n\x0c\n\x05\
-    \x04\0\x02\0\x03\x12\x03\x05\x15\x16\n\x0b\n\x04\x04\0\x02\x01\x12\x03\
-    \x06\x04\x19\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x06\x04\x05\x17\n\x0c\n\
-    \x05\x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\
-    \x12\x03\x06\x0b\x14\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x06\x17\x18\n\
-    \x0b\n\x04\x04\0\x02\x02\x12\x03\x07\x04\x16\n\r\n\x05\x04\0\x02\x02\x04\
-    \x12\x04\x07\x04\x06\x19\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x07\x04\n\
-    \n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x07\x0b\x11\n\x0c\n\x05\x04\0\x02\
+    k\x12\x14\n\x05index\x18\x03\x20\x01(\x04R\x05index*\xce\x03\n\x0cReceip\
+    tError\x12\x16\n\x12NotEnoughBaseQuota\x10\0\x12\x1a\n\x16BlockQuotaLimi\
+    tReached\x10\x01\x12\x1c\n\x18AccountQuotaLimitReached\x10\x02\x12\x1b\n\
+    \x17InvalidTransactionNonce\x10\x03\x12\x11\n\rNotEnoughCash\x10\x04\x12\
+    \x1b\n\x17NoTransactionPermission\x10\x05\x12\x18\n\x14NoContractPermiss\
+    ion\x10\x06\x12\x14\n\x10NoCallPermission\x10\x07\x12\x15\n\x11Execution\
+    Internal\x10\x08\x12\x18\n\x14TransactionMalformed\x10\t\x12\x0e\n\nOutO\
+    fQuota\x10\n\x12\x16\n\x12BadJumpDestination\x10\x0b\x12\x12\n\x0eBadIns\
+    truction\x10\x0c\x12\x12\n\x0eStackUnderflow\x10\r\x12\x0e\n\nOutOfStack\
+    \x10\x0e\x12\x0c\n\x08Internal\x10\x0f\x12\x1e\n\x1aMutableCallInStaticC\
+    ontext\x10\x10\x12\x0f\n\x0bOutOfBounds\x10\x11\x12\x0c\n\x08Reverted\
+    \x10\x12\x12\x11\n\rAccountFrozen\x10\x13J\xb8(\n\x07\x12\x05\0\0\x80\
+    \x01\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\
+    \x19\n\n\n\x02\x04\0\x12\x04\x04\0\x0f\x01\n\n\n\x03\x04\0\x01\x12\x03\
+    \x04\x08\x16\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04\x17\n\r\n\x05\x04\0\
+    \x02\0\x04\x12\x04\x05\x04\x04\x18\n\x0c\n\x05\x04\0\x02\0\x05\x12\x03\
+    \x05\x04\t\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\n\x12\n\x0c\n\x05\x04\
+    \0\x02\0\x03\x12\x03\x05\x15\x16\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x06\
+    \x04\x19\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x06\x04\x05\x17\n\x0c\n\x05\
+    \x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\x12\
+    \x03\x06\x0b\x14\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x06\x17\x18\n\x0b\
+    \n\x04\x04\0\x02\x02\x12\x03\x07\x04\x16\n\r\n\x05\x04\0\x02\x02\x04\x12\
+    \x04\x07\x04\x06\x19\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x07\x04\n\n\
+    \x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x07\x0b\x11\n\x0c\n\x05\x04\0\x02\
     \x02\x03\x12\x03\x07\x14\x15\n\x0b\n\x04\x04\0\x02\x03\x12\x03\x08\x04\
     \x19\n\r\n\x05\x04\0\x02\x03\x04\x12\x04\x08\x04\x07\x16\n\x0c\n\x05\x04\
     \0\x02\x03\x05\x12\x03\x08\x04\t\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\
@@ -4804,10 +4804,10 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x04\x14\n\r\n\x05\x04\x0e\x02\x01\x04\x12\x04~\x04}\x19\n\x0c\n\x05\x04\
     \x0e\x02\x01\x06\x12\x03~\x04\t\n\x0c\n\x05\x04\x0e\x02\x01\x01\x12\x03~\
     \n\x0f\n\x0c\n\x05\x04\x0e\x02\x01\x03\x12\x03~\x12\x13\n\x0b\n\x04\x04\
-    \x0e\x02\x02\x12\x03\x7f\x04\x18\n\r\n\x05\x04\x0e\x02\x02\x04\x12\x04\
+    \x0e\x02\x02\x12\x03\x7f\x04\x15\n\r\n\x05\x04\x0e\x02\x02\x04\x12\x04\
     \x7f\x04~\x14\n\x0c\n\x05\x04\x0e\x02\x02\x05\x12\x03\x7f\x04\n\n\x0c\n\
-    \x05\x04\x0e\x02\x02\x01\x12\x03\x7f\x0b\x13\n\x0c\n\x05\x04\x0e\x02\x02\
-    \x03\x12\x03\x7f\x16\x17b\x06proto3\
+    \x05\x04\x0e\x02\x02\x01\x12\x03\x7f\x0b\x10\n\x0c\n\x05\x04\x0e\x02\x02\
+    \x03\x12\x03\x7f\x13\x14b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
