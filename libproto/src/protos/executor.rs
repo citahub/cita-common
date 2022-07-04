@@ -4136,7 +4136,7 @@ pub struct TransactionResponse {
     // message fields
     pub block_hash: ::std::vec::Vec<u8>,
     pub block: ::protobuf::SingularPtrField<super::blockchain::Block>,
-    pub tx_index: u64,
+    pub tx_index: u32,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -4212,10 +4212,10 @@ impl TransactionResponse {
         self.block.take().unwrap_or_else(|| super::blockchain::Block::new())
     }
 
-    // uint64 tx_index = 3;
+    // uint32 tx_index = 3;
 
 
-    pub fn get_tx_index(&self) -> u64 {
+    pub fn get_tx_index(&self) -> u32 {
         self.tx_index
     }
     pub fn clear_tx_index(&mut self) {
@@ -4223,7 +4223,7 @@ impl TransactionResponse {
     }
 
     // Param is passed by value, moved
-    pub fn set_tx_index(&mut self, v: u64) {
+    pub fn set_tx_index(&mut self, v: u32) {
         self.tx_index = v;
     }
 }
@@ -4252,7 +4252,7 @@ impl ::protobuf::Message for TransactionResponse {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    let tmp = is.read_uint64()?;
+                    let tmp = is.read_uint32()?;
                     self.tx_index = tmp;
                 },
                 _ => {
@@ -4292,7 +4292,7 @@ impl ::protobuf::Message for TransactionResponse {
             v.write_to_with_cached_sizes(os)?;
         }
         if self.tx_index != 0 {
-            os.write_uint64(3, self.tx_index)?;
+            os.write_uint32(3, self.tx_index)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -4346,7 +4346,7 @@ impl ::protobuf::Message for TransactionResponse {
                     |m: &TransactionResponse| { &m.block },
                     |m: &mut TransactionResponse| { &mut m.block },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "tx_index",
                     |m: &TransactionResponse| { &m.tx_index },
                     |m: &mut TransactionResponse| { &mut m.tx_index },
@@ -4553,9 +4553,9 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x0cR\x07address\x12\x12\n\x04data\x18\x03\x20\x01(\x0cR\x04dat\
     a\"m\n\x13TransactionResponse\x12\x1d\n\nblock_hash\x18\x01\x20\x01(\x0c\
     R\tblockHash\x12\x1c\n\x05block\x18\x02\x20\x01(\x0b2\x06.BlockR\x05bloc\
-    k\x12\x19\n\x08tx_index\x18\x03\x20\x01(\x04R\x07txIndex*\xce\x03\n\x0cR\
-    eceiptError\x12\x16\n\x12NotEnoughBaseQuota\x10\0\x12\x1a\n\x16BlockQuot\
-    aLimitReached\x10\x01\x12\x1c\n\x18AccountQuotaLimitReached\x10\x02\x12\
+    k\x12\x19\n\x08tx_index\x18\x03\x20\x01(\rR\x07txIndex*\xce\x03\n\x0cRec\
+    eiptError\x12\x16\n\x12NotEnoughBaseQuota\x10\0\x12\x1a\n\x16BlockQuotaL\
+    imitReached\x10\x01\x12\x1c\n\x18AccountQuotaLimitReached\x10\x02\x12\
     \x1b\n\x17InvalidTransactionNonce\x10\x03\x12\x11\n\rNotEnoughCash\x10\
     \x04\x12\x1b\n\x17NoTransactionPermission\x10\x05\x12\x18\n\x14NoContrac\
     tPermission\x10\x06\x12\x14\n\x10NoCallPermission\x10\x07\x12\x15\n\x11E\
