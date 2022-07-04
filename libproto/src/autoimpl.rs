@@ -181,7 +181,6 @@ macro_rules! loop_macro_for_structs {
             SignedProposal,
             Vote,
             AbiResponse,
-            BlockResponse,
             CodeResponse,
             ConsensusConfig,
             ExecutedHeader,
@@ -193,6 +192,7 @@ macro_rules! loop_macro_for_structs {
             ReceiptResponse,
             ReceiptWithOption,
             StateRoot,
+            TransactionResponse,
             TrieID,
             TrieResponse,
             BatchRequest,
@@ -250,7 +250,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             ReceiptResponse,
             CodeResponse,
             AbiResponse,
-            BlockResponse,
+            TransactionResponse,
             SyncLightRequest,
             SyncLightResponse,
             LightRequest,
@@ -581,9 +581,9 @@ impl Message {
             _ => None,
         }
     }
-    pub fn take_block_response(&mut self) -> Option<BlockResponse> {
+    pub fn take_transaction_response(&mut self) -> Option<TransactionResponse> {
         match self.take_content() {
-            Some(MsgClass::BlockResponse(v)) => Some(v),
+            Some(MsgClass::TransactionResponse(v)) => Some(v),
             _ => None,
         }
     }

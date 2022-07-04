@@ -48,7 +48,7 @@ pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block,
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
 pub use self::compact_block::{BlockTxn, GetBlockTxn};
 pub use self::consensus::{CompactProposal, CompactSignedProposal, Proposal, SignedProposal, Vote};
-pub use self::executor::{ReceiptError, AbiResponse, BlockResponse, CodeResponse, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptResponse, ReceiptWithOption, StateRoot, TrieID, TrieResponse};
+pub use self::executor::{ReceiptError, AbiResponse, CodeResponse, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptResponse, ReceiptWithOption, StateRoot, TransactionResponse, TrieID, TrieResponse};
 pub use self::request::{BlockTag, LightRequest_oneof_req, Request_oneof_req, BatchRequest, Call, LightRequest, Request, StateProof, StorageKey};
 pub use self::response::{LightResponse_oneof_data, Response_oneof_data, FullTransaction, LightResponse, Response};
 pub use self::snapshot::{Cmd, Resp, SnapshotReq, SnapshotResp};
