@@ -2286,7 +2286,7 @@ pub enum LightResponse_oneof_data {
     balance(::std::vec::Vec<u8>),
     block_header(::std::vec::Vec<u8>),
     estimate_quota(::std::vec::Vec<u8>),
-    transaction_count(u64),
+    transaction_response(::std::vec::Vec<u8>),
     storage_value(::std::vec::Vec<u8>),
 }
 
@@ -2900,29 +2900,53 @@ impl LightResponse {
         }
     }
 
-    // uint64 transaction_count = 15;
+    // bytes transaction_response = 15;
 
 
-    pub fn get_transaction_count(&self) -> u64 {
+    pub fn get_transaction_response(&self) -> &[u8] {
         match self.data {
-            ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(v)) => v,
-            _ => 0,
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(ref v)) => v,
+            _ => &[],
         }
     }
-    pub fn clear_transaction_count(&mut self) {
+    pub fn clear_transaction_response(&mut self) {
         self.data = ::std::option::Option::None;
     }
 
-    pub fn has_transaction_count(&self) -> bool {
+    pub fn has_transaction_response(&self) -> bool {
         match self.data {
-            ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(..)) => true,
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(..)) => true,
             _ => false,
         }
     }
 
     // Param is passed by value, moved
-    pub fn set_transaction_count(&mut self, v: u64) {
-        self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(v))
+    pub fn set_transaction_response(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_transaction_response(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_transaction_response(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_transaction_response() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
     }
 
     // bytes storage_value = 16;
@@ -3067,10 +3091,10 @@ impl ::protobuf::Message for LightResponse {
                     self.data = ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(is.read_bytes()?));
                 },
                 15 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(is.read_uint64()?));
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(is.read_bytes()?));
                 },
                 16 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
@@ -3134,8 +3158,8 @@ impl ::protobuf::Message for LightResponse {
                 &LightResponse_oneof_data::estimate_quota(ref v) => {
                     my_size += ::protobuf::rt::bytes_size(14, &v);
                 },
-                &LightResponse_oneof_data::transaction_count(v) => {
-                    my_size += ::protobuf::rt::value_size(15, v, ::protobuf::wire_format::WireTypeVarint);
+                &LightResponse_oneof_data::transaction_response(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(15, &v);
                 },
                 &LightResponse_oneof_data::storage_value(ref v) => {
                     my_size += ::protobuf::rt::bytes_size(16, &v);
@@ -3192,8 +3216,8 @@ impl ::protobuf::Message for LightResponse {
                 &LightResponse_oneof_data::estimate_quota(ref v) => {
                     os.write_bytes(14, v)?;
                 },
-                &LightResponse_oneof_data::transaction_count(v) => {
-                    os.write_uint64(15, v)?;
+                &LightResponse_oneof_data::transaction_response(ref v) => {
+                    os.write_bytes(15, v)?;
                 },
                 &LightResponse_oneof_data::storage_value(ref v) => {
                     os.write_bytes(16, v)?;
@@ -3312,10 +3336,10 @@ impl ::protobuf::Message for LightResponse {
                     LightResponse::has_estimate_quota,
                     LightResponse::get_estimate_quota,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor::<_>(
-                    "transaction_count",
-                    LightResponse::has_transaction_count,
-                    LightResponse::get_transaction_count,
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "transaction_response",
+                    LightResponse::has_transaction_response,
+                    LightResponse::get_transaction_response,
                 ));
                 fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
                     "storage_value",
@@ -3406,7 +3430,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x01(\tH\0R\x0fsoftwareVersion\x12\x1f\n\npeers_info\x18\x1b\x20\x01(\tH\
     \0R\tpeersInfo\x12'\n\x0eestimate_quota\x18\x1c\x20\x01(\x0cH\0R\restima\
     teQuota\x12#\n\x0clicense_info\x18\x1d\x20\x01(\tH\0R\x0blicenseInfoB\
-    \x06\n\x04data\"\x9e\x04\n\rLightResponse\x12\x1d\n\nrequest_id\x18\x01\
+    \x06\n\x04data\"\xa4\x04\n\rLightResponse\x12\x1d\n\nrequest_id\x18\x01\
     \x20\x01(\x0cR\trequestId\x12\x12\n\x04code\x18\x02\x20\x01(\x03R\x04cod\
     e\x12\x1d\n\terror_msg\x18\x03\x20\x01(\tH\0R\x08errorMsg\x12\x1b\n\x08t\
     x_state\x18\x04\x20\x01(\tH\0R\x07txState\x12\x16\n\x05block\x18\x05\x20\
@@ -3417,17 +3441,17 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x08H\0R\x04none\x12\x1d\n\tmeta_data\x18\x0b\x20\x01(\tH\0R\
     \x08metaData\x12\x1a\n\x07balance\x18\x0c\x20\x01(\x0cH\0R\x07balance\
     \x12#\n\x0cblock_header\x18\r\x20\x01(\x0cH\0R\x0bblockHeader\x12'\n\x0e\
-    estimate_quota\x18\x0e\x20\x01(\x0cH\0R\restimateQuota\x12-\n\x11transac\
-    tion_count\x18\x0f\x20\x01(\x04H\0R\x10transactionCount\x12%\n\rstorage_\
-    value\x18\x10\x20\x01(\x0cH\0R\x0cstorageValueB\x06\n\x04dataJ\xe8\x17\n\
-    \x06\x12\x04\0\0M\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\
-    \x12\x03\x02\x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\t\x01\n\n\n\x03\x04\0\
-    \x01\x12\x03\x04\x08\x17\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04&\n\r\n\
-    \x05\x04\0\x02\0\x04\x12\x04\x05\x04\x04\x19\n\x0c\n\x05\x04\0\x02\0\x06\
-    \x12\x03\x05\x04\x15\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\x16!\n\x0c\
-    \n\x05\x04\0\x02\0\x03\x12\x03\x05$%\n\x0b\n\x04\x04\0\x02\x01\x12\x03\
-    \x06\x04\x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x06\x04\x05&\n\x0c\n\
-    \x05\x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\
+    estimate_quota\x18\x0e\x20\x01(\x0cH\0R\restimateQuota\x123\n\x14transac\
+    tion_response\x18\x0f\x20\x01(\x0cH\0R\x13transactionResponse\x12%\n\rst\
+    orage_value\x18\x10\x20\x01(\x0cH\0R\x0cstorageValueB\x06\n\x04dataJ\xe8\
+    \x17\n\x06\x12\x04\0\0M\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\
+    \x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\t\x01\n\n\n\x03\
+    \x04\0\x01\x12\x03\x04\x08\x17\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04&\
+    \n\r\n\x05\x04\0\x02\0\x04\x12\x04\x05\x04\x04\x19\n\x0c\n\x05\x04\0\x02\
+    \0\x06\x12\x03\x05\x04\x15\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\x16!\
+    \n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x05$%\n\x0b\n\x04\x04\0\x02\x01\x12\
+    \x03\x06\x04\x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x06\x04\x05&\n\x0c\
+    \n\x05\x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\n\x05\x04\0\x02\x01\x01\
     \x12\x03\x06\x0b\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x06\x1a\x1b\n\
     \x0b\n\x04\x04\0\x02\x02\x12\x03\x07\x04\x19\n\r\n\x05\x04\0\x02\x02\x04\
     \x12\x04\x07\x04\x06\x1c\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\x07\x04\t\
@@ -3563,12 +3587,12 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x03@\x1d\x1f\n\x0b\n\x04\x04\x02\x02\r\x12\x03A\x08\"\n\x0c\n\x05\x04\
     \x02\x02\r\x05\x12\x03A\x08\r\n\x0c\n\x05\x04\x02\x02\r\x01\x12\x03A\x0e\
     \x1c\n\x0c\n\x05\x04\x02\x02\r\x03\x12\x03A\x1f!\n\x0b\n\x04\x04\x02\x02\
-    \x0e\x12\x03B\x08&\n\x0c\n\x05\x04\x02\x02\x0e\x05\x12\x03B\x08\x0e\n\
-    \x0c\n\x05\x04\x02\x02\x0e\x01\x12\x03B\x0f\x20\n\x0c\n\x05\x04\x02\x02\
-    \x0e\x03\x12\x03B#%\n\x0b\n\x04\x04\x02\x02\x0f\x12\x03C\x08!\n\x0c\n\
-    \x05\x04\x02\x02\x0f\x05\x12\x03C\x08\r\n\x0c\n\x05\x04\x02\x02\x0f\x01\
-    \x12\x03C\x0e\x1b\n\x0c\n\x05\x04\x02\x02\x0f\x03\x12\x03C\x1e\x20b\x06p\
-    roto3\
+    \x0e\x12\x03B\x08(\n\x0c\n\x05\x04\x02\x02\x0e\x05\x12\x03B\x08\r\n\x0c\
+    \n\x05\x04\x02\x02\x0e\x01\x12\x03B\x0e\"\n\x0c\n\x05\x04\x02\x02\x0e\
+    \x03\x12\x03B%'\n\x0b\n\x04\x04\x02\x02\x0f\x12\x03C\x08!\n\x0c\n\x05\
+    \x04\x02\x02\x0f\x05\x12\x03C\x08\r\n\x0c\n\x05\x04\x02\x02\x0f\x01\x12\
+    \x03C\x0e\x1b\n\x0c\n\x05\x04\x02\x02\x0f\x03\x12\x03C\x1e\x20b\x06proto\
+    3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
