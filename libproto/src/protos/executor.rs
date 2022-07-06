@@ -4392,6 +4392,371 @@ impl ::protobuf::reflect::ProtobufValue for TransactionResponse {
     }
 }
 
+#[derive(PartialEq,Clone,Default)]
+pub struct ValidatorsListReq {
+    // message fields
+    pub height: u64,
+    // special fields
+    pub unknown_fields: ::protobuf::UnknownFields,
+    pub cached_size: ::protobuf::CachedSize,
+}
+
+impl<'a> ::std::default::Default for &'a ValidatorsListReq {
+    fn default() -> &'a ValidatorsListReq {
+        <ValidatorsListReq as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl ValidatorsListReq {
+    pub fn new() -> ValidatorsListReq {
+        ::std::default::Default::default()
+    }
+
+    // uint64 height = 1;
+
+
+    pub fn get_height(&self) -> u64 {
+        self.height
+    }
+    pub fn clear_height(&mut self) {
+        self.height = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_height(&mut self, v: u64) {
+        self.height = v;
+    }
+}
+
+impl ::protobuf::Message for ValidatorsListReq {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint64()?;
+                    self.height = tmp;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if self.height != 0 {
+            my_size += ::protobuf::rt::value_size(1, self.height, ::protobuf::wire_format::WireTypeVarint);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        if self.height != 0 {
+            os.write_uint64(1, self.height)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
+    }
+    fn as_any_mut(&mut self) -> &mut dyn (::std::any::Any) {
+        self as &mut dyn (::std::any::Any)
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<dyn (::std::any::Any)> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> ValidatorsListReq {
+        ValidatorsListReq::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                    "height",
+                    |m: &ValidatorsListReq| { &m.height },
+                    |m: &mut ValidatorsListReq| { &mut m.height },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ValidatorsListReq>(
+                    "ValidatorsListReq",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static ValidatorsListReq {
+        static mut instance: ::protobuf::lazy::Lazy<ValidatorsListReq> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ValidatorsListReq,
+        };
+        unsafe {
+            instance.get(ValidatorsListReq::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for ValidatorsListReq {
+    fn clear(&mut self) {
+        self.height = 0;
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ValidatorsListReq {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ValidatorsListReq {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct ValidatorsListResp {
+    // message fields
+    pub validators: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
+    pub height: u64,
+    // special fields
+    pub unknown_fields: ::protobuf::UnknownFields,
+    pub cached_size: ::protobuf::CachedSize,
+}
+
+impl<'a> ::std::default::Default for &'a ValidatorsListResp {
+    fn default() -> &'a ValidatorsListResp {
+        <ValidatorsListResp as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl ValidatorsListResp {
+    pub fn new() -> ValidatorsListResp {
+        ::std::default::Default::default()
+    }
+
+    // repeated bytes validators = 1;
+
+
+    pub fn get_validators(&self) -> &[::std::vec::Vec<u8>] {
+        &self.validators
+    }
+    pub fn clear_validators(&mut self) {
+        self.validators.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_validators(&mut self, v: ::protobuf::RepeatedField<::std::vec::Vec<u8>>) {
+        self.validators = v;
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_validators(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &mut self.validators
+    }
+
+    // Take field
+    pub fn take_validators(&mut self) -> ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        ::std::mem::replace(&mut self.validators, ::protobuf::RepeatedField::new())
+    }
+
+    // uint64 height = 2;
+
+
+    pub fn get_height(&self) -> u64 {
+        self.height
+    }
+    pub fn clear_height(&mut self) {
+        self.height = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_height(&mut self, v: u64) {
+        self.height = v;
+    }
+}
+
+impl ::protobuf::Message for ValidatorsListResp {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.validators)?;
+                },
+                2 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint64()?;
+                    self.height = tmp;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        for value in &self.validators {
+            my_size += ::protobuf::rt::bytes_size(1, &value);
+        };
+        if self.height != 0 {
+            my_size += ::protobuf::rt::value_size(2, self.height, ::protobuf::wire_format::WireTypeVarint);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        for v in &self.validators {
+            os.write_bytes(1, &v)?;
+        };
+        if self.height != 0 {
+            os.write_uint64(2, self.height)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
+    }
+    fn as_any_mut(&mut self) -> &mut dyn (::std::any::Any) {
+        self as &mut dyn (::std::any::Any)
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<dyn (::std::any::Any)> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> ValidatorsListResp {
+        ValidatorsListResp::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                    "validators",
+                    |m: &ValidatorsListResp| { &m.validators },
+                    |m: &mut ValidatorsListResp| { &mut m.validators },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                    "height",
+                    |m: &ValidatorsListResp| { &m.height },
+                    |m: &mut ValidatorsListResp| { &mut m.height },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ValidatorsListResp>(
+                    "ValidatorsListResp",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static ValidatorsListResp {
+        static mut instance: ::protobuf::lazy::Lazy<ValidatorsListResp> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ValidatorsListResp,
+        };
+        unsafe {
+            instance.get(ValidatorsListResp::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for ValidatorsListResp {
+    fn clear(&mut self) {
+        self.validators.clear();
+        self.height = 0;
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ValidatorsListResp {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ValidatorsListResp {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
 pub enum ReceiptError {
     NotEnoughBaseQuota = 0,
@@ -4553,9 +4918,12 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x0cR\x07address\x12\x12\n\x04data\x18\x03\x20\x01(\x0cR\x04dat\
     a\"h\n\x13TransactionResponse\x12\x1d\n\nblock_hash\x18\x01\x20\x01(\x0c\
     R\tblockHash\x12\x1c\n\x05block\x18\x02\x20\x01(\x0b2\x06.BlockR\x05bloc\
-    k\x12\x14\n\x05index\x18\x03\x20\x01(\x04R\x05index*\xce\x03\n\x0cReceip\
-    tError\x12\x16\n\x12NotEnoughBaseQuota\x10\0\x12\x1a\n\x16BlockQuotaLimi\
-    tReached\x10\x01\x12\x1c\n\x18AccountQuotaLimitReached\x10\x02\x12\x1b\n\
+    k\x12\x14\n\x05index\x18\x03\x20\x01(\x04R\x05index\"+\n\x11ValidatorsLi\
+    stReq\x12\x16\n\x06height\x18\x01\x20\x01(\x04R\x06height\"L\n\x12Valida\
+    torsListResp\x12\x1e\n\nvalidators\x18\x01\x20\x03(\x0cR\nvalidators\x12\
+    \x16\n\x06height\x18\x02\x20\x01(\x04R\x06height*\xce\x03\n\x0cReceiptEr\
+    ror\x12\x16\n\x12NotEnoughBaseQuota\x10\0\x12\x1a\n\x16BlockQuotaLimitRe\
+    ached\x10\x01\x12\x1c\n\x18AccountQuotaLimitReached\x10\x02\x12\x1b\n\
     \x17InvalidTransactionNonce\x10\x03\x12\x11\n\rNotEnoughCash\x10\x04\x12\
     \x1b\n\x17NoTransactionPermission\x10\x05\x12\x18\n\x14NoContractPermiss\
     ion\x10\x06\x12\x14\n\x10NoCallPermission\x10\x07\x12\x15\n\x11Execution\
@@ -4564,7 +4932,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     truction\x10\x0c\x12\x12\n\x0eStackUnderflow\x10\r\x12\x0e\n\nOutOfStack\
     \x10\x0e\x12\x0c\n\x08Internal\x10\x0f\x12\x1e\n\x1aMutableCallInStaticC\
     ontext\x10\x10\x12\x0f\n\x0bOutOfBounds\x10\x11\x12\x0c\n\x08Reverted\
-    \x10\x12\x12\x11\n\rAccountFrozen\x10\x13J\xb8(\n\x07\x12\x05\0\0\x80\
+    \x10\x12\x12\x11\n\rAccountFrozen\x10\x13J\xd0*\n\x07\x12\x05\0\0\x89\
     \x01\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\
     \x19\n\n\n\x02\x04\0\x12\x04\x04\0\x0f\x01\n\n\n\x03\x04\0\x01\x12\x03\
     \x04\x08\x16\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\x04\x17\n\r\n\x05\x04\0\
@@ -4807,7 +5175,21 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0e\x02\x02\x12\x03\x7f\x04\x15\n\r\n\x05\x04\x0e\x02\x02\x04\x12\x04\
     \x7f\x04~\x14\n\x0c\n\x05\x04\x0e\x02\x02\x05\x12\x03\x7f\x04\n\n\x0c\n\
     \x05\x04\x0e\x02\x02\x01\x12\x03\x7f\x0b\x10\n\x0c\n\x05\x04\x0e\x02\x02\
-    \x03\x12\x03\x7f\x13\x14b\x06proto3\
+    \x03\x12\x03\x7f\x13\x14\n\x0c\n\x02\x04\x0f\x12\x06\x82\x01\0\x84\x01\
+    \x01\n\x0b\n\x03\x04\x0f\x01\x12\x04\x82\x01\x08\x19\n\x0c\n\x04\x04\x0f\
+    \x02\0\x12\x04\x83\x01\x04\x16\n\x0f\n\x05\x04\x0f\x02\0\x04\x12\x06\x83\
+    \x01\x04\x82\x01\x1b\n\r\n\x05\x04\x0f\x02\0\x05\x12\x04\x83\x01\x04\n\n\
+    \r\n\x05\x04\x0f\x02\0\x01\x12\x04\x83\x01\x0b\x11\n\r\n\x05\x04\x0f\x02\
+    \0\x03\x12\x04\x83\x01\x14\x15\n\x0c\n\x02\x04\x10\x12\x06\x86\x01\0\x89\
+    \x01\x01\n\x0b\n\x03\x04\x10\x01\x12\x04\x86\x01\x08\x1a\n\x0c\n\x04\x04\
+    \x10\x02\0\x12\x04\x87\x01\x04\"\n\r\n\x05\x04\x10\x02\0\x04\x12\x04\x87\
+    \x01\x04\x0c\n\r\n\x05\x04\x10\x02\0\x05\x12\x04\x87\x01\r\x12\n\r\n\x05\
+    \x04\x10\x02\0\x01\x12\x04\x87\x01\x13\x1d\n\r\n\x05\x04\x10\x02\0\x03\
+    \x12\x04\x87\x01\x20!\n\x0c\n\x04\x04\x10\x02\x01\x12\x04\x88\x01\x04\
+    \x16\n\x0f\n\x05\x04\x10\x02\x01\x04\x12\x06\x88\x01\x04\x87\x01\"\n\r\n\
+    \x05\x04\x10\x02\x01\x05\x12\x04\x88\x01\x04\n\n\r\n\x05\x04\x10\x02\x01\
+    \x01\x12\x04\x88\x01\x0b\x11\n\r\n\x05\x04\x10\x02\x01\x03\x12\x04\x88\
+    \x01\x14\x15b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

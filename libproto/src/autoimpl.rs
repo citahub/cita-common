@@ -195,6 +195,8 @@ macro_rules! loop_macro_for_structs {
             TransactionResponse,
             TrieID,
             TrieResponse,
+            ValidatorsListReq,
+            ValidatorsListResp,
             BatchRequest,
             Call,
             LightRequest,
@@ -255,6 +257,8 @@ macro_rules! loop_macro_for_structs_in_msg {
             SyncLightResponse,
             LightRequest,
             LightResponse,
+            ValidatorsListReq,
+            ValidatorsListResp,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -608,6 +612,18 @@ impl Message {
     pub fn take_light_response(&mut self) -> Option<LightResponse> {
         match self.take_content() {
             Some(MsgClass::LightResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_validators_list_req(&mut self) -> Option<ValidatorsListReq> {
+        match self.take_content() {
+            Some(MsgClass::ValidatorsListReq(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_validators_list_resp(&mut self) -> Option<ValidatorsListResp> {
+        match self.take_content() {
+            Some(MsgClass::ValidatorsListResp(v)) => Some(v),
             _ => None,
         }
     }
