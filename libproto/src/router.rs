@@ -88,6 +88,7 @@ pub enum MsgType {
     LightResponse,
     ValidatorsListReq,
     ValidatorsListResp,
+    BlockWithLogBloom,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -201,6 +202,7 @@ impl fmt::Display for MsgType {
                 &MsgType::LightResponse => "light_response",
                 &MsgType::ValidatorsListReq => "validators_list_req",
                 &MsgType::ValidatorsListResp => "validators_list_resp",
+                &MsgType::BlockWithLogBloom => "block_with_log_bloom",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -284,6 +286,7 @@ impl<'a> From<&'a str> for MsgType {
             "light_response" => MsgType::LightResponse,
             "validators_list_req" => MsgType::ValidatorsListReq,
             "validators_list_resp" => MsgType::ValidatorsListResp,
+            "block_with_log_bloom" => MsgType::BlockWithLogBloom,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "req_new_tx" => MsgType::RequestNewTx,

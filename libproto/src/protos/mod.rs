@@ -44,7 +44,7 @@ pub mod snapshot;
 pub mod sync;
 
 pub use self::auth::{BlockTxHashes, BlockTxHashesReq, GetTxList, Miscellaneous, MiscellaneousReq, VerifyBlockReq, VerifyBlockResp, VerifyTxReq};
-pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, CompactBlock, CompactBlockBody, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
+pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithLogBloom, BlockWithProof, CompactBlock, CompactBlockBody, LogBloom, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
 pub use self::compact_block::{BlockTxn, GetBlockTxn};
 pub use self::consensus::{CompactProposal, CompactSignedProposal, Proposal, SignedProposal, Vote};

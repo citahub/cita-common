@@ -162,9 +162,11 @@ macro_rules! loop_macro_for_structs {
             BlockBody,
             BlockHeader,
             BlockTxs,
+            BlockWithLogBloom,
             BlockWithProof,
             CompactBlock,
             CompactBlockBody,
+            LogBloom,
             Proof,
             RichStatus,
             SignedTransaction,
@@ -259,6 +261,7 @@ macro_rules! loop_macro_for_structs_in_msg {
             LightResponse,
             ValidatorsListReq,
             ValidatorsListResp,
+            BlockWithLogBloom,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -624,6 +627,12 @@ impl Message {
     pub fn take_validators_list_resp(&mut self) -> Option<ValidatorsListResp> {
         match self.take_content() {
             Some(MsgClass::ValidatorsListResp(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_block_with_log_bloom(&mut self) -> Option<BlockWithLogBloom> {
+        match self.take_content() {
+            Some(MsgClass::BlockWithLogBloom(v)) => Some(v),
             _ => None,
         }
     }
