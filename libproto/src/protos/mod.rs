@@ -44,12 +44,12 @@ pub mod snapshot;
 pub mod sync;
 
 pub use self::auth::{BlockTxHashes, BlockTxHashesReq, GetTxList, Miscellaneous, MiscellaneousReq, VerifyBlockReq, VerifyBlockResp, VerifyTxReq};
-pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithProof, CompactBlock, CompactBlockBody, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
+pub use self::blockchain::{Crypto, ProofType, AccountGasLimit, BlackList, Block, BlockBody, BlockHeader, BlockTxs, BlockWithLogBloom, BlockWithProof, CompactBlock, CompactBlockBody, LogBloom, Proof, RichStatus, SignedTransaction, StateSignal, Status, Transaction, UnverifiedTransaction};
 pub use self::communication::{InnerMessage_oneof_content, InnerMessage};
 pub use self::compact_block::{BlockTxn, GetBlockTxn};
 pub use self::consensus::{CompactProposal, CompactSignedProposal, Proposal, SignedProposal, Vote};
-pub use self::executor::{ReceiptError, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptWithOption, StateRoot};
-pub use self::request::{BlockTag, Request_oneof_req, BatchRequest, Call, Request, StateProof, StorageKey};
-pub use self::response::{Response_oneof_data, FullTransaction, Response};
+pub use self::executor::{ReceiptError, AbiResponse, CodeResponse, ConsensusConfig, ExecutedHeader, ExecutedInfo, ExecutedResult, LogEntry, Receipt, ReceiptErrorWithOption, ReceiptResponse, ReceiptWithOption, StateRoot, TransactionResponse, TrieID, TrieResponse, ValidatorsListReq, ValidatorsListResp};
+pub use self::request::{BlockTag, LightRequest_oneof_req, Request_oneof_req, BatchRequest, Call, LightRequest, Request, StateProof, StorageKey};
+pub use self::response::{LightResponse_oneof_data, Response_oneof_data, FullTransaction, LightResponse, Response};
 pub use self::snapshot::{Cmd, Resp, SnapshotReq, SnapshotResp};
-pub use self::sync::{SyncRequest, SyncResponse};
+pub use self::sync::{SyncLightRequest, SyncLightResponse, SyncRequest, SyncResponse};

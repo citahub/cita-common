@@ -77,6 +77,18 @@ pub enum MsgType {
     BlockTxn,
     CompactSignedProposal,
     GetTxList,
+    TrieResponse,
+    ReceiptResponse,
+    CodeResponse,
+    AbiResponse,
+    TransactionResponse,
+    SyncLightRequest,
+    SyncLightResponse,
+    LightRequest,
+    LightResponse,
+    ValidatorsListReq,
+    ValidatorsListResp,
+    BlockWithLogBloom,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -92,6 +104,7 @@ pub enum MsgType {
     GetCrl,
     GetCrlResp,
     InvalidLicense,
+    ExecuteRequest,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -178,6 +191,18 @@ impl fmt::Display for MsgType {
                 &MsgType::BlockTxn => "block_txn",
                 &MsgType::CompactSignedProposal => "compact_signed_proposal",
                 &MsgType::GetTxList => "get_tx_list",
+                &MsgType::TrieResponse => "trie_response",
+                &MsgType::ReceiptResponse => "receipt_response",
+                &MsgType::CodeResponse => "code_response",
+                &MsgType::AbiResponse => "abi_response",
+                &MsgType::TransactionResponse => "transaction_response",
+                &MsgType::SyncLightRequest => "sync_light_request",
+                &MsgType::SyncLightResponse => "sync_light_response",
+                &MsgType::LightRequest => "light_request",
+                &MsgType::LightResponse => "light_response",
+                &MsgType::ValidatorsListReq => "validators_list_req",
+                &MsgType::ValidatorsListResp => "validators_list_resp",
+                &MsgType::BlockWithLogBloom => "block_with_log_bloom",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -190,6 +215,7 @@ impl fmt::Display for MsgType {
                 MsgType::GetCrl => "get_crl",
                 MsgType::GetCrlResp => "get_crl_resp",
                 MsgType::InvalidLicense => "invalid_license",
+                MsgType::ExecuteRequest => "execute_request",
             }
         )
     }
@@ -249,6 +275,18 @@ impl<'a> From<&'a str> for MsgType {
             "block_txn" => MsgType::BlockTxn,
             "compact_signed_proposal" => MsgType::CompactSignedProposal,
             "get_tx_list" => MsgType::GetTxList,
+            "trie_response" => MsgType::TrieResponse,
+            "receipt_response" => MsgType::ReceiptResponse,
+            "code_response" => MsgType::CodeResponse,
+            "abi_response" => MsgType::AbiResponse,
+            "transaction_response" => MsgType::TransactionResponse,
+            "sync_light_request" => MsgType::SyncLightRequest,
+            "sync_light_response" => MsgType::SyncLightResponse,
+            "light_request" => MsgType::LightRequest,
+            "light_response" => MsgType::LightResponse,
+            "validators_list_req" => MsgType::ValidatorsListReq,
+            "validators_list_resp" => MsgType::ValidatorsListResp,
+            "block_with_log_bloom" => MsgType::BlockWithLogBloom,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "req_new_tx" => MsgType::RequestNewTx,
@@ -260,6 +298,7 @@ impl<'a> From<&'a str> for MsgType {
             "get_crl" => MsgType::GetCrl,
             "get_crl_resp" => MsgType::GetCrlResp,
             "invalid_license" => MsgType::InvalidLicense,
+            "execute_request" => MsgType::ExecuteRequest,
             _ => MsgType::Unknown,
         }
     }

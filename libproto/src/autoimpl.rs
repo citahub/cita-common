@@ -162,9 +162,11 @@ macro_rules! loop_macro_for_structs {
             BlockBody,
             BlockHeader,
             BlockTxs,
+            BlockWithLogBloom,
             BlockWithProof,
             CompactBlock,
             CompactBlockBody,
+            LogBloom,
             Proof,
             RichStatus,
             SignedTransaction,
@@ -180,6 +182,8 @@ macro_rules! loop_macro_for_structs {
             Proposal,
             SignedProposal,
             Vote,
+            AbiResponse,
+            CodeResponse,
             ConsensusConfig,
             ExecutedHeader,
             ExecutedInfo,
@@ -187,17 +191,27 @@ macro_rules! loop_macro_for_structs {
             LogEntry,
             Receipt,
             ReceiptErrorWithOption,
+            ReceiptResponse,
             ReceiptWithOption,
             StateRoot,
+            TransactionResponse,
+            TrieID,
+            TrieResponse,
+            ValidatorsListReq,
+            ValidatorsListResp,
             BatchRequest,
             Call,
+            LightRequest,
             Request,
             StateProof,
             StorageKey,
             FullTransaction,
+            LightResponse,
             Response,
             SnapshotReq,
             SnapshotResp,
+            SyncLightRequest,
+            SyncLightResponse,
             SyncRequest,
             SyncResponse,
             // Generate ALL-PROTOS automatically end.
@@ -236,6 +250,18 @@ macro_rules! loop_macro_for_structs_in_msg {
             BlockTxn,
             CompactSignedProposal,
             GetTxList,
+            TrieResponse,
+            ReceiptResponse,
+            CodeResponse,
+            AbiResponse,
+            TransactionResponse,
+            SyncLightRequest,
+            SyncLightResponse,
+            LightRequest,
+            LightResponse,
+            ValidatorsListReq,
+            ValidatorsListResp,
+            BlockWithLogBloom,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -535,6 +561,78 @@ impl Message {
     pub fn take_get_tx_list(&mut self) -> Option<GetTxList> {
         match self.take_content() {
             Some(MsgClass::GetTxList(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_trie_response(&mut self) -> Option<TrieResponse> {
+        match self.take_content() {
+            Some(MsgClass::TrieResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_receipt_response(&mut self) -> Option<ReceiptResponse> {
+        match self.take_content() {
+            Some(MsgClass::ReceiptResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_code_response(&mut self) -> Option<CodeResponse> {
+        match self.take_content() {
+            Some(MsgClass::CodeResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_abi_response(&mut self) -> Option<AbiResponse> {
+        match self.take_content() {
+            Some(MsgClass::AbiResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_transaction_response(&mut self) -> Option<TransactionResponse> {
+        match self.take_content() {
+            Some(MsgClass::TransactionResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_sync_light_request(&mut self) -> Option<SyncLightRequest> {
+        match self.take_content() {
+            Some(MsgClass::SyncLightRequest(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_sync_light_response(&mut self) -> Option<SyncLightResponse> {
+        match self.take_content() {
+            Some(MsgClass::SyncLightResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_light_request(&mut self) -> Option<LightRequest> {
+        match self.take_content() {
+            Some(MsgClass::LightRequest(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_light_response(&mut self) -> Option<LightResponse> {
+        match self.take_content() {
+            Some(MsgClass::LightResponse(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_validators_list_req(&mut self) -> Option<ValidatorsListReq> {
+        match self.take_content() {
+            Some(MsgClass::ValidatorsListReq(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_validators_list_resp(&mut self) -> Option<ValidatorsListResp> {
+        match self.take_content() {
+            Some(MsgClass::ValidatorsListResp(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_block_with_log_bloom(&mut self) -> Option<BlockWithLogBloom> {
+        match self.take_content() {
+            Some(MsgClass::BlockWithLogBloom(v)) => Some(v),
             _ => None,
         }
     }

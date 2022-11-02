@@ -2254,6 +2254,1196 @@ impl ::protobuf::reflect::ProtobufValue for Response {
     }
 }
 
+#[derive(PartialEq,Clone,Default)]
+pub struct LightResponse {
+    // message fields
+    pub request_id: ::std::vec::Vec<u8>,
+    pub code: i64,
+    // message oneof groups
+    pub data: ::std::option::Option<LightResponse_oneof_data>,
+    // special fields
+    pub unknown_fields: ::protobuf::UnknownFields,
+    pub cached_size: ::protobuf::CachedSize,
+}
+
+impl<'a> ::std::default::Default for &'a LightResponse {
+    fn default() -> &'a LightResponse {
+        <LightResponse as ::protobuf::Message>::default_instance()
+    }
+}
+
+#[derive(Clone,PartialEq,Debug)]
+pub enum LightResponse_oneof_data {
+    error_msg(::std::string::String),
+    tx_state(::std::string::String),
+    block(::std::vec::Vec<u8>),
+    call_result(::std::vec::Vec<u8>),
+    receipt(::std::vec::Vec<u8>),
+    contract_code(::std::vec::Vec<u8>),
+    contract_abi(::std::vec::Vec<u8>),
+    none(bool),
+    meta_data(::std::string::String),
+    balance(::std::vec::Vec<u8>),
+    block_header(::std::vec::Vec<u8>),
+    estimate_quota(::std::vec::Vec<u8>),
+    transaction_response(::std::vec::Vec<u8>),
+    storage_value(::std::vec::Vec<u8>),
+    transaction_count(u64),
+}
+
+impl LightResponse {
+    pub fn new() -> LightResponse {
+        ::std::default::Default::default()
+    }
+
+    // bytes request_id = 1;
+
+
+    pub fn get_request_id(&self) -> &[u8] {
+        &self.request_id
+    }
+    pub fn clear_request_id(&mut self) {
+        self.request_id.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_request_id(&mut self, v: ::std::vec::Vec<u8>) {
+        self.request_id = v;
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_request_id(&mut self) -> &mut ::std::vec::Vec<u8> {
+        &mut self.request_id
+    }
+
+    // Take field
+    pub fn take_request_id(&mut self) -> ::std::vec::Vec<u8> {
+        ::std::mem::replace(&mut self.request_id, ::std::vec::Vec::new())
+    }
+
+    // int64 code = 2;
+
+
+    pub fn get_code(&self) -> i64 {
+        self.code
+    }
+    pub fn clear_code(&mut self) {
+        self.code = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_code(&mut self, v: i64) {
+        self.code = v;
+    }
+
+    // string error_msg = 3;
+
+
+    pub fn get_error_msg(&self) -> &str {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::error_msg(ref v)) => v,
+            _ => "",
+        }
+    }
+    pub fn clear_error_msg(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_error_msg(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::error_msg(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_error_msg(&mut self, v: ::std::string::String) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::error_msg(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_error_msg(&mut self) -> &mut ::std::string::String {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::error_msg(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::error_msg(::std::string::String::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::error_msg(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_error_msg(&mut self) -> ::std::string::String {
+        if self.has_error_msg() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::error_msg(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::string::String::new()
+        }
+    }
+
+    // string tx_state = 4;
+
+
+    pub fn get_tx_state(&self) -> &str {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::tx_state(ref v)) => v,
+            _ => "",
+        }
+    }
+    pub fn clear_tx_state(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_tx_state(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::tx_state(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_tx_state(&mut self, v: ::std::string::String) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::tx_state(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_tx_state(&mut self) -> &mut ::std::string::String {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::tx_state(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::tx_state(::std::string::String::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::tx_state(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_tx_state(&mut self) -> ::std::string::String {
+        if self.has_tx_state() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::tx_state(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::string::String::new()
+        }
+    }
+
+    // bytes block = 5;
+
+
+    pub fn get_block(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::block(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_block(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_block(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::block(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_block(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::block(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_block(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::block(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::block(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::block(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_block(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_block() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::block(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes call_result = 6;
+
+
+    pub fn get_call_result(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::call_result(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_call_result(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_call_result(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::call_result(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_call_result(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::call_result(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_call_result(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::call_result(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::call_result(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::call_result(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_call_result(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_call_result() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::call_result(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes receipt = 7;
+
+
+    pub fn get_receipt(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::receipt(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_receipt(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_receipt(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::receipt(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_receipt(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::receipt(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_receipt(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::receipt(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::receipt(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::receipt(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_receipt(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_receipt() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::receipt(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes contract_code = 8;
+
+
+    pub fn get_contract_code(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::contract_code(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_contract_code(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_contract_code(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::contract_code(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_contract_code(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::contract_code(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_contract_code(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::contract_code(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::contract_code(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::contract_code(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_contract_code(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_contract_code() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::contract_code(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes contract_abi = 9;
+
+
+    pub fn get_contract_abi(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_contract_abi(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_contract_abi(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_contract_abi(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_contract_abi(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_contract_abi(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_contract_abi() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bool none = 10;
+
+
+    pub fn get_none(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::none(v)) => v,
+            _ => false,
+        }
+    }
+    pub fn clear_none(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_none(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::none(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_none(&mut self, v: bool) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::none(v))
+    }
+
+    // string meta_data = 11;
+
+
+    pub fn get_meta_data(&self) -> &str {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::meta_data(ref v)) => v,
+            _ => "",
+        }
+    }
+    pub fn clear_meta_data(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_meta_data(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::meta_data(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_meta_data(&mut self, v: ::std::string::String) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::meta_data(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_meta_data(&mut self) -> &mut ::std::string::String {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::meta_data(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::meta_data(::std::string::String::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::meta_data(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_meta_data(&mut self) -> ::std::string::String {
+        if self.has_meta_data() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::meta_data(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::string::String::new()
+        }
+    }
+
+    // bytes balance = 12;
+
+
+    pub fn get_balance(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::balance(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_balance(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_balance(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::balance(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_balance(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::balance(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_balance(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::balance(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::balance(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::balance(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_balance(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_balance() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::balance(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes block_header = 13;
+
+
+    pub fn get_block_header(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::block_header(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_block_header(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_block_header(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::block_header(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_block_header(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::block_header(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_block_header(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::block_header(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::block_header(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::block_header(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_block_header(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_block_header() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::block_header(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes estimate_quota = 14;
+
+
+    pub fn get_estimate_quota(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_estimate_quota(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_estimate_quota(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_estimate_quota(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_estimate_quota(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_estimate_quota(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_estimate_quota() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes transaction_response = 15;
+
+
+    pub fn get_transaction_response(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_transaction_response(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_transaction_response(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_transaction_response(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_transaction_response(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_transaction_response(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_transaction_response() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // bytes storage_value = 16;
+
+
+    pub fn get_storage_value(&self) -> &[u8] {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::storage_value(ref v)) => v,
+            _ => &[],
+        }
+    }
+    pub fn clear_storage_value(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_storage_value(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::storage_value(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_storage_value(&mut self, v: ::std::vec::Vec<u8>) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::storage_value(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_storage_value(&mut self) -> &mut ::std::vec::Vec<u8> {
+        if let ::std::option::Option::Some(LightResponse_oneof_data::storage_value(_)) = self.data {
+        } else {
+            self.data = ::std::option::Option::Some(LightResponse_oneof_data::storage_value(::std::vec::Vec::new()));
+        }
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::storage_value(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_storage_value(&mut self) -> ::std::vec::Vec<u8> {
+        if self.has_storage_value() {
+            match self.data.take() {
+                ::std::option::Option::Some(LightResponse_oneof_data::storage_value(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::vec::Vec::new()
+        }
+    }
+
+    // uint64 transaction_count = 17;
+
+
+    pub fn get_transaction_count(&self) -> u64 {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(v)) => v,
+            _ => 0,
+        }
+    }
+    pub fn clear_transaction_count(&mut self) {
+        self.data = ::std::option::Option::None;
+    }
+
+    pub fn has_transaction_count(&self) -> bool {
+        match self.data {
+            ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_transaction_count(&mut self, v: u64) {
+        self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(v))
+    }
+}
+
+impl ::protobuf::Message for LightResponse {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.request_id)?;
+                },
+                2 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_int64()?;
+                    self.code = tmp;
+                },
+                3 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::error_msg(is.read_string()?));
+                },
+                4 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::tx_state(is.read_string()?));
+                },
+                5 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::block(is.read_bytes()?));
+                },
+                6 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::call_result(is.read_bytes()?));
+                },
+                7 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::receipt(is.read_bytes()?));
+                },
+                8 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::contract_code(is.read_bytes()?));
+                },
+                9 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::contract_abi(is.read_bytes()?));
+                },
+                10 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::none(is.read_bool()?));
+                },
+                11 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::meta_data(is.read_string()?));
+                },
+                12 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::balance(is.read_bytes()?));
+                },
+                13 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::block_header(is.read_bytes()?));
+                },
+                14 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::estimate_quota(is.read_bytes()?));
+                },
+                15 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_response(is.read_bytes()?));
+                },
+                16 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::storage_value(is.read_bytes()?));
+                },
+                17 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.data = ::std::option::Option::Some(LightResponse_oneof_data::transaction_count(is.read_uint64()?));
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if !self.request_id.is_empty() {
+            my_size += ::protobuf::rt::bytes_size(1, &self.request_id);
+        }
+        if self.code != 0 {
+            my_size += ::protobuf::rt::value_size(2, self.code, ::protobuf::wire_format::WireTypeVarint);
+        }
+        if let ::std::option::Option::Some(ref v) = self.data {
+            match v {
+                &LightResponse_oneof_data::error_msg(ref v) => {
+                    my_size += ::protobuf::rt::string_size(3, &v);
+                },
+                &LightResponse_oneof_data::tx_state(ref v) => {
+                    my_size += ::protobuf::rt::string_size(4, &v);
+                },
+                &LightResponse_oneof_data::block(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(5, &v);
+                },
+                &LightResponse_oneof_data::call_result(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(6, &v);
+                },
+                &LightResponse_oneof_data::receipt(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(7, &v);
+                },
+                &LightResponse_oneof_data::contract_code(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(8, &v);
+                },
+                &LightResponse_oneof_data::contract_abi(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(9, &v);
+                },
+                &LightResponse_oneof_data::none(v) => {
+                    my_size += 2;
+                },
+                &LightResponse_oneof_data::meta_data(ref v) => {
+                    my_size += ::protobuf::rt::string_size(11, &v);
+                },
+                &LightResponse_oneof_data::balance(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(12, &v);
+                },
+                &LightResponse_oneof_data::block_header(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(13, &v);
+                },
+                &LightResponse_oneof_data::estimate_quota(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(14, &v);
+                },
+                &LightResponse_oneof_data::transaction_response(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(15, &v);
+                },
+                &LightResponse_oneof_data::storage_value(ref v) => {
+                    my_size += ::protobuf::rt::bytes_size(16, &v);
+                },
+                &LightResponse_oneof_data::transaction_count(v) => {
+                    my_size += ::protobuf::rt::value_size(17, v, ::protobuf::wire_format::WireTypeVarint);
+                },
+            };
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        if !self.request_id.is_empty() {
+            os.write_bytes(1, &self.request_id)?;
+        }
+        if self.code != 0 {
+            os.write_int64(2, self.code)?;
+        }
+        if let ::std::option::Option::Some(ref v) = self.data {
+            match v {
+                &LightResponse_oneof_data::error_msg(ref v) => {
+                    os.write_string(3, v)?;
+                },
+                &LightResponse_oneof_data::tx_state(ref v) => {
+                    os.write_string(4, v)?;
+                },
+                &LightResponse_oneof_data::block(ref v) => {
+                    os.write_bytes(5, v)?;
+                },
+                &LightResponse_oneof_data::call_result(ref v) => {
+                    os.write_bytes(6, v)?;
+                },
+                &LightResponse_oneof_data::receipt(ref v) => {
+                    os.write_bytes(7, v)?;
+                },
+                &LightResponse_oneof_data::contract_code(ref v) => {
+                    os.write_bytes(8, v)?;
+                },
+                &LightResponse_oneof_data::contract_abi(ref v) => {
+                    os.write_bytes(9, v)?;
+                },
+                &LightResponse_oneof_data::none(v) => {
+                    os.write_bool(10, v)?;
+                },
+                &LightResponse_oneof_data::meta_data(ref v) => {
+                    os.write_string(11, v)?;
+                },
+                &LightResponse_oneof_data::balance(ref v) => {
+                    os.write_bytes(12, v)?;
+                },
+                &LightResponse_oneof_data::block_header(ref v) => {
+                    os.write_bytes(13, v)?;
+                },
+                &LightResponse_oneof_data::estimate_quota(ref v) => {
+                    os.write_bytes(14, v)?;
+                },
+                &LightResponse_oneof_data::transaction_response(ref v) => {
+                    os.write_bytes(15, v)?;
+                },
+                &LightResponse_oneof_data::storage_value(ref v) => {
+                    os.write_bytes(16, v)?;
+                },
+                &LightResponse_oneof_data::transaction_count(v) => {
+                    os.write_uint64(17, v)?;
+                },
+            };
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
+    }
+    fn as_any_mut(&mut self) -> &mut dyn (::std::any::Any) {
+        self as &mut dyn (::std::any::Any)
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<dyn (::std::any::Any)> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> LightResponse {
+        LightResponse::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                    "request_id",
+                    |m: &LightResponse| { &m.request_id },
+                    |m: &mut LightResponse| { &mut m.request_id },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
+                    "code",
+                    |m: &LightResponse| { &m.code },
+                    |m: &mut LightResponse| { &mut m.code },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
+                    "error_msg",
+                    LightResponse::has_error_msg,
+                    LightResponse::get_error_msg,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
+                    "tx_state",
+                    LightResponse::has_tx_state,
+                    LightResponse::get_tx_state,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "block",
+                    LightResponse::has_block,
+                    LightResponse::get_block,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "call_result",
+                    LightResponse::has_call_result,
+                    LightResponse::get_call_result,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "receipt",
+                    LightResponse::has_receipt,
+                    LightResponse::get_receipt,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "contract_code",
+                    LightResponse::has_contract_code,
+                    LightResponse::get_contract_code,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "contract_abi",
+                    LightResponse::has_contract_abi,
+                    LightResponse::get_contract_abi,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bool_accessor::<_>(
+                    "none",
+                    LightResponse::has_none,
+                    LightResponse::get_none,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
+                    "meta_data",
+                    LightResponse::has_meta_data,
+                    LightResponse::get_meta_data,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "balance",
+                    LightResponse::has_balance,
+                    LightResponse::get_balance,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "block_header",
+                    LightResponse::has_block_header,
+                    LightResponse::get_block_header,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "estimate_quota",
+                    LightResponse::has_estimate_quota,
+                    LightResponse::get_estimate_quota,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "transaction_response",
+                    LightResponse::has_transaction_response,
+                    LightResponse::get_transaction_response,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
+                    "storage_value",
+                    LightResponse::has_storage_value,
+                    LightResponse::get_storage_value,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor::<_>(
+                    "transaction_count",
+                    LightResponse::has_transaction_count,
+                    LightResponse::get_transaction_count,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<LightResponse>(
+                    "LightResponse",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static LightResponse {
+        static mut instance: ::protobuf::lazy::Lazy<LightResponse> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const LightResponse,
+        };
+        unsafe {
+            instance.get(LightResponse::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for LightResponse {
+    fn clear(&mut self) {
+        self.request_id.clear();
+        self.code = 0;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.data = ::std::option::Option::None;
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for LightResponse {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for LightResponse {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x0eresponse.proto\x1a\x10blockchain.proto\"\x9f\x01\n\x0fFullTransact\
     ion\x124\n\x0btransaction\x18\x01\x20\x01(\x0b2\x12.SignedTransactionR\
@@ -2284,62 +3474,77 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x01(\tH\0R\x0fsoftwareVersion\x12\x1f\n\npeers_info\x18\x1b\x20\x01(\tH\
     \0R\tpeersInfo\x12'\n\x0eestimate_quota\x18\x1c\x20\x01(\x0cH\0R\restima\
     teQuota\x12#\n\x0clicense_info\x18\x1d\x20\x01(\tH\0R\x0blicenseInfoB\
-    \x06\n\x04dataJ\x80\x10\n\x06\x12\x04\0\0.\x01\n\x08\n\x01\x0c\x12\x03\0\
-    \0\x12\n\t\n\x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\
-    \t\x01\n\n\n\x03\x04\0\x01\x12\x03\x04\x08\x17\n\x0b\n\x04\x04\0\x02\0\
-    \x12\x03\x05\x04&\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x05\x04\x04\x19\n\
-    \x0c\n\x05\x04\0\x02\0\x06\x12\x03\x05\x04\x15\n\x0c\n\x05\x04\0\x02\0\
-    \x01\x12\x03\x05\x16!\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x05$%\n\x0b\n\
-    \x04\x04\0\x02\x01\x12\x03\x06\x04\x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\
-    \x04\x06\x04\x05&\n\x0c\n\x05\x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\
-    \n\x05\x04\0\x02\x01\x01\x12\x03\x06\x0b\x17\n\x0c\n\x05\x04\0\x02\x01\
-    \x03\x12\x03\x06\x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x07\x04\x19\n\
-    \r\n\x05\x04\0\x02\x02\x04\x12\x04\x07\x04\x06\x1c\n\x0c\n\x05\x04\0\x02\
-    \x02\x05\x12\x03\x07\x04\t\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x07\n\
-    \x14\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\x07\x17\x18\n\x0b\n\x04\x04\0\
-    \x02\x03\x12\x03\x08\x04\x15\n\r\n\x05\x04\0\x02\x03\x04\x12\x04\x08\x04\
-    \x07\x19\n\x0c\n\x05\x04\0\x02\x03\x05\x12\x03\x08\x04\n\n\x0c\n\x05\x04\
-    \0\x02\x03\x01\x12\x03\x08\x0b\x10\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\
-    \x08\x13\x14\n\n\n\x02\x04\x01\x12\x04\x0c\0.\x01\n\n\n\x03\x04\x01\x01\
-    \x12\x03\x0c\x08\x10\n\x0b\n\x04\x04\x01\x02\0\x12\x03\r\x04\x19\n\r\n\
-    \x05\x04\x01\x02\0\x04\x12\x04\r\x04\x0c\x12\n\x0c\n\x05\x04\x01\x02\0\
-    \x05\x12\x03\r\x04\t\n\x0c\n\x05\x04\x01\x02\0\x01\x12\x03\r\n\x14\n\x0c\
-    \n\x05\x04\x01\x02\0\x03\x12\x03\r\x17\x18\n\x0b\n\x04\x04\x01\x02\x01\
-    \x12\x03\x0e\x04\x13\n\r\n\x05\x04\x01\x02\x01\x04\x12\x04\x0e\x04\r\x19\
-    \n\x0c\n\x05\x04\x01\x02\x01\x05\x12\x03\x0e\x04\t\n\x0c\n\x05\x04\x01\
-    \x02\x01\x01\x12\x03\x0e\n\x0e\n\x0c\n\x05\x04\x01\x02\x01\x03\x12\x03\
-    \x0e\x11\x12\n\x0c\n\x04\x04\x01\x08\0\x12\x04\x0f\x04-\x05\n\x0c\n\x05\
-    \x04\x01\x08\0\x01\x12\x03\x0f\n\x0e\n\x0b\n\x04\x04\x01\x02\x02\x12\x03\
-    \x10\x08\x1d\n\x0c\n\x05\x04\x01\x02\x02\x05\x12\x03\x10\x08\x0e\n\x0c\n\
-    \x05\x04\x01\x02\x02\x01\x12\x03\x10\x0f\x18\n\x0c\n\x05\x04\x01\x02\x02\
-    \x03\x12\x03\x10\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x03\x12\x03\x11\x08\x1c\
-    \n\x0c\n\x05\x04\x01\x02\x03\x05\x12\x03\x11\x08\x0e\n\x0c\n\x05\x04\x01\
-    \x02\x03\x01\x12\x03\x11\x0f\x17\n\x0c\n\x05\x04\x01\x02\x03\x03\x12\x03\
-    \x11\x1a\x1b\n\x0b\n\x04\x04\x01\x02\x04\x12\x03\x12\x08\x20\n\x0c\n\x05\
-    \x04\x01\x02\x04\x05\x12\x03\x12\x08\x0e\n\x0c\n\x05\x04\x01\x02\x04\x01\
-    \x12\x03\x12\x0f\x1b\n\x0c\n\x05\x04\x01\x02\x04\x03\x12\x03\x12\x1e\x1f\
-    \n\x0b\n\x04\x04\x01\x02\x05\x12\x03\x13\x08\x19\n\x0c\n\x05\x04\x01\x02\
-    \x05\x05\x12\x03\x13\x08\x0e\n\x0c\n\x05\x04\x01\x02\x05\x01\x12\x03\x13\
-    \x0f\x14\n\x0c\n\x05\x04\x01\x02\x05\x03\x12\x03\x13\x17\x18\n\x0b\n\x04\
-    \x04\x01\x02\x06\x12\x03\x14\x08\x1f\n\x0c\n\x05\x04\x01\x02\x06\x06\x12\
-    \x03\x14\x08\x17\n\x0c\n\x05\x04\x01\x02\x06\x01\x12\x03\x14\x18\x1a\n\
-    \x0c\n\x05\x04\x01\x02\x06\x03\x12\x03\x14\x1d\x1e\n\x0b\n\x04\x04\x01\
-    \x02\x07\x12\x03\x15\x08\x1d\n\x0c\n\x05\x04\x01\x02\x07\x05\x12\x03\x15\
-    \x08\x0e\n\x0c\n\x05\x04\x01\x02\x07\x01\x12\x03\x15\x0f\x18\n\x0c\n\x05\
-    \x04\x01\x02\x07\x03\x12\x03\x15\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x08\x12\
-    \x03\x16\x08\x1e\n\x0c\n\x05\x04\x01\x02\x08\x05\x12\x03\x16\x08\r\n\x0c\
-    \n\x05\x04\x01\x02\x08\x01\x12\x03\x16\x0e\x19\n\x0c\n\x05\x04\x01\x02\
-    \x08\x03\x12\x03\x16\x1c\x1d\n\x0b\n\x04\x04\x01\x02\t\x12\x03\x17\x08\
-    \x19\n\x0c\n\x05\x04\x01\x02\t\x05\x12\x03\x17\x08\x0e\n\x0c\n\x05\x04\
-    \x01\x02\t\x01\x12\x03\x17\x0f\x13\n\x0c\n\x05\x04\x01\x02\t\x03\x12\x03\
-    \x17\x16\x18\n\x0b\n\x04\x04\x01\x02\n\x12\x03\x18\x08\x1c\n\x0c\n\x05\
-    \x04\x01\x02\n\x05\x12\x03\x18\x08\x0e\n\x0c\n\x05\x04\x01\x02\n\x01\x12\
-    \x03\x18\x0f\x16\n\x0c\n\x05\x04\x01\x02\n\x03\x12\x03\x18\x19\x1b\n\x0b\
-    \n\x04\x04\x01\x02\x0b\x12\x03\x19\x08&\n\x0c\n\x05\x04\x01\x02\x0b\x05\
-    \x12\x03\x19\x08\x0e\n\x0c\n\x05\x04\x01\x02\x0b\x01\x12\x03\x19\x0f\x20\
-    \n\x0c\n\x05\x04\x01\x02\x0b\x03\x12\x03\x19#%\n\x0b\n\x04\x04\x01\x02\
-    \x0c\x12\x03\x1a\x08!\n\x0c\n\x05\x04\x01\x02\x0c\x05\x12\x03\x1a\x08\r\
-    \n\x0c\n\x05\x04\x01\x02\x0c\x01\x12\x03\x1a\x0e\x1b\n\x0c\n\x05\x04\x01\
+    \x06\n\x04data\"\xd3\x04\n\rLightResponse\x12\x1d\n\nrequest_id\x18\x01\
+    \x20\x01(\x0cR\trequestId\x12\x12\n\x04code\x18\x02\x20\x01(\x03R\x04cod\
+    e\x12\x1d\n\terror_msg\x18\x03\x20\x01(\tH\0R\x08errorMsg\x12\x1b\n\x08t\
+    x_state\x18\x04\x20\x01(\tH\0R\x07txState\x12\x16\n\x05block\x18\x05\x20\
+    \x01(\x0cH\0R\x05block\x12!\n\x0bcall_result\x18\x06\x20\x01(\x0cH\0R\nc\
+    allResult\x12\x1a\n\x07receipt\x18\x07\x20\x01(\x0cH\0R\x07receipt\x12%\
+    \n\rcontract_code\x18\x08\x20\x01(\x0cH\0R\x0ccontractCode\x12#\n\x0ccon\
+    tract_abi\x18\t\x20\x01(\x0cH\0R\x0bcontractAbi\x12\x14\n\x04none\x18\n\
+    \x20\x01(\x08H\0R\x04none\x12\x1d\n\tmeta_data\x18\x0b\x20\x01(\tH\0R\
+    \x08metaData\x12\x1a\n\x07balance\x18\x0c\x20\x01(\x0cH\0R\x07balance\
+    \x12#\n\x0cblock_header\x18\r\x20\x01(\x0cH\0R\x0bblockHeader\x12'\n\x0e\
+    estimate_quota\x18\x0e\x20\x01(\x0cH\0R\restimateQuota\x123\n\x14transac\
+    tion_response\x18\x0f\x20\x01(\x0cH\0R\x13transactionResponse\x12%\n\rst\
+    orage_value\x18\x10\x20\x01(\x0cH\0R\x0cstorageValue\x12-\n\x11transacti\
+    on_count\x18\x11\x20\x01(\x04H\0R\x10transactionCountB\x06\n\x04dataJ\
+    \x9f\x18\n\x06\x12\x04\0\0N\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\t\n\
+    \x02\x03\0\x12\x03\x02\x07\x19\n\n\n\x02\x04\0\x12\x04\x04\0\t\x01\n\n\n\
+    \x03\x04\0\x01\x12\x03\x04\x08\x17\n\x0b\n\x04\x04\0\x02\0\x12\x03\x05\
+    \x04&\n\r\n\x05\x04\0\x02\0\x04\x12\x04\x05\x04\x04\x19\n\x0c\n\x05\x04\
+    \0\x02\0\x06\x12\x03\x05\x04\x15\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x05\
+    \x16!\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x05$%\n\x0b\n\x04\x04\0\x02\
+    \x01\x12\x03\x06\x04\x1c\n\r\n\x05\x04\0\x02\x01\x04\x12\x04\x06\x04\x05\
+    &\n\x0c\n\x05\x04\0\x02\x01\x05\x12\x03\x06\x04\n\n\x0c\n\x05\x04\0\x02\
+    \x01\x01\x12\x03\x06\x0b\x17\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x06\
+    \x1a\x1b\n\x0b\n\x04\x04\0\x02\x02\x12\x03\x07\x04\x19\n\r\n\x05\x04\0\
+    \x02\x02\x04\x12\x04\x07\x04\x06\x1c\n\x0c\n\x05\x04\0\x02\x02\x05\x12\
+    \x03\x07\x04\t\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\x07\n\x14\n\x0c\n\
+    \x05\x04\0\x02\x02\x03\x12\x03\x07\x17\x18\n\x0b\n\x04\x04\0\x02\x03\x12\
+    \x03\x08\x04\x15\n\r\n\x05\x04\0\x02\x03\x04\x12\x04\x08\x04\x07\x19\n\
+    \x0c\n\x05\x04\0\x02\x03\x05\x12\x03\x08\x04\n\n\x0c\n\x05\x04\0\x02\x03\
+    \x01\x12\x03\x08\x0b\x10\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\x08\x13\
+    \x14\n\n\n\x02\x04\x01\x12\x04\x0c\0.\x01\n\n\n\x03\x04\x01\x01\x12\x03\
+    \x0c\x08\x10\n\x0b\n\x04\x04\x01\x02\0\x12\x03\r\x04\x19\n\r\n\x05\x04\
+    \x01\x02\0\x04\x12\x04\r\x04\x0c\x12\n\x0c\n\x05\x04\x01\x02\0\x05\x12\
+    \x03\r\x04\t\n\x0c\n\x05\x04\x01\x02\0\x01\x12\x03\r\n\x14\n\x0c\n\x05\
+    \x04\x01\x02\0\x03\x12\x03\r\x17\x18\n\x0b\n\x04\x04\x01\x02\x01\x12\x03\
+    \x0e\x04\x13\n\r\n\x05\x04\x01\x02\x01\x04\x12\x04\x0e\x04\r\x19\n\x0c\n\
+    \x05\x04\x01\x02\x01\x05\x12\x03\x0e\x04\t\n\x0c\n\x05\x04\x01\x02\x01\
+    \x01\x12\x03\x0e\n\x0e\n\x0c\n\x05\x04\x01\x02\x01\x03\x12\x03\x0e\x11\
+    \x12\n\x0c\n\x04\x04\x01\x08\0\x12\x04\x0f\x04-\x05\n\x0c\n\x05\x04\x01\
+    \x08\0\x01\x12\x03\x0f\n\x0e\n\x0b\n\x04\x04\x01\x02\x02\x12\x03\x10\x08\
+    \x1d\n\x0c\n\x05\x04\x01\x02\x02\x05\x12\x03\x10\x08\x0e\n\x0c\n\x05\x04\
+    \x01\x02\x02\x01\x12\x03\x10\x0f\x18\n\x0c\n\x05\x04\x01\x02\x02\x03\x12\
+    \x03\x10\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x03\x12\x03\x11\x08\x1c\n\x0c\n\
+    \x05\x04\x01\x02\x03\x05\x12\x03\x11\x08\x0e\n\x0c\n\x05\x04\x01\x02\x03\
+    \x01\x12\x03\x11\x0f\x17\n\x0c\n\x05\x04\x01\x02\x03\x03\x12\x03\x11\x1a\
+    \x1b\n\x0b\n\x04\x04\x01\x02\x04\x12\x03\x12\x08\x20\n\x0c\n\x05\x04\x01\
+    \x02\x04\x05\x12\x03\x12\x08\x0e\n\x0c\n\x05\x04\x01\x02\x04\x01\x12\x03\
+    \x12\x0f\x1b\n\x0c\n\x05\x04\x01\x02\x04\x03\x12\x03\x12\x1e\x1f\n\x0b\n\
+    \x04\x04\x01\x02\x05\x12\x03\x13\x08\x19\n\x0c\n\x05\x04\x01\x02\x05\x05\
+    \x12\x03\x13\x08\x0e\n\x0c\n\x05\x04\x01\x02\x05\x01\x12\x03\x13\x0f\x14\
+    \n\x0c\n\x05\x04\x01\x02\x05\x03\x12\x03\x13\x17\x18\n\x0b\n\x04\x04\x01\
+    \x02\x06\x12\x03\x14\x08\x1f\n\x0c\n\x05\x04\x01\x02\x06\x06\x12\x03\x14\
+    \x08\x17\n\x0c\n\x05\x04\x01\x02\x06\x01\x12\x03\x14\x18\x1a\n\x0c\n\x05\
+    \x04\x01\x02\x06\x03\x12\x03\x14\x1d\x1e\n\x0b\n\x04\x04\x01\x02\x07\x12\
+    \x03\x15\x08\x1d\n\x0c\n\x05\x04\x01\x02\x07\x05\x12\x03\x15\x08\x0e\n\
+    \x0c\n\x05\x04\x01\x02\x07\x01\x12\x03\x15\x0f\x18\n\x0c\n\x05\x04\x01\
+    \x02\x07\x03\x12\x03\x15\x1b\x1c\n\x0b\n\x04\x04\x01\x02\x08\x12\x03\x16\
+    \x08\x1e\n\x0c\n\x05\x04\x01\x02\x08\x05\x12\x03\x16\x08\r\n\x0c\n\x05\
+    \x04\x01\x02\x08\x01\x12\x03\x16\x0e\x19\n\x0c\n\x05\x04\x01\x02\x08\x03\
+    \x12\x03\x16\x1c\x1d\n\x0b\n\x04\x04\x01\x02\t\x12\x03\x17\x08\x19\n\x0c\
+    \n\x05\x04\x01\x02\t\x05\x12\x03\x17\x08\x0e\n\x0c\n\x05\x04\x01\x02\t\
+    \x01\x12\x03\x17\x0f\x13\n\x0c\n\x05\x04\x01\x02\t\x03\x12\x03\x17\x16\
+    \x18\n\x0b\n\x04\x04\x01\x02\n\x12\x03\x18\x08\x1c\n\x0c\n\x05\x04\x01\
+    \x02\n\x05\x12\x03\x18\x08\x0e\n\x0c\n\x05\x04\x01\x02\n\x01\x12\x03\x18\
+    \x0f\x16\n\x0c\n\x05\x04\x01\x02\n\x03\x12\x03\x18\x19\x1b\n\x0b\n\x04\
+    \x04\x01\x02\x0b\x12\x03\x19\x08&\n\x0c\n\x05\x04\x01\x02\x0b\x05\x12\
+    \x03\x19\x08\x0e\n\x0c\n\x05\x04\x01\x02\x0b\x01\x12\x03\x19\x0f\x20\n\
+    \x0c\n\x05\x04\x01\x02\x0b\x03\x12\x03\x19#%\n\x0b\n\x04\x04\x01\x02\x0c\
+    \x12\x03\x1a\x08!\n\x0c\n\x05\x04\x01\x02\x0c\x05\x12\x03\x1a\x08\r\n\
+    \x0c\n\x05\x04\x01\x02\x0c\x01\x12\x03\x1a\x0e\x1b\n\x0c\n\x05\x04\x01\
     \x02\x0c\x03\x12\x03\x1a\x1e\x20\n\x0b\n\x04\x04\x01\x02\r\x12\x03\x1b\
     \x08\x20\n\x0c\n\x05\x04\x01\x02\r\x05\x12\x03\x1b\x08\r\n\x0c\n\x05\x04\
     \x01\x02\r\x01\x12\x03\x1b\x0e\x1a\n\x0c\n\x05\x04\x01\x02\r\x03\x12\x03\
@@ -2384,8 +3589,57 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x05\x04\x01\x02\x1b\x01\x12\x03+\x0e\x1c\n\x0c\n\x05\x04\x01\x02\x1b\
     \x03\x12\x03+\x1f!\n\x0b\n\x04\x04\x01\x02\x1c\x12\x03,\x08!\n\x0c\n\x05\
     \x04\x01\x02\x1c\x05\x12\x03,\x08\x0e\n\x0c\n\x05\x04\x01\x02\x1c\x01\
-    \x12\x03,\x0f\x1b\n\x0c\n\x05\x04\x01\x02\x1c\x03\x12\x03,\x1e\x20b\x06p\
-    roto3\
+    \x12\x03,\x0f\x1b\n\x0c\n\x05\x04\x01\x02\x1c\x03\x12\x03,\x1e\x20\n\n\n\
+    \x02\x04\x02\x12\x040\0N\x01\n\n\n\x03\x04\x02\x01\x12\x030\x08\x15\n\
+    \x0b\n\x04\x04\x02\x02\0\x12\x031\x04\x19\n\r\n\x05\x04\x02\x02\0\x04\
+    \x12\x041\x040\x17\n\x0c\n\x05\x04\x02\x02\0\x05\x12\x031\x04\t\n\x0c\n\
+    \x05\x04\x02\x02\0\x01\x12\x031\n\x14\n\x0c\n\x05\x04\x02\x02\0\x03\x12\
+    \x031\x17\x18\n\x0b\n\x04\x04\x02\x02\x01\x12\x032\x04\x13\n\r\n\x05\x04\
+    \x02\x02\x01\x04\x12\x042\x041\x19\n\x0c\n\x05\x04\x02\x02\x01\x05\x12\
+    \x032\x04\t\n\x0c\n\x05\x04\x02\x02\x01\x01\x12\x032\n\x0e\n\x0c\n\x05\
+    \x04\x02\x02\x01\x03\x12\x032\x11\x12\n\x0c\n\x04\x04\x02\x08\0\x12\x043\
+    \x04M\x05\n\x0c\n\x05\x04\x02\x08\0\x01\x12\x033\n\x0e\n\x0b\n\x04\x04\
+    \x02\x02\x02\x12\x034\x08\x1d\n\x0c\n\x05\x04\x02\x02\x02\x05\x12\x034\
+    \x08\x0e\n\x0c\n\x05\x04\x02\x02\x02\x01\x12\x034\x0f\x18\n\x0c\n\x05\
+    \x04\x02\x02\x02\x03\x12\x034\x1b\x1c\n\x0b\n\x04\x04\x02\x02\x03\x12\
+    \x035\x08\x1c\n\x0c\n\x05\x04\x02\x02\x03\x05\x12\x035\x08\x0e\n\x0c\n\
+    \x05\x04\x02\x02\x03\x01\x12\x035\x0f\x17\n\x0c\n\x05\x04\x02\x02\x03\
+    \x03\x12\x035\x1a\x1b\n\x0b\n\x04\x04\x02\x02\x04\x12\x036\x08\x18\n\x0c\
+    \n\x05\x04\x02\x02\x04\x05\x12\x036\x08\r\n\x0c\n\x05\x04\x02\x02\x04\
+    \x01\x12\x036\x0e\x13\n\x0c\n\x05\x04\x02\x02\x04\x03\x12\x036\x16\x17\n\
+    \x0b\n\x04\x04\x02\x02\x05\x12\x037\x08\x1e\n\x0c\n\x05\x04\x02\x02\x05\
+    \x05\x12\x037\x08\r\n\x0c\n\x05\x04\x02\x02\x05\x01\x12\x037\x0e\x19\n\
+    \x0c\n\x05\x04\x02\x02\x05\x03\x12\x037\x1c\x1d\n\x0b\n\x04\x04\x02\x02\
+    \x06\x12\x038\x08\x1a\n\x0c\n\x05\x04\x02\x02\x06\x05\x12\x038\x08\r\n\
+    \x0c\n\x05\x04\x02\x02\x06\x01\x12\x038\x0e\x15\n\x0c\n\x05\x04\x02\x02\
+    \x06\x03\x12\x038\x18\x19\n\x0b\n\x04\x04\x02\x02\x07\x12\x039\x08\x20\n\
+    \x0c\n\x05\x04\x02\x02\x07\x05\x12\x039\x08\r\n\x0c\n\x05\x04\x02\x02\
+    \x07\x01\x12\x039\x0e\x1b\n\x0c\n\x05\x04\x02\x02\x07\x03\x12\x039\x1e\
+    \x1f\n\x0b\n\x04\x04\x02\x02\x08\x12\x03:\x08\x1f\n\x0c\n\x05\x04\x02\
+    \x02\x08\x05\x12\x03:\x08\r\n\x0c\n\x05\x04\x02\x02\x08\x01\x12\x03:\x0e\
+    \x1a\n\x0c\n\x05\x04\x02\x02\x08\x03\x12\x03:\x1d\x1e\n\x0b\n\x04\x04\
+    \x02\x02\t\x12\x03;\x08\x17\n\x0c\n\x05\x04\x02\x02\t\x05\x12\x03;\x08\
+    \x0c\n\x0c\n\x05\x04\x02\x02\t\x01\x12\x03;\r\x11\n\x0c\n\x05\x04\x02\
+    \x02\t\x03\x12\x03;\x14\x16\n\x1f\n\x04\x04\x02\x02\n\x12\x03=\x08\x1e\
+    \x1a\x12\x20cita_getMetaData\n\n\x0c\n\x05\x04\x02\x02\n\x05\x12\x03=\
+    \x08\x0e\n\x0c\n\x05\x04\x02\x02\n\x01\x12\x03=\x0f\x18\n\x0c\n\x05\x04\
+    \x02\x02\n\x03\x12\x03=\x1b\x1d\n\x1d\n\x04\x04\x02\x02\x0b\x12\x03?\x08\
+    \x1b\x1a\x10\x20eth_getBalance\n\n\x0c\n\x05\x04\x02\x02\x0b\x05\x12\x03\
+    ?\x08\r\n\x0c\n\x05\x04\x02\x02\x0b\x01\x12\x03?\x0e\x15\n\x0c\n\x05\x04\
+    \x02\x02\x0b\x03\x12\x03?\x18\x1a\n\x0b\n\x04\x04\x02\x02\x0c\x12\x03@\
+    \x08\x20\n\x0c\n\x05\x04\x02\x02\x0c\x05\x12\x03@\x08\r\n\x0c\n\x05\x04\
+    \x02\x02\x0c\x01\x12\x03@\x0e\x1a\n\x0c\n\x05\x04\x02\x02\x0c\x03\x12\
+    \x03@\x1d\x1f\n\x0b\n\x04\x04\x02\x02\r\x12\x03A\x08\"\n\x0c\n\x05\x04\
+    \x02\x02\r\x05\x12\x03A\x08\r\n\x0c\n\x05\x04\x02\x02\r\x01\x12\x03A\x0e\
+    \x1c\n\x0c\n\x05\x04\x02\x02\r\x03\x12\x03A\x1f!\n\x0b\n\x04\x04\x02\x02\
+    \x0e\x12\x03B\x08(\n\x0c\n\x05\x04\x02\x02\x0e\x05\x12\x03B\x08\r\n\x0c\
+    \n\x05\x04\x02\x02\x0e\x01\x12\x03B\x0e\"\n\x0c\n\x05\x04\x02\x02\x0e\
+    \x03\x12\x03B%'\n\x0b\n\x04\x04\x02\x02\x0f\x12\x03C\x08!\n\x0c\n\x05\
+    \x04\x02\x02\x0f\x05\x12\x03C\x08\r\n\x0c\n\x05\x04\x02\x02\x0f\x01\x12\
+    \x03C\x0e\x1b\n\x0c\n\x05\x04\x02\x02\x0f\x03\x12\x03C\x1e\x20\n\x0b\n\
+    \x04\x04\x02\x02\x10\x12\x03D\x08&\n\x0c\n\x05\x04\x02\x02\x10\x05\x12\
+    \x03D\x08\x0e\n\x0c\n\x05\x04\x02\x02\x10\x01\x12\x03D\x0f\x20\n\x0c\n\
+    \x05\x04\x02\x02\x10\x03\x12\x03D#%b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
