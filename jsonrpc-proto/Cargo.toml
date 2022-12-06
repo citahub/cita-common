@@ -10,7 +10,7 @@ libproto = { path = "../libproto" }
 jsonrpc-types = { path = "../jsonrpc-types" }
 proof = { path = "../proof" }
 cita-types = { path = "../cita-types" }
-cita-logger = "0.1.1"
+cmb-logger = "0.1.0"
 serde = "1.0"
 serde_json = "1.0"
 uuid = { version = "0.7", features = ["v4"] }

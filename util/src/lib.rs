@@ -24,7 +24,7 @@ extern crate toml;
 
 extern crate backtrace;
 #[macro_use]
-extern crate cita_logger as logger;
+extern crate cmb_logger as logger;
 
 pub mod build_info;
 pub mod instrument;
