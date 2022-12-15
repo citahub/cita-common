@@ -12,7 +12,7 @@ libsodium-sys = { version = "0.2.5", optional = true }
 libsm = { version = "0.5", optional = true }
 
 [features]
-default = ["sm3hash"]
+default = []
 sha3hash = ["tiny-keccak"]
 blake2bhash = ["libsodium-sys"]
 sm3hash = ["libsm"]
