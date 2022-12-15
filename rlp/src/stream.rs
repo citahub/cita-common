@@ -11,7 +11,7 @@ use elastic_array::{ElasticArray1024, ElasticArray16};
 use std::borrow::Borrow;
 use traits::Encodable;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 struct ListInfo {
     position: usize,
     current: usize,

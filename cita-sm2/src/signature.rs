@@ -221,7 +221,7 @@ impl Sign for Signature {
 
         let sig = key_pair
             .inner
-            .sign(&rng, &message)
+            .sign(&rng, message.as_bytes())
             .map_err(|_| Error::SignError)?;
         let signature = untrusted::Input::from(sig.as_ref());
         let (r, s) = key_pair
@@ -233,7 +233,7 @@ impl Sign for Signature {
         let s_bytes = s.as_slice_less_safe();
         sig_bytes[32 - r_bytes.len()..32].copy_from_slice(&r_bytes);
         sig_bytes[64 - s_bytes.len()..64].copy_from_slice(&s_bytes);
-        sig_bytes[64..].copy_from_slice(key_pair.pubkey());
+        sig_bytes[64..].copy_from_slice(key_pair.pubkey().as_bytes());
         Ok(Signature(sig_bytes))
     }
 
@@ -250,8 +250,8 @@ impl Sign for Signature {
         let signature = EcdsaKeyPair::format_rs(&ECDSA_SM2P256_SM3_ASN1_SIGNING, r, s)
             .map_err(|_| Error::RecoverError)?;
 
-        if pk.verify(&message, signature.as_ref()).is_ok() {
-            Ok(PubKey::from(self.pk()))
+        if pk.verify(message.as_bytes(), signature.as_ref()).is_ok() {
+            Ok(PubKey::from_slice(self.pk()))
         } else {
             Err(Error::RecoverError)
         }
@@ -272,8 +272,8 @@ impl Sign for Signature {
         let signature = EcdsaKeyPair::format_rs(&ECDSA_SM2P256_SM3_ASN1_SIGNING, r, s)
             .map_err(|_| Error::SignError)?;
 
-        if PubKey::from(self.pk()) == *pubkey {
-            if pk.verify(&message, signature.as_ref()).is_ok() {
+        if PubKey::from_slice(self.pk()) == *pubkey {
+            if pk.verify(message.as_bytes(), signature.as_ref()).is_ok() {
                 Ok(true)
             } else {
                 Ok(false)
@@ -336,13 +336,13 @@ mod tests {
     fn test_sign_ring_libsm() {
         let pri = hex::decode("fffffc4d0000064efffffb8c00000324fffffdc600000543fffff8950000053b")
             .unwrap();
-        let keypair = KeyPair::from_privkey(PrivKey::from(pri.as_slice())).unwrap();
+        let keypair = KeyPair::from_privkey(PrivKey::from_slice(pri.as_slice())).unwrap();
         let pk = keypair.pubkey();
         println!("{}", hex::encode(&pk));
 
         let mut pubkey = [0u8; 65];
         pubkey[0] = 4;
-        pubkey[1..].copy_from_slice(pk);
+        pubkey[1..].copy_from_slice(pk.as_bytes());
         let message = "hello world".as_bytes();
 
         let message = message.crypt_hash();

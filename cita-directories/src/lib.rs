@@ -55,9 +55,9 @@ impl DataPath {
         let node_component = match env::current_dir() {
             Ok(pathbuf) => match pathbuf.file_name() {
                 Some(name) => String::from(name.to_str().unwrap()),
-                None => Uuid::new_v4().to_simple().to_string(),
+                None => Uuid::new_v4().simple().to_string(),
             },
-            Err(_) => Uuid::new_v4().to_simple().to_string(),
+            Err(_) => Uuid::new_v4().simple().to_string(),
         };
 
         let is_using_vagrant = DataPath::is_using_vagrant();

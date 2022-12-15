@@ -21,7 +21,7 @@ cita-logger = "0.1.1"
 
 
 [features]
-default = []
+default = ["sm2", "sm3hash"]
 secp256k1 = ["cita-crypto/secp256k1"]
 ed25519 = ["cita-crypto/ed25519"]
 sm2 = ["cita-crypto/sm2"]

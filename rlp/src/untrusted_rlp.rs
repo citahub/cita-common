@@ -120,7 +120,9 @@ impl<'a> fmt::Display for UntrustedRlp<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
         match self.prototype() {
             Ok(Prototype::Null) => write!(f, "null"),
-            Ok(Prototype::Data(_)) => write!(f, "\"0x{}\"", self.data().unwrap().to_hex()),
+            Ok(Prototype::Data(_)) => {
+                write!(f, "\"0x{}\"", self.data().unwrap().to_hex::<String>())
+            }
             Ok(Prototype::List(len)) => {
                 write!(f, "[")?;
                 for i in 0..len - 1 {

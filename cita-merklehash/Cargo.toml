@@ -9,7 +9,7 @@ edition = "2018"
 cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 rlp = { path = "../rlp" }
-static_merkle_tree = "~0.1.1"
+static_merkle_tree = "1.1"
 
 [features]
 default = []

@@ -11,7 +11,7 @@ cita-crypto = { path = "../cita-crypto" }
 cita-types = { path = "../cita-types" }
 
 [features]
-default = []
+default = ["sm2", "sm3hash"]
 secp256k1 = ["cita-crypto/secp256k1", "libproto/secp256k1"]
 ed25519 = ["cita-crypto/ed25519", "libproto/ed25519"]
 sm2 = ["cita-crypto/sm2", "libproto/sm2"]

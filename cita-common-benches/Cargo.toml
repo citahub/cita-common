@@ -6,15 +6,15 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-rand = "0.4"
+rand = "0.8"
 
 [dev-dependencies]
-criterion = "0.3.3"
-tiny-keccak= "1.4"
+criterion = "0.4"
+tiny-keccak= "2.0"
 blake2b = { path = "../blake2b" }
-secp256k1 = {version = "0.12", features = ["rand"]}
-sodiumoxide = "0.2.2"
-libsm = "0.4.1"
+secp256k1 = {version = "0.24", features = ["rand"]}
+sodiumoxide = "0.2"
+libsm = "0.5"
 
 [[bench]]
 name = "hash-algos"

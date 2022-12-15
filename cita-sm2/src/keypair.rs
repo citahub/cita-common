@@ -50,8 +50,8 @@ impl CreateKey for KeyPair {
         )
         .map_err(|_| Error::RecoverError)?;
         let out = &inner.private_key()[16..];
-        let privkey = PrivKey::from(out);
-        let pubkey = PubKey::from(&inner.public_key()[1..]);
+        let privkey = PrivKey::from_slice(out);
+        let pubkey = PubKey::from_slice(&inner.public_key()[1..]);
         Ok(KeyPair {
             inner,
             privkey,
@@ -62,8 +62,8 @@ impl CreateKey for KeyPair {
     fn gen_keypair() -> Self {
         let inner = EcdsaKeyPair::generate_keypair(&ECDSA_SM2P256_SM3_ASN1_SIGNING).unwrap();
         let out = &inner.private_key()[16..];
-        let privkey = PrivKey::from(out);
-        let pubkey = PubKey::from(&inner.public_key()[1..]);
+        let privkey = PrivKey::from_slice(out);
+        let pubkey = PubKey::from_slice(&inner.public_key()[1..]);
         KeyPair {
             inner,
             privkey,
