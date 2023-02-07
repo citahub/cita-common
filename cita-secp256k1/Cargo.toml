@@ -6,7 +6,7 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-secp256k1 = {version = "0.25", features = ["rand", "recovery"]}
+secp256k1 = {version = "0.26", features = ["rand", "recovery"]}
 lazy_static = "1.1"
 rustc-serialize = "0.3"
 cita-types = { path = "../cita-types" }
