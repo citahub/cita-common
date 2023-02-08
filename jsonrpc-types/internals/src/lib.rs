@@ -24,23 +24,25 @@ use syn::punctuated::Punctuated;
 use syn::token;
 
 struct TypeWithAttrs {
-    typ: syn::Type,
     attrs: Vec<syn::Attribute>,
+    typ: syn::Type,
 }
 
 impl Parse for TypeWithAttrs {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            typ: input.parse()?,
             attrs: input.call(syn::Attribute::parse_outer)?,
+            typ: input.parse()?,
         })
     }
 }
 
 struct ParamsType {
     name: syn::Ident,
-    brace_token: token::Brace,
+    colon_token: Token![:],
+    brace_token: token::Bracket,
     fields: Punctuated<TypeWithAttrs, Token![,]>,
+    comma_token: Token![,],
     resp: syn::Ident,
 }
 
@@ -49,8 +51,10 @@ impl Parse for ParamsType {
         let content;
         Ok(ParamsType {
             name: input.parse()?,
-            brace_token: braced!(content in input),
+            colon_token: input.parse()?,
+            brace_token: bracketed!(content in input),
             fields: content.parse_terminated(TypeWithAttrs::parse)?,
+            comma_token: input.parse()?,
             resp: input.parse()?,
         })
     }
@@ -90,13 +94,15 @@ fn generate_attrs_list(attrs_vec: &[syn::Attribute]) -> proc_macro2::TokenStream
 
 #[proc_macro]
 pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let input: proc_macro2::TokenStream = input.into();
+    let input = proc_macro2::TokenStream::from(input);
 
     let output = {
         let ParamsType {
             name,
-            brace_token,
+            colon_token: _colon_token,
+            brace_token: _brace_token,
             fields,
+            comma_token: _comma_token,
             resp,
         } = syn::parse2(input).unwrap();
 
@@ -111,7 +117,7 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         match fields_size {
             0 => {}
             1 => {
-                let TypeWithAttrs { typ, attrs } = &fields.iter().next().unwrap();
+                let TypeWithAttrs { attrs, typ } = &fields.iter().next().unwrap();
                 let param_attrs = generate_attrs_list(attrs);
                 types = quote!(#param_attrs pub #typ, #[serde(skip)] OneItemTupleTrick);
                 params_with_types = quote!(param: #typ);
@@ -121,7 +127,7 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             }
             _ => {
                 let mut param_num = 0;
-                for TypeWithAttrs { typ, attrs } in fields.iter() {
+                for TypeWithAttrs { attrs, typ } in fields.iter() {
                     let param_attrs = generate_attrs_list(attrs.as_slice());
                     let param_name = format!("p{}", param_num);
                     let param_name = syn::Ident::new(&param_name, proc_macro2::Span::call_site());
@@ -166,5 +172,5 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         )
     };
 
-    output.into()
+    proc_macro::TokenStream::from(output)
 }
