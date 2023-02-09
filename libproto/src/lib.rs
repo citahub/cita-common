@@ -15,7 +15,7 @@
 extern crate cita_crypto as crypto;
 extern crate cita_types as types;
 #[macro_use]
-extern crate cmb_logger as logger;
+extern crate cita_logger as logger;
 extern crate hashable;
 extern crate protobuf;
 extern crate rlp;
