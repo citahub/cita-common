@@ -91,8 +91,12 @@ where
     T: AsRef<[u8]>,
 {
     fn crypt_hash_into(&self, dest: &mut [u8]) {
+        use sha3::Hasher;
+
+        let mut hasher = tiny_keccak::Keccak::v256();
         let input: &[u8] = self.as_ref();
-        tiny_keccak::Keccak::keccak256(input, dest);
+        hasher.update(input);
+        hasher.finalize(dest);
     }
 }
 

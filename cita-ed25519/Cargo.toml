@@ -15,7 +15,7 @@ rlp = { path = "../rlp" }
 serde = "1.0"
 
 [dev-dependencies]
-bincode = "0.8.0"
+bincode = "1.3"
 
 [features]
 default = []

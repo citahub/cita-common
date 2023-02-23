@@ -19,6 +19,7 @@ use std::mem::transmute;
 use std::path::Path;
 use std::str;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct Wal {
     fs: File,

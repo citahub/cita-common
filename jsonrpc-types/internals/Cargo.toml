@@ -6,9 +6,9 @@ license = "Apache-2.0"
 edition = "2018"
 
 [dependencies]
-syn = "0.14"
-quote = "0.6"
-proc-macro2 = "0.4"
+syn = "1.0"
+quote = "1.0"
+proc-macro2 = "1.0"
 
 [lib]
 proc-macro = true

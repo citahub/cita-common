@@ -12,10 +12,10 @@ cita-types = { path = "../cita-types" }
 hashable = { path = "../hashable" }
 cita-crypto-trait = { path = "../cita-crypto-trait" }
 rlp = { path = "../rlp" }
-libsm = "0.4.1"
+libsm = "0.5"
 ring = { git = "https://github.com/Pencil-Yao/ring", branch = "smx" }
-untrusted = { version = "0.7.1" }
-hex = "0.3"
+untrusted = "0.7"
+hex = "0.4"
 
 [features]
 default = []

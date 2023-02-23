@@ -10,8 +10,8 @@ version = "0.1"
 default-features = false
 
 [dependencies]
-dotenv = "0.13.0"
-crossbeam-channel = "0.4.2"
+dotenv = "0.15"
+crossbeam-channel = "0.5"
 
 [features]
 default = []

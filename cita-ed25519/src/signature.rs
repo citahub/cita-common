@@ -220,7 +220,7 @@ impl Sign for Signature {
         let is_valid = verify_detached(
             &EdSignature::from_bytes(&sig).unwrap(),
             message.as_ref(),
-            &EdPublicKey::from_slice(&pubkey).unwrap(),
+            &EdPublicKey::from_slice(pubkey).unwrap(),
         );
 
         if !is_valid {
@@ -244,7 +244,7 @@ impl Sign for Signature {
         let is_valid = verify_detached(
             &EdSignature::from_bytes(&sig).unwrap(),
             message.as_ref(),
-            &EdPublicKey::from_slice(&pubkey).unwrap(),
+            &EdPublicKey::from_slice(pubkey.as_bytes()).unwrap(),
         );
         if !is_valid {
             Err(Error::InvalidSignature)
@@ -312,7 +312,7 @@ mod tests {
         let keypair = KeyPair::gen_keypair();
         let msg = Message::from_slice(&MESSAGE[..]);
         let sig = Signature::sign(keypair.privkey(), &msg).unwrap();
-        let se_result = serialize(&sig, Infinite).unwrap();
+        let se_result = serialize(&sig).unwrap();
         let de_result: Signature = deserialize(&se_result).unwrap();
         assert_eq!(sig, de_result);
     }

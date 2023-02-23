@@ -35,9 +35,9 @@ macro_rules! micro_service_init {
     };
 }
 
-pub fn parse_config_from_buffer<'de, T>(s: &'de str) -> Result<T, toml::de::Error>
+pub fn parse_config_from_buffer<T>(s: &'_ str) -> Result<T, toml::de::Error>
 where
-    T: de::Deserialize<'de>,
+    T: de::DeserializeOwned,
 {
     Ok(toml::from_str::<T>(s)?)
 }

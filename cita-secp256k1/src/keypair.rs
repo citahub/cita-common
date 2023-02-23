@@ -18,7 +18,7 @@ use cita_crypto_trait::CreateKey;
 use hashable::Hashable;
 use rand::thread_rng;
 use rustc_serialize::hex::ToHex;
-use secp256k1::key;
+use secp256k1::{PublicKey, SecretKey};
 use std::fmt;
 
 pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
@@ -48,8 +48,8 @@ impl CreateKey for KeyPair {
     /// Create a pair from secret key
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
         let context = &SECP256K1;
-        let s: key::SecretKey = key::SecretKey::from_slice(&privkey.0[..])?;
-        let pubkey = key::PublicKey::from_secret_key(context, &s);
+        let s: SecretKey = SecretKey::from_slice(&privkey.0[..])?;
+        let pubkey = PublicKey::from_secret_key(context, &s);
         let serialized = pubkey.serialize_uncompressed();
 
         let mut pubkey = PubKey::default();

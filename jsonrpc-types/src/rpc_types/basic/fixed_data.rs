@@ -120,7 +120,7 @@ macro_rules! impl_for_fixed_type {
 
         impl Into<Vec<u8>> for $outer {
             fn into(self) -> Vec<u8> {
-                self.0.to_vec()
+                self.0.as_bytes().to_vec()
             }
         }
     };

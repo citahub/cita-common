@@ -19,11 +19,9 @@ use crate::types::H256;
 use cita_crypto_trait::Sign;
 use rlp::*;
 use rustc_serialize::hex::ToHex;
-use secp256k1::key::{PublicKey, SecretKey};
-use secp256k1::{
-    recovery::RecoverableSignature, recovery::RecoveryId, Error as SecpError,
-    Message as SecpMessage,
-};
+use secp256k1::ecdsa::{RecoverableSignature, RecoveryId};
+use secp256k1::Message as SecpMessage;
+use secp256k1::{PublicKey, SecretKey};
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -31,6 +29,7 @@ use std::cmp::PartialEq;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
+use std::str::FromStr;
 
 pub struct Signature(pub [u8; 65]);
 
@@ -62,18 +61,21 @@ impl Signature {
     /// Check if this is a "low" signature.
     pub fn is_low_s(&self) -> bool {
         H256::from_slice(self.s())
-            <= "7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0".into()
+            <= H256::from_str("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0")
+                .unwrap()
     }
 
     /// Check if each component of the signature is in range.
     pub fn is_valid(&self) -> bool {
         self.v() <= 1
             && H256::from_slice(self.r())
-                < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
-            && H256::from_slice(self.r()) >= 1.into()
+                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
+                    .unwrap()
+            && H256::from_slice(self.r()) >= H256::from_low_u64_be(1)
             && H256::from_slice(self.s())
-                < "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".into()
-            && H256::from_slice(self.s()) >= 1.into()
+                < H256::from_str("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
+                    .unwrap()
+            && H256::from_slice(self.s()) >= H256::from_low_u64_be(1)
     }
 }
 
@@ -248,7 +250,7 @@ pub fn sign(privkey: &PrivKey, message: &Message) -> Result<Signature, Error> {
     // no way to create from raw byte array.
     let sec: &SecretKey =
         unsafe { &*(privkey as *const types::H256 as *const secp256k1::SecretKey) };
-    let s = context.sign_recoverable(&SecpMessage::from_slice(&message.0[..])?, sec);
+    let s = context.sign_ecdsa_recoverable(&SecpMessage::from_slice(&message.0[..])?, sec);
     let (rec_id, data) = s.serialize_compact();
     let mut data_arr = [0; 65];
 
@@ -272,14 +274,14 @@ pub fn verify_public(
 
     let pdata: [u8; 65] = {
         let mut temp = [4u8; 65];
-        temp[1..65].copy_from_slice(pubkey);
+        temp[1..65].copy_from_slice(pubkey.as_bytes());
         temp
     };
 
     let public_key = PublicKey::from_slice(&pdata)?;
-    match context.verify(&SecpMessage::from_slice(&message.0[..])?, &sig, &public_key) {
+    match context.verify_ecdsa(&SecpMessage::from_slice(&message.0[..])?, &sig, &public_key) {
         Ok(_) => Ok(true),
-        Err(SecpError::IncorrectSignature) => Ok(false),
+        Err(secp256k1::Error::IncorrectSignature) => Ok(false),
         Err(x) => Err(Error::from(x)),
     }
 }
@@ -300,7 +302,7 @@ pub fn recover(signature: &Signature, message: &Message) -> Result<PubKey, Error
         &signature[0..64],
         RecoveryId::from_i32(i32::from(signature[64]))?,
     )?;
-    let publ = context.recover(&SecpMessage::from_slice(&message.0[..])?, &rsig)?;
+    let publ = context.recover_ecdsa(&SecpMessage::from_slice(&message.0[..])?, &rsig)?;
     let serialized = publ.serialize_uncompressed();
 
     let mut pubkey = PubKey::default();
@@ -320,7 +322,7 @@ impl Sign for Signature {
         let sec: &SecretKey =
             unsafe { &*(privkey as *const types::H256 as *const secp256k1::SecretKey) };
         let msg = SecpMessage::from_slice(&message.0[..]).unwrap();
-        let s = context.sign_recoverable(&msg, sec);
+        let s = context.sign_ecdsa_recoverable(&msg, sec);
         let (rec_id, data) = s.serialize_compact();
         let mut data_arr = [0; 65];
 
@@ -336,7 +338,7 @@ impl Sign for Signature {
             &self.0[0..64],
             RecoveryId::from_i32(i32::from(self.0[64]))?,
         )?;
-        let publ = context.recover(&SecpMessage::from_slice(&message.0[..])?, &rsig)?;
+        let publ = context.recover_ecdsa(&SecpMessage::from_slice(&message.0[..])?, &rsig)?;
         let serialized = publ.serialize_uncompressed();
 
         let mut pubkey = PubKey::default();
@@ -358,14 +360,14 @@ impl Sign for Signature {
 
         let pdata: [u8; 65] = {
             let mut temp = [4u8; 65];
-            temp[1..65].copy_from_slice(pubkey);
+            temp[1..65].copy_from_slice(pubkey.as_bytes());
             temp
         };
 
         let publ = PublicKey::from_slice(&pdata)?;
-        match context.verify(&SecpMessage::from_slice(&message.0[..])?, &sig, &publ) {
+        match context.verify_ecdsa(&SecpMessage::from_slice(&message.0[..])?, &sig, &publ) {
             Ok(_) => Ok(true),
-            Err(SecpError::IncorrectSignature) => Ok(false),
+            Err(secp256k1::Error::IncorrectSignature) => Ok(false),
             Err(x) => Err(Error::from(x)),
         }
     }
@@ -386,7 +388,7 @@ mod tests {
     use super::super::KeyPair;
     use super::{PrivKey, Signature};
     use crate::types::H256;
-    use bincode::{deserialize, serialize, Infinite};
+    use bincode::{deserialize, serialize};
     use cita_crypto_trait::{CreateKey, Sign};
     use hashable::Hashable;
     use std::str::FromStr;
@@ -437,7 +439,7 @@ mod tests {
         let str = "".to_owned();
         let message = str.crypt_hash();
         let signature = Signature::sign(keypair.privkey().into(), &message.into()).unwrap();
-        let se_result = serialize(&signature, Infinite).unwrap();
+        let se_result = serialize(&signature).unwrap();
         let de_result: Signature = deserialize(&se_result).unwrap();
         assert_eq!(signature, de_result);
     }

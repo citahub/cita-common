@@ -36,18 +36,16 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str, version_str: String) {
         Err(_) => None,
     };
 
-    let (version, pre, commit_date) = {
-        let ver_meta = rustc_version::version_meta().unwrap();
-        let ver = &ver_meta.semver;
-        let pre = ver.pre.get(0).map(|id| format!("{}", id));
-        ((ver.major, ver.minor, ver.patch), pre, ver_meta.commit_date)
-    };
+    let ver_meta = rustc_version::version_meta().unwrap();
+    let ver = ver_meta.semver;
+    let pre_str = ver.pre.as_str();
+    let version = (ver.major, ver.minor, ver.patch);
+    let commit_date = ver_meta.commit_date;
 
     let version_string = {
         let commit_id_string = commit_id.unwrap_or_else(|| "unknown".to_owned());
         format!("{}-{:.8}", version_str, commit_id_string)
     };
-    let pre_str = pre.as_ref().map(|x| &**x).unwrap_or("unknown");
     let commit_date_str = commit_date.as_ref().map(|x| &**x).unwrap_or("unknown");
     let rustc_str = format!(
         "rustc {major}.{minor}.{patch}-{pre}-{commit_date}",

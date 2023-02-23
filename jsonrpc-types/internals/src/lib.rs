@@ -19,37 +19,45 @@ extern crate syn;
 #[macro_use]
 extern crate quote;
 
+use syn::parse::{Parse, ParseStream};
+use syn::punctuated::Punctuated;
+use syn::token;
+
 struct TypeWithAttrs {
-    typ: syn::Type,
     attrs: Vec<syn::Attribute>,
+    typ: syn::Type,
 }
 
-impl syn::synom::Synom for TypeWithAttrs {
-    named!(parse -> Self, do_parse!(
-        attrs: many0!(syn::Attribute::parse_outer) >>
-        typ: syn!(syn::Type) >>
-        (TypeWithAttrs{ typ, attrs })
-    ));
+impl Parse for TypeWithAttrs {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            attrs: input.call(syn::Attribute::parse_outer)?,
+            typ: input.parse()?,
+        })
+    }
 }
 
 struct ParamsType {
     name: syn::Ident,
-    types: (
-        syn::token::Bracket,
-        syn::punctuated::Punctuated<TypeWithAttrs, Token![,]>,
-    ),
+    colon_token: Token![:],
+    brace_token: token::Bracket,
+    fields: Punctuated<TypeWithAttrs, Token![,]>,
+    comma_token: Token![,],
     resp: syn::Ident,
 }
 
-impl syn::synom::Synom for ParamsType {
-    named!(parse -> Self, do_parse!(
-        name: syn!(syn::Ident) >>
-        punct!(:) >>
-        types: brackets!(call!(syn::punctuated::Punctuated::parse_separated)) >>
-        punct!(,) >>
-        resp: syn!(syn::Ident) >>
-        (ParamsType { name, types, resp })
-    ));
+impl Parse for ParamsType {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        let content;
+        Ok(ParamsType {
+            name: input.parse()?,
+            colon_token: input.parse()?,
+            brace_token: bracketed!(content in input),
+            fields: content.parse_terminated(TypeWithAttrs::parse)?,
+            comma_token: input.parse()?,
+            resp: input.parse()?,
+        })
+    }
 }
 
 // Get JSON-RPC name from params name.
@@ -86,16 +94,19 @@ fn generate_attrs_list(attrs_vec: &[syn::Attribute]) -> proc_macro2::TokenStream
 
 #[proc_macro]
 pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let input: proc_macro2::TokenStream = input.into();
+    let input = proc_macro2::TokenStream::from(input);
 
     let output = {
         let ParamsType {
             name,
-            types: (_, params_types),
+            colon_token: _colon_token,
+            brace_token: _brace_token,
+            fields,
+            comma_token: _comma_token,
             resp,
         } = syn::parse2(input).unwrap();
 
-        let params_size = params_types.len();
+        let fields_size = fields.len();
         let rpcname = construct_rpcname_from_params_name(name.to_string().as_ref());
 
         let mut types = quote!();
@@ -103,10 +114,10 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         let mut params = quote!();
         let mut params_into_vec = quote!();
 
-        match params_size {
+        match fields_size {
             0 => {}
             1 => {
-                let TypeWithAttrs { typ, attrs } = &params_types.iter().next().unwrap();
+                let TypeWithAttrs { attrs, typ } = &fields.iter().next().unwrap();
                 let param_attrs = generate_attrs_list(attrs);
                 types = quote!(#param_attrs pub #typ, #[serde(skip)] OneItemTupleTrick);
                 params_with_types = quote!(param: #typ);
@@ -116,8 +127,8 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             }
             _ => {
                 let mut param_num = 0;
-                for TypeWithAttrs { typ, attrs } in params_types.iter() {
-                    let param_attrs = generate_attrs_list(attrs);
+                for TypeWithAttrs { attrs, typ } in fields.iter() {
+                    let param_attrs = generate_attrs_list(attrs.as_slice());
                     let param_name = format!("p{}", param_num);
                     let param_name = syn::Ident::new(&param_name, proc_macro2::Span::call_site());
                     types = quote!(#types #param_attrs pub #typ,);
@@ -147,7 +158,7 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 type Response = #resp;
 
                 fn required_len() -> usize {
-                    #params_size
+                    #fields_size
                 }
 
                 fn method_name(&self) -> &'static str {
@@ -161,5 +172,5 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         )
     };
 
-    output.into()
+    proc_macro::TokenStream::from(output)
 }

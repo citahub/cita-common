@@ -176,7 +176,6 @@ impl OutputExt for Output {
                             })
                             .unwrap_or_else(|_| Output::system_error(0))
                     }
-                    _ => Output::system_error(0),
                 }
             } else {
                 match response {
