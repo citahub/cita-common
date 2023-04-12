@@ -46,7 +46,7 @@ pub use self::filter::{Filter, FilterAddress, FilterChanges, Topic};
 pub use self::license_info::LicenseInfo;
 pub use self::log::Log;
 pub use self::meta_data::MetaData;
-pub use self::peers_info::PeersInfo;
+pub use self::peers_info::{ExtraInfo, PeersInfo};
 pub use self::proof::{BftProof, Proof};
 pub use self::receipt::Receipt;
 pub use self::software_version::SoftwareVersion;
