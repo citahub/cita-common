@@ -26,7 +26,7 @@ pub type FilterAddress = VariadicValue<Data20>;
 pub type Topic = VariadicValue<Data32>;
 
 /// Filter
-#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq, Default)]
 #[serde(deny_unknown_fields)]
 pub struct Filter {
     /// From Block

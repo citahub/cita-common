@@ -74,7 +74,7 @@ impl TryIntoProto<ProtoRequest> for PeersInfoParams {
     fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
 
-        request.set_peers_info(true);
+        request.set_peers_info(self.0.into());
         Ok(request)
     }
 }

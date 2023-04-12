@@ -144,7 +144,7 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         };
 
         quote!(
-            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
             pub struct #name (#types);
 
             impl #name {

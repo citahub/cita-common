@@ -14,7 +14,7 @@
 
 use crate::rpc_types::{Data, Data20};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq, Default)]
 pub struct CallRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub from: Option<Data20>,

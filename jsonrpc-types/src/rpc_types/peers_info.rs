@@ -19,9 +19,16 @@ use std::collections::HashMap;
 pub struct PeersInfo {
     pub amount: u32,
     pub peers: Option<HashMap<Address, String>>,
-
     #[serde(rename = "errorMessage")]
     pub error_message: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extra_info: Option<HashMap<Address, ExtraInfo>>,
+}
+
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
+pub struct ExtraInfo {
+    pub node_type: String,
+    pub height: u64,
 }
 
 #[cfg(test)]
@@ -56,6 +63,7 @@ mod tests {
             amount: 3,
             peers: Some(peers),
             error_message: None,
+            extra_info: None,
         };
 
         assert_eq!(serde_json::to_value(peers_info).unwrap(), value);
@@ -73,6 +81,7 @@ mod tests {
             amount: 0,
             peers: None,
             error_message: Some("Disabled interface".to_owned()),
+            extra_info: None,
         };
 
         assert_eq!(serde_json::to_value(peers_info).unwrap(), value);
