@@ -64,7 +64,8 @@ macro_rules! partial_call_complete {
                         PartialCall::$enum_name { params } => {
                             if let Some(params) = params {
                                 let pparams: PartialParams = serde_json::from_value(params.clone())?;
-                                if pparams.len() != $params_name::required_len() {
+                                if pparams.len() < $params_name::required_len()
+                                    && pparams.len() > $params_name::valid_len() {
                                     Err(Error::invalid_params_len())
                                 } else {
                                     Ok(Call::$enum_name{ params: serde_json::from_value(params)? })

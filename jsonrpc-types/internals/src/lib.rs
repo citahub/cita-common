@@ -107,6 +107,7 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         } = syn::parse2(input).unwrap();
 
         let fields_size = fields.len();
+        let mut ele_req = fields_size;
         let rpcname = construct_rpcname_from_params_name(name.to_string().as_ref());
 
         let mut types = quote!();
@@ -118,6 +119,9 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             0 => {}
             1 => {
                 let TypeWithAttrs { attrs, typ } = &fields.iter().next().unwrap();
+                if !attrs.is_empty() {
+                    ele_req = ele_req - 1;
+                }
                 let param_attrs = generate_attrs_list(attrs);
                 types = quote!(#param_attrs pub #typ, #[serde(skip)] OneItemTupleTrick);
                 params_with_types = quote!(param: #typ);
@@ -129,6 +133,9 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 let mut param_num = 0;
                 for TypeWithAttrs { attrs, typ } in fields.iter() {
                     let param_attrs = generate_attrs_list(attrs.as_slice());
+                    if !attrs.is_empty() {
+                        ele_req = ele_req - 1;
+                    }
                     let param_name = format!("p{}", param_num);
                     let param_name = syn::Ident::new(&param_name, proc_macro2::Span::call_site());
                     types = quote!(#types #param_attrs pub #typ,);
@@ -158,6 +165,10 @@ pub fn construct_params(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 type Response = #resp;
 
                 fn required_len() -> usize {
+                    #ele_req
+                }
+
+                fn valid_len() -> usize {
                     #fields_size
                 }
 

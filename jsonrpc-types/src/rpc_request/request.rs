@@ -193,6 +193,7 @@ macro_rules! define_call {
 pub trait JsonRpcRequest {
     type Response;
     fn required_len() -> usize;
+    fn valid_len() -> usize;
     fn method_name(&self) -> &'static str;
     fn value_vec(self) -> Vec<serde_json::Value>;
 }
