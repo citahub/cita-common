@@ -166,7 +166,6 @@ macro_rules! loop_macro_for_structs {
             BlockWithProof,
             CompactBlock,
             CompactBlockBody,
-            InitMessage,
             LogBloom,
             Proof,
             RichStatus,
