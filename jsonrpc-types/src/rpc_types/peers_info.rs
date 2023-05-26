@@ -29,6 +29,7 @@ pub struct PeersInfo {
 pub struct ExtraInfo {
     pub node_type: String,
     pub height: u64,
+    pub soft_version: String,
 }
 
 #[cfg(test)]
