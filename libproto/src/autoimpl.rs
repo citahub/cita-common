@@ -164,6 +164,8 @@ macro_rules! loop_macro_for_structs {
             BlockTxs,
             BlockWithLogBloom,
             BlockWithProof,
+            ChainVersionReq,
+            ChainVersionResp,
             CompactBlock,
             CompactBlockBody,
             LogBloom,
@@ -262,6 +264,8 @@ macro_rules! loop_macro_for_structs_in_msg {
             ValidatorsListReq,
             ValidatorsListResp,
             BlockWithLogBloom,
+            ChainVersionReq,
+            ChainVersionResp,
             // Generate MSG-PROTOS struct automatically end.
         );
     };
@@ -633,6 +637,18 @@ impl Message {
     pub fn take_block_with_log_bloom(&mut self) -> Option<BlockWithLogBloom> {
         match self.take_content() {
             Some(MsgClass::BlockWithLogBloom(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_chain_version_req(&mut self) -> Option<ChainVersionReq> {
+        match self.take_content() {
+            Some(MsgClass::ChainVersionReq(v)) => Some(v),
+            _ => None,
+        }
+    }
+    pub fn take_chain_version_resp(&mut self) -> Option<ChainVersionResp> {
+        match self.take_content() {
+            Some(MsgClass::ChainVersionResp(v)) => Some(v),
             _ => None,
         }
     }

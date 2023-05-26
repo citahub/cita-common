@@ -89,6 +89,8 @@ pub enum MsgType {
     ValidatorsListReq,
     ValidatorsListResp,
     BlockWithLogBloom,
+    ChainVersionReq,
+    ChainVersionResp,
     // Generate MSG-PROTOS struct automatically end.
     All,
     Unknown,
@@ -203,6 +205,8 @@ impl fmt::Display for MsgType {
                 &MsgType::ValidatorsListReq => "validators_list_req",
                 &MsgType::ValidatorsListResp => "validators_list_resp",
                 &MsgType::BlockWithLogBloom => "block_with_log_bloom",
+                &MsgType::ChainVersionReq => "chain_version_req",
+                &MsgType::ChainVersionResp => "chain_version_resp",
                 // Generate MSG-PROTOS display automatically end.
                 MsgType::All => "*",
                 MsgType::Unknown => UNKNOWN,
@@ -287,6 +291,8 @@ impl<'a> From<&'a str> for MsgType {
             "validators_list_req" => MsgType::ValidatorsListReq,
             "validators_list_resp" => MsgType::ValidatorsListResp,
             "block_with_log_bloom" => MsgType::BlockWithLogBloom,
+            "chain_version_req" => MsgType::ChainVersionReq,
+            "chain_version_resp" => MsgType::ChainVersionResp,
             // Generate MSG-PROTOS from_str automatically end.
             "*" => MsgType::All,
             "req_new_tx" => MsgType::RequestNewTx,

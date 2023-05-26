@@ -1,3 +1,4 @@
 [submodule "libproto/proto"]
 	path = libproto/proto
 	url = git@git.rivtower.com:cita/cita-proto.git
+	branch = wip-1.8.1
