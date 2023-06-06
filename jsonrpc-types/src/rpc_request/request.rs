@@ -19,8 +19,8 @@ use crate::internals::construct_params;
 
 use crate::rpc_types::{
     Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id,
-    LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo, Quantity, Receipt, RpcTransaction,
-    SoftwareVersion, TxResponse, Version,
+    LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo, PoolTxNum, Quantity, Receipt,
+    RpcTransaction, SoftwareVersion, TxResponse, Version,
 };
 
 pub type Logs = Vec<Log>;
@@ -251,7 +251,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
                 #[serde(default)]
                 Boolean
             ], PeersInfo),
-            (GetPoolTxNum, GetPoolTxNumParams: [], Quantity),
+            (GetPoolTxNum, GetPoolTxNumParams: [], PoolTxNum),
         );
     };
 }

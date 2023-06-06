@@ -16,13 +16,12 @@ use jsonrpc_types::{
     rpc_request::{RequestInfo, ResponseResult},
     rpc_response::{Output, RpcFailure, RpcSuccess},
     rpc_types::{
-        Block, FilterChanges, LicenseInfo, Log, MetaData, PeersInfo, Receipt, RpcBlock,
+        Block, FilterChanges, LicenseInfo, Log, MetaData, PeersInfo, PoolTxNum, Receipt, RpcBlock,
         RpcTransaction, SoftwareVersion,
     },
     Error,
 };
 use libproto::response::{Response, Response_oneof_data};
-use libproto::PoolTxNum;
 
 pub trait OutputExt {
     fn from_res_info(resp: Response, info: RequestInfo) -> Self;
@@ -178,7 +177,7 @@ impl OutputExt for Output {
                             .unwrap_or_else(|_| Output::system_error(0))
                     }
                     Response_oneof_data::pool_tx_num(data) => success
-                        .set_result(ResponseResult::GetPoolTxNum(data.into()))
+                        .set_result(ResponseResult::GetPoolTxNum(PoolTxNum { num: data }))
                         .output(),
                 }
             } else {
