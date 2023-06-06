@@ -22,6 +22,7 @@ use jsonrpc_types::{
     Error,
 };
 use libproto::response::{Response, Response_oneof_data};
+use libproto::PoolTxNum;
 
 pub trait OutputExt {
     fn from_res_info(resp: Response, info: RequestInfo) -> Self;
@@ -176,6 +177,9 @@ impl OutputExt for Output {
                             })
                             .unwrap_or_else(|_| Output::system_error(0))
                     }
+                    Response_oneof_data::pool_tx_num(data) => success
+                        .set_result(ResponseResult::GetPoolTxNum(data.into()))
+                        .output(),
                 }
             } else {
                 match response {

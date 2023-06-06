@@ -251,6 +251,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
                 #[serde(default)]
                 Boolean
             ], PeersInfo),
+            (GetPoolTxNum, GetPoolTxNumParams: [], Quantity),
         );
     };
 }

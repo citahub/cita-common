@@ -22,15 +22,15 @@ mod license_info;
 mod log;
 mod meta_data;
 mod peers_info;
+mod pool_tx_num;
 mod proof;
 mod receipt;
 mod software_version;
 mod specs;
-mod transaction;
-mod tx_response;
-
 #[cfg(test)]
 mod tests;
+mod transaction;
+mod tx_response;
 
 pub use self::basic::{
     BlockTag, Boolean, Data, Data20, Data32, EconomicalModel, Integer, OneItemTupleTrick, Quantity,

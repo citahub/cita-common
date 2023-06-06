@@ -169,6 +169,7 @@ macro_rules! loop_macro_for_structs {
             CompactBlock,
             CompactBlockBody,
             LogBloom,
+            PoolTxNum,
             Proof,
             RichStatus,
             SignedTransaction,

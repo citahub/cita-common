@@ -484,3 +484,14 @@ impl SendRawTransactionParamsExt for SendRawTransactionParams {
         Ok(un_tx)
     }
 }
+
+impl TryIntoProto<ProtoRequest> for GetPoolTxNumParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_pool_tx_num(true);
+        Ok(request)
+    }
+}
