@@ -18,9 +18,9 @@ use serde_json;
 use crate::internals::construct_params;
 
 use crate::rpc_types::{
-    Block, BlockNumber, Boolean, CallRequest, Data, Data20, Data32, Filter, FilterChanges, Id,
-    LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo, PoolTxNum, Quantity, Receipt,
-    RpcTransaction, SoftwareVersion, TxResponse, Version,
+    Block, BlockNumber, Boolean, CallRequest, CallResult, Data, Data20, Data32, Filter,
+    FilterChanges, Id, LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo, PoolTxNum,
+    Quantity, Receipt, RpcTransaction, SoftwareVersion, TxResponse, Version,
 };
 
 pub type Logs = Vec<Log>;
@@ -228,7 +228,6 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (GetBlockByNumber, GetBlockByNumberParams: [BlockNumber, Boolean], Block),
             (GetTransactionReceipt, GetTransactionReceiptParams: [Data32], Receipt),
             (GetLogs, GetLogsParams: [Filter], Logs),
-            (Call, CallParams: [CallRequest, BlockNumber], Data),
             (GetTransaction, GetTransactionParams: [Data32], RpcTransaction),
             (GetTransactionCount, GetTransactionCountParams: [Data20, BlockNumber], Quantity),
             (GetCode, GetCodeParams: [Data20, BlockNumber], Data),
@@ -247,11 +246,17 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (GetVersion, GetVersionParams: [], SoftwareVersion),
             (EstimateQuota, EstimateQuotaParams: [CallRequest, BlockNumber], Quantity),
             (LicenseInfo, LicenseInfoParams: [], LicenseInfo),
+            (GetPoolTxNum, GetPoolTxNumParams: [], PoolTxNum),
             (PeersInfo, PeersInfoParams: [
                 #[serde(default)]
                 Boolean
             ], PeersInfo),
-            (GetPoolTxNum, GetPoolTxNumParams: [], PoolTxNum),
+            (Call, CallParams: [
+                CallRequest,
+                BlockNumber,
+                #[serde(default)]
+                Boolean
+            ], CallResult),
         );
     };
 }

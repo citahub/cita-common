@@ -16,6 +16,7 @@ mod basic;
 mod block;
 mod block_number;
 mod call_request;
+mod call_result;
 mod exchange;
 mod filter;
 mod license_info;
@@ -36,12 +37,11 @@ pub use self::basic::{
     BlockTag, Boolean, Data, Data20, Data32, EconomicalModel, Integer, OneItemTupleTrick, Quantity,
     VariadicValue,
 };
-pub use self::exchange::{BlockParamsByHash, BlockParamsByNumber, CountOrCode, RpcBlock};
-pub use self::specs::{Id, Params, Version};
-
 pub use self::block::{Block, BlockBody, BlockHeader};
 pub use self::block_number::BlockNumber;
 pub use self::call_request::CallRequest;
+pub use self::call_result::CallResult;
+pub use self::exchange::{BlockParamsByHash, BlockParamsByNumber, CountOrCode, RpcBlock};
 pub use self::filter::{Filter, FilterAddress, FilterChanges, Topic};
 pub use self::license_info::LicenseInfo;
 pub use self::log::Log;
@@ -51,9 +51,9 @@ pub use self::pool_tx_num::PoolTxNum;
 pub use self::proof::{BftProof, Proof};
 pub use self::receipt::Receipt;
 pub use self::software_version::SoftwareVersion;
+pub use self::specs::{Id, Params, Version};
 pub use self::transaction::{BlockTransaction, FullTransaction, RpcTransaction};
 pub use self::tx_response::TxResponse;
-
 use serde_json;
 
 macro_rules! impl_from_jsonstr_for {

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use jsonrpc_types::rpc_types::CallResult;
 use jsonrpc_types::{
     rpc_request::{RequestInfo, ResponseResult},
     rpc_response::{Output, RpcFailure, RpcSuccess},
@@ -73,8 +74,13 @@ impl OutputExt for Output {
                     Response_oneof_data::peercount(x) => success
                         .set_result(ResponseResult::PeerCount(x.into()))
                         .output(),
-                    Response_oneof_data::call_result(x) => {
-                        success.set_result(ResponseResult::Call(x.into())).output()
+                    Response_oneof_data::call_result(x) => success
+                        .set_result(ResponseResult::GetCode(x.into()))
+                        .output(),
+                    Response_oneof_data::call_full_result(serialized) => {
+                        serde_json::from_str::<CallResult>(&serialized)
+                            .map(|result| success.set_result(ResponseResult::Call(result)).output())
+                            .unwrap_or_else(|_| Output::system_error(0))
                     }
                     Response_oneof_data::logs(serialized) => {
                         serde_json::from_str::<Vec<Log>>(&serialized)

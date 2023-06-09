@@ -192,6 +192,7 @@ impl TryIntoProto<ProtoRequest> for CallParams {
         call.set_from(self.0.from.unwrap_or_default().into());
         call.set_to(self.0.to.into());
         call.set_data(self.0.data.unwrap_or_default().into());
+        call.set_extra(self.2.into());
 
         serde_json::to_string(&self.1)
             .map_err(|err| Error::invalid_params(err.to_string()))
