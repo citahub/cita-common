@@ -506,12 +506,12 @@ impl TryIntoProto<ProtoRequest> for OpCensoredAddressParams {
         let mut censor_address = CensorAddress::new();
 
         censor_address.address = self.1.into();
-        match self.0 {
-            Integer(1) => censor_address.action = 1,
-            Integer(0) => censor_address.action = 0,
+        match self.0.into() {
+            1 => censor_address.action = 1,
+            2 => censor_address.action = 2,
             _ => {
                 return Err(Error::invalid_params(
-                    "param 'action' is invalid, expected 0 or 1",
+                    "param 'action' is invalid, expected 1 or 2",
                 ))
             }
         }
