@@ -13,12 +13,13 @@
 // limitations under the License.
 
 use cita_types::{clean_0x, traits::LowerHex};
+use jsonrpc_types::rpc_types::Integer;
 use jsonrpc_types::{
     rpc_request::*, // bring in varied Params
     rpc_types::{BlockParamsByHash, BlockParamsByNumber, CountOrCode},
     Error,
 };
-use libproto::{request::Request as ProtoRequest, UnverifiedTransaction};
+use libproto::{request::Request as ProtoRequest, CensorAddress, UnverifiedTransaction};
 use serde_json;
 
 use crate::from_into::TryIntoProto;
@@ -493,6 +494,29 @@ impl TryIntoProto<ProtoRequest> for GetPoolTxNumParams {
         let mut request = create_request();
 
         request.set_pool_tx_num(true);
+        Ok(request)
+    }
+}
+
+impl TryIntoProto<ProtoRequest> for OpCensoredAddressParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+        let mut censor_address = CensorAddress::new();
+
+        censor_address.address = self.1.into();
+        match self.0 {
+            Integer(1) => censor_address.action = 1,
+            Integer(0) => censor_address.action = 0,
+            _ => {
+                return Err(Error::invalid_params(
+                    "param 'action' is invalid, expected 0 or 1",
+                ))
+            }
+        }
+
+        request.set_censor_address(censor_address);
         Ok(request)
     }
 }

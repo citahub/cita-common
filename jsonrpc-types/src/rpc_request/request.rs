@@ -19,8 +19,8 @@ use crate::internals::construct_params;
 
 use crate::rpc_types::{
     Block, BlockNumber, Boolean, CallRequest, CallResult, Data, Data20, Data32, Filter,
-    FilterChanges, Id, LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo, PoolTxNum,
-    Quantity, Receipt, RpcTransaction, SoftwareVersion, TxResponse, Version,
+    FilterChanges, Id, Integer, LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo,
+    PoolTxNum, Quantity, Receipt, RpcTransaction, SoftwareVersion, TxResponse, Version,
 };
 
 pub type Logs = Vec<Log>;
@@ -247,6 +247,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (EstimateQuota, EstimateQuotaParams: [CallRequest, BlockNumber], Quantity),
             (LicenseInfo, LicenseInfoParams: [], LicenseInfo),
             (GetPoolTxNum, GetPoolTxNumParams: [], PoolTxNum),
+            (OpCensoredAddress, OpCensoredAddressParams: [Integer, Data20], Boolean),
             (PeersInfo, PeersInfoParams: [
                 #[serde(default)]
                 Boolean

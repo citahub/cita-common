@@ -185,6 +185,9 @@ impl OutputExt for Output {
                     Response_oneof_data::pool_tx_num(data) => success
                         .set_result(ResponseResult::GetPoolTxNum(PoolTxNum { num: data }))
                         .output(),
+                    Response_oneof_data::censor_address(data) => success
+                        .set_result(ResponseResult::OpCensoredAddress(data.into()))
+                        .output(),
                 }
             } else {
                 match response {

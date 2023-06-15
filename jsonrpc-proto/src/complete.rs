@@ -18,8 +18,9 @@ use jsonrpc_types::rpc_request::{
     GetFilterChangesParams, GetFilterLogsParams, GetLogsParams, GetMetaDataParams,
     GetPoolTxNumParams, GetStateProofParams, GetStorageKeyParams, GetTransactionCountParams,
     GetTransactionParams, GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams,
-    LicenseInfoParams, NewBlockFilterParams, NewFilterParams, PeerCountParams, PeersInfoParams,
-    SendRawTransactionParams, SendTransactionParams, UninstallFilterParams,
+    LicenseInfoParams, NewBlockFilterParams, NewFilterParams, OpCensoredAddressParams,
+    PeerCountParams, PeersInfoParams, SendRawTransactionParams, SendTransactionParams,
+    UninstallFilterParams,
 };
 use jsonrpc_types::rpc_request::{Call, JsonRpcRequest, PartialCall, PartialRequest, Request};
 use jsonrpc_types::{rpc_types::Params as PartialParams, Error};

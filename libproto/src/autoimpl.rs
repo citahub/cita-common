@@ -150,6 +150,7 @@ macro_rules! loop_macro_for_structs {
             // Generate ALL-PROTOS automatically begin:
             BlockTxHashes,
             BlockTxHashesReq,
+            CensorAddress,
             GetTxList,
             Miscellaneous,
             MiscellaneousReq,
