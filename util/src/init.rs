@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use serde::de;
+use std::io::Write;
 use toml;
 
 #[macro_export]
@@ -56,4 +57,18 @@ macro_rules! parse_config {
         parse_config_from_buffer::<$type>(&buffer)
             .unwrap_or_else(|err| panic!("Error while parsing config: [{}]", err))
     }};
+}
+
+pub fn write_toml<T: serde::Serialize>(content: T, path: impl AsRef<std::path::Path>) {
+    let toml = toml::Value::try_from(content).unwrap();
+
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(path.as_ref())
+        .unwrap_or_else(|_| panic!("open file({:?}) failed.", path.as_ref().to_str()));
+    file.write_all(toml::to_string_pretty(&toml).unwrap().as_bytes())
+        .unwrap();
+    file.write_all(b"\n").unwrap();
 }
