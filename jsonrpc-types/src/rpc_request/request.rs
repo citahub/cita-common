@@ -18,8 +18,8 @@ use serde_json;
 use crate::internals::construct_params;
 
 use crate::rpc_types::{
-    Block, BlockNumber, Boolean, CallRequest, CallResult, Data, Data20, Data32, Filter,
-    FilterChanges, Id, Integer, LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo,
+    Block, BlockNumber, Boolean, CallRequest, CallResult, CensorAddrs, Data, Data20, Data32,
+    Filter, FilterChanges, Id, Integer, LicenseInfo, Log, MetaData, OneItemTupleTrick, PeersInfo,
     PoolTxNum, Quantity, Receipt, RpcTransaction, SoftwareVersion, TxResponse, Version,
 };
 
@@ -258,6 +258,7 @@ macro_rules! impl_for_each_jsonrpc_requests {
                 #[serde(default)]
                 Boolean
             ], CallResult),
+            (GetCensoredAddrs, GetCensoredAddrsParams: [], CensorAddrs),
         );
     };
 }

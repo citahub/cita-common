@@ -17,8 +17,8 @@ use jsonrpc_types::{
     rpc_request::{RequestInfo, ResponseResult},
     rpc_response::{Output, RpcFailure, RpcSuccess},
     rpc_types::{
-        Block, FilterChanges, LicenseInfo, Log, MetaData, PeersInfo, PoolTxNum, Receipt, RpcBlock,
-        RpcTransaction, SoftwareVersion,
+        Block, CensorAddrs, FilterChanges, LicenseInfo, Log, MetaData, PeersInfo, PoolTxNum,
+        Receipt, RpcBlock, RpcTransaction, SoftwareVersion,
     },
     Error,
 };
@@ -188,6 +188,15 @@ impl OutputExt for Output {
                     Response_oneof_data::censor_address(data) => success
                         .set_result(ResponseResult::OpCensoredAddress(data.into()))
                         .output(),
+                    Response_oneof_data::query_censor_addrs(data) => {
+                        serde_json::from_str::<CensorAddrs>(&data)
+                            .map(|data| {
+                                success
+                                    .set_result(ResponseResult::GetCensoredAddrs(data))
+                                    .output()
+                            })
+                            .unwrap_or_else(|_| Output::system_error(0))
+                    }
                 }
             } else {
                 match response {

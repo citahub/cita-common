@@ -19,8 +19,8 @@ mod tests;
 
 pub use self::request::{
     BlockNumberParams, CallParams, EstimateQuotaParams, GetAbiParams, GetBalanceParams,
-    GetBlockByHashParams, GetBlockByNumberParams, GetBlockHeaderParams, GetCodeParams,
-    GetFilterChangesParams, GetFilterLogsParams, GetLogsParams, GetMetaDataParams,
+    GetBlockByHashParams, GetBlockByNumberParams, GetBlockHeaderParams, GetCensoredAddrsParams,
+    GetCodeParams, GetFilterChangesParams, GetFilterLogsParams, GetLogsParams, GetMetaDataParams,
     GetPoolTxNumParams, GetStateProofParams, GetStorageKeyParams, GetTransactionCountParams,
     GetTransactionParams, GetTransactionProofParams, GetTransactionReceiptParams, GetVersionParams,
     LicenseInfoParams, NewBlockFilterParams, NewFilterParams, OpCensoredAddressParams,

@@ -520,3 +520,14 @@ impl TryIntoProto<ProtoRequest> for OpCensoredAddressParams {
         Ok(request)
     }
 }
+
+impl TryIntoProto<ProtoRequest> for GetCensoredAddrsParams {
+    type Error = Error;
+
+    fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
+        let mut request = create_request();
+
+        request.set_query_censor_addrs(true);
+        Ok(request)
+    }
+}
