@@ -228,7 +228,6 @@ macro_rules! impl_for_each_jsonrpc_requests {
             (GetBlockByNumber, GetBlockByNumberParams: [BlockNumber, Boolean], Block),
             (GetTransactionReceipt, GetTransactionReceiptParams: [Data32], Receipt),
             (GetLogs, GetLogsParams: [Filter], Logs),
-            (GetTransaction, GetTransactionParams: [Data32], RpcTransaction),
             (GetTransactionCount, GetTransactionCountParams: [Data20, BlockNumber], Quantity),
             (GetCode, GetCodeParams: [Data20, BlockNumber], Data),
             (GetAbi, GetAbiParams: [Data20, BlockNumber], Data),
@@ -252,6 +251,11 @@ macro_rules! impl_for_each_jsonrpc_requests {
                 #[serde(default)]
                 Boolean
             ], PeersInfo),
+            (GetTransaction, GetTransactionParams: [
+                Data32,
+                #[serde(default)]
+                Boolean
+            ], RpcTransaction),
             (Call, CallParams: [
                 CallRequest,
                 BlockNumber,

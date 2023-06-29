@@ -209,6 +209,7 @@ macro_rules! loop_macro_for_structs {
             Request,
             StateProof,
             StorageKey,
+            TransactionParam,
             FullTransaction,
             LightResponse,
             Response,

@@ -19,7 +19,9 @@ use jsonrpc_types::{
     rpc_types::{BlockParamsByHash, BlockParamsByNumber, CountOrCode},
     Error,
 };
-use libproto::{request::Request as ProtoRequest, CensorAddress, UnverifiedTransaction};
+use libproto::{
+    request::Request as ProtoRequest, CensorAddress, TransactionParam, UnverifiedTransaction,
+};
 use serde_json;
 
 use crate::from_into::TryIntoProto;
@@ -210,8 +212,11 @@ impl TryIntoProto<ProtoRequest> for GetTransactionParams {
 
     fn try_into_proto(self) -> Result<ProtoRequest, Self::Error> {
         let mut request = create_request();
+        let mut param = TransactionParam::new();
+        param.set_hash(self.0.into());
+        param.set_find_in_pool(self.1.into());
 
-        request.set_transaction(self.0.into());
+        request.set_transaction(param);
         Ok(request)
     }
 }
