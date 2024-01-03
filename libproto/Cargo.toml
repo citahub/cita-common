@@ -4,7 +4,7 @@ version = "0.1.1"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 description = "decorate proto struct"
 license = "Apache-2.0"
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 protobuf = { version = "=2.8.1", features = ["with-bytes"]}

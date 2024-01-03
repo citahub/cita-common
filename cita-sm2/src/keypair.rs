@@ -16,7 +16,7 @@ use super::{Address, Error, PrivKey, PubKey};
 use crate::types::H160;
 use cita_crypto_trait::CreateKey;
 use hashable::Hashable;
-use ring::signature::{EcdsaKeyPair, ECDSA_SM2P256_SM3_ASN1_SIGNING};
+use rand::{thread_rng, Rng};
 use rustc_serialize::hex::ToHex;
 use std::fmt;
 
@@ -25,7 +25,7 @@ pub fn pubkey_to_address(pubkey: &PubKey) -> Address {
 }
 
 pub struct KeyPair {
-    pub inner: EcdsaKeyPair,
+    pub inner: efficient_sm2::KeyPair,
     privkey: PrivKey,
     pubkey: PubKey,
 }
@@ -44,14 +44,9 @@ impl CreateKey for KeyPair {
     type Error = Error;
 
     fn from_privkey(privkey: Self::PrivKey) -> Result<Self, Self::Error> {
-        let inner = EcdsaKeyPair::from_privatekey_bytes(
-            &ECDSA_SM2P256_SM3_ASN1_SIGNING,
-            untrusted::Input::from(privkey.as_ref()),
-        )
-        .map_err(|_| Error::RecoverError)?;
-        let out = &inner.private_key()[16..];
-        let privkey = PrivKey::from_slice(out);
-        let pubkey = PubKey::from_slice(&inner.public_key()[1..]);
+        let inner =
+            efficient_sm2::KeyPair::new(privkey.as_bytes()).map_err(|_| Error::KeyPairError)?;
+        let pubkey = PubKey::from_slice(&inner.public_key().bytes_less_safe()[1..]);
         Ok(KeyPair {
             inner,
             privkey,
@@ -60,10 +55,11 @@ impl CreateKey for KeyPair {
     }
 
     fn gen_keypair() -> Self {
-        let inner = EcdsaKeyPair::generate_keypair(&ECDSA_SM2P256_SM3_ASN1_SIGNING).unwrap();
-        let out = &inner.private_key()[16..];
-        let privkey = PrivKey::from_slice(out);
-        let pubkey = PubKey::from_slice(&inner.public_key()[1..]);
+        let mut sk_bz = [0; 32];
+        thread_rng().fill(&mut sk_bz);
+        let privkey = PrivKey::from_slice(&sk_bz);
+        let inner = efficient_sm2::KeyPair::new(privkey.as_bytes()).unwrap();
+        let pubkey = PubKey::from_slice(&inner.public_key().bytes_less_safe()[1..]);
         KeyPair {
             inner,
             privkey,

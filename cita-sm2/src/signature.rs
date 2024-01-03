@@ -16,8 +16,6 @@ use super::{
     pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
 };
 use cita_crypto_trait::{CreateKey, Sign};
-use ring::signature;
-use ring::signature::{EcdsaKeyPair, ECDSA_SM2P256_SM3_ASN1_SIGNING};
 use rlp::*;
 use rustc_serialize::hex::ToHex;
 use serde::de::{Error as SerdeError, SeqAccess, Visitor};
@@ -216,67 +214,37 @@ impl Sign for Signature {
     type Error = Error;
 
     fn sign(privkey: &Self::PrivKey, message: &Self::Message) -> Result<Self, Error> {
-        let rng = ring::rand::SystemRandom::new();
         let key_pair = KeyPair::from_privkey(*privkey)?;
 
         let sig = key_pair
             .inner
-            .sign(&rng, message.as_bytes())
-            .map_err(|_| Error::SignError)?;
-        let signature = untrusted::Input::from(sig.as_ref());
-        let (r, s) = key_pair
-            .inner
-            .split_rs(&signature::ECDSA_SM2P256_SM3_ASN1, &signature)
+            .sign(message.as_bytes())
             .map_err(|_| Error::SignError)?;
         let mut sig_bytes = [0u8; SIGNATURE_BYTES_LEN];
-        let r_bytes = r.as_slice_less_safe();
-        let s_bytes = s.as_slice_less_safe();
-        sig_bytes[32 - r_bytes.len()..32].copy_from_slice(&r_bytes);
-        sig_bytes[64 - s_bytes.len()..64].copy_from_slice(&s_bytes);
+        sig_bytes[..32].copy_from_slice(&sig.r());
+        sig_bytes[32..64].copy_from_slice(&sig.s());
         sig_bytes[64..].copy_from_slice(key_pair.pubkey().as_bytes());
         Ok(Signature(sig_bytes))
     }
 
     fn recover(&self, message: &Message) -> Result<Self::PubKey, Error> {
-        let mut pubkey = [0u8; 65];
-        pubkey[0] = 4;
-        pubkey[1..].copy_from_slice(self.pk());
-
-        let pk =
-            signature::UnparsedPublicKey::new(&signature::ECDSA_SM2P256_SM3_ASN1, pubkey.as_ref());
-
-        let r = self.r();
-        let s = self.s();
-        let signature = EcdsaKeyPair::format_rs(&ECDSA_SM2P256_SM3_ASN1_SIGNING, r, s)
-            .map_err(|_| Error::RecoverError)?;
-
-        if pk.verify(message.as_bytes(), signature.as_ref()).is_ok() {
-            Ok(PubKey::from_slice(self.pk()))
-        } else {
-            Err(Error::RecoverError)
+        let sig =
+            efficient_sm2::Signature::new(self.r(), self.s()).map_err(|_| Error::SignatureError)?;
+        let pk = efficient_sm2::PublicKey::from_slice(self.pk());
+        match sig.verify(&pk, message.as_bytes()) {
+            Ok(()) => Ok(PubKey::from_slice(self.pk())),
+            Err(_) => Err(Error::RecoverError),
         }
     }
 
     fn verify_public(&self, pubkey: &Self::PubKey, message: &Self::Message) -> Result<bool, Error> {
-        let mut pubkey_sig = [0u8; 65];
-        pubkey_sig[0] = 4;
-        pubkey_sig[1..].copy_from_slice(self.pk());
-
-        let pk = signature::UnparsedPublicKey::new(
-            &signature::ECDSA_SM2P256_SM3_ASN1,
-            pubkey_sig.as_ref(),
-        );
-
-        let r = self.r();
-        let s = self.s();
-        let signature = EcdsaKeyPair::format_rs(&ECDSA_SM2P256_SM3_ASN1_SIGNING, r, s)
-            .map_err(|_| Error::SignError)?;
-
-        if PubKey::from_slice(self.pk()) == *pubkey {
-            if pk.verify(message.as_bytes(), signature.as_ref()).is_ok() {
-                Ok(true)
-            } else {
-                Ok(false)
+        let sig =
+            efficient_sm2::Signature::new(self.r(), self.s()).map_err(|_| Error::SignatureError)?;
+        let pk = efficient_sm2::PublicKey::from_slice(self.pk());
+        if *pubkey == PubKey::from_slice(self.pk()) {
+            match sig.verify(&pk, message.as_bytes()) {
+                Ok(()) => Ok(true),
+                Err(_) => Ok(false),
             }
         } else {
             Ok(false)

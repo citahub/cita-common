@@ -18,6 +18,8 @@ use std::fmt;
 pub enum Error {
     RecoverError,
     SignError,
+    KeyPairError,
+    SignatureError,
 }
 
 impl fmt::Display for Error {
@@ -25,6 +27,8 @@ impl fmt::Display for Error {
         let message = match *self {
             Error::RecoverError => "Recover Error",
             Error::SignError => "Sign Error",
+            Error::KeyPairError => "KeyPair Error",
+            Error::SignatureError => "Signature Error",
         };
         f.write_fmt(format_args!("Crypto error: {}", message))
     }
