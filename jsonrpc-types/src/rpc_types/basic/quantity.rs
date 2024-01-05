@@ -76,7 +76,7 @@ impl<'de> Visitor<'de> for QuantityVisitor {
             })?;
             Ok(Quantity::new(data))
         } else if !value.is_empty() {
-            let data = U256::from_dec_str(&value[..]).map_err(|_| {
+            let data = U256::from_dec_str(value).map_err(|_| {
                 if value.len() > 12 {
                     E::custom(format!(
                         "invalid decimal string: [{}..(omit {})..{}]",
@@ -114,10 +114,10 @@ impl From<Vec<u8>> for Quantity {
     }
 }
 
-impl Into<Vec<u8>> for Quantity {
-    fn into(self) -> Vec<u8> {
+impl From<Quantity> for Vec<u8> {
+    fn from(val: Quantity) -> Self {
         let mut bytes = [0u8; 32];
-        self.0.to_big_endian(&mut bytes);
+        val.0.to_big_endian(&mut bytes);
         bytes.to_vec()
     }
 }
@@ -128,9 +128,9 @@ impl From<U256> for Quantity {
     }
 }
 
-impl Into<U256> for Quantity {
-    fn into(self) -> U256 {
-        self.0
+impl From<Quantity> for U256 {
+    fn from(val: Quantity) -> Self {
+        val.0
     }
 }
 
@@ -142,9 +142,9 @@ macro_rules! impl_from_and_into_for_small_uint {
             }
         }
 
-        impl Into<$utype> for Quantity {
-            fn into(self) -> $utype {
-                self.0.low_u64() as $utype
+        impl From<Quantity> for $utype {
+            fn from(val: Quantity) -> Self {
+                val.0.low_u64() as $utype
             }
         }
     };

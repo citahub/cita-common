@@ -112,15 +112,15 @@ macro_rules! impl_for_fixed_type {
             }
         }
 
-        impl Into<$inner> for $outer {
-            fn into(self) -> $inner {
-                self.0
+        impl From<$outer> for $inner {
+            fn from(data: $outer) -> $inner {
+                data.0
             }
         }
 
-        impl Into<Vec<u8>> for $outer {
-            fn into(self) -> Vec<u8> {
-                self.0.as_bytes().to_vec()
+        impl From<$outer> for Vec<u8> {
+            fn from(data: $outer) -> Vec<u8> {
+                data.0.as_bytes().to_vec()
             }
         }
     };

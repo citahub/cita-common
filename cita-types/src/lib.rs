@@ -52,8 +52,8 @@ pub fn delete_left0(s: &str) -> &str {
 
 #[inline]
 pub fn clean_0x(s: &str) -> &str {
-    if s.starts_with("0x") {
-        &s[2..]
+    if let Some(s) = s.strip_prefix("0x") {
+        s
     } else {
         s
     }

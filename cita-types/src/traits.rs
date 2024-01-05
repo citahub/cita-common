@@ -34,7 +34,7 @@ where
 fn convert_u8_to_char(u: u8) -> char {
     match u {
         u if u < 10 => (b'0' + u) as char,
-        u if 10 <= u && u < 16 => (b'a' + (u - 10)) as char,
+        u if (10..16).contains(&u) => (b'a' + (u - 10)) as char,
         _ => panic!("{} not bwtween 0 and 15", u),
     }
 }

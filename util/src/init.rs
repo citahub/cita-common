@@ -40,7 +40,7 @@ pub fn parse_config_from_buffer<T>(s: &'_ str) -> Result<T, toml::de::Error>
 where
     T: de::DeserializeOwned,
 {
-    Ok(toml::from_str::<T>(s)?)
+    toml::from_str::<T>(s)
 }
 
 #[macro_export]

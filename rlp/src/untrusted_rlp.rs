@@ -400,7 +400,7 @@ impl<'a> BasicDecoder<'a> {
             // Longer than 55 bytes.
             Some(l @ 0xb8..=0xbf) => {
                 let len_of_len = l as usize - 0xb7;
-                let begin_of_value = 1 as usize + len_of_len;
+                let begin_of_value = 1 + len_of_len;
                 if bytes.len() < begin_of_value {
                     return Err(DecoderError::RlpInconsistentLengthAndData);
                 }

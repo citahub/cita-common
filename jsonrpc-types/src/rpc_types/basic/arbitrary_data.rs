@@ -104,9 +104,9 @@ impl From<Vec<u8>> for Data {
     }
 }
 
-impl Into<Vec<u8>> for Data {
-    fn into(self) -> Vec<u8> {
-        self.0
+impl From<Data> for Vec<u8> {
+    fn from(val: Data) -> Self {
+        val.0
     }
 }
 

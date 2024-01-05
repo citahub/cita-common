@@ -48,7 +48,7 @@ impl AuthorityManage {
         let mut authority_manage = AuthorityManage {
             authorities: Vec::new(),
             validators: Vec::new(),
-            authorities_log: Wal::create(&*logpath).unwrap(),
+            authorities_log: Wal::create(&logpath).unwrap(),
             authorities_old: Vec::new(),
             validators_old: Vec::new(),
             authority_h_old: 0,
@@ -99,9 +99,9 @@ impl AuthorityManage {
             self.authority_h_old = height;
 
             self.authorities.clear();
-            self.authorities.extend_from_slice(&authorities);
+            self.authorities.extend_from_slice(authorities);
             self.validators.clear();
-            self.validators.extend_from_slice(&validators);
+            self.validators.extend_from_slice(validators);
 
             if flag == 2 {
                 self.save();
@@ -110,14 +110,12 @@ impl AuthorityManage {
     }
 
     pub fn save(&mut self) {
-        let bmsg = serialize(
-            &(
-                self.authority_h_old,
-                self.authorities.clone(),
-                self.validators_old.clone(),
-                self.validators.clone(),
-            ),
-        )
+        let bmsg = serialize(&(
+            self.authority_h_old,
+            self.authorities.clone(),
+            self.validators_old.clone(),
+            self.validators.clone(),
+        ))
         .unwrap();
         let _ = self.authorities_log.save(LOG_TYPE_AUTHORITIES, &bmsg);
     }

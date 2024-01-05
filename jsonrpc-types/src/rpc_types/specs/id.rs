@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 #[serde(untagged)]
 pub enum Id {
     /// No id (notification)
+    #[default]
     Null,
     /// String id
     Str(String),
     /// Numeric id
     Num(u64),
-}
-
-impl Default for Id {
-    fn default() -> Self {
-        Id::Null
-    }
 }
 
 impl Id {

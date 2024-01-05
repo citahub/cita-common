@@ -12,16 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Version {
     #[serde(rename = "1.0")]
     V1,
     #[serde(rename = "2.0")]
+    #[default]
     V2,
-}
-
-impl Default for Version {
-    fn default() -> Self {
-        Version::V2
-    }
 }

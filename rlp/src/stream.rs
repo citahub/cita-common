@@ -193,12 +193,7 @@ impl RlpStream {
     }
 
     /// Appends raw (pre-serialised) RLP data. Checks for size oveflow.
-    pub fn append_raw_checked<'a>(
-        &'a mut self,
-        bytes: &[u8],
-        item_count: usize,
-        max_size: usize,
-    ) -> bool {
+    pub fn append_raw_checked(&mut self, bytes: &[u8], item_count: usize, max_size: usize) -> bool {
         if self.estimate_size(bytes.len()) > max_size {
             return false;
         }
@@ -358,7 +353,7 @@ impl<'a> BasicEncoder<'a> {
         BigEndian::write_u32(&mut buffer, size);
         self.buffer
             .insert_slice(position, &buffer[leading_empty_bytes..]);
-        size_bytes as u8
+        size_bytes
     }
 
     /// Inserts list prefix at given position

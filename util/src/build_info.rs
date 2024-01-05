@@ -29,7 +29,7 @@ fn get_commit_id(repo: &Repository) -> Option<String> {
 /// Generate the build info functions (The file will be used by `include!` macro)
 pub fn gen_build_info(out_dir: &str, dest_name: &str, version_str: String) {
     let dest_path = Path::new(&out_dir).join(dest_name);
-    let mut f = File::create(&dest_path).unwrap();
+    let mut f = File::create(dest_path).unwrap();
 
     let commit_id = match Repository::discover(".") {
         Ok(repo) => get_commit_id(&repo),
@@ -46,7 +46,7 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str, version_str: String) {
         let commit_id_string = commit_id.unwrap_or_else(|| "unknown".to_owned());
         format!("{}-{:.8}", version_str, commit_id_string)
     };
-    let commit_date_str = commit_date.as_ref().map(|x| &**x).unwrap_or("unknown");
+    let commit_date_str = commit_date.as_deref().unwrap_or("unknown");
     let rustc_str = format!(
         "rustc {major}.{minor}.{patch}-{pre}-{commit_date}",
         major = version.0,
@@ -60,9 +60,9 @@ pub fn gen_build_info(out_dir: &str, dest_name: &str, version_str: String) {
         version = version_string,
         rustc = rustc_str,
     )
-    .replace("\\", "\\\\")
-    .replace("\"", "\\\"")
-    .replace("\n", "\\n");
+    .replace('\\', "\\\\")
+    .replace('\"', "\\\"")
+    .replace('\n', "\\n");
     let code = format!(
         "
         #[allow(unknown_lints)]

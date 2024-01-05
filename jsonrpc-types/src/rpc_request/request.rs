@@ -73,9 +73,9 @@ impl Request {
     }
 }
 
-impl Into<String> for Request {
-    fn into(self) -> String {
-        serde_json::to_string(&self).unwrap()
+impl From<Request> for String {
+    fn from(val: Request) -> Self {
+        serde_json::to_string(&val).unwrap()
     }
 }
 
@@ -158,9 +158,9 @@ macro_rules! define_call {
         }
 
         $(
-            impl Into<$params_name> for Call {
-                fn into(self) -> $params_name{
-                    if let Call::$enum_name{ params } = self {
+            impl From<Call> for $params_name {
+                fn from(call: Call) -> $params_name {
+                    if let Call::$enum_name{ params } = call {
                         params
                     } else {
                         // IMHO, in Rust, no static check can do this.

@@ -28,7 +28,7 @@ pub struct Wal {
 
 impl Wal {
     pub fn create(dir: &str) -> Result<Wal, io::Error> {
-        let fss = read_dir(&dir);
+        let fss = read_dir(dir);
         if fss.is_err() {
             DirBuilder::new().recursive(true).create(dir).unwrap();
         }
@@ -52,8 +52,8 @@ impl Wal {
             return Ok(0);
         }
         self.fs.set_len(0)?;
-        let len_bytes: [u8; 4] = unsafe { transmute(mlen.to_le()) };
-        let type_bytes: [u8; 1] = unsafe { transmute(mtype.to_le()) };
+        let len_bytes: [u8; 4] = mlen.to_le_bytes();
+        let type_bytes: [u8; 1] = mtype.to_le_bytes();
         self.fs.seek(io::SeekFrom::End(0))?;
         self.fs.write_all(&len_bytes[..])?;
         self.fs.write_all(&type_bytes[..])?;

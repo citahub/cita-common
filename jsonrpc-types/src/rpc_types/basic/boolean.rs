@@ -66,9 +66,9 @@ impl From<bool> for Boolean {
     }
 }
 
-impl Into<bool> for Boolean {
-    fn into(self) -> bool {
-        self.0
+impl From<Boolean> for bool {
+    fn from(val: Boolean) -> Self {
+        val.0
     }
 }
 

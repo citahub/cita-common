@@ -15,9 +15,9 @@
 /// Structs for combine paramters and exchange between request handler and response handler.
 use crate::rpc_types::BlockNumber;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Default)]
 pub struct CountOrCode {
-    pub address: ::std::vec::Vec<u8>,
+    pub address: Vec<u8>,
     pub block_id: BlockNumber,
 }
 
@@ -27,18 +27,9 @@ impl CountOrCode {
     }
 }
 
-impl Default for CountOrCode {
-    fn default() -> CountOrCode {
-        CountOrCode {
-            address: vec![],
-            block_id: BlockNumber::default(),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Default)]
 pub struct BlockParamsByHash {
-    pub hash: ::std::vec::Vec<u8>,
+    pub hash: Vec<u8>,
     pub include_txs: bool,
 }
 
@@ -48,16 +39,7 @@ impl BlockParamsByHash {
     }
 }
 
-impl Default for BlockParamsByHash {
-    fn default() -> BlockParamsByHash {
-        BlockParamsByHash {
-            hash: vec![],
-            include_txs: false,
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Default)]
 pub struct BlockParamsByNumber {
     pub block_id: BlockNumber,
     pub include_txs: bool,
@@ -68,15 +50,6 @@ impl BlockParamsByNumber {
         BlockParamsByNumber {
             block_id,
             include_txs,
-        }
-    }
-}
-
-impl Default for BlockParamsByNumber {
-    fn default() -> BlockParamsByNumber {
-        BlockParamsByNumber {
-            block_id: BlockNumber::default(),
-            include_txs: false,
         }
     }
 }

@@ -30,11 +30,5 @@ pub use self::variadic::VariadicValue;
 
 // serde: Tuple enums with single element should not be a json-array
 // https://github.com/serde-rs/serde/pull/111
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct OneItemTupleTrick {}
-
-impl Default for OneItemTupleTrick {
-    fn default() -> Self {
-        OneItemTupleTrick {}
-    }
-}
