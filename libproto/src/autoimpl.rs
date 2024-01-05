@@ -337,7 +337,8 @@ impl Message {
 
     pub fn get_operate(&self) -> OperateType {
         if self.is_raw_ok() {
-            OperateType::try_from(self.raw[3] & 0b0000_0011).unwrap_or(DEFAULT_OPERATE_TYPE)
+            <OperateType as TryFrom<u8>>::try_from(self.raw[3] & 0b0000_0011)
+                .unwrap_or(DEFAULT_OPERATE_TYPE)
         } else {
             DEFAULT_OPERATE_TYPE
         }
@@ -378,7 +379,7 @@ impl Message {
 
     pub fn set_content(&mut self, v: MsgClass) {
         let im: InnerMessage = v.into();
-        let im_vec: Vec<u8> = im.try_into().unwrap();
+        let im_vec: Vec<u8> = TryInto::try_into(im).unwrap();
         self.raw.drain(8..);
         match snappy::cita_compress_to(&im_vec[..], &mut self.raw) {
             Ok(true) => {
@@ -395,11 +396,11 @@ impl Message {
         let im_opt = if self.get_compressed() {
             let mut im_vec: Vec<u8> = Vec::new();
             match snappy::cita_decompress_to(&self.raw[8..], &mut im_vec) {
-                Ok(_) => InnerMessage::try_from(&im_vec).ok(),
+                Ok(_) => <InnerMessage as TryFrom<&Vec<u8>>>::try_from(&im_vec).ok(),
                 Err(_) => None,
             }
         } else {
-            InnerMessage::try_from(&self.raw[8..]).ok()
+            <InnerMessage as TryFrom<&[u8]>>::try_from(&self.raw[8..]).ok()
         };
         if let Some(mut im) = im_opt {
             im.take_content()
@@ -762,8 +763,8 @@ mod tests {
         let height: u64 = 13579;
         let mut status = blockchain::Status::new();
         status.set_height(height);
-        let status_bytes: Vec<u8> = (&status).try_into().unwrap();
-        let status_bytes_consume: Vec<u8> = status.try_into().unwrap();
+        let status_bytes: Vec<u8> = TryInto::try_into(&status).unwrap();
+        let status_bytes_consume: Vec<u8> = TryInto::try_into(&status).unwrap();
         assert_eq!(status_bytes, status_bytes_consume);
         let status_new = blockchain::Status::try_from(&status_bytes).unwrap();
         let status_new_from_slice = blockchain::Status::try_from(&status_bytes[..]).unwrap();
@@ -822,10 +823,10 @@ mod tests {
         let req_same = msg_same.take_content().unwrap();
         assert!(req_take == req_same);
 
-        let msg_bytes_rst: Result<Vec<u8>, _> = msg.clone().try_into();
+        let msg_bytes_rst: Result<Vec<u8>, _> = TryInto::try_into(msg.clone());
         assert!(msg_bytes_rst.is_ok());
         let msg_bytes = msg_bytes_rst.unwrap();
-        let msg_same_bytes: Vec<u8> = msg_same.clone().try_into().unwrap();
+        let msg_same_bytes: Vec<u8> = TryInto::try_into(msg_same.clone()).unwrap();
         assert_eq!(msg_bytes, msg_same_bytes);
 
         let mut msg_from_bytes = Message::try_from(msg_bytes).unwrap();

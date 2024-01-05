@@ -28,9 +28,8 @@ impl TryFromProto<ProtoUnverifiedTransaction> for Data {
     type Error = Error;
 
     fn try_from_proto(utx: ProtoUnverifiedTransaction) -> Result<Self, Self::Error> {
-        let content: Vec<u8> = utx
-            .try_into()
-            .map_err(Error::transaction_data_encode_error)?;
+        let content: Vec<u8> =
+            TryInto::try_into(utx).map_err(Error::transaction_data_encode_error)?;
 
         Ok(Data::new(content))
     }
@@ -118,7 +117,7 @@ mod tests {
         let p_utx = sig_ptx.get_transaction_with_sig();
 
         let data = Data::try_from_proto(p_utx.clone()).unwrap();
-        assert_eq!(data, Data::new(p_utx.try_into().unwrap()));
+        assert_eq!(data, Data::new(TryInto::try_into(p_utx).unwrap()));
     }
 
     #[test]
@@ -127,7 +126,7 @@ mod tests {
         let json_tx = FullTransaction::try_from_proto(sig_ptx.clone()).unwrap();
 
         let hash = sig_ptx.get_tx_hash();
-        let content = sig_ptx.get_transaction_with_sig().try_into().unwrap();
+        let content = TryInto::try_into(sig_ptx.get_transaction_with_sig()).unwrap();
         assert_eq!(json_tx.hash, H256::from_slice(hash));
         assert_eq!(json_tx.content, Data::new(content));
     }
@@ -145,7 +144,7 @@ mod tests {
         full_tx.set_index(0);
 
         let rpc_tx = RpcTransaction::try_from_proto(full_tx).unwrap();
-        let rpc_data = Data::new(sig_ptx.get_transaction_with_sig().try_into().unwrap());
+        let rpc_data = Data::new(TryInto::try_into(sig_ptx.get_transaction_with_sig()).unwrap());
         assert_eq!(rpc_tx.hash, H256::from_slice(sig_ptx.get_tx_hash()));
         assert_eq!(rpc_tx.content, rpc_data);
         assert_eq!(rpc_tx.from, keypair.address());

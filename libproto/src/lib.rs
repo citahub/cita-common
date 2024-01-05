@@ -81,7 +81,7 @@ impl Transaction {
         // Build SignedTransaction
         let mut signed_tx = SignedTransaction::new();
         signed_tx.set_signer(pubkey.0.to_vec());
-        let bytes: Vec<u8> = (&unverified_tx).try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(&unverified_tx).unwrap();
         signed_tx.set_tx_hash(bytes.crypt_hash().0.to_vec());
         signed_tx.set_transaction_with_sig(unverified_tx);
         signed_tx
@@ -90,7 +90,7 @@ impl Transaction {
     /// Build UnverifiedTransaction
     pub fn build_unverified(&self, sk: PrivKey) -> UnverifiedTransaction {
         let mut unverified_tx = UnverifiedTransaction::new();
-        let bytes: Vec<u8> = self.try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(self).unwrap();
         let hash = bytes.crypt_hash();
         unverified_tx.set_transaction(self.clone());
         let signature = Signature::sign(&sk, &hash).unwrap();
@@ -103,7 +103,7 @@ impl Transaction {
 impl UnverifiedTransaction {
     /// Try to recover the public key.
     pub fn recover_public(&self) -> Result<(PubKey, H256), (H256, String)> {
-        let bytes: Vec<u8> = self.get_transaction().try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(self.get_transaction()).unwrap();
         let hash = bytes.crypt_hash();
         let tx_hash = self.crypt_hash();
         if self.get_signature().len() != SIGNATURE_BYTES_LEN {
@@ -130,13 +130,13 @@ impl UnverifiedTransaction {
     }
 
     pub fn crypt_hash(&self) -> H256 {
-        let bytes: Vec<u8> = self.try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(self).unwrap();
         bytes.crypt_hash()
     }
 
     pub fn tx_verify_req_msg(&self) -> VerifyTxReq {
         let version = self.get_transaction().get_version();
-        let bytes: Vec<u8> = self.get_transaction().try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(self.get_transaction()).unwrap();
         let hash = bytes.crypt_hash();
         let mut verify_tx_req = VerifyTxReq::new();
         verify_tx_req.set_valid_until_block(self.get_transaction().get_valid_until_block());
@@ -198,13 +198,13 @@ impl Eq for Proof {}
 impl Decodable for Proof {
     fn decode(data: &UntrustedRlp) -> Result<Self, DecoderError> {
         data.decoder()
-            .decode_value(|bytes| Ok(Proof::try_from(bytes).unwrap()))
+            .decode_value(|bytes| Ok(<Proof as TryFrom<&[u8]>>::try_from(bytes).unwrap()))
     }
 }
 
 impl Encodable for Proof {
     fn rlp_append(&self, s: &mut RlpStream) {
-        let b: Vec<u8> = self.try_into().unwrap();
+        let b: Vec<u8> = TryInto::try_into(self).unwrap();
         s.encoder().encode_value(&b);
     }
 }
@@ -327,12 +327,12 @@ impl CompactSignedProposal {
 
 impl BlockHeader {
     pub fn crypt_hash(&self) -> H256 {
-        let bytes: Vec<u8> = self.try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(self).unwrap();
         bytes.crypt_hash()
     }
 
     pub fn crypt_hash_hex(&self) -> String {
-        let bytes: Vec<u8> = self.try_into().unwrap();
+        let bytes: Vec<u8> = TryInto::try_into(self).unwrap();
         bytes.crypt_hash().lower_hex()
     }
 }
