@@ -445,7 +445,7 @@ impl SendRawTransactionParamsExt for SendRawTransactionParams {
         use libproto::TryFrom;
         use rustc_serialize::hex::FromHex;
 
-        let un_tx = UnverifiedTransaction::try_from(data).map_err(|_err| {
+        let un_tx = <UnverifiedTransaction as TryFrom<&[u8]>>::try_from(data).map_err(|_err| {
             let err_msg = format!(
                 "parse protobuf UnverifiedTransaction data error : {:?}",
                 _err

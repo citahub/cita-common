@@ -61,7 +61,7 @@ impl BlockExt for Block {
         use crate::error::ErrorExt;
         use libproto::TryFrom;
 
-        let mut blk = libproto::Block::try_from(&rpc_block.block) // from chain
+        let mut blk = <libproto::Block as TryFrom<&Vec<u8>>>::try_from(&rpc_block.block) // from chain
             .map_err(|err| Error::rpc_block_decode_error(Box::new(err)))?;
 
         let block_transactions = blk.take_body().take_transactions();

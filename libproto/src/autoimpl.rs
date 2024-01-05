@@ -716,6 +716,7 @@ impl<'a> TryInto<Vec<u8>> for &'a Message {
 
 #[cfg(test)]
 mod tests {
+    use crate::Message;
 
     #[test]
     fn convert_operate_type_works() {
@@ -766,8 +767,10 @@ mod tests {
         let status_bytes: Vec<u8> = TryInto::try_into(&status).unwrap();
         let status_bytes_consume: Vec<u8> = TryInto::try_into(&status).unwrap();
         assert_eq!(status_bytes, status_bytes_consume);
-        let status_new = blockchain::Status::try_from(&status_bytes).unwrap();
-        let status_new_from_slice = blockchain::Status::try_from(&status_bytes[..]).unwrap();
+        let status_new =
+            <blockchain::Status as TryFrom<&Vec<u8>>>::try_from(&status_bytes).unwrap();
+        let status_new_from_slice =
+            <blockchain::Status as TryFrom<&[u8]>>::try_from(&status_bytes[..]).unwrap();
         assert_eq!(status_new, status_new_from_slice);
         let height_new = status_new.get_height();
         assert_eq!(height, height_new);
@@ -829,7 +832,7 @@ mod tests {
         let msg_same_bytes: Vec<u8> = TryInto::try_into(msg_same.clone()).unwrap();
         assert_eq!(msg_bytes, msg_same_bytes);
 
-        let mut msg_from_bytes = Message::try_from(msg_bytes).unwrap();
+        let mut msg_from_bytes = <Message as TryFrom<Vec<u8>>>::try_from(msg_bytes).unwrap();
         assert_eq!(msg_from_bytes.get_origin(), 1234567890);
         assert_eq!(msg_from_bytes.get_operate(), OperateType::Single);
         let req_from_bytes = msg_from_bytes.take_content().unwrap();
