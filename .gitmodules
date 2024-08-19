@@ -1,4 +1,4 @@
 [submodule "libproto/proto"]
 	path = libproto/proto
 	url = https://github.com/citahub/cita-proto.git
-	branch = wip-1.8.3
+	branch = release-1.8.3
