@@ -3,7 +3,7 @@ name = "cita-sm2"
 version = "0.1.0"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 rustc-serialize = "0.3"
@@ -15,7 +15,7 @@ rlp = { path = "../rlp" }
 libsm = "0.6"
 efficient-sm2 = "0.2"
 hex = "0.4"
-rand = "0.8"
+rand = "0.9"
 
 [features]
 default = []

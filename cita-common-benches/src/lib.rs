@@ -14,11 +14,11 @@
 
 pub mod bench_tools {
 
-    use rand::{thread_rng, RngCore};
+    use rand::{rng, RngCore};
 
     pub fn random_bytes(len: usize) -> Vec<u8> {
         let mut bz = vec![0; len];
-        thread_rng().fill_bytes(&mut bz);
+        rng().fill_bytes(&mut bz);
         bz
     }
 }

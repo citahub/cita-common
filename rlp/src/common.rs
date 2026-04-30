@@ -7,7 +7,7 @@
 // except according to those terms.
 
 //! Contains RLPs used for compression.
-use compression::InvalidRlpSwapper;
+use crate::compression::InvalidRlpSwapper;
 
 lazy_static! {
     /// Swapper for snapshot compression.

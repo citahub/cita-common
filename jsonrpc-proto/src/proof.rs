@@ -14,7 +14,7 @@
 
 use std::collections::HashMap;
 
-use bincode::deserialize;
+use bincode::{config, serde::decode_from_slice};
 use cita_types::Address;
 use jsonrpc_types::{
     rpc_types::{BftProof, Proof},
@@ -45,8 +45,9 @@ impl TryFromProto<ProtoProof> for BftProof {
     fn try_from_proto(p: ProtoProof) -> Result<Self, Self::Error> {
         use crate::proof_srv::BftProof as SrvBftProof;
 
-        let decoded: SrvBftProof = deserialize(&p.get_content()[..]) //
-            .map_err(Error::bft_proof_decode_error)?;
+        let (decoded, _): (SrvBftProof, _) =
+            decode_from_slice(&p.get_content()[..], config::standard()) //
+                .map_err(Error::bft_proof_decode_error)?;
         let mut commits: HashMap<Address, String> = HashMap::new();
         let str_0x = "0x".to_string();
 

@@ -86,7 +86,7 @@ impl Wal {
                 vec_buf[index + 2],
                 vec_buf[index + 3],
             ];
-            let tmp: u32 = unsafe { transmute::<[u8; 4], u32>(hd) };
+            let tmp: u32 = u32::from_ne_bytes(hd);
             let bodylen = tmp as usize;
             let mtype = vec_buf[index + 4];
             index += 5;

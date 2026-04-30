@@ -116,8 +116,7 @@ impl From<Vec<u8>> for Quantity {
 
 impl From<Quantity> for Vec<u8> {
     fn from(val: Quantity) -> Self {
-        let mut bytes = [0u8; 32];
-        val.0.to_big_endian(&mut bytes);
+        let bytes = val.0.to_big_endian();
         bytes.to_vec()
     }
 }

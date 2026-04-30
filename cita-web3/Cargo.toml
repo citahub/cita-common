@@ -3,10 +3,12 @@ name = "cita-web3"
 version = "0.1.0"
 authors = ["Rivtower Technologies <arch@citahub.com>"]
 license = "Apache-2.0"
+edition = "2024"
 
 [dependencies]
 jsonrpc-types = { path = "../jsonrpc-types" }
 web3 = "0.19.0"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 
 [features]
 default = []

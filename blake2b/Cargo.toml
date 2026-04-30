@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
 build = "build.rs"
-edition = "2021"
+edition = "2024"
 
 [build-dependencies]
 cc = "1.0"

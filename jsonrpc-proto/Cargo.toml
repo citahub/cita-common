@@ -3,7 +3,7 @@ name = "jsonrpc-proto"
 version = "0.1.1"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 libproto = { path = "../libproto" }
@@ -15,9 +15,8 @@ serde = "1.0"
 serde_json = "1.0"
 uuid = { version = "1.0", features = ["v4"] }
 rustc-serialize = "0.3.24"
-bincode = "1.3"
+bincode = { version = "2.0", features = ["serde"] }
 
-[dev-dependencies]
 cita-crypto = { path = "../cita-crypto" }
 
 [features]

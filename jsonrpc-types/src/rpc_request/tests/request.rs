@@ -34,7 +34,7 @@ macro_rules! test_ser_and_de {
 
 #[test]
 fn serialize_and_deserialize() {
-    let params = GetTransactionReceiptParams::new(H256::from(10).into());
+    let params = GetTransactionReceiptParams::new(H256::from_low_u64_be(10).into());
     test_ser_and_de!(
         GetTransactionReceiptParams,
         params,

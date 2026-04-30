@@ -3,16 +3,16 @@ name = "cita-common-benches"
 version = "0.1.0"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-rand = "0.8"
+rand = "0.9"
 
 [dev-dependencies]
-criterion = "0.5"
-tiny-keccak = "2.0"
+criterion = "0.8"
+tiny-keccak = { version = "2.0", features = ["keccak"] }
 blake2b = { path = "../blake2b" }
-secp256k1 = { version = "0.29", features = ["rand"] }
+secp256k1 = { version = "0.31", features = ["rand"] }
 sodiumoxide = "0.2"
 libsm = "0.6"
 

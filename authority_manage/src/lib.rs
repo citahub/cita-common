@@ -18,7 +18,10 @@ pub mod wal;
 
 use crate::types::Address;
 use crate::wal::Wal;
-use bincode::{deserialize, serialize};
+use bincode::{
+    config,
+    serde::{decode_from_slice, encode_to_vec},
+};
 
 pub const DATA_PATH: &str = "DATA_PATH";
 pub const LOG_TYPE_AUTHORITIES: u8 = 1;
@@ -56,7 +59,9 @@ impl AuthorityManage {
 
         let vec_out = authority_manage.authorities_log.load();
         if !vec_out.is_empty() {
-            if let Ok((h, authorities, validators_old, validators)) = deserialize(&(vec_out[0].1)) {
+            if let Ok((h, authorities, validators_old, validators)) =
+                decode_from_slice(&(vec_out[0].1), config::standard()).map(|(v, _)| v)
+            {
                 let authorities: Vec<Address> = authorities;
                 let validators_old: Vec<Address> = validators_old;
                 let validators: Vec<Address> = validators;
@@ -110,12 +115,15 @@ impl AuthorityManage {
     }
 
     pub fn save(&mut self) {
-        let bmsg = serialize(&(
-            self.authority_h_old,
-            self.authorities.clone(),
-            self.validators_old.clone(),
-            self.validators.clone(),
-        ))
+        let bmsg = encode_to_vec(
+            &(
+                self.authority_h_old,
+                self.authorities.clone(),
+                self.validators_old.clone(),
+                self.validators.clone(),
+            ),
+            config::standard(),
+        )
         .unwrap();
         let _ = self.authorities_log.save(LOG_TYPE_AUTHORITIES, &bmsg);
     }

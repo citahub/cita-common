@@ -13,7 +13,6 @@
 // limitations under the License.
 
 use cita_types::{clean_0x, traits::LowerHex};
-use jsonrpc_types::rpc_types::Integer;
 use jsonrpc_types::{
     rpc_request::*, // bring in varied Params
     rpc_types::{BlockParamsByHash, BlockParamsByNumber, CountOrCode},

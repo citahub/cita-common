@@ -263,7 +263,10 @@ impl Sign for Signature {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bincode::{deserialize, serialize, Infinite};
+    use bincode::{
+        config,
+        serde::{decode_from_slice, encode_to_vec},
+    };
     use cita_crypto_trait::CreateKey;
 
     const MESSAGE: [u8; 32] = [
@@ -312,8 +315,11 @@ mod tests {
         let keypair = KeyPair::gen_keypair();
         let msg = Message::from_slice(&MESSAGE[..]);
         let sig = Signature::sign(keypair.privkey(), &msg).unwrap();
-        let se_result = serialize(&sig).unwrap();
-        let de_result: Signature = deserialize(&se_result).unwrap();
+        let bincode_config = config::standard();
+        let se_result = encode_to_vec(&sig, bincode_config).unwrap();
+        let de_result: Signature = decode_from_slice(&se_result, bincode_config)
+            .map(|(v, _)| v)
+            .unwrap();
         assert_eq!(sig, de_result);
     }
 }

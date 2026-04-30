@@ -170,10 +170,10 @@ macro_rules! test_for_fixed_type {
 
                 let testdata = vec![
                     ("g", None),
-                    ("a", Some($outer::new($inner::from(10)))),
-                    ("10", Some($outer::new($inner::from(16)))),
-                    ("abcdef", Some($outer::new($inner::from(11259375)))),
-                    ("ABCDEF", Some($outer::new($inner::from(11259375)))),
+                    ("a", Some($outer::new($inner::from_low_u64_be(10)))),
+                    ("10", Some($outer::new($inner::from_low_u64_be(16)))),
+                    ("abcdef", Some($outer::new($inner::from_low_u64_be(11259375)))),
+                    ("ABCDEF", Some($outer::new($inner::from_low_u64_be(11259375)))),
                 ];
                 for (data, expected_opt) in testdata.into_iter() {
                     let padded = format!(r#""0x{}""#, pad_left0(data, $outer_size * 2));

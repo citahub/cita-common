@@ -3,7 +3,7 @@ name = "hashable"
 version = "0.1.0"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 cita-types = { path = "../cita-types" }
@@ -13,6 +13,6 @@ libsm = { version = "0.6", optional = true }
 
 [features]
 default = []
-sha3hash = ["tiny-keccak"]
+sha3hash = ["tiny-keccak/keccak"]
 blake2bhash = ["libsodium-sys"]
 sm3hash = ["libsm"]

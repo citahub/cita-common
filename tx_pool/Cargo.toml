@@ -3,12 +3,16 @@ name = "tx_pool"
 version = "0.6.0"
 authors = ["Rivtower Technologies <contact@rivtower.com>"]
 license = "Apache-2.0"
+edition = "2024"
 
 [dependencies]
 libproto = { path = "../libproto" }
 util = { path = "../util" }
 cita-crypto = { path = "../cita-crypto" }
 cita-types = { path = "../cita-types" }
+
+[dev-dependencies]
+criterion = "0.8"
 
 [features]
 default = []
@@ -18,3 +22,7 @@ sm2 = ["cita-crypto/sm2", "libproto/sm2"]
 sha3hash = ["libproto/sha3hash"]
 blake2bhash = ["libproto/blake2bhash"]
 sm3hash = ["libproto/sm3hash"]
+
+[[bench]]
+name = "bench"
+harness = false

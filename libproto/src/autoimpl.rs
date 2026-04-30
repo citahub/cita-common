@@ -716,8 +716,6 @@ impl<'a> TryInto<Vec<u8>> for &'a Message {
 
 #[cfg(test)]
 mod tests {
-    use crate::Message;
-
     #[test]
     fn convert_operate_type_works() {
         use super::OperateType;
@@ -731,10 +729,10 @@ mod tests {
         assert_eq!(ot1, ot2);
         let ot3 = OperateType::Subtract;
         assert_ne!(ot1, ot3);
-        let ot4_rst = OperateType::try_from(0);
+        let ot4_rst = TryFrom::try_from(0);
         assert!(ot4_rst.is_ok());
         assert_eq!(ot1, ot4_rst.unwrap());
-        let ot5_rst = OperateType::try_from(255);
+        let ot5_rst: Result<OperateType, crate::TryFromConvertError> = TryFrom::try_from(255);
         assert!(ot5_rst.is_err());
     }
 

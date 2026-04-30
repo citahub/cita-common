@@ -27,7 +27,7 @@ pub trait ErrorExt {
         Error::server_error(ERR_CODE_INTERNAL_ERROR, ERR_MSG_BLOCK_DECODE_ERROR)
     }
 
-    fn bft_proof_decode_error(err: Box<bincode::ErrorKind>) -> Error {
+    fn bft_proof_decode_error(err: bincode::error::DecodeError) -> Error {
         error!("jsonrpc_proto: fail to decode service bft proof {}", err);
         Error::server_error(ERR_CODE_INTERNAL_ERROR, err.to_string())
     }

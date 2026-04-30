@@ -6,12 +6,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use crate::stream::RlpStream;
+use crate::traits::{Decodable, Encodable};
+use crate::{DecoderError, UntrustedRlp};
 use byteorder::{BigEndian, ByteOrder};
 use std::{cmp, mem, str};
-use stream::RlpStream;
-use traits::{Decodable, Encodable};
 use types::{Bloom, H128, H160, H256, H512, H520, H64, U128, U256};
-use {DecoderError, UntrustedRlp};
 
 pub fn decode_usize(bytes: &[u8]) -> Result<usize, DecoderError> {
     match bytes.len() {
@@ -228,8 +228,7 @@ macro_rules! impl_encodable_for_uint {
         impl Encodable for $name {
             fn rlp_append(&self, s: &mut RlpStream) {
                 let leading_empty_bytes = $size - (self.bits() + 7) / 8;
-                let mut buffer = [0u8; $size];
-                self.to_big_endian(&mut buffer);
+                let buffer = self.to_big_endian();
                 s.encoder().encode_value(&buffer[leading_empty_bytes..]);
             }
         }
@@ -244,7 +243,7 @@ macro_rules! impl_decodable_for_uint {
                     if !bytes.is_empty() && bytes[0] == 0 {
                         Err(DecoderError::RlpInvalidIndirection)
                     } else if bytes.len() <= $size {
-                        Ok($name::from(bytes))
+                        Ok($name::from_big_endian(bytes))
                     } else {
                         Err(DecoderError::RlpIsTooBig)
                     }

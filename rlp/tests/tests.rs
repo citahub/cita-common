@@ -10,7 +10,7 @@ extern crate cita_types as types;
 extern crate rlp;
 
 use rlp::{Decodable, DecoderError, Encodable, RlpStream, UntrustedRlp};
-use std::{cmp, fmt};
+use std::{cmp, fmt, str::FromStr};
 use types::U256;
 
 #[test]
@@ -183,7 +183,7 @@ fn encode_address() {
     use types::H160;
 
     let tests = vec![ETestPair(
-        H160::from("ef2d6d194084c2de36e0dabfce45d046b37d1106"),
+        H160::from_str("ef2d6d194084c2de36e0dabfce45d046b37d1106").unwrap(),
         vec![
             0x94, 0xef, 0x2d, 0x6d, 0x19, 0x40, 0x84, 0xc2, 0xde, 0x36, 0xe0, 0xda, 0xbf, 0xce,
             0x45, 0xd0, 0x46, 0xb3, 0x7d, 0x11, 0x06,
@@ -351,7 +351,7 @@ fn decode_untrusted_address() {
     use types::H160;
 
     let tests = vec![DTestPair(
-        H160::from("ef2d6d194084c2de36e0dabfce45d046b37d1106"),
+        H160::from_str("ef2d6d194084c2de36e0dabfce45d046b37d1106").unwrap(),
         vec![
             0x94, 0xef, 0x2d, 0x6d, 0x19, 0x40, 0x84, 0xc2, 0xde, 0x36, 0xe0, 0xda, 0xbf, 0xce,
             0x45, 0xd0, 0x46, 0xb3, 0x7d, 0x11, 0x06,

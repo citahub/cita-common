@@ -13,7 +13,7 @@
 // limitations under the License.
 
 use backtrace::Backtrace;
-use std::panic::{self, PanicInfo};
+use std::panic::{self, PanicHookInfo};
 use std::process;
 use std::thread;
 
@@ -28,7 +28,7 @@ pub fn set_panic_handler() {
     panic::set_hook(Box::new(panic_hook));
 }
 
-fn panic_hook(info: &PanicInfo) {
+fn panic_hook(info: &PanicHookInfo) {
     let location = info.location();
     let file = location.as_ref().map(|l| l.file()).unwrap_or("<unknown>");
     let line = location.as_ref().map(|l| l.line()).unwrap_or(0);

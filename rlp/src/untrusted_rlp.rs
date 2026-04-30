@@ -6,11 +6,11 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use impls::decode_usize;
+use crate::impls::decode_usize;
+use crate::{Decodable, DecoderError};
 use rustc_hex::ToHex;
 use std::cell::Cell;
 use std::fmt;
-use {Decodable, DecoderError};
 
 /// rlp offset
 #[derive(Copy, Clone, Debug)]
@@ -290,7 +290,7 @@ where
         self.at(index)?.as_list()
     }
 
-    pub fn decoder(&self) -> BasicDecoder {
+    pub fn decoder(&self) -> BasicDecoder<'_> {
         BasicDecoder::new(self.clone())
     }
 
@@ -422,12 +422,12 @@ impl<'a> BasicDecoder<'a> {
 
 #[cfg(test)]
 mod tests {
-    use {DecoderError, UntrustedRlp};
+    use crate::{DecoderError, UntrustedRlp};
 
     #[test]
     fn test_rlp_display() {
         use rustc_hex::FromHex;
-        let data = "f84d0589010efbef67941f79b2a056e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421a0c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        let data: Vec<u8> = "f84d0589010efbef67941f79b2a056e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421a0c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
             .from_hex()
             .unwrap();
         let rlp = UntrustedRlp::new(&data);

@@ -12,149 +12,132 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#![cfg_attr(test, feature(test))]
+#[macro_use]
+extern crate criterion;
 extern crate cita_crypto as crypto;
 extern crate libproto;
-extern crate test;
 extern crate tx_pool;
 extern crate util;
 
+use criterion::Criterion;
 use crypto::{CreateKey, KeyPair};
 use libproto::blockchain::AccountGasLimit;
 use libproto::blockchain::Transaction;
 use std::collections::HashMap;
-use std::time::SystemTime;
-use test::Bencher;
 use tx_pool::pool::*;
-#[bench]
-fn bench_base(b: &mut Bencher) {
-    let start = SystemTime::now();
-    let mut tx = Transaction::new();
-    for i in 0..10000 {
-        tx.set_data(format!("{}", i).as_bytes().to_vec());
-    }
-    let sys_time = SystemTime::now();
-    let diff = sys_time
-        .duration_since(start)
-        .expect("SystemTime::duration_since failed");
-    println!("pass");
-    println!(
-        "test {:20} ... bench: {}.{} s/iter",
-        "bench_base",
-        diff.as_secs(),
-        diff.subsec_nanos()
-    );
-    b.iter(|| {});
+
+fn bench_base(c: &mut Criterion) {
+    c.bench_function("bench_base", |b| {
+        b.iter(|| {
+            let mut tx = Transaction::new();
+            for i in 0..10000 {
+                tx.set_data(format!("{}", i).as_bytes().to_vec());
+            }
+        })
+    });
 }
 
-#[bench]
-fn bench_enqueue(b: &mut Bencher) {
-    let start = SystemTime::now();
-    let mut p = Pool::new(1000);
-    let mut tx = Transaction::new();
-    let keypair = KeyPair::gen_keypair();
-    let pv = keypair.privkey();
-    for i in 0..10000 {
-        tx.set_data(format!("{}", i).as_bytes().to_vec());
-        tx.set_to("1234567".to_string());
-        tx.set_nonce("0".to_string());
-        tx.set_valid_until_block(99);
-        // 2000*10000 <= account_quota_limit <= block_quota_limit
-        tx.set_quota(2000);
-        p.enqueue(tx.sign(*pv));
-    }
-    let sys_time = SystemTime::now();
-    let diff = sys_time
-        .duration_since(start)
-        .expect("SystemTime::duration_since failed");
-    println!("pass");
-    println!(
-        "test {:20} ... bench: {}.{} s/iter",
-        "bench_enqueue",
-        diff.as_secs(),
-        diff.subsec_nanos()
-    );
-    b.iter(|| {});
+fn bench_enqueue(c: &mut Criterion) {
+    c.bench_function("bench_enqueue", |b| {
+        let mut p = Pool::new(1000);
+        let mut tx = Transaction::new();
+        let keypair = KeyPair::gen_keypair();
+        let pv = keypair.privkey();
+        b.iter(|| {
+            for i in 0..10000 {
+                tx.set_data(format!("{}", i).as_bytes().to_vec());
+                tx.set_to("1234567".to_string());
+                tx.set_nonce("0".to_string());
+                tx.set_valid_until_block(99);
+                // 2000*10000 <= account_quota_limit <= block_quota_limit
+                tx.set_quota(2000);
+                p.enqueue(tx.sign(*pv));
+            }
+        })
+    });
 }
 
-#[bench]
-fn bench_package(b: &mut Bencher) {
-    let start = SystemTime::now();
-    let mut p = Pool::new(1000);
-    let mut tx = Transaction::new();
-    let keypair = KeyPair::gen_keypair();
-    let pv = keypair.privkey();
-    for i in 0..10000 {
-        tx.set_data(format!("{}", i).as_bytes().to_vec());
-        tx.set_to("1234567".to_string());
-        tx.set_nonce("0".to_string());
-        tx.set_valid_until_block(99);
-        // 6000*10000 <= account_quota_limit <= block_quota_limit
-        tx.set_quota(6000);
-        p.enqueue(tx.sign(*pv));
-    }
-    let mut account_quota_limit = AccountGasLimit::new();
-    // set block_quota_limit default
-    let block_quota_limit = 61415926;
-    // height should less than valid_until_block
-    let height = 0;
-    // set account_quota_limit be equal as block_quota_limit
-    account_quota_limit.set_common_quota_limit(block_quota_limit);
-    account_quota_limit.set_specific_quota_limit(HashMap::new());
+fn bench_package(c: &mut Criterion) {
+    c.bench_function("bench_package", |b| {
+        let mut p = Pool::new(1000);
+        let mut tx = Transaction::new();
+        let keypair = KeyPair::gen_keypair();
+        let pv = keypair.privkey();
+        for i in 0..10000 {
+            tx.set_data(format!("{}", i).as_bytes().to_vec());
+            tx.set_to("1234567".to_string());
+            tx.set_nonce("0".to_string());
+            tx.set_valid_until_block(99);
+            // 6000*10000 <= account_quota_limit <= block_quota_limit
+            tx.set_quota(6000);
+            p.enqueue(tx.sign(*pv));
+        }
+        let mut account_quota_limit = AccountGasLimit::new();
+        // set block_quota_limit default
+        let block_quota_limit = 61415926;
+        // height should less than valid_until_block
+        let height = 0;
+        // set account_quota_limit be equal as block_quota_limit
+        account_quota_limit.set_common_quota_limit(block_quota_limit);
+        account_quota_limit.set_specific_quota_limit(HashMap::new());
 
-    p.package(height, block_quota_limit, account_quota_limit.clone());
-    let sys_time = SystemTime::now();
-    let diff = sys_time
-        .duration_since(start)
-        .expect("SystemTime::duration_since failed");
-    println!("pass");
-    println!(
-        "test {:20} ... bench: {}.{} s/iter",
-        "bench_package",
-        diff.as_secs(),
-        diff.subsec_nanos()
-    );
-    b.iter(|| {});
+        b.iter(|| {
+            p.package(
+                height,
+                block_quota_limit,
+                account_quota_limit.clone(),
+                false,
+                None,
+                0,
+            );
+        })
+    });
 }
 
-#[bench]
-fn bench_update(b: &mut Bencher) {
-    let start = SystemTime::now();
-    let mut p = Pool::new(1000);
-    let mut tx = Transaction::new();
-    let keypair = KeyPair::gen_keypair();
-    let pv = keypair.privkey();
+fn bench_update(c: &mut Criterion) {
+    c.bench_function("bench_update", |b| {
+        let mut p = Pool::new(1000);
+        let mut tx = Transaction::new();
+        let keypair = KeyPair::gen_keypair();
+        let pv = keypair.privkey();
 
-    for i in 0..10000 {
-        tx.set_data(format!("{}", i).as_bytes().to_vec());
-        tx.set_to("1234567".to_string());
-        tx.set_nonce("0".to_string());
-        tx.set_valid_until_block(99);
-        // 6000*10000 <= account_quota_limit <= block_quota_limit
-        tx.set_quota(6000);
-        p.enqueue(tx.sign(*pv));
-    }
-    let mut account_quota_limit = AccountGasLimit::new();
-    // set block_quota_limit default
-    let block_quota_limit = 61415926;
-    // height should less than valid_until_block
-    let height = 0;
-    // set account_quota_limit be equal as block_quota_limit
-    account_quota_limit.set_common_quota_limit(block_quota_limit);
-    account_quota_limit.set_specific_quota_limit(HashMap::new());
+        for i in 0..10000 {
+            tx.set_data(format!("{}", i).as_bytes().to_vec());
+            tx.set_to("1234567".to_string());
+            tx.set_nonce("0".to_string());
+            tx.set_valid_until_block(99);
+            // 6000*10000 <= account_quota_limit <= block_quota_limit
+            tx.set_quota(6000);
+            p.enqueue(tx.sign(*pv));
+        }
+        let mut account_quota_limit = AccountGasLimit::new();
+        // set block_quota_limit default
+        let block_quota_limit = 61415926;
+        // height should less than valid_until_block
+        let height = 0;
+        // set account_quota_limit be equal as block_quota_limit
+        account_quota_limit.set_common_quota_limit(block_quota_limit);
+        account_quota_limit.set_specific_quota_limit(HashMap::new());
 
-    let txs = p.package(height, block_quota_limit, account_quota_limit.clone());
-    p.update(&txs);
-    let sys_time = SystemTime::now();
-    let diff = sys_time
-        .duration_since(start)
-        .expect("SystemTime::duration_since failed");
-    println!("pass");
-    println!(
-        "test {:20} ... bench: {}.{} s/iter",
-        "bench_update",
-        diff.as_secs(),
-        diff.subsec_nanos()
-    );
-    b.iter(|| {});
+        let txs = p.package(
+            height,
+            block_quota_limit,
+            account_quota_limit.clone(),
+            false,
+            None,
+            0,
+        );
+        b.iter(|| {
+            p.update(&txs);
+        })
+    });
 }
+
+criterion_group!(
+    benches,
+    bench_base,
+    bench_enqueue,
+    bench_package,
+    bench_update
+);
+criterion_main!(benches);

@@ -6,10 +6,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use crate::traits::Encodable;
 use byteorder::{BigEndian, ByteOrder};
 use elastic_array::{ElasticArray1024, ElasticArray16};
 use std::borrow::Borrow;
-use traits::Encodable;
 
 #[derive(Debug, Copy, Clone, Default)]
 struct ListInfo {
@@ -309,7 +309,7 @@ impl RlpStream {
         self.finished_list = should_finish;
     }
 
-    pub fn encoder(&mut self) -> BasicEncoder {
+    pub fn encoder(&mut self) -> BasicEncoder<'_> {
         BasicEncoder::new(self)
     }
 

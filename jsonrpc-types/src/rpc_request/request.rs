@@ -155,7 +155,7 @@ macro_rules! define_call {
             pub fn get_method(&self) -> &str {
                 match self {
                     $(
-                        Call::$enum_name { ref params } => params.method_name(),
+                        &Call::$enum_name { ref params } => params.method_name(),
                     )+
                 }
             }

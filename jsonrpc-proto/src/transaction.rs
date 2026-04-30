@@ -140,7 +140,7 @@ mod tests {
         let mut full_tx = ProtoFullTransaction::new();
         full_tx.set_transaction(sig_ptx.clone());
         full_tx.set_block_number(2077);
-        full_tx.set_block_hash(block_hash.to_vec());
+        full_tx.set_block_hash(block_hash.0.to_vec());
         full_tx.set_index(0);
 
         let rpc_tx = RpcTransaction::try_from_proto(full_tx).unwrap();

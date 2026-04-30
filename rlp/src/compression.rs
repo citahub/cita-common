@@ -6,10 +6,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use common::{BLOCKS_RLP_SWAPPER, SNAPSHOT_RLP_SWAPPER};
+use crate::common::{BLOCKS_RLP_SWAPPER, SNAPSHOT_RLP_SWAPPER};
+use crate::{encode, Compressible, RlpStream, UntrustedRlp};
 use elastic_array::ElasticArray1024;
 use std::collections::HashMap;
-use {encode, Compressible, RlpStream, UntrustedRlp};
 
 /// Stores RLPs used for compression
 pub struct InvalidRlpSwapper<'a> {
@@ -158,8 +158,8 @@ impl<'a> Compressible for UntrustedRlp<'a> {
 
 #[cfg(test)]
 mod tests {
-    use compression::InvalidRlpSwapper;
-    use {Compressible, RlpType, UntrustedRlp};
+    use crate::compression::InvalidRlpSwapper;
+    use crate::{Compressible, RlpType, UntrustedRlp};
 
     #[test]
     fn invalid_rlp_swapper() {

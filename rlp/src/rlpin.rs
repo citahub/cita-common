@@ -6,8 +6,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use crate::{Decodable, PayloadInfo, Prototype, UntrustedRlp};
 use std::fmt;
-use {Decodable, PayloadInfo, Prototype, UntrustedRlp};
 
 impl<'a> From<UntrustedRlp<'a>> for Rlp<'a> {
     fn from(rlp: UntrustedRlp<'a>) -> Rlp<'a> {

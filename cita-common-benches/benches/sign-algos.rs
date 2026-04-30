@@ -25,10 +25,10 @@ fn benchmark_sign(c: &mut Criterion) {
         let data = Arc::clone(&data);
         let context = secp256k1::Secp256k1::new();
         c.bench_function("secp256k1 sign", move |b| {
-            let (sk, _) = context.generate_keypair(&mut rand::thread_rng());
+            let (sk, _) = context.generate_keypair(&mut rand::rng());
             b.iter(|| {
                 context
-                    .sign_recoverable(&secp256k1::Message::from_slice(&data).unwrap(), &sk)
+                    .sign_ecdsa(secp256k1::Message::from_slice(&data).unwrap(), &sk)
                     .serialize_compact()
             })
         });
@@ -44,7 +44,7 @@ fn benchmark_sign(c: &mut Criterion) {
         let data = Arc::clone(&data);
         c.bench_function("sm2 sign", move |b| {
             let ctx = libsm::sm2::signature::SigCtx::new();
-            let (pk, sk) = ctx.new_keypair();
+            let (pk, sk) = ctx.new_keypair().unwrap();
             b.iter(|| ctx.sign(&data, &sk, &pk))
         });
     }
@@ -57,12 +57,9 @@ fn benchmark_verify(c: &mut Criterion) {
         let context = secp256k1::Secp256k1::new();
         let (sk, pk) = context.generate_keypair(&mut rand::thread_rng());
         let sig_msg = secp256k1::Message::from_slice(&data).unwrap();
-        let (rec_id, sig_data) = context.sign_recoverable(&sig_msg, &sk).serialize_compact();
-        let sig = secp256k1::RecoverableSignature::from_compact(&sig_data, rec_id)
-            .unwrap()
-            .to_standard();
+        let sig = context.sign_ecdsa(sig_msg, &sk);
         c.bench_function("secp256k1 verify", move |b| {
-            b.iter(|| context.verify(&sig_msg, &sig, &pk).unwrap())
+            b.iter(|| context.verify_ecdsa(sig_msg, &sig, &pk).unwrap())
         });
     }
     {
@@ -80,11 +77,11 @@ fn benchmark_verify(c: &mut Criterion) {
     {
         let data = Arc::clone(&data);
         let ctx = libsm::sm2::signature::SigCtx::new();
-        let (pk, sk) = ctx.new_keypair();
-        let sig = ctx.sign(&data, &sk, &pk);
+        let (pk, sk) = ctx.new_keypair().unwrap();
+        let sig = ctx.sign(&data, &sk, &pk).unwrap();
         c.bench_function("sm2 verify", move |b| {
             b.iter(|| {
-                if !ctx.verify(&data, &pk, &sig) {
+                if !ctx.verify(&data, &pk, &sig).unwrap() {
                     panic!("sm2 verify error");
                 }
             })

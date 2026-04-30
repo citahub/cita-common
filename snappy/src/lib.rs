@@ -69,7 +69,7 @@ impl From<SnappyStatus> for SnappyError {
 }
 
 #[link(name = "snappy")]
-extern "C" {
+unsafe extern "C" {
     fn snappy_compress(
         input: *const c_char,
         input_len: size_t,

@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use bincode::{deserialize, serialize};
+use bincode::{
+    config,
+    serde::{decode_from_slice, encode_to_vec},
+};
 use cita_directories::DataPath;
 use crypto::{pubkey_to_address, Sign, Signature};
 use hashable::Hashable;
@@ -72,7 +75,7 @@ impl BftProof {
     pub fn store(&self) {
         let proof_path = DataPath::proof_bin_path();
         let mut file = File::create(&proof_path).unwrap();
-        let encoded_proof: Vec<u8> = serialize(&self).unwrap();
+        let encoded_proof: Vec<u8> = encode_to_vec(&self, config::standard()).unwrap();
         file.write_all(&encoded_proof).unwrap();
         let _ = file.sync_all();
     }
@@ -82,7 +85,7 @@ impl BftProof {
         if let Ok(mut file) = File::open(&proof_path) {
             let mut content = Vec::new();
             if file.read_to_end(&mut content).is_ok() {
-                if let Ok(decoded) = deserialize(&content[..]) {
+                if let Ok((decoded, _)) = decode_from_slice(&content[..], config::standard()) {
                     //self.round = decoded.round;
                     //self.proposal = decoded.proposal;
                     //self.commits = decoded.commits;
@@ -112,8 +115,11 @@ impl BftProof {
         }
         self.commits.iter().all(|(sender, sig)| {
             if authorities.contains(sender) {
-                let msg = serialize(&(h, self.round, Step::Precommit, sender, Some(self.proposal)))
-                    .unwrap();
+                let msg = encode_to_vec(
+                    &(h, self.round, Step::Precommit, sender, Some(self.proposal)),
+                    config::standard(),
+                )
+                .unwrap();
                 let signature = Signature(sig.0);
                 if let Ok(pubkey) = signature.recover(&msg.crypt_hash()) {
                     return pubkey_to_address(&pubkey) == *sender;
@@ -126,8 +132,9 @@ impl BftProof {
 
 impl From<Proof> for BftProof {
     fn from(p: Proof) -> Self {
-        let decoded: BftProof =
-            deserialize(&p.get_content()[..]).unwrap_or_else(|_| BftProof::default());
+        let (decoded, _): (BftProof, _) =
+            decode_from_slice(&p.get_content()[..], config::standard())
+                .unwrap_or_else(|_| (BftProof::default(), 0));
         decoded
     }
 }
@@ -135,7 +142,7 @@ impl From<Proof> for BftProof {
 impl Into<Proof> for BftProof {
     fn into(self) -> Proof {
         let mut proof = Proof::new();
-        let encoded_proof: Vec<u8> = serialize(&self).unwrap();
+        let encoded_proof: Vec<u8> = encode_to_vec(&self, config::standard()).unwrap();
         proof.set_content(encoded_proof);
         proof.set_field_type(ProofType::Bft);
         proof
