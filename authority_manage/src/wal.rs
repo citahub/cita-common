@@ -15,7 +15,6 @@
 use std::fs::{read_dir, DirBuilder, File, OpenOptions};
 use std::io;
 use std::io::{Read, Seek, Write};
-use std::mem::transmute;
 use std::path::Path;
 use std::str;
 

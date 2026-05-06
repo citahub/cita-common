@@ -53,7 +53,7 @@ impl Parse for ParamsType {
             name: input.parse()?,
             colon_token: input.parse()?,
             brace_token: bracketed!(content in input),
-            fields: content.parse_terminated(TypeWithAttrs::parse)?,
+            fields: content.parse_terminated(TypeWithAttrs::parse, Token![,])?,
             comma_token: input.parse()?,
             resp: input.parse()?,
         })
