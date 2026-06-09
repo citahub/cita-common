@@ -66,7 +66,7 @@ macro_rules! partial_call_complete {
                             if let Some(params) = params {
                                 let pparams: PartialParams = serde_json::from_value(params.clone())?;
                                 if pparams.len() < $params_name::required_len()
-                                    && pparams.len() > $params_name::valid_len() {
+                                    || pparams.len() > $params_name::valid_len() {
                                     Err(Error::invalid_params_len())
                                 } else {
                                     Ok(Call::$enum_name{ params: serde_json::from_value(params)? })
@@ -123,7 +123,7 @@ mod tests {
             "method": "getTransactionReceipt",
             "params": ["0x000000000000000000000000000000000000000000000000000000000000000a"]
         }"#;
-        let part_req = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
+        let part_req: PartialRequest = serde_json::from_str::<PartialRequest>(&req_str).unwrap();
         assert_eq!(part_req.complete().unwrap(), full_req);
     }
 

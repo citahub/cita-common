@@ -120,7 +120,7 @@ fn serialize_and_deserialize() {
             "to": "0x000000000000000000000000000000000000000c",
         },
         "latest",
-        "false"
+        false
     ],
     (
         CallRequest::new(Some(H160::from_low_u64_be(11).into()),
@@ -148,7 +148,7 @@ fn serialize_and_deserialize() {
         GetTransactionParams,
         [
             "0x000000000000000000000000000000000000000000000000000000000000000a",
-            "false"
+            false
         ],
         (H256::from_low_u64_be(10).into(), Boolean::new(false))
     );
@@ -259,6 +259,6 @@ fn serialize_and_deserialize() {
     );
 
     test_ser_and_de!(GetVersionParams, [], ());
-    test_ser_and_de!(PeersInfoParams, ["false"], (Boolean::new(false)));
+    test_ser_and_de!(PeersInfoParams, [false], (Boolean::new(false)));
     test_ser_and_de!(LicenseInfoParams, [], ());
 }
