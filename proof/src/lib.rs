@@ -19,6 +19,8 @@ extern crate hashable;
 extern crate libproto;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate cita_logger as logger;
 extern crate cita_directories;
 
 mod bft_proof;
@@ -54,8 +56,8 @@ impl Into<Proof> for CitaProof {
 
 #[cfg(test)]
 mod tests {
-    use super::bft_proof::BftProof;
     use super::CitaProof;
+    use super::bft_proof::BftProof;
     use libproto::blockchain::Proof;
     use std::collections::HashMap;
     use types::H256;

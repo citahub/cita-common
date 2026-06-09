@@ -17,7 +17,7 @@ use bincode::{
     serde::{decode_from_slice, encode_to_vec},
 };
 use cita_directories::DataPath;
-use crypto::{pubkey_to_address, Sign, Signature};
+use crypto::{Sign, Signature, pubkey_to_address};
 use hashable::Hashable;
 use libproto::blockchain::{Proof, ProofType};
 use std::collections::HashMap;
@@ -133,8 +133,10 @@ impl BftProof {
 impl From<Proof> for BftProof {
     fn from(p: Proof) -> Self {
         let (decoded, _): (BftProof, _) =
-            decode_from_slice(&p.get_content()[..], config::standard())
-                .unwrap_or_else(|_| (BftProof::default(), 0));
+            decode_from_slice(&p.get_content()[..], config::standard()).unwrap_or_else(|_| {
+                error!("BftProof from Proof failed");
+                (BftProof::default(), 0)
+            });
         decoded
     }
 }
@@ -142,7 +144,8 @@ impl From<Proof> for BftProof {
 impl Into<Proof> for BftProof {
     fn into(self) -> Proof {
         let mut proof = Proof::new();
-        let encoded_proof: Vec<u8> = encode_to_vec(&self, config::standard()).unwrap();
+        let encoded_proof: Vec<u8> =
+            encode_to_vec(&self, config::standard()).expect("BftProof to Proof failed");
         proof.set_content(encoded_proof);
         proof.set_field_type(ProofType::Bft);
         proof
