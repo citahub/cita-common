@@ -60,7 +60,7 @@ impl AuthorityManage {
         let vec_out = authority_manage.authorities_log.load();
         if !vec_out.is_empty() {
             if let Ok((h, authorities, validators_old, validators)) =
-                decode_from_slice(&(vec_out[0].1), config::standard()).map(|(v, _)| v)
+                decode_from_slice(&(vec_out[0].1), config::legacy()).map(|(v, _)| v)
             {
                 let authorities: Vec<Address> = authorities;
                 let validators_old: Vec<Address> = validators_old;
@@ -122,7 +122,7 @@ impl AuthorityManage {
                 self.validators_old.clone(),
                 self.validators.clone(),
             ),
-            config::standard(),
+            config::legacy(),
         )
         .unwrap();
         let _ = self.authorities_log.save(LOG_TYPE_AUTHORITIES, &bmsg);

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 use super::{
-    pubkey_to_address, Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN,
+    Address, Error, KeyPair, Message, PrivKey, PubKey, SIGNATURE_BYTES_LEN, pubkey_to_address,
 };
 use cita_crypto_trait::{CreateKey, Sign};
 use rlp::*;
@@ -22,7 +22,7 @@ use serde::de::{Error as SerdeError, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use sodiumoxide::crypto::sign::{
-    sign_detached, verify_detached, PublicKey as EdPublicKey, SecretKey, Signature as EdSignature,
+    PublicKey as EdPublicKey, SecretKey, Signature as EdSignature, sign_detached, verify_detached,
 };
 use std::fmt;
 use std::ops::{Deref, DerefMut};
@@ -315,7 +315,7 @@ mod tests {
         let keypair = KeyPair::gen_keypair();
         let msg = Message::from_slice(&MESSAGE[..]);
         let sig = Signature::sign(keypair.privkey(), &msg).unwrap();
-        let bincode_config = config::standard();
+        let bincode_config = config::legacy();
         let se_result = encode_to_vec(&sig, bincode_config).unwrap();
         let de_result: Signature = decode_from_slice(&se_result, bincode_config)
             .map(|(v, _)| v)

@@ -443,9 +443,9 @@ mod tests {
         let str = "".to_owned();
         let message = str.crypt_hash();
         let signature = Signature::sign(keypair.privkey().into(), &message.into()).unwrap();
-        let se_result = encode_to_vec(&signature, config::standard()).unwrap();
+        let se_result = encode_to_vec(&signature, config::legacy()).unwrap();
         let (de_result, _): (Signature, _) =
-            decode_from_slice(&se_result, config::standard()).unwrap();
+            decode_from_slice(&se_result, config::legacy()).unwrap();
         assert_eq!(signature, de_result);
     }
 

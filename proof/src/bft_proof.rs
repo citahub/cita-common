@@ -75,7 +75,7 @@ impl BftProof {
     pub fn store(&self) {
         let proof_path = DataPath::proof_bin_path();
         let mut file = File::create(&proof_path).unwrap();
-        let encoded_proof: Vec<u8> = encode_to_vec(&self, config::standard()).unwrap();
+        let encoded_proof: Vec<u8> = encode_to_vec(&self, config::legacy()).unwrap();
         file.write_all(&encoded_proof).unwrap();
         let _ = file.sync_all();
     }
@@ -85,7 +85,7 @@ impl BftProof {
         if let Ok(mut file) = File::open(&proof_path) {
             let mut content = Vec::new();
             if file.read_to_end(&mut content).is_ok() {
-                if let Ok((decoded, _)) = decode_from_slice(&content[..], config::standard()) {
+                if let Ok((decoded, _)) = decode_from_slice(&content[..], config::legacy()) {
                     //self.round = decoded.round;
                     //self.proposal = decoded.proposal;
                     //self.commits = decoded.commits;
@@ -117,7 +117,7 @@ impl BftProof {
             if authorities.contains(sender) {
                 let msg = encode_to_vec(
                     &(h, self.round, Step::Precommit, sender, Some(self.proposal)),
-                    config::standard(),
+                    config::legacy(),
                 )
                 .unwrap();
                 let signature = Signature(sig.0);
@@ -132,8 +132,8 @@ impl BftProof {
 
 impl From<Proof> for BftProof {
     fn from(p: Proof) -> Self {
-        let (decoded, _): (BftProof, _) =
-            decode_from_slice(&p.get_content()[..], config::standard()).unwrap_or_else(|_| {
+        let (decoded, _): (BftProof, _) = decode_from_slice(&p.get_content()[..], config::legacy())
+            .unwrap_or_else(|_| {
                 error!("BftProof from Proof failed");
                 (BftProof::default(), 0)
             });
@@ -145,7 +145,7 @@ impl Into<Proof> for BftProof {
     fn into(self) -> Proof {
         let mut proof = Proof::new();
         let encoded_proof: Vec<u8> =
-            encode_to_vec(&self, config::standard()).expect("BftProof to Proof failed");
+            encode_to_vec(&self, config::legacy()).expect("BftProof to Proof failed");
         proof.set_content(encoded_proof);
         proof.set_field_type(ProofType::Bft);
         proof

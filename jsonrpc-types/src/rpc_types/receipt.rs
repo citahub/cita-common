@@ -151,7 +151,7 @@ mod tests {
 
         println!("{:?}", receipt);
 
-        let config = config::standard();
+        let config = config::legacy();
 
         let encoded: Vec<u8> = encode_to_vec(&receipt, config).unwrap();
 
